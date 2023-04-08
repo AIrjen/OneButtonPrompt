@@ -49,7 +49,8 @@ Edit the main script to set the amount of loops/images to generate, and uncommen
 From the above header, these are the generated prompts, from left to right, top to bottom. Generated during various stages of development. Using deliberate and DPM Karras.
 
 >cinematic shot of a Cruel " The Soul of Enlightenment ", at Blue hour, Cel shaded 
-( art by Albert Dubois-Pillet :0.9), art by Bastien Lecouffe-Deharme, Physically based render, Tranquil Delicate Island and Windmill, at Golden hour, Illustration, Amusing, Fish-eye Lens 
+>
+>( art by Albert Dubois-Pillet :0.9), art by Bastien Lecouffe-Deharme, Physically based render, Tranquil Delicate Island and Windmill, at Golden hour, Illustration, Amusing, Fish-eye Lens 
 >
 >art by Aykut Aydogdu,art by Jacob van Ruisdael, 3D Rendering, extreme wide shot of a Wraith, Crusader ,wearing Floral maxi dress and sandals, background is Strait, Illustration, Modern European Ink Painting, loop lighting, octane engine 
 >

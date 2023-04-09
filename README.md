@@ -1,11 +1,28 @@
 # OneButtonPrompt
-![OneButtonPrompt](https://github.com/AIrjen/OneButtonPrompt/blob/main/images/Background.png)
+![OneButtonPrompt](https://github.com/AIrjen/OneButtonPrompt/blob/main/images/Background.png "These images are auto generated, see all generated prompt below")
+
+
+# The (best:1.3) auto prompt generator in the world, high quality, trending on artstation
 
 # Summary
 
 One Button Prompt is a tool for beginners who have problems writing a good prompt, or advanced users who want to get inspired.
 
 It generates an entire prompt from scratch. It is random, but controlled.
+
+## Use in automatic1111
+In TXT2IMG or IMG2IMG, select the script "One Button Prompt".
+![image](https://user-images.githubusercontent.com/130234949/230793053-3b1d1b1b-b3c1-4071-a135-35f56dba0f01.png "so easy")
+
+Leave the prompts empty:
+![image](https://user-images.githubusercontent.com/130234949/230793068-d38bc782-4c2f-4268-9e91-76f4eabe3eca.png "who needs prompts anyway")
+
+Hit Generate!
+![image](https://user-images.githubusercontent.com/130234949/230793086-cedbe72a-e1eb-46e5-a425-4a52540847f6.png "click!")
+
+Enjoy creating awesome pictures:
+![example3](https://user-images.githubusercontent.com/130234949/230793138-c5a42845-3488-4a78-a3ce-3772e5f45e5e.png "wow, good job you!")
+
 
 ### Some details
 It will generate between 0 and 3 artists, and add those the prompt.

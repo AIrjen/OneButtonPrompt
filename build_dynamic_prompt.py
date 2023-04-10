@@ -14,6 +14,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artistmode = "
 
     completeprompt = " "
 
+    isphoto = 0
     othertype = 0
     humanspecial = 0
     wereanimaladded = 0
@@ -134,16 +135,18 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artistmode = "
     if(mainchooser in ["object", "animal", "humanoid", "concept"] and othertype == 0 and "portait" not in completeprompt):
         completeprompt = add_from_csv(completeprompt, "shotsizes", 0, ""," of a ")
     elif("portait" in completeprompt):
-        completeprompt += " of a "
+        completeprompt += " ,close up of a "
    # Multiple subjects doesnt really work, need to think of other way to do multiple subjects. Maybe AND in the prompt?
    # if(subjectchooser in ["object", "animal", "humanoid"] and rare_dist(insanitylevel)):
    #     completeprompt = completeprompt[:-2] # remove a from 
    #     completeprompt = add_from_csv(completeprompt, "amounts", 0, "","")      
 
+    
+    # Common to have 1 description, uncommon to have 2
     if(common_dist(insanitylevel)):
         completeprompt = add_from_csv(completeprompt, "descriptors", 0, "","")
 
-    if(normal_dist(insanitylevel)):
+    if(uncommon_dist(insanitylevel)):
         completeprompt = add_from_csv(completeprompt, "descriptors", 0, "","")
 
     if(subjectchooser in ["animal as human,","human", "job", "fictional", "non fictional", "humanoid"] and normal_dist(insanitylevel)):
@@ -271,7 +274,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artistmode = "
     # riding an animal, holding an object or driving a vehicle, rare
     if(subjectchooser in ["animal as human,","human","fictional", "non fictional", "humanoid"] and rare_dist(insanitylevel)):
         humanspecial = 1
-        speciallist = ["riding a -animal- ", "holding a -object- ", "driving a -vehicle-", "visiting a -building-"]
+        speciallist = [" riding a -animal- ", "holding a -object- ", " driving a -vehicle-", " visiting a -building-"]
         completeprompt += random.choice(speciallist)
 
     # SD understands emoji's. Can be used to manipulate facial expressions.
@@ -324,16 +327,33 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artistmode = "
 
     if(subjectchooser in ["animal as human,","human","fictional", "non fictional", "humanoid"]  and normal_dist(insanitylevel)):
         completeprompt = add_from_csv(completeprompt, "accessories", 1, "","")
+        # Sometimes get 2
+        if(uncommon_dist(insanitylevel)):
+            completeprompt = add_from_csv(completeprompt, "accessories", 1, "","")
 
     
-    if(subjectchooser not in ["landscape", "concept"]  and normal_dist(insanitylevel)):
-        completeprompt = add_from_csv(completeprompt, "locations", 1, " background is ","")
+    if(subjectchooser not in ["landscape", "concept"] and humanspecial != 1 and normal_dist(insanitylevel)):
+        backgroundtype = ["landscape", "buildingbackground", "insidebuilding"]
+        match random.choice(backgroundtype):
+            case "landscape":
+                completeprompt = add_from_csv(completeprompt, "locations", 1, " background is ","")
+            case "buildingbackground":
+                completeprompt = ",background is "
+                if(uncommon_dist(insanitylevel)):
+                    completeprompt = add_from_csv(completeprompt, "descriptors", 0, "","")
+                completeprompt = add_from_csv(completeprompt, "buildings", 0, "","")
+            case "insidebuilding":
+                completeprompt = ",inside a "
+                if(uncommon_dist(insanitylevel)):
+                    completeprompt = add_from_csv(completeprompt, "descriptors", 0, "","")
+                completeprompt = add_from_csv(completeprompt, "buildings", 0, "","")
 
 
 
 
 
-    if(normal_dist(insanitylevel)):
+    # landscapes it is nice to always have a time period
+    if(normal_dist(insanitylevel) or subjectchooser=="landscape"):
         completeprompt = add_from_csv(completeprompt, "timeperiods", 1, "","")
 
     if(mainchooser not in ["landscape"]  and normal_dist(insanitylevel)):
@@ -352,7 +372,16 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artistmode = "
     if(normal_dist(insanitylevel)):
         completeprompt = add_from_csv(completeprompt, "lighting", 1, "","")    
 
-    if(normal_dist(insanitylevel)):
+    # determine wether we have a photo or not
+    if("hoto" in completeprompt):
+        isphoto = 1
+        if(common_dist(insanitylevel)):
+            completeprompt += ", film grain"
+            
+    if(isphoto == 1):
+        completeprompt = add_from_csv(completeprompt, "cameras", 1, "","")   
+
+    if(normal_dist(insanitylevel) or isphoto == 1):
         completeprompt = add_from_csv(completeprompt, "lenses", 1, "","")   
 
     if(normal_dist(insanitylevel)):

@@ -292,7 +292,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artistmode = "
         completeprompt = add_from_csv(completeprompt, "human_activities", 1, "","")
 
     if(subjectchooser in ["animal as human","human","job", "fictional", "non fictional", "humanoid"] and legendary_dist(insanitylevel)):
-        completeprompt += " with -color- skin, "
+        completeprompt += ", with -color- skin, "
 
     # outfit builder
     if(subjectchooser in ["animal as human","human","fictional", "non fictional", "humanoid"]  and normal_dist(insanitylevel)):
@@ -418,7 +418,17 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artistmode = "
         while "-animal-" in completeprompt:
             completeprompt = completeprompt.replace('-animal-', random.choice(animallist),1)
 
+    completeprompt = re.sub('\[ ', '[', completeprompt)
+    completeprompt = re.sub(' \]', ']', completeprompt)
+    completeprompt = re.sub(' \|', '|', completeprompt)
+    completeprompt = re.sub(' \"', '\"', completeprompt)
+    completeprompt = re.sub('\" ', '\"', completeprompt)
+    completeprompt = re.sub('\( ', '(', completeprompt)
+    completeprompt = re.sub(' \(', '(', completeprompt)
+    completeprompt = re.sub('\) ', ')', completeprompt)
+    completeprompt = re.sub(' \)', ')', completeprompt)
 
+    completeprompt = re.sub(',,', ',', completeprompt)
     completeprompt = re.sub(', ,', ',', completeprompt)
     completeprompt = re.sub(' , ', ',', completeprompt)
     completeprompt = re.sub(' +', ' ', completeprompt[2:]) # remove first character, that is always a comma. Remove any excess spaces

@@ -102,21 +102,31 @@ class Script(scripts.Script):
     def run(self, p, insanitylevel, subject, artist, imagetype):
         
         images = []
+        infotexts = []
 
         if p.prompt != "":
             print("Prompt is not empty, adding current prompt to the end of the generated prompt")
         
         batches = p.n_iter
-        print(batches)
+        initialbatchsize = p.batch_size
+        batchsize = p.batch_size
+        p.n_iter = 1
+        p.batch_size = 1
 
-        # todo: somehow it duplicates the batch when handling multiple batches. To fix!
+
         for i in range(batches):
             p.prompt = build_dynamic_prompt(insanitylevel,subject,artist, imagetype) + ", " + p.prompt  # add existing prompt to the back?
-            print(i)
-            processed = process_images(p)
-            images += processed.images
+            for j in range(batchsize):
+       
+                processed = process_images(p)
+                images += processed.images
+                infotexts += processed.infotexts
             
-        # just return the prompt, and webui will do the rest
+                # Only move up a seed, when there are multiple batchsizes, and we had the first one done.
+                if(initialbatchsize != 1):
+                    p.seed += 1
+                
+        # just return all the things
         p.n_iter = 0
         p.batch_size = 0
-        return Processed(p=p, images_list=images)
+        return Processed(p=p, images_list=images, info=infotexts[0], infotexts=infotexts)

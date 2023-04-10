@@ -10,18 +10,24 @@ One Button Prompt is a tool for beginners who have problems writing a good promp
 
 It generates an entire prompt from scratch. It is random, but controlled.
 
-## Use in automatic1111
+## How to use in automatic1111
 In TXT2IMG or IMG2IMG, select the script "One Button Prompt".
-![image](https://user-images.githubusercontent.com/130234949/230793053-3b1d1b1b-b3c1-4071-a135-35f56dba0f01.png "so easy")
+
+<img src="https://user-images.githubusercontent.com/130234949/230793053-3b1d1b1b-b3c1-4071-a135-35f56dba0f01.png" alt="so easy" width="50%" height="50%">
 
 Leave the prompts empty:
-![image](https://user-images.githubusercontent.com/130234949/230793068-d38bc782-4c2f-4268-9e91-76f4eabe3eca.png "who needs prompts anyway")
+
+<img src="https://user-images.githubusercontent.com/130234949/230793068-d38bc782-4c2f-4268-9e91-76f4eabe3eca.png" alt="who needs prompts anyway" width="50%" height="50%">
 
 Hit Generate!
-![image](https://user-images.githubusercontent.com/130234949/230793086-cedbe72a-e1eb-46e5-a425-4a52540847f6.png "click!")
+
+<img src="https://user-images.githubusercontent.com/130234949/230793086-cedbe72a-e1eb-46e5-a425-4a52540847f6.png" alt="click!" width="30%" height="30%">
 
 Enjoy creating awesome pictures:
-![example3](https://user-images.githubusercontent.com/130234949/230793138-c5a42845-3488-4a78-a3ce-3772e5f45e5e.png "wow, good job you!")
+
+![image](https://user-images.githubusercontent.com/130234949/230916833-0dc38593-94e0-40f5-9312-da720278b791.png "wow, good job you!")
+> Concept art, Fluid Biosphere, at Dawn, F/1.8, Kodak portra, extremely beautiful ,
+
 
 
 ### Some details
@@ -44,6 +50,9 @@ It mixes techniques such as prompt switching and hybrids.
 
 # automatic1111 script
 It can be used in automatic1111. Simply install this from via install from URL. After that you can see OneButtonPrompt in the script fields for txt2img and img2img.
+Set the following URL to install from: https://github.com/AIrjen/OneButtonPrompt/
+
+<img src="https://user-images.githubusercontent.com/130234949/230917712-60a3c1f4-fea6-4ecd-bc68-da52f1ff86fe.png" alt="Easy to install" width="50%" height="50%">
 
 ![image](https://user-images.githubusercontent.com/130234949/230737801-fd107060-161b-495e-871c-234342664b31.png)
 This generator will generate a complete full prompt for you, based on randomness. You can increase the slider, to include more things to put into the prompt. 
@@ -60,6 +69,7 @@ It doesn't add anything to the negative prompt field, so feel free to add your f
 
 In the main.py script, there is logic that calls the API's from automatic1111. Simply start automatic1111 normally, and run the main script.
 Edit the main script to set the amount of loops/images to generate, and uncomment the txt2img, img2img and upscale scripts to taste.
+It was build for personal development, so adjust directories and settings accordingly.
 
 
 # examples

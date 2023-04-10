@@ -1,14 +1,14 @@
-# OneButtonPrompt
-![OneButtonPrompt](https://github.com/AIrjen/OneButtonPrompt/blob/main/images/Background.png "These images are auto generated, see all generated prompt below")
+![OneButtonPrompt](https://github.com/AIrjen/OneButtonPrompt/blob/main/images/background.png "These images are auto generated, see all generated prompt below")
 
 
-# The (best:1.3) auto prompt generator in the world, high quality, trending on artstation
+---
+# One Button Prompt
 
 # Summary
 
 One Button Prompt is a tool for beginners who have problems writing a good prompt, or advanced users who want to get inspired.
 
-It generates an entire prompt from scratch. It is random, but controlled.
+It generates an entire prompt from scratch. It is random, but controlled. You simply load up the script and press generate, and let it surprise you.
 
 ## How to use in automatic1111
 In TXT2IMG or IMG2IMG, select the script "One Button Prompt".
@@ -28,8 +28,6 @@ Enjoy creating awesome pictures:
 ![image](https://user-images.githubusercontent.com/130234949/230916833-0dc38593-94e0-40f5-9312-da720278b791.png "wow, good job you!")
 > Concept art, Fluid Biosphere, at Dawn, F/1.8, Kodak portra, extremely beautiful ,
 
-
-
 ### Some details
 It will generate between 0 and 3 artists, and add those the prompt.
 
@@ -47,23 +45,24 @@ It can generate the following subjects, while building a prompt:
 
 It mixes techniques such as prompt switching and hybrids. 
 
+This generator will generate a complete full prompt for you, based on randomness. You can increase the slider, to include more things to put into the prompt. 
+Recommended is keeping it around 3-7. Use 10 at your own risk.
 
-# automatic1111 script
+There are a lot of special things build in, based on various research. Just try it, and let it surprise you.
+
+Suggestion is to leave the prompt field empty, anything here will be added at the end of the generated prompt.  
+It doesn't add anything to the negative prompt field, so feel free to add your favorite negative prompts here.  
+
+For each Batch you run, it will create a new prompt. For each batch size, it will reuse the same prompt.
+
+
+# Installing in automatic1111
 It can be used in automatic1111. Simply install this from via install from URL. After that you can see OneButtonPrompt in the script fields for txt2img and img2img.
 Set the following URL to install from: https://github.com/AIrjen/OneButtonPrompt/
 
 <img src="https://user-images.githubusercontent.com/130234949/230917712-60a3c1f4-fea6-4ecd-bc68-da52f1ff86fe.png" alt="Easy to install" width="50%" height="50%">
 
-![image](https://user-images.githubusercontent.com/130234949/230737801-fd107060-161b-495e-871c-234342664b31.png)
-This generator will generate a complete full prompt for you, based on randomness. You can increase the slider, to include more things to put into the prompt. 
-Recommended is keeping it around 3-7. Use 10 at your own risk.
-
-There are a lot of special things build in, based on various research papers. Just try it, and let it surprise you.
-
-Suggestion is to leave the prompt field empty, anything here will be added at the end of the generated prompt.  
-It doesn't add anything to the negative prompt field, so feel free to add your favorite negative prompts here.  
-
-(note: there is a bug with multiple batches, it doesn't add the new prompt)
+You can also download the files from github directly, and place them under your automatic1111 installation in the \Extensions\ folder.
 
 # off-hands generation
 

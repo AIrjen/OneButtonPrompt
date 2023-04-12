@@ -15,13 +15,13 @@ def rare_dist(insanitylevel):
     return roll
 
 def legendary_dist(insanitylevel):
-        roll = (random.randint(1, 40)<insanitylevel)
+        roll = (random.randint(1, 50)<insanitylevel)
         if(roll):
             print("Nice! adding something legendary to the prompt")
         return roll
 
 def unique_dist(insanitylevel):
-        roll = (random.randint(1, 50)<insanitylevel)
+        roll = (random.randint(1, 75)<insanitylevel)
         if(roll):
             print("Critical hit! Something unique has been added to the prompt")
         return roll

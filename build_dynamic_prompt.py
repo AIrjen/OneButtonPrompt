@@ -10,7 +10,7 @@ from random_functions import *
 # insanity level controls randomness of propmt 0-10
 # forcesubject van be used to force a certain type of subject
 # Set artistmode to none, to exclude artists 
-def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artistmode = "all", imagetype = "all"):
+def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all"):
 
     completeprompt = " "
 
@@ -20,10 +20,12 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artistmode = "
     wereanimaladded = 0
     isweighted = 0
     hybridorswap = ""
+    artistmode = "normal"
 
     if(insanitylevel==0):
         insanitylevel =  random.randint(1, 10)  # 10 = add everything, 1 is add almost nothing
-    insanitylevel3 = int(insanitylevel/3) + 1
+    insanitylevel3 = int((insanitylevel/3) + 1.20)
+
     print("Setting insanity level to " + str(insanitylevel))
 
    # main chooser: 0 object, 1 animal, 2 humanoid, 3 landscape, 4 event/concept
@@ -55,7 +57,11 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artistmode = "
     hybridhumanlist = ["-fictional-", "-nonfictional-"]
     
     # possible?: think about curated artist list?
-    if(artistmode == "all"):
+    artistsplacement = "front"
+    if(uncommon_dist(insanitylevel)):
+        artistsplacement = "back"
+
+    if(artists == "all" and artistsplacement == "front"):
         # take 1-3 artists, weighted to 1-2
         step = random.randint(0, 1)
         end = random.randint(1, insanitylevel3)
@@ -70,8 +76,10 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artistmode = "
         # adding at step x  a:X
         # stopping at step x ::X
         # enhancing from step  x
-        
-        artistmode = "normal"
+
+
+
+
         modeselector = random.randint(0,10)
         if modeselector < 5 and end - step >= 2:
             artistmodeslist = ["hybrid", "stopping", "adding", "switching", "enhancing"]
@@ -163,12 +171,23 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artistmode = "
             hybridorswap = random.choice(hybridorswaplist)
             completeprompt += "["
 
-        completeprompt = add_from_csv(completeprompt, random.choice(objecttypelist), 0, "","")
+        chosenobjecttype = random.choice(objecttypelist)
+        completeprompt = add_from_csv(completeprompt, chosenobjecttype, 0, "","")
 
         if(hybridorswap == "hybrid"):
-            completeprompt += "|" + random.choice(hybridlist) + "]"
+            if(uncommon_dist(insanitylevel)):
+                completeprompt += "|" + random.choice(hybridlist) + "]"
+            else:
+                completeprompt += "|" 
+                completeprompt = add_from_csv(completeprompt, chosenobjecttype, 0, "","") 
+                completeprompt += "]"
         if(hybridorswap == "swap"):
-            completeprompt += ":" + random.choice(hybridlist) + ":" + str(random.randint(1,5)) +  "]"
+            if(uncommon_dist(insanitylevel)):
+                completeprompt += ":" + random.choice(hybridlist) + ":" + str(random.randint(1,5)) +  "]"
+            else:
+                completeprompt += ":"
+                completeprompt = add_from_csv(completeprompt, chosenobjecttype, 0, "","") 
+                completeptompt += ":" + str(random.randint(1,5)) +  "]"
         hybridorswap = ""
 
     if(mainchooser == "animal"):
@@ -184,9 +203,15 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artistmode = "
             completeprompt = add_from_csv(completeprompt, "animals", 0, "","")
 
         if(hybridorswap == "hybrid"):
-            completeprompt += "|" + random.choice(hybridlist) + "]"
+            if(uncommon_dist(insanitylevel)):
+                completeprompt += "|" + random.choice(hybridlist) + "]"
+            else:
+                completeprompt += "| -animal- ]"
         if(hybridorswap == "swap"):
-            completeprompt += ":" + random.choice(hybridlist) + ":" + str(random.randint(1,5)) +  "]"
+            if(uncommon_dist(insanitylevel)):
+                completeprompt += ":" + random.choice(hybridlist) + ":" + str(random.randint(1,5)) +  "]"
+            else:
+                completeprompt += ":-animal-:" + str(random.randint(1,5)) +  "]"
         hybridorswap = ""
     
     if(subjectchooser == "human"):
@@ -253,8 +278,14 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artistmode = "
         hybridorswap = ""
 
         if(normal_dist(insanitylevel)):
+            completeprompt += " and "
+            if(rare_dist(insanitylevel)):
+                completeprompt = add_from_csv(completeprompt, "descriptors", 0, "","")
+            if(rare_dist(insanitylevel)):
+                completeprompt = add_from_csv(completeprompt, "ethnicity", 0, "","")
+
             addontolocation = ["locations","buildings", "vehicles"]
-            completeprompt = add_from_csv(completeprompt, random.choice(addontolocation), 0, "and ","")
+            completeprompt = add_from_csv(completeprompt, random.choice(addontolocation), 0, "","")
     
     if(subjectchooser == "event"):
         completeprompt = add_from_csv(completeprompt, "events", 0, "\"","\"")
@@ -264,17 +295,25 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artistmode = "
         completeprompt = add_from_csv(completeprompt, "concept_suffix", 0, "","\"")
 
     # object with a face
-    if(mainchooser == "object" and legendary_dist(insanitylevel)):
+    if(mainchooser == "object" and unique_dist(insanitylevel)):
         completeprompt += " with a face "
 
     # object materials
-    if(mainchooser == "object" and normal_dist(insanitylevel)):
+    if(mainchooser == "object" and uncommon_dist(insanitylevel)):
         completeprompt += "made from -material- "
+
+    # object detailing
+    if(mainchooser == "object" and rare_dist(insanitylevel)):
+        completeprompt += "detailed with "
+        if(uncommon_dist(insanitylevel)):
+            completeprompt = add_from_csv(completeprompt, "descriptors", 0, "","")
+        completeprompt += "-material- patterns "
+        
     
     # riding an animal, holding an object or driving a vehicle, rare
     if(subjectchooser in ["animal as human,","human","fictional", "non fictional", "humanoid"] and rare_dist(insanitylevel)):
         humanspecial = 1
-        speciallist = [" riding a -animal- ", "holding a -object- ", " driving a -vehicle-", " visiting a -building-"]
+        speciallist = [" riding a -animal- ", "holding a -object- ", " driving a -vehicle-", " visiting a -building-", "with a -animal-", "surrounded by -object-s"]
         completeprompt += random.choice(speciallist)
 
     # SD understands emoji's. Can be used to manipulate facial expressions.
@@ -320,10 +359,13 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artistmode = "
             completeprompt += ":" + "-outfit-" + ":" + str(random.randint(1,5)) +  "]"  
         hybridorswap = ""      
 
+    if(subjectchooser in ["animal as human","human","fictional", "non fictional", "humanoid"]  and uncommon_dist(insanitylevel) and humanspecial != 1):
+        completeprompt = add_from_csv(completeprompt, "poses", 1, "","")
+    
     if(subjectchooser in ["human","job","fictional", "non fictional", "humanoid"]  and normal_dist(insanitylevel)):
-            completeprompt = completeprompt + ", "
-            completeprompt = add_from_csv(completeprompt, "haircolors", 0, "","")
-            completeprompt = add_from_csv(completeprompt, "hairstyles", 0, " hair styled as ","")
+        completeprompt += ", "
+        completeprompt = add_from_csv(completeprompt, "haircolors", 0, "","")
+        completeprompt = add_from_csv(completeprompt, "hairstyles", 0, " hair styled as ","")
 
     if(subjectchooser in ["animal as human,","human","fictional", "non fictional", "humanoid"]  and normal_dist(insanitylevel)):
         completeprompt = add_from_csv(completeprompt, "accessories", 1, "","")
@@ -338,12 +380,12 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artistmode = "
             case "landscape":
                 completeprompt = add_from_csv(completeprompt, "locations", 1, " background is ","")
             case "buildingbackground":
-                completeprompt = ",background is "
+                completeprompt += ",background is "
                 if(uncommon_dist(insanitylevel)):
                     completeprompt = add_from_csv(completeprompt, "descriptors", 0, "","")
                 completeprompt = add_from_csv(completeprompt, "buildings", 0, "","")
             case "insidebuilding":
-                completeprompt = ",inside a "
+                completeprompt += ",inside a "
                 if(uncommon_dist(insanitylevel)):
                     completeprompt = add_from_csv(completeprompt, "descriptors", 0, "","")
                 completeprompt = add_from_csv(completeprompt, "buildings", 0, "","")
@@ -390,14 +432,85 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artistmode = "
     # vomit some cool/wierd things into the prompt
     if(uncommon_dist(insanitylevel)):
         completeprompt = add_from_csv(completeprompt, "vomit", 1, "","")
+        if(uncommon_dist(insanitylevel)):
+            completeprompt = add_from_csv(completeprompt, "vomit", 1, "","")
+
 
     # everyone loves the adding quality. The better models don't need this, but lets add it anyway
     if(uncommon_dist(insanitylevel)):
         completeprompt = add_from_csv(completeprompt, "quality", 1, "","")
+        if(uncommon_dist(insanitylevel)):
+            completeprompt = add_from_csv(completeprompt, "quality", 1, "","")
 
 
     if artistmode in ["enhancing"]:
         completeprompt += "::" + str(random.randint(1,17)) + "]"
+
+
+
+    if(artists == "all" and artistsplacement == "back"):
+        completeprompt += ", "
+        # take 1-3 artists, weighted to 1-2
+        step = random.randint(0, 1)
+        end = random.randint(1, insanitylevel3)
+
+
+
+
+        # determine artist mode:
+        # normal
+        # hybrid |
+        # switching A:B:X
+        # adding at step x  a:X
+        # stopping at step x ::X
+
+        
+        modeselector = random.randint(0,10)
+        if modeselector < 4 and end - step >= 2:
+            artistmodeslist = ["hybrid", "stopping", "adding", "switching"]
+            artistmode = artistmodeslist[modeselector]
+            if artistmode in ["hybrid","switching"] and end - step == 1:
+                artistmode = "normal"
+        
+        if artistmode in ["hybrid", "stopping", "adding","switching"]:
+            completeprompt += " ["
+            
+        while step < end: 
+            if(normal_dist(insanitylevel)):
+                isweighted = 1
+            
+            if isweighted == 1:
+                completeprompt += " ("
+
+            completeprompt = add_from_csv(completeprompt, "artists", 0, "art by ","")
+            
+            if isweighted == 1:
+                completeprompt += ":" + str(1 + (random.randint(-3,3)/10)) + ")"       
+            
+            if artistmode in ["hybrid"] and not end - step == 1:
+                completeprompt += "|"
+            if artistmode in ["switching"] and not end - step == 1:
+                completeprompt += ":"
+        
+            if artistmode not in ["hybrid", "switching"]and not end - step == 1:
+                completeprompt += ","
+            
+            isweighted = 0
+            
+            step = step + 1
+
+        if artistmode in ["stopping"]:
+            completeprompt += "::"
+            completeprompt += str(random.randint(1,19))
+        
+        if artistmode in ["switching","adding"]:
+            completeprompt += ":" + str(random.randint(1,18))
+        if artistmode in ["hybrid", "stopping","adding", "switching"]:
+            completeprompt += "]"
+
+
+        completeprompt += ", "
+
 
     #replace any values
     colorlist = csv_to_list("colors")
@@ -461,7 +574,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artistmode = "
     completeprompt = re.sub(', ,', ',', completeprompt)
     completeprompt = re.sub(' , ', ',', completeprompt)
     completeprompt = re.sub(' +', ' ', completeprompt[2:]) # remove first character, that is always a comma. Remove any excess spaces
-    
+
+
     print(completeprompt)
     return completeprompt
     

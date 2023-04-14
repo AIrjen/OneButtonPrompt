@@ -10,6 +10,8 @@ One Button Prompt is a tool for beginners who have problems writing a good promp
 
 It generates an entire prompt from scratch. It is random, but controlled. You simply load up the script and press generate, and let it surprise you.
 
+It is best used on all-purpose models, such as Stable Difussion 1.5 or those based on 1.5. Such as [deliberate](https://civitai.com/models/4823/deliberate) and [dreamlike diffusion](https://civitai.com/models/1274/dreamlike-diffusion-10). However, feel free to use it on your personal favorite models.
+
 ## How to use in automatic1111
 In TXT2IMG or IMG2IMG, select the script "One Button Prompt".
 
@@ -27,6 +29,11 @@ Enjoy creating awesome pictures:
 
 ![image](https://user-images.githubusercontent.com/130234949/230916833-0dc38593-94e0-40f5-9312-da720278b791.png "wow, good job you!")
 > Concept art, Fluid Biosphere, at Dawn, F/1.8, Kodak portra, extremely beautiful ,
+
+Please be aware, that not each picture will be awesome due to the randomness of the prompt, artist and model used.
+You might get an epic landscape, or a photo of an Aggregavated Trout. In my experience, about 1 in 5 is good. Everyone of them is interesting.
+
+Some more examples below.
 
 ### Some details
 It will generate between 0 and 3 artists, and add those the prompt.
@@ -64,14 +71,25 @@ Set the following URL to install from: https://github.com/AIrjen/OneButtonPrompt
 
 You can also download the files from github directly, and place them under your automatic1111 installation in the \Extensions\ folder.
 
-# off-hands generation
+# off-hands, automatic generation
+This project started out as a personal project, to automatically generate windows wallpapers. The code is still in here, and can be used. You would need to set it up correctly, so it is for advanced users only.
 
-In the main.py script, there is logic that calls the API's from automatic1111. Simply start automatic1111 normally, and run the main script.
+In the main.py script, there is logic that calls the API's from automatic1111. Uncomment the lines you need, such as txt2img. You also need to create some folders on your computer (see code)
+Start automatic1111 with the option --api and run the main script.
 Edit the main script to set the amount of loops/images to generate, and uncomment the txt2img, img2img and upscale scripts to taste.
+
 It was build for personal development, so adjust directories and settings accordingly.
 
+# roadmap
+Some ideas I'd like to implement:
 
-# examples
+- Multisubject (More people at once)
+- SD 2.1 support (inversion negative prompt)
+- Ongoing: list refinements
+
+If you have a good idea or suggestion, let me know, or build it yourself ;)
+
+# prompts and examples
 From the above header, these are the generated prompts, from left to right, top to bottom. Generated during various stages of development. Using deliberate and DPM Karras.
 
 >cinematic shot of a Cruel " The Soul of Enlightenment ", at Blue hour, Cel shaded 
@@ -111,3 +129,25 @@ From the above header, these are the generated prompts, from left to right, top 
 >by artist Michael Craig-Martin, by artist John Lurie, Zoon lens of a Rustic Fatigued portly Blue Jay, background is Indonesia, Relieving, Mono Color
 >
 >by artist Brandon Mably, Vector Art, extreme wide shot of a Aggravated Invigorating Fijian snake at Stormy weather, FOV 90 degrees, Vaporwave Art, flat lighting, High Contrast
+
+
+# More prompts and examples
+
+![efa94f2f-2bb8-4484-9855-ebd2600f8092](https://user-images.githubusercontent.com/130234949/232003239-3d983bf1-df26-4450-bf71-2b3bfe23ccbd.png)
+> (art by Daniel Lieske:1.3), Spray paint style, Noble Rustic The Hanging Gardens of Babylon and Cafe, at Dusk, Masterpiece, Shameful, Academism, Lens Flare, Fujifilm Superia, UHD
+
+![c25eb65a-0656-4a8a-a436-60bff4d6bd84](https://user-images.githubusercontent.com/130234949/232003386-933cfc7b-ed49-4aee-bbd4-66cdacf80efc.png)
+> [art by Max Bedulenko| art by Jack Davis], Spray paint style, Vile Mecha Spit, at Starry night, F/5, psychedelic colors, 8K
+ 
+![d5c2ace0-1aac-4512-9006-7431fe57fbb4](https://user-images.githubusercontent.com/130234949/232003478-0bf98902-7c57-4ca7-b821-c70d6c5488f9.png)
+>close-up shot of a Cozy Falcon, Summer, Bokeh, Sketch, Lonely, Pop Art, Black lighting, Fish-eye Lens, Calotype, Magic the gathering, layered textures, [(art by Yasushi Nirasawa :0.8),(art by Rumiko Takahashi :1.3), art by Carl Barks :7], 
+
+![00016-3511975148](https://user-images.githubusercontent.com/130234949/232003763-32d4aa2e-eb95-4edf-b0a9-2afc501b5628.png)
+> [(art by Walter Quirt :1.2):(art by Arthur Dove :1.0):8], Renderman, Hideous The Eyrie of House Arryn and Imp-drawn carriage, at Starry night, Detailed illustration, Bloom light, 80mm, Film grain
+
+
+![b7287807-efd3-4d0e-98b8-1fb1d7e57757](https://user-images.githubusercontent.com/130234949/232003927-ec8ed961-6f47-4aa0-ba55-a12f92c21cfe.png)
+> by artist Sam Spratt, by artist Robert Hagan, by artist Mike Kelley, Painting, landscape, wide shot of Cavern, Screen print, Lonely, Neo-Fauvism
+
+![00007-3666399242](https://user-images.githubusercontent.com/130234949/232004618-e0407158-fa5d-46aa-97b5-33990fc8d382.png)
+> Vector Art, high angle shot of a Dreadful Anime "The Fukushima Disaster", Disgusting, Methaphysical painting, studio lighting, F/5, Mono Color, behance, [(art by Hans Zatzka :1.1),(art by Alexandre Jacovleff :1.0)::13], ,

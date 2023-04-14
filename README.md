@@ -6,7 +6,7 @@
 
 # Summary
 
-One Button Prompt is a tool for beginners who have problems writing a good prompt, or advanced users who want to get inspired.
+One Button Prompt is a tool/script for automatic1111 for beginners who have problems writing a good prompt, or advanced users who want to get inspired.
 
 It generates an entire prompt from scratch. It is random, but controlled. You simply load up the script and press generate, and let it surprise you.
 

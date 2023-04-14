@@ -160,7 +160,11 @@ From the above header, these are the generated prompts, from left to right, top 
 
 # Thank you
 Thank you to the amazing [Stylepile](https://github.com/some9000/StylePile) and [Dynamic Prompts](https://github.com/adieyal/sd-dynamic-prompts) for inspiration.
+
 Thanks to everyone maintaining this [SD artists list](https://docs.google.com/spreadsheets/d/14xTqtuV3BuKDNhLotB_d1aFlBGnDJOY0BRXJ8-86GpA/edit#gid=0)
+
 Thanks to openart.ai for setting up the very helpful [prompt book](https://openart.ai/promptbook)
+
 Thanks to this [ai art modifier guide](https://www.the-ai-art.com/modifiers)
+
 Everyone at the [stable diffusion subreddit](https://www.reddit.com/r/StableDiffusion/) for inspiration and sharing workflows

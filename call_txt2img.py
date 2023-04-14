@@ -21,7 +21,7 @@ def call_txt2img(passingprompt,ratio,upscale,debugmode):
     if(ratio=='wide'):
         width = "768"
         height = "512"
-    elif(ratio=='portait'):
+    elif(ratio=='portrait'):
         width = "512"
         height = "768"
     elif(ratio=='ultrawide'):

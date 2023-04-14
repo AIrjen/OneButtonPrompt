@@ -12,7 +12,7 @@ from random_functions import *
 # Set artistmode to none, to exclude artists 
 def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all"):
 
-    completeprompt = " "
+    completeprompt = ", "
 
     isphoto = 0
     othertype = 0
@@ -161,7 +161,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         completeprompt = add_from_csv(completeprompt, "body_types", 0, "","")
 
     if(subjectchooser in ["object","animal as human,","human", "job", "fictional", "non fictional", "humanoid"] and normal_dist(insanitylevel)):
-        completeprompt = add_from_csv(completeprompt, "ethnicity", 0, "","")
+        completeprompt = add_from_csv(completeprompt, "cultures", 0, "","")
 
     if(mainchooser == "object"):
         objecttypelist = ["objects", "buildings", "vehicles"]
@@ -187,7 +187,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             else:
                 completeprompt += ":"
                 completeprompt = add_from_csv(completeprompt, chosenobjecttype, 0, "","") 
-                completeptompt += ":" + str(random.randint(1,5)) +  "]"
+                completeprompt += ":" + str(random.randint(1,5)) +  "]"
         hybridorswap = ""
 
     if(mainchooser == "animal"):
@@ -282,7 +282,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             if(rare_dist(insanitylevel)):
                 completeprompt = add_from_csv(completeprompt, "descriptors", 0, "","")
             if(rare_dist(insanitylevel)):
-                completeprompt = add_from_csv(completeprompt, "ethnicity", 0, "","")
+                completeprompt = add_from_csv(completeprompt, "cultures", 0, "","")
 
             addontolocation = ["locations","buildings", "vehicles"]
             completeprompt = add_from_csv(completeprompt, random.choice(addontolocation), 0, "","")
@@ -327,20 +327,24 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         completeprompt = add_from_csv(completeprompt, "fictional characters", 0, "cosplaying as ","")
 
     # Job 
-    if(subjectchooser in ["animal as human","human","fictional", "non fictional", "humanoid"]  and normal_dist(insanitylevel) and humanspecial != 1):
-        completeprompt = add_from_csv(completeprompt, "jobs", 1, "","")
+    # either go job or activity, not both
 
-    if(subjectchooser in ["animal as human","human","job", "fictional", "non fictional", "humanoid"] and normal_dist(insanitylevel) and humanspecial != 1):
-        completeprompt = add_from_csv(completeprompt, "human_activities", 1, "","")
+    if(subjectchooser in ["animal as human","human","fictional", "non fictional", "humanoid"]  and normal_dist(insanitylevel) and humanspecial != 1):
+        joboractivitylist = ["jobs","human_activities"]
+        completeprompt = add_from_csv(completeprompt, random.choice(joboractivitylist), 1, "","")
+
 
     if(subjectchooser in ["animal as human","human","job", "fictional", "non fictional", "humanoid"] and legendary_dist(insanitylevel)):
-        completeprompt += ", with -color- skin, "
+        skintypelist = ["-color-", "-material-"]
+        completeprompt += ", with " + random.choice(skintypelist) + " skin, "
 
     # outfit builder
     if(subjectchooser in ["animal as human","human","fictional", "non fictional", "humanoid"]  and normal_dist(insanitylevel)):
-        completeprompt = " ".join([completeprompt, ", wearing"])
+        completeprompt += ", wearing"
         if(normal_dist(insanitylevel)):
             completeprompt = add_from_csv(completeprompt, "descriptors", 0, "","")
+        if(uncommon_dist(insanitylevel)):
+            completeprompt = add_from_csv(completeprompt, "cultures", 0, "","")
         if(normal_dist(insanitylevel)):
             completeprompt += " -color- "
         if(rare_dist(insanitylevel)):
@@ -380,12 +384,12 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             case "landscape":
                 completeprompt = add_from_csv(completeprompt, "locations", 1, " background is ","")
             case "buildingbackground":
-                completeprompt += ",background is "
+                completeprompt += ", background is "
                 if(uncommon_dist(insanitylevel)):
                     completeprompt = add_from_csv(completeprompt, "descriptors", 0, "","")
                 completeprompt = add_from_csv(completeprompt, "buildings", 0, "","")
             case "insidebuilding":
-                completeprompt += ",inside a "
+                completeprompt += ", inside a "
                 if(uncommon_dist(insanitylevel)):
                     completeprompt = add_from_csv(completeprompt, "descriptors", 0, "","")
                 completeprompt = add_from_csv(completeprompt, "buildings", 0, "","")
@@ -398,7 +402,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     if(normal_dist(insanitylevel) or subjectchooser=="landscape"):
         completeprompt = add_from_csv(completeprompt, "timeperiods", 1, "","")
 
-    if(mainchooser not in ["landscape"]  and normal_dist(insanitylevel)):
+    if(mainchooser not in ["landscape"]  and rare_dist(insanitylevel)):
         completeprompt = add_from_csv(completeprompt, "focus", 1, "","")
         
     # others
@@ -570,12 +574,19 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     completeprompt = re.sub('\) ', ')', completeprompt)
     completeprompt = re.sub(' \)', ')', completeprompt)
 
+    completeprompt = re.sub(' :', ':', completeprompt)
+
     completeprompt = re.sub(',,', ',', completeprompt)
     completeprompt = re.sub(', ,', ',', completeprompt)
-    completeprompt = re.sub(' , ', ',', completeprompt)
+    completeprompt = re.sub(' , ', ', ', completeprompt)
+    completeprompt = re.sub(',\(', ', (', completeprompt)
+
+    completeprompt = re.sub('a The', 'The', completeprompt)
+    completeprompt = re.sub('ss ', 's ', completeprompt)
+
     completeprompt = re.sub(' +', ' ', completeprompt[2:]) # remove first character, that is always a comma. Remove any excess spaces
 
-
+    completeprompt = completeprompt.strip(", ")
     print(completeprompt)
     return completeprompt
     

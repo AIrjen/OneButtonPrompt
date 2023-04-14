@@ -23,7 +23,7 @@ while steps < loops:
     
     # prompt + size
 
-    #txt2img = call_txt2img(randomprompt, "portait",True,0)
+    #txt2img = call_txt2img(randomprompt, "portrait",True,0)
     #txt2img = call_txt2img(randomprompt, "wide" ,True, 0)
     #txt2img = call_txt2img(randomprompt, "ultrawide",True,0)
     #txt2img = call_txt2img(randomprompt, "square",True,0)

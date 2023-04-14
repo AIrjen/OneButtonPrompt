@@ -151,3 +151,16 @@ From the above header, these are the generated prompts, from left to right, top 
 
 ![00007-3666399242](https://user-images.githubusercontent.com/130234949/232004618-e0407158-fa5d-46aa-97b5-33990fc8d382.png)
 > Vector Art, high angle shot of a Dreadful Anime "The Fukushima Disaster", Disgusting, Methaphysical painting, studio lighting, F/5, Mono Color, behance, [(art by Hans Zatzka :1.1),(art by Alexandre Jacovleff :1.0)::13], ,
+
+![00033-437599208](https://user-images.githubusercontent.com/130234949/232122501-1eec6247-b4cd-4f75-b4ad-0a6094dd4b39.png)
+> Long exposure of a Ignorant Light Klingon cosplaying as Princes Leia Organa, with Pink skin, Sitting with elbows on knees, Gloves, background is Landfill, at Nighttime, Happy, Grayscale, extremely detailed CG Unity 8k wallpaper, (art by Paul Hedley:1.1), art by Giacomo Balla , (art by Andre Norton:1.1)
+
+![3e04863e-2627-4e93-9596-fb0d43416b99](https://user-images.githubusercontent.com/130234949/232122614-73bb655d-c0f3-421d-a640-69219db18fa7.png)
+> art by Marianne North, Cozy Botanical garden and South-American The Alhambra, Thunderstorm, Detailed illustration, Private Press, Light caustics, Circular polarizer, Swirling Polyester, Light streaks, absurdres, trending on artstation
+
+# Thank you
+Thank you to the amazing [Stylepile](https://github.com/some9000/StylePile) and [Dynamic Prompts](https://github.com/adieyal/sd-dynamic-prompts) for inspiration.
+Thanks to everyone maintaining this [SD artists list](https://docs.google.com/spreadsheets/d/14xTqtuV3BuKDNhLotB_d1aFlBGnDJOY0BRXJ8-86GpA/edit#gid=0)
+Thanks to openart.ai for setting up the very helpful [prompt book](https://openart.ai/promptbook)
+Thanks to this [ai art modifier guide](https://www.the-ai-art.com/modifiers)
+Everyone at the [stable diffusion subreddit](https://www.reddit.com/r/StableDiffusion/) for inspiration and sharing workflows

@@ -22,7 +22,7 @@ def csv_to_list(csvfilename):
         csvlist = []
         script_dir = os.path.dirname(os.path.abspath(__file__))
         full_path = os.path.join(script_dir, ".\\csvfiles\\" )
-        with open(full_path + csvfilename + ".csv", "r", newline="") as file:
+        with open(full_path + csvfilename + ".csv", "r", newline="",encoding="utf8") as file:
                 reader = csv.reader(file, delimiter=",")
                 for row in reader:
                         csvlist.append(row[0])

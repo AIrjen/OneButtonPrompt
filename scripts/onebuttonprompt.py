@@ -112,10 +112,11 @@ class Script(scripts.Script):
         batchsize = p.batch_size
         p.n_iter = 1
         p.batch_size = 1
+        originalprompt = p.prompt
 
 
         for i in range(batches):
-            p.prompt = build_dynamic_prompt(insanitylevel,subject,artist, imagetype) + ", " + p.prompt  # add existing prompt to the back?
+            p.prompt = build_dynamic_prompt(insanitylevel,subject,artist, imagetype) + ", " + originalprompt  # add existing prompt to the back?
             for j in range(batchsize):
        
                 processed = process_images(p)

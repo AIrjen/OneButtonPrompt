@@ -4,7 +4,7 @@ import os
 
 def random_read_from_csv(filename):
     script_dir = os.path.dirname(os.path.abspath(__file__))  # Script directory
-    full_path = os.path.join(script_dir, ".\\csvfiles\\" )
+    full_path = os.path.join(script_dir, "./csvfiles/" )
     with open(full_path + filename + ".csv", "r",encoding="utf8") as csv_file:
             csv_reader = csv.reader(csv_file)
             output = (random.choice([line[0] for line in csv_reader]))

@@ -12,6 +12,7 @@ from build_dynamic_prompt import *
 subjects = ["all","object","animal","humanoid", "landscape", "concept"]
 artists = ["all", "none"]
 imagetypes = ["all", "photograph", "octane render","digital art","concept art", "painting", "portait"]
+promptmode = ["at the back", "in the front"]
 
 
 class Script(scripts.Script):
@@ -36,6 +37,10 @@ class Script(scripts.Script):
                 with gr.Column():
                     imagetype = gr.Dropdown(
                                     imagetypes, label="type of image", value="all")
+            with gr.Row():
+                with gr.Column():
+                    promptlocation = gr.Dropdown(
+                                    promptmode, label="Location of existing prompt", value="at the back")
             with gr.Row():
                     gr.Markdown(
                         """
@@ -97,15 +102,15 @@ class Script(scripts.Script):
                         </font>
                         """
                         )
-        return [insanitylevel,subject, artist, imagetype]
+        return [insanitylevel,subject, artist, imagetype, promptlocation]
             
-    def run(self, p, insanitylevel, subject, artist, imagetype):
+    def run(self, p, insanitylevel, subject, artist, imagetype, promptlocation):
         
         images = []
         infotexts = []
 
         if p.prompt != "":
-            print("Prompt is not empty, adding current prompt to the end of the generated prompt")
+            print("Prompt is not empty, adding current prompt " + promptlocation + " of the generated prompt")
         
         batches = p.n_iter
         initialbatchsize = p.batch_size
@@ -116,7 +121,11 @@ class Script(scripts.Script):
 
 
         for i in range(batches):
-            p.prompt = build_dynamic_prompt(insanitylevel,subject,artist, imagetype) + ", " + originalprompt  # add existing prompt to the back?
+            
+            if(promptlocation == "in the front"):
+                p.prompt = originalprompt + ", " + build_dynamic_prompt(insanitylevel,subject,artist, imagetype)
+            else:
+                p.prompt = build_dynamic_prompt(insanitylevel,subject,artist, imagetype) + ", " + originalprompt  # add existing prompt to the back?
             for j in range(batchsize):
        
                 processed = process_images(p)

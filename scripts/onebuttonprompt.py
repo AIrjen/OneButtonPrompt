@@ -13,7 +13,7 @@ subjects = ["all","object","animal","humanoid", "landscape", "concept"]
 artists = ["all", "none"]
 imagetypes = ["all", "photograph", "octane render","digital art","concept art", "painting", "portait"]
 promptmode = ["at the back", "in the front"]
-promptbleed = [1,2,3,4,5,6,7,8]
+promptcompounder = [1,2,3,4,5]
 
 
 class Script(scripts.Script):
@@ -116,37 +116,30 @@ class Script(scripts.Script):
                         )
         with gr.Tab("Advanced"):
             with gr.Row():
-                promptbleedlevel = gr.Dropdown(
-                    promptbleed, label="decker12 mode", value=1)
+                promptcompounderlevel = gr.Dropdown(
+                    promptcompounder, label="Prompt compunder", value=1)
             with gr.Row():
                 gr.Markdown(
                     """
-                    ### decker12 mode
+                    ### Prompt compounder
                     
                     <font size="2">
-                    Named after the original redditor, decker12, who found this bug. After each batch, it would start compounding older prompts on top of the new prompt. They would bleed into eachother.
+                    Normally, it creates a single random prompt. With prompt compounder, it will generate multiple prompts and compound them together. 
                     
-                    A question was raised by redditor drone2222, to bring this back as a toggle, since it did create interesting results. So here it is. 
-
-                    This value now determines how many prompt should bleed into eachother. Keep it at 1 for normal prompting!
-                    For a value of 3 the following happens when generating multiple batches:
-
-                    batch 1: prompt A
-
-                    batch 2: prompt B + A
-
-                    batch 3: Prompt C + B + A
-
-                    batch 4: Prompt D + C + B
-
+                    Keep at 1 for normal behavior.
+                    Set to different values to compound that many prompts together. My suggestion is to try 2 first.
+                    
+                    This was originally a bug in the first release when using multiple batches, now brought back as a feature. 
+                    Raised by redditor drone2222, to bring this back as a toggle, since it did create interesting results. So here it is. 
+                    
                     </font>
                     
                     """
                     )
                 
-        return [insanitylevel,subject, artist, imagetype, promptlocation, promptbleedlevel]
+        return [insanitylevel,subject, artist, imagetype, promptlocation, promptcompounderlevel]
             
-    def run(self, p, insanitylevel, subject, artist, imagetype, promptlocation, promptbleedlevel):
+    def run(self, p, insanitylevel, subject, artist, imagetype, promptlocation, promptcompounderlevel):
         
         images = []
         infotexts = []
@@ -160,31 +153,33 @@ class Script(scripts.Script):
         p.n_iter = 1
         p.batch_size = 1
         originalprompt = p.prompt
-        promptlist = []
-        promptlistcounter = 1
-        promptbleedlevel += 1 #if its 0 we want 1, etc
+
 
 
         for i in range(batches):
             
-            # prompt bleeding
-            frompromptlistcounter = promptlistcounter - promptbleedlevel
-            if frompromptlistcounter < 0:
-                frompromptlistcounter = 0
-            promptlist.append(build_dynamic_prompt(insanitylevel,subject,artist, imagetype))
+            # prompt compounding
+            print("Starting generating the prompt")
+            preppedprompt = ""
+            for i in range(promptcompounderlevel):
+                preppedprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype)
+                if i + 1 != promptcompounderlevel:
+                    preppedprompt += ", "
 
-            preppedprompt = ', '.join(promptlist[frompromptlistcounter:promptlistcounter])
-
-            if(promptlocation == "in the front"):
+            if(promptlocation == "in the front" and originalprompt != ""):
                 p.prompt = originalprompt + ", " + preppedprompt
+            elif(promptlocation == "at the back" and originalprompt != ""):
+                p.prompt = preppedprompt + ", " + originalprompt  # add existing prompt to the back?
             else:
-                p.prompt = preppedprompt+ ", " + originalprompt  # add existing prompt to the back?
-
-            promptlistcounter += 1
+                p.prompt = preppedprompt  # dont add anything
 
 
             for j in range(batchsize):
        
+                print(" ")
+                print("Full prompt to be processed:")
+                print(" ")
+                print(p.prompt)
                 processed = process_images(p)
                 images += processed.images
                 infotexts += processed.infotexts

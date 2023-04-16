@@ -13,6 +13,7 @@ subjects = ["all","object","animal","humanoid", "landscape", "concept"]
 artists = ["all", "none"]
 imagetypes = ["all", "photograph", "octane render","digital art","concept art", "painting", "portait"]
 promptmode = ["at the back", "in the front"]
+promptbleed = [1,2,3,4,5,6,7,8]
 
 
 class Script(scripts.Script):
@@ -99,12 +100,53 @@ class Script(scripts.Script):
 
                         6. portait
 
+
+
+                        ### Location of existing prompt
+
+                        <font size="2">
+                        If you put a prompt in the prompt field, it will be added onto the generated prompt. You can determine where to put it in the front or the back of the generated prompt.
+                        
+                        1. at the back
+
+                        2. in the front
+
                         </font>
                         """
                         )
-        return [insanitylevel,subject, artist, imagetype, promptlocation]
+        with gr.Tab("Advanced"):
+            with gr.Row():
+                promptbleedlevel = gr.Dropdown(
+                    promptbleed, label="decker12 mode", value=1)
+            with gr.Row():
+                gr.Markdown(
+                    """
+                    ### decker12 mode
+                    
+                    <font size="2">
+                    Named after the original redditor, decker12, who found this bug. After each batch, it would start compounding older prompts on top of the new prompt. They would bleed into eachother.
+                    
+                    A question was raised by redditor drone2222, to bring this back as a toggle, since it did create interesting results. So here it is. 
+
+                    This value now determines how many prompt should bleed into eachother. Keep it at 1 for normal prompting!
+                    For a value of 3 the following happens when generating multiple batches:
+
+                    batch 1: prompt A
+
+                    batch 2: prompt B + A
+
+                    batch 3: Prompt C + B + A
+
+                    batch 4: Prompt D + C + B
+
+                    </font>
+                    
+                    """
+                    )
+                
+        return [insanitylevel,subject, artist, imagetype, promptlocation, promptbleedlevel]
             
-    def run(self, p, insanitylevel, subject, artist, imagetype, promptlocation):
+    def run(self, p, insanitylevel, subject, artist, imagetype, promptlocation, promptbleedlevel):
         
         images = []
         infotexts = []
@@ -118,14 +160,29 @@ class Script(scripts.Script):
         p.n_iter = 1
         p.batch_size = 1
         originalprompt = p.prompt
+        promptlist = []
+        promptlistcounter = 1
+        promptbleedlevel += 1 #if its 0 we want 1, etc
 
 
         for i in range(batches):
             
+            # prompt bleeding
+            frompromptlistcounter = promptlistcounter - promptbleedlevel
+            if frompromptlistcounter < 0:
+                frompromptlistcounter = 0
+            promptlist.append(build_dynamic_prompt(insanitylevel,subject,artist, imagetype))
+
+            preppedprompt = ', '.join(promptlist[frompromptlistcounter:promptlistcounter])
+
             if(promptlocation == "in the front"):
-                p.prompt = originalprompt + ", " + build_dynamic_prompt(insanitylevel,subject,artist, imagetype)
+                p.prompt = originalprompt + ", " + preppedprompt
             else:
-                p.prompt = build_dynamic_prompt(insanitylevel,subject,artist, imagetype) + ", " + originalprompt  # add existing prompt to the back?
+                p.prompt = preppedprompt+ ", " + originalprompt  # add existing prompt to the back?
+
+            promptlistcounter += 1
+
+
             for j in range(batchsize):
        
                 processed = process_images(p)

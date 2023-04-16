@@ -449,6 +449,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         if(uncommon_dist(insanitylevel)):
             completeprompt = add_from_csv(completeprompt, "vomit", 1, "","")
 
+    #adding a great work of art, like starry night has cool effects. But this should happen only very rarely.
+    if(novel_dist(insanitylevel)):
+        completeprompt = add_from_csv(completeprompt, "greatworks", 1, "","")
 
     # everyone loves the adding quality. The better models don't need this, but lets add it anyway
     if(uncommon_dist(insanitylevel)):

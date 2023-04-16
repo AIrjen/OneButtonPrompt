@@ -25,3 +25,9 @@ def unique_dist(insanitylevel):
         if(roll):
             print("Critical hit! Something unique has been added to the prompt")
         return roll
+
+def novel_dist(insanitylevel):
+        roll = (random.randint(1, 500)<insanitylevel)
+        if(roll):
+            print("Uh, something novel has been added to the prompt. Interesting.")
+        return roll

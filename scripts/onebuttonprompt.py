@@ -128,6 +128,10 @@ class Script(scripts.Script):
                 promptcompounderlevel = gr.Dropdown(
                     promptcompounder, label="Prompt compunder", value=1)
             with gr.Row():
+                ANDtoggle = gr.Checkbox(
+                    label="toggle AND mode"
+                )
+            with gr.Row():
                 gr.Markdown(
                     """
                     ### Prompt compounder
@@ -141,14 +145,15 @@ class Script(scripts.Script):
                     This was originally a bug in the first release when using multiple batches, now brought back as a feature. 
                     Raised by redditor drone2222, to bring this back as a toggle, since it did create interesting results. So here it is. 
                     
+                    You can toggle "AND mode". This will seperate the prompts with an AND and a newline. This can than be used in conjuction with the Latent Couple extension.
                     </font>
                     
                     """
                     )
                 
-        return [insanitylevel,subject, artist, imagetype, promptlocation, promptcompounderlevel]
+        return [insanitylevel,subject, artist, imagetype, promptlocation, promptcompounderlevel, ANDtoggle]
             
-    def run(self, p, insanitylevel, subject, artist, imagetype, promptlocation, promptcompounderlevel):
+    def run(self, p, insanitylevel, subject, artist, imagetype, promptlocation, promptcompounderlevel, ANDtoggle):
         
         images = []
         infotexts = []
@@ -172,8 +177,11 @@ class Script(scripts.Script):
             preppedprompt = ""
             for i in range(promptcompounderlevel):
                 preppedprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype)
-                if i + 1 != promptcompounderlevel:
-                    preppedprompt += ", "
+                if(i + 1 != promptcompounderlevel):
+                    if(ANDtoggle):
+                        preppedprompt += " \n AND "
+                    else:
+                        preppedprompt += ", "
 
             if(promptlocation == "in the front" and originalprompt != ""):
                 p.prompt = originalprompt + ", " + preppedprompt

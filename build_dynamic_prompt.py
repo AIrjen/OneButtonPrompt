@@ -133,13 +133,13 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     
     if(imagetype != "all" and imagetype != "all - force multiple" and imagetype != "only other types"):
             completeprompt += " " + imagetype + " "
-    elif(imagetype == "all - force multiple"):
+    elif(imagetype == "all - force multiple" or rare_dist(insanitylevel)):
         amountofimagetypes = random.randint(2,3)
     elif(imagetype == "only other types"):
         othertype = 1
         completeprompt = add_from_csv(completeprompt, "othertypes", 1, ""," of a ")
     
-    if(imagetype == "all" and normal_dist(insanitylevel)):
+    if(imagetype == "all" and normal_dist(insanitylevel) and amountofimagetypes <= 1):
         amountofimagetypes = 1
     
     for i in range(amountofimagetypes):

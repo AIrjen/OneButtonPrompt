@@ -11,7 +11,7 @@ from build_dynamic_prompt import *
 
 subjects = ["all","object","animal","humanoid", "landscape", "concept"]
 artists = ["all", "none"]
-imagetypes = ["all", "all - force multiple",  "photograph", "octane render","digital art","concept art", "painting", "portait", "anime key visual", "only other types"]
+imagetypes = ["all", "all - force multiple",  "photograph", "octane render","digital art","concept art", "painting", "portrait", "anime key visual", "only other types"]
 promptmode = ["at the back", "in the front"]
 promptcompounder = [1,2,3,4,5]
 
@@ -103,7 +103,7 @@ class Script(scripts.Script):
 
                         7. painting
 
-                        6. portait
+                        6. portrait
 
                         7. anime key visual
                         

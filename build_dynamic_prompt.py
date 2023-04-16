@@ -22,6 +22,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     amountofimagetypes = 0
     hybridorswap = ""
     artistmode = "normal"
+    insideshot = 0
 
     if(insanitylevel==0):
         insanitylevel =  random.randint(1, 10)  # 10 = add everything, 1 is add almost nothing
@@ -150,9 +151,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             completeprompt = add_from_csv(completeprompt, "othertypes", 1, ""," of a ")
 
 
-    if(mainchooser in ["object", "animal", "humanoid", "concept"] and othertype == 0 and "portait" not in completeprompt):
+    if(mainchooser in ["object", "animal", "humanoid", "concept"] and othertype == 0 and "portrait" not in completeprompt):
         completeprompt = add_from_csv(completeprompt, "shotsizes", 0, ""," of a ")
-    elif("portait" in completeprompt):
+    elif("portrait" in completeprompt):
         completeprompt += " ,close up of a "
    # Multiple subjects doesnt really work, need to think of other way to do multiple subjects. Maybe AND in the prompt?
    # if(subjectchooser in ["object", "animal", "humanoid"] and rare_dist(insanitylevel)):
@@ -287,7 +288,14 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             completeprompt += ":" + "-location-" + ":" + str(random.randint(1,5)) +  "]"        
         hybridorswap = ""
 
-        if(normal_dist(insanitylevel)):
+        # shots from inside can create cool effects in landscapes
+        if(legendary_dist(insanitylevel)):
+            insideshot = 1
+            completeprompt += " from inside of a "
+            addontolocation = ["locations","buildings"]
+            completeprompt = add_from_csv(completeprompt, random.choice(addontolocation), 0, "","")
+
+        if(normal_dist(insanitylevel) and insideshot == 0):
             completeprompt += " and "
             if(rare_dist(insanitylevel)):
                 completeprompt = add_from_csv(completeprompt, "descriptors", 0, "","")
@@ -296,6 +304,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
             addontolocation = ["locations","buildings", "vehicles"]
             completeprompt = add_from_csv(completeprompt, random.choice(addontolocation), 0, "","")
+
+
     
     if(subjectchooser == "event"):
         completeprompt = add_from_csv(completeprompt, "events", 0, "\"","\"")
@@ -387,8 +397,13 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         if(uncommon_dist(insanitylevel)):
             completeprompt = add_from_csv(completeprompt, "accessories", 1, "","")
 
+    if(legendary_dist(insanitylevel) and subjectchooser not in ["landscape", "concept"]):
+        insideshot = 1
+        completeprompt += ", from inside of a "
+        addontolocation = ["locations","buildings"]
+        completeprompt = add_from_csv(completeprompt, random.choice(addontolocation), 0, "","")
     
-    if(subjectchooser not in ["landscape", "concept"] and humanspecial != 1 and normal_dist(insanitylevel)):
+    if(subjectchooser not in ["landscape", "concept"] and humanspecial != 1 and insideshot == 0 and normal_dist(insanitylevel)):
         backgroundtype = ["landscape", "buildingbackground", "insidebuilding"]
         match random.choice(backgroundtype):
             case "landscape":

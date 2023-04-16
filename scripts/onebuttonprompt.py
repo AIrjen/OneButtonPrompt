@@ -11,7 +11,7 @@ from build_dynamic_prompt import *
 
 subjects = ["all","object","animal","humanoid", "landscape", "concept"]
 artists = ["all", "none"]
-imagetypes = ["all", "photograph", "octane render","digital art","concept art", "painting", "portait"]
+imagetypes = ["all", "all - force multiple",  "photograph", "octane render","digital art","concept art", "painting", "portait", "anime key visual", "only other types"]
 promptmode = ["at the back", "in the front"]
 promptcompounder = [1,2,3,4,5]
 
@@ -87,18 +87,27 @@ class Script(scripts.Script):
                         <font size="2">
                         There are an immense number of image types, not only paintings and photo's, but also isometric renders and funko pops.
                         You can however, overwrite it with the most popular ones.
+
+
+                        1. all --> normally picks a image type as random. Can choose a 'other' more unique type.
+
+                        2. all - force multiple  --> idea by redditor WestWordHoeDown, it forces to choose between 2 and 3 image types
                         
-                        1. photograph
+                        3. photograph
 
-                        2. octane render
+                        4. octane render
 
-                        3. digital art
+                        5. digital art
 
-                        4. concept art
+                        6. concept art
 
-                        5. painting
+                        7. painting
 
                         6. portait
+
+                        7. anime key visual
+                        
+                        8. only other types --> Will pick only from the more unique types, such as stained glass window or a funko pop
 
 
 

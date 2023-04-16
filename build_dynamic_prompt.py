@@ -19,6 +19,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     humanspecial = 0
     wereanimaladded = 0
     isweighted = 0
+    amountofimagetypes = 0
     hybridorswap = ""
     artistmode = "normal"
 
@@ -129,9 +130,18 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         if artistmode in ["enhancing"]:
             completeprompt += " ["
     
-    if(imagetype != "all"):
+    if(imagetype != "all" and imagetype != "all - force multiple" and imagetype != "only other types"):
             completeprompt += " " + imagetype + " "
-    elif(normal_dist(insanitylevel)):
+    elif(imagetype == "all - force multiple"):
+        amountofimagetypes = random.randint(2,3)
+    elif(imagetype == "only other types"):
+        othertype = 1
+        completeprompt = add_from_csv(completeprompt, "othertypes", 1, ""," of a ")
+    
+    if(imagetype == "all" and normal_dist(insanitylevel)):
+        amountofimagetypes = 1
+    
+    for i in range(amountofimagetypes):
     # one in 6 images is a complex/other type
         if(random.randint(0,5) < 5):
             completeprompt = add_from_csv(completeprompt, "imagetypes", 1, "",",")

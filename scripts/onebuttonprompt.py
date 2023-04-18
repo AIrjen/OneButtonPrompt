@@ -24,7 +24,17 @@ class Script(scripts.Script):
     def show(self, is_img2img):
         return True
 
+        
     def ui(self, is_img2img):
+        def gen_prompt(insanitylevel, subject, artist, imagetype):
+
+            promptlist = []
+
+            for i in range(5):
+                promptlist.append(build_dynamic_prompt(insanitylevel,subject,artist, imagetype))
+
+            return promptlist
+        
         with gr.Tab("Main"):
             with gr.Row():
                 insanitylevel = gr.Slider(1, 10, value=7, step=1, label="Higher levels increases complexity and randomness of generated prompt")
@@ -150,15 +160,52 @@ class Script(scripts.Script):
                     
                     """
                     )
-                
-        return [insanitylevel,subject, artist, imagetype, promptlocation, promptcompounderlevel, ANDtoggle]
+        with gr.Tab("Workflow assist"):
+            with gr.Row():
+                    silentmode = gr.Checkbox(
+                        label="silent mode, turns off prompt generation")
+            with gr.Row():
+                gr.Markdown(
+                     """
+                     <font size="2"> 
+                     Workflow assist, suggestions by redditor Woisek.
+
+                     With silent mode, you turn off the automatic generation of new prompts on generate, and can just use normal prompting. So you can work and finetune any fun prompts without turning of the script.
+
+                     Below here, you can generate a set of random prompts, and start working from there instead.
+                     </font>
+                     """)
+            with gr.Row():
+                genprom = gr.Button("Generate me some prompts!")
+            with gr.Row():
+                prompt1 = gr.Textbox(label="prompt 1")
+            with gr.Row():
+                prompt2 = gr.Textbox(label="prompt 2")
+            with gr.Row():
+                prompt3 = gr.Textbox(label="prompt 3")
+            with gr.Row():
+                prompt4 = gr.Textbox(label="prompt 4")
+            with gr.Row():
+                prompt5 = gr.Textbox(label="prompt 5")
+
+
+        genprom.click(gen_prompt, inputs=[insanitylevel,subject, artist, imagetype], outputs=[prompt1, prompt2, prompt3,prompt4,prompt5])
+
+        return [insanitylevel,subject, artist, imagetype, promptlocation, promptcompounderlevel, ANDtoggle, silentmode]
             
-    def run(self, p, insanitylevel, subject, artist, imagetype, promptlocation, promptcompounderlevel, ANDtoggle):
+    
+
+    
+    def run(self, p, insanitylevel, subject, artist, imagetype, promptlocation, promptcompounderlevel, ANDtoggle, silentmode):
         
         images = []
         infotexts = []
 
-        if p.prompt != "":
+        if(silentmode and p.prompt != ""):
+            print("Silent mode turned on, not generating a prompt. Using current prompt.")
+        elif(silentmode):
+            print("Warning, silent mode is turned on, but no current prompt has been given.")
+        elif p.prompt != "":
             print("Prompt is not empty, adding current prompt " + promptlocation + " of the generated prompt")
         
         batches = p.n_iter
@@ -172,23 +219,24 @@ class Script(scripts.Script):
 
         for i in range(batches):
             
-            # prompt compounding
-            print("Starting generating the prompt")
-            preppedprompt = ""
-            for i in range(promptcompounderlevel):
-                preppedprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype)
-                if(i + 1 != promptcompounderlevel):
-                    if(ANDtoggle):
-                        preppedprompt += " \n AND "
-                    else:
-                        preppedprompt += ", "
+            if(silentmode == False):
+                # prompt compounding
+                print("Starting generating the prompt")
+                preppedprompt = ""
+                for i in range(promptcompounderlevel):
+                    preppedprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype)
+                    if(i + 1 != promptcompounderlevel):
+                        if(ANDtoggle):
+                            preppedprompt += " \n AND "
+                        else:
+                            preppedprompt += ", "
 
-            if(promptlocation == "in the front" and originalprompt != ""):
-                p.prompt = originalprompt + ", " + preppedprompt
-            elif(promptlocation == "at the back" and originalprompt != ""):
-                p.prompt = preppedprompt + ", " + originalprompt  # add existing prompt to the back?
-            else:
-                p.prompt = preppedprompt  # dont add anything
+                if(promptlocation == "in the front" and originalprompt != ""):
+                    p.prompt = originalprompt + ", " + preppedprompt
+                elif(promptlocation == "at the back" and originalprompt != ""):
+                    p.prompt = preppedprompt + ", " + originalprompt  # add existing prompt to the back?
+                else:
+                    p.prompt = preppedprompt  # dont add anything
 
 
             for j in range(batchsize):
@@ -204,7 +252,8 @@ class Script(scripts.Script):
                 # Only move up a seed, when there are multiple batchsizes, and we had the first one done.
                 if(initialbatchsize != 1):
                     p.seed += 1
-                
+            
+            p.seed +=1    
         # just return all the things
         p.n_iter = 0
         p.batch_size = 0

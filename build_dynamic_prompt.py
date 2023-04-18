@@ -132,7 +132,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             completeprompt += " ["
     
     if(imagetype != "all" and imagetype != "all - force multiple" and imagetype != "only other types"):
-            completeprompt += " " + imagetype + " "
+            completeprompt += " " + imagetype + ", "
     elif(imagetype == "all - force multiple" or rare_dist(insanitylevel)):
         amountofimagetypes = random.randint(2,3)
     elif(imagetype == "only other types"):
@@ -335,6 +335,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         humanspecial = 1
         speciallist = [" riding a -animal- ", "holding a -object- ", " driving a -vehicle-", " visiting a -building-", "with a -animal-", "surrounded by -object-s"]
         completeprompt += random.choice(speciallist)
+        
 
     # SD understands emoji's. Can be used to manipulate facial expressions.
     # emoji, legendary
@@ -466,7 +467,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
     #adding a great work of art, like starry night has cool effects. But this should happen only very rarely.
     if(novel_dist(insanitylevel)):
-        completeprompt = add_from_csv(completeprompt, "greatworks", 1, "","")
+        completeprompt = add_from_csv(completeprompt, "greatworks", 1, "in style of ","")
 
     # everyone loves the adding quality. The better models don't need this, but lets add it anyway
     if(uncommon_dist(insanitylevel)):
@@ -611,6 +612,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
     completeprompt = re.sub('a The', 'The', completeprompt)
     completeprompt = re.sub('ss ', 's ', completeprompt)
+    completeprompt = re.sub('ss, ', 's, ', completeprompt)
 
     completeprompt = re.sub(' +', ' ', completeprompt[2:]) # remove first character, that is always a comma. Remove any excess spaces
 

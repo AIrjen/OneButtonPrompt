@@ -10,7 +10,7 @@ from random_functions import *
 # insanity level controls randomness of propmt 0-10
 # forcesubject van be used to force a certain type of subject
 # Set artistmode to none, to exclude artists 
-def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all"):
+def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False):
 
     completeprompt = ", "
 
@@ -60,7 +60,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     
     # possible?: think about curated artist list?
     artistsplacement = "front"
-    if(uncommon_dist(insanitylevel)):
+    if(uncommon_dist(insanitylevel) and onlyartists == False):
         artistsplacement = "back"
 
     if(artists == "all" and artistsplacement == "front"):
@@ -86,9 +86,14 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         if modeselector < 5 and end - step >= 2:
             artistmodeslist = ["hybrid", "stopping", "adding", "switching", "enhancing"]
             artistmode = artistmodeslist[modeselector]
-            if artistmode in ["hybrid","switching"] and end - step == 1:
+            if (artistmode in ["hybrid","switching"] and end - step == 1):
                 artistmode = "normal"
         
+        if(onlyartists == True and artistmode == "enhancing"):
+            artistmode = "normal"
+        if(onlyartists == True and step == end):
+            step = step - 1
+
         if artistmode in ["hybrid", "stopping", "adding","switching"]:
             completeprompt += " ["
             
@@ -126,14 +131,22 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             completeprompt += "]"
 
 
+        if(onlyartists == True):
+            completeprompt = completeprompt.strip(", ")
+            print("only generated these artists:" + completeprompt)
+            return completeprompt
+
+
         completeprompt = completeprompt + ", "
+
+
 
         if artistmode in ["enhancing"]:
             completeprompt += " ["
     
     if(imagetype != "all" and imagetype != "all - force multiple" and imagetype != "only other types"):
             completeprompt += " " + imagetype + ", "
-    elif(imagetype == "all - force multiple" or rare_dist(insanitylevel)):
+    elif(imagetype == "all - force multiple" or unique_dist(insanitylevel)):
         amountofimagetypes = random.randint(2,3)
     elif(imagetype == "only other types"):
         othertype = 1
@@ -611,8 +624,6 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     completeprompt = re.sub(',\(', ', (', completeprompt)
 
     completeprompt = re.sub('a The', 'The', completeprompt)
-    completeprompt = re.sub('ss ', 's ', completeprompt)
-    completeprompt = re.sub('ss, ', 's, ', completeprompt)
 
     completeprompt = re.sub(' +', ' ', completeprompt[2:]) # remove first character, that is always a comma. Remove any excess spaces
 

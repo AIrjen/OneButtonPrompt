@@ -14,6 +14,7 @@ artists = ["all", "none"]
 imagetypes = ["all", "all - force multiple",  "photograph", "octane render","digital art","concept art", "painting", "portrait", "anime key visual", "only other types"]
 promptmode = ["at the back", "in the front"]
 promptcompounder = [1,2,3,4,5]
+ANDtogglemode = ["comma", "AND", "current prompt + AND", "automatic AND"]
 
 
 class Script(scripts.Script):
@@ -138,9 +139,8 @@ class Script(scripts.Script):
                 promptcompounderlevel = gr.Dropdown(
                     promptcompounder, label="Prompt compunder", value=1)
             with gr.Row():
-                ANDtoggle = gr.Checkbox(
-                    label="toggle AND mode"
-                )
+                ANDtoggle = gr.Dropdown(
+                    ANDtogglemode, label="Prompt seperator mode", value="comma")
             with gr.Row():
                 gr.Markdown(
                     """
@@ -155,7 +155,11 @@ class Script(scripts.Script):
                     This was originally a bug in the first release when using multiple batches, now brought back as a feature. 
                     Raised by redditor drone2222, to bring this back as a toggle, since it did create interesting results. So here it is. 
                     
-                    You can toggle "AND mode". This will seperate the prompts with an AND and a newline. This can than be used in conjuction with the Latent Couple extension.
+                    You can toggle the separator mode. Standardly this is a comma, but you can choose an AND and a newline.
+                    
+                    You can also choose for "current prompt + AND". This is best used in conjuction with the Latent Couple extension when you want some control. Set the prompt compounder to the amount of objects to generate.
+
+                    "automatic AND" is entirely build around Latent Couple. It will pass artists and the amount of people/animals/objects to generate in the prompt automatically. Set the prompt compounder to the amount of objects to generate.
                     </font>
                     
                     """
@@ -163,7 +167,7 @@ class Script(scripts.Script):
         with gr.Tab("Workflow assist"):
             with gr.Row():
                     silentmode = gr.Checkbox(
-                        label="silent mode, turns off prompt generation")
+                        label="surpressing mode, turns off prompt generation")
             with gr.Row():
                 gr.Markdown(
                      """
@@ -172,7 +176,7 @@ class Script(scripts.Script):
 
                      With silent mode, you turn off the automatic generation of new prompts on generate, and can just use normal prompting. So you can work and finetune any fun prompts without turning of the script.
 
-                     Below here, you can generate a set of random prompts, and start working from there instead.
+                     Below here, you can generate a set of random prompts, and start working from there instead. It works on the settings in the Main tab.
                      </font>
                      """)
             with gr.Row():
@@ -223,17 +227,38 @@ class Script(scripts.Script):
                 # prompt compounding
                 print("Starting generating the prompt")
                 preppedprompt = ""
-                for i in range(promptcompounderlevel):
-                    preppedprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype)
-                    if(i + 1 != promptcompounderlevel):
-                        if(ANDtoggle):
-                            preppedprompt += " \n AND "
-                        else:
-                            preppedprompt += ", "
+                if(ANDtoggle == "automatic AND" and originalprompt == ""):
+                    if(artist != "none"):
+                        originalprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype, True) 
+                    if(subject == "humanoid"):
+                        originalprompt += ", " + str(promptcompounderlevel) + " people"
+                    if(subject == "landscape"):
+                        originalprompt += ", landscape"
+                    if(subject == "animal"):
+                        originalprompt += ", " + str(promptcompounderlevel)  + " animals"
+                    if(subject == "object"):
+                        originalprompt += ", " + str(promptcompounderlevel)  + " objects"
 
-                if(promptlocation == "in the front" and originalprompt != ""):
+                if(ANDtoggle != "AND" and ANDtoggle != "comma" and originalprompt != ""):
+                    preppedprompt += originalprompt + " \n AND "
+                
+                for i in range(promptcompounderlevel):
+                    if(ANDtoggle == "automatic AND"):
+                        preppedprompt += originalprompt + ", " + build_dynamic_prompt(insanitylevel,subject,"none", imagetype)
+                    elif(ANDtoggle != "AND" and ANDtoggle != "comma" and originalprompt != ""):
+                        preppedprompt += originalprompt + ", " + build_dynamic_prompt(insanitylevel,subject,artist, imagetype)
+                    else:
+                        preppedprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype)
+                    if(i + 1 != promptcompounderlevel):
+                        if(ANDtoggle == "comma"):
+                            preppedprompt += ", "
+                        else:
+                            preppedprompt += " \n AND "
+
+
+                if(promptlocation == "in the front" and originalprompt != "" and (ANDtoggle == "AND" or ANDtoggle == "comma")):
                     p.prompt = originalprompt + ", " + preppedprompt
-                elif(promptlocation == "at the back" and originalprompt != ""):
+                elif(promptlocation == "at the back" and originalprompt != "" and (ANDtoggle == "AND" or ANDtoggle == "comma")):
                     p.prompt = preppedprompt + ", " + originalprompt  # add existing prompt to the back?
                 else:
                     p.prompt = preppedprompt  # dont add anything

@@ -71,6 +71,57 @@ Set the following URL to install from: https://github.com/AIrjen/OneButtonPrompt
 
 You can also download the files from github directly, and place them under your automatic1111 installation in the \Extensions\ folder.
 
+# Main tab
+
+Guide your prompt here. You can increase the slider, to include more things to put into the prompt. Recommended is keeping it around 3-7. Use 10 at your own risk. I usually run it between 5 and 7.
+
+You an use the Subject Types filter to select on main subject types to generate. Maybe you want only Landscapes, maybe you want only people. Select it here.
+
+Artists have a major impact on the result. Automatically, it will select between 0-3 artists out of 3483 artists for your prompt.
+You can turn it off. Add your own artists to the prompt, and they will be added to the end of the prompt.
+
+Type of image can be used to force a certian direction. For example when using Realistic Vision, it might be a good idea to set it to photograph. For an anime model, you might want to use "Anime key visual"
+
+If you write anything in the prompt field, it will be added to the generated prompt. You can select where it goes, in the front or at the back. Users have been using this to add their own LoRA's or textual inversions. You can also add your own artists here if wou'd like, or anything else you want to have control over.
+
+![image](https://user-images.githubusercontent.com/130234949/233621990-ebbab403-86dd-4764-8448-26ab5729a7e9.png)
+
+
+# Workflow assist tab
+I've added a Workflow assist tab in a recent update.
+
+This tab is designed to help with the workflow of adjusting and maintaining prompts without turning the extension off.
+"Supressing mode" turns off the generated script, so you can just play with any prompt it previously generated.
+
+It also has the options to generate a few prompts with a click. This way you can search or combine interesting ideas together.
+![image](https://user-images.githubusercontent.com/130234949/233619544-f6518cf0-6773-4ce0-8022-dd7540434e96.png)
+
+# Advanced / prompt compounder
+On the advanced tab, there is the option to compound multiple generated prompts together. It is set to 1 for normal behavior, a single prompt. You can up this, for interesting results.
+![image](https://user-images.githubusercontent.com/130234949/233619883-17f58277-d536-4682-bb69-7c86d4a0b1bd.png)
+
+There is however, some tricks build into this, for use with the [Latent Couple](https://github.com/opparco/stable-diffusion-webui-two-shot) extension. Using setting the seperator to "automatic AND" and the Prompt compounder equal to the amount of latent spaces, you can combine interesting things together.
+
+Example here with 3 different landscapes combined together in a single image.
+![00066-4269117636](https://user-images.githubusercontent.com/130234949/233621427-495d3eae-b58e-4f2c-87de-35e51c455e68.png)
+
+>art by Nathan Spoor, landscape
+>
+>AND art by Nathan Spoor, landscape, Unreal Engine, Lively France, Thunderstorm, Rough sketch, Reflected light
+>
+>AND art by Nathan Spoor, landscape, Spellbinding Straw caverns, at Golden hour, Mandala, octane engine
+>
+>AND art by Nathan Spoor, landscape, Refreshing Death Valley National Park and Frustrated Aircraft carrier, Bathed in shadows, Detailed illustration, Lustful
+
+If you want more control, use "current prompt + AND". An example would be "Art by brandon woelfel, 2 people" and setting the subject type to humanoids. This will automatically form the prompt for use with latent couple:
+
+![00040-2515550298](https://user-images.githubusercontent.com/130234949/233620894-55357483-64d4-4185-8c45-ae27f26d8eb1.png)
+>art by brandon woelfel, 2 people 
+>
+> AND art by brandon woelfel, 2 people, Studio shot of a Repugnant Woman, wearing Exhausted Mauve Boyfriend blazer and skinny jeans, Dark hair styled as Straight, Cat Ears, Modern Art, hair light, F/8, Mono Color
+> 
+>AND art by brandon woelfel, 2 people, Abstract, selfie shot angle of a 1920's Nasty slight Michelle Yeoh surrounded by Grapefruits, Blonde hair styled as Short and messy, glowing Turquoise eyes, Anime screencap, Panfuturism, Magic the gathering, photolab, High quality
+
 # off-hands, automatic generation
 This project started out as a personal project, to automatically generate windows wallpapers. The code is still in here, and can be used. You would need to set it up correctly, so it is for advanced users only.
 
@@ -82,10 +133,10 @@ It was build for personal development, so adjust directories and settings accord
 
 # roadmap
 Some ideas I'd like to implement:
-
-- Multisubject (More people at once)
+- Better workflow management in workflow assist tab
+- Curated artist lists
 - SD 2.1 support (inversion negative prompt)
-- Ongoing: list refinements
+- Ongoing: list refinements and new features in the prompt generation
 
 If you have a good idea or suggestion, let me know, or build it yourself ;)
 
@@ -93,41 +144,42 @@ If you have a good idea or suggestion, let me know, or build it yourself ;)
 From the above header, these are the generated prompts, from left to right, top to bottom. Generated during various stages of development. Using deliberate and DPM Karras.
 
 >cinematic shot of a Cruel " The Soul of Enlightenment ", at Blue hour, Cel shaded 
->
+
 >( art by Albert Dubois-Pillet :0.9), art by Bastien Lecouffe-Deharme, Physically based render, Tranquil Delicate Island and Windmill, at Golden hour, Illustration, Amusing, Fish-eye Lens 
->
+
 >art by Aykut Aydogdu,art by Jacob van Ruisdael, 3D Rendering, extreme wide shot of a Wraith, Crusader ,wearing Floral maxi dress and sandals, background is Strait, Illustration, Modern European Ink Painting, loop lighting, octane engine 
->
+
 >art by Gaston Bussière, Photograph, Cottage Progressive Era Tokyo, Orange and Pink hue
->
+
 >art by Jeffrey T. Larson, Tired Illuminating The Misty Mountains and The River Styx, at Dusk, Vaporwave Art, Rembrandt lighting 
->
+
 >art by Jon Foster,art by Ricardo Bofill, extreme wide shot of a " The Industrial Revolution ", background is Appalachian, tilt shift, New Wave Art, Mono Color 
 
 
 
 >( art by Peter Saville :0.7), Layered paper art of a Irritated Airy Blueberry, Screen print, hair light, Depth of field 270mm, Kinemacolor 
->
+
 >( art by Jessie Arms Botke :1.1), ( art by Juan Carreño de Miranda :1.2), ( art by Cerith Wyn Evans :1.2), [ birds-eye-view shot of a Belle Époque portly Tyra Banks cosplaying as Spider-Man, Hosting parties ,wearing Industrial Turquoise Gator skin Tank top and denim skirt, Black hair styled as Space buns, Scarf, background is The Gobi Desert, at Starry night, split diopter, Realistic, Autochrome ::8]
->
+
 >art by Art Spiegelman, Unsightly The Badwater Basin and Stonehenge, Sunny, Ultrarealistic, Psytrance Art, Mono Color 
->
+
 >art by Gerhard Munthe, Long shot of a Classical midweight Asian Chris Hemsworth riding a Koala, Brown hair styled as Short and messy, background is The Palace of Asgard, natural lighting, Low shutter, Film Washi 
->
->art by Peter Eisenman, Vector Art, Serene The Garden of Eden, Stormy weather, Movie still, Peaceful 
-( art by Hans Zatzka :1.3), Aquatint of a Compelling Dubrovnik, at Sunrise, Illustration, Orientalism Art, Black lighting, overhead angle 
+
+>art by Peter Eisenman, Vector Art, Serene The Garden of Eden, Stormy weather, Movie still, Peaceful
+
+>( art by Hans Zatzka :1.3), Aquatint of a Compelling Dubrovnik, at Sunrise, Illustration, Orientalism Art, Black lighting, overhead angle 
 
 
 >art by Guillem H. Pongiluppi, F/1.8 of a " The life of Saint Barbara of Nicomedia ", at Starry night, shallow depth of field, Movie still, Frightening 
->
+
 >art by Jeffrey Smith, close-up shot of a Victorian Bulgarian Kitchen timer, background is The Grand Canyon of the Yellowstone, Spring, Sketch, Peaceful, natural lighting, Calotype 
->
+
 >art by Helen Allingham,art by Étienne Maurice Falconet, Water color painting, Circular polarizer of a Mayan Revival Dominican Female Dragon rider, Auburn hair styled as Messy bun, at Sunrise, deep focus, Sad 
->
+
 >art by Sparth , Spanish Golden Age Tranquil The Angel Oak and Liverpool , Foggy conditions , Screen print , Ukiyo-E , Provia 
->
+
 >by artist Michael Craig-Martin, by artist John Lurie, Zoon lens of a Rustic Fatigued portly Blue Jay, background is Indonesia, Relieving, Mono Color
->
+
 >by artist Brandon Mably, Vector Art, extreme wide shot of a Aggravated Invigorating Fijian snake at Stormy weather, FOV 90 degrees, Vaporwave Art, flat lighting, High Contrast
 
 

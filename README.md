@@ -91,10 +91,12 @@ If you write anything in the prompt field, it will be added to the generated pro
 I've added a Workflow assist tab in a recent update.
 
 This tab is designed to help with the workflow of adjusting and maintaining prompts without turning the extension off.
-"Supressing mode" turns off the generated script, so you can just play with any prompt it previously generated.
+"Workflow mode" turns off the generated script, and uses the Workflow prompt instead.
 
-It also has the options to generate a few prompts with a click. This way you can search or combine interesting ideas together.
-![image](https://user-images.githubusercontent.com/130234949/233619544-f6518cf0-6773-4ce0-8022-dd7540434e96.png)
+This part is still being developed, to have a better UI.
+
+It also has the options to generate a few prompts with a click and send them to the workflow prompt. This way you can search or combine interesting ideas together.
+![image](https://user-images.githubusercontent.com/130234949/233644374-22e2bf6e-da4c-46b7-a248-9c623adc0b99.png)
 
 # Advanced / prompt compounder
 On the advanced tab, there is the option to compound multiple generated prompts together. It is set to 1 for normal behavior, a single prompt. You can up this, for interesting results.

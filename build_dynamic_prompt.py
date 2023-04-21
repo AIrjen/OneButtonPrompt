@@ -418,20 +418,20 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         completeprompt = add_from_csv(completeprompt, random.choice(addontolocation), 0, "","")
     
     if(subjectchooser not in ["landscape", "concept"] and humanspecial != 1 and insideshot == 0 and normal_dist(insanitylevel)):
-        backgroundtype = ["landscape", "buildingbackground", "insidebuilding"]
-        match random.choice(backgroundtype):
-            case "landscape":
-                completeprompt = add_from_csv(completeprompt, "locations", 1, " background is ","")
-            case "buildingbackground":
-                completeprompt += ", background is "
-                if(uncommon_dist(insanitylevel)):
-                    completeprompt = add_from_csv(completeprompt, "descriptors", 0, "","")
-                completeprompt = add_from_csv(completeprompt, "buildings", 0, "","")
-            case "insidebuilding":
-                completeprompt += ", inside a "
-                if(uncommon_dist(insanitylevel)):
-                    completeprompt = add_from_csv(completeprompt, "descriptors", 0, "","")
-                completeprompt = add_from_csv(completeprompt, "buildings", 0, "","")
+        backgroundtypelist = ["landscape", "buildingbackground", "insidebuilding"]
+        backgroundtype = random.choice(backgroundtypelist)
+        if(backgroundtype == "landscape"):
+            completeprompt = add_from_csv(completeprompt, "locations", 1, " background is ","")
+        elif(backgroundtype == "buildingbackground"):
+            completeprompt += ", background is "
+            if(uncommon_dist(insanitylevel)):
+                completeprompt = add_from_csv(completeprompt, "descriptors", 0, "","")
+            completeprompt = add_from_csv(completeprompt, "buildings", 0, "","")
+        elif(backgroundtype == "insidebuilding"):
+            completeprompt += ", inside a "
+            if(uncommon_dist(insanitylevel)):
+                completeprompt = add_from_csv(completeprompt, "descriptors", 0, "","")
+            completeprompt = add_from_csv(completeprompt, "buildings", 0, "","")
 
 
 

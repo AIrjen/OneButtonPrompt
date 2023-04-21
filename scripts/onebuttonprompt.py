@@ -134,6 +134,33 @@ class Script(scripts.Script):
                         </font>
                         """
                         )
+        with gr.Tab("Workflow assist"):
+            with gr.Row():
+                    silentmode = gr.Checkbox(
+                        label="surpressing mode, turns off prompt generation")
+            with gr.Row():
+                gr.Markdown(
+                     """
+                     <font size="2"> 
+                     Workflow assist, suggestions by redditor Woisek.
+
+                     With surpressing mode, you turn off the automatic generation of new prompts on 'generate', and can just use normal prompting. So you can work and finetune any fun prompts without turning of the script.
+
+                     Below here, you can generate a set of random prompts, and start working from there instead. It works on the settings in the Main tab.
+                     </font>
+                     """)
+            with gr.Row():
+                genprom = gr.Button("Generate me some prompts!")
+            with gr.Row():
+                prompt1 = gr.Textbox(label="prompt 1")
+            with gr.Row():
+                prompt2 = gr.Textbox(label="prompt 2")
+            with gr.Row():
+                prompt3 = gr.Textbox(label="prompt 3")
+            with gr.Row():
+                prompt4 = gr.Textbox(label="prompt 4")
+            with gr.Row():
+                prompt5 = gr.Textbox(label="prompt 5")
         with gr.Tab("Advanced"):
             with gr.Row():
                 promptcompounderlevel = gr.Dropdown(
@@ -157,44 +184,40 @@ class Script(scripts.Script):
                     
                     You can toggle the separator mode. Standardly this is a comma, but you can choose an AND and a newline.
                     
-                    You can also choose for "current prompt + AND". This is best used in conjuction with the Latent Couple extension when you want some control. Set the prompt compounder to the amount of objects to generate.
+                    You can also choose for "current prompt + AND". This is best used in conjuction with the Latent Couple extension when you want some control. Set the prompt compounder equal to the amount of areas defined in Laten Couple.
+                    
+                    Example flow:
 
-                    "automatic AND" is entirely build around Latent Couple. It will pass artists and the amount of people/animals/objects to generate in the prompt automatically. Set the prompt compounder to the amount of objects to generate.
+                    Set the Latent Couple extension to 2 area's (standard setting)
+                    
+                    In the main tab, set the subject to humanoids
+                    
+                    In the prompt field then add for example: Art by <artist name>, 2 people
+                    
+                    Set the prompt compounder to: 2
+
+                    "automatic AND" is entirely build around Latent Couple. It will pass artists and the amount of people/animals/objects to generate in the prompt automatically. Set the prompt compounder equal to the amount of areas defined in Laten Couple.
+                    
+                    Example flow:
+
+                    Set the Latent Couple extension to 2 area's (standard setting)
+                    
+                    In the main tab, set the subject to humanoids
+                    
+                    Leave the prompt field empty
+                    
+                    Set the prompt compounder to: 2
+
+
                     </font>
                     
                     """
                     )
-        with gr.Tab("Workflow assist"):
-            with gr.Row():
-                    silentmode = gr.Checkbox(
-                        label="surpressing mode, turns off prompt generation")
-            with gr.Row():
-                gr.Markdown(
-                     """
-                     <font size="2"> 
-                     Workflow assist, suggestions by redditor Woisek.
-
-                     With silent mode, you turn off the automatic generation of new prompts on generate, and can just use normal prompting. So you can work and finetune any fun prompts without turning of the script.
-
-                     Below here, you can generate a set of random prompts, and start working from there instead. It works on the settings in the Main tab.
-                     </font>
-                     """)
-            with gr.Row():
-                genprom = gr.Button("Generate me some prompts!")
-            with gr.Row():
-                prompt1 = gr.Textbox(label="prompt 1")
-            with gr.Row():
-                prompt2 = gr.Textbox(label="prompt 2")
-            with gr.Row():
-                prompt3 = gr.Textbox(label="prompt 3")
-            with gr.Row():
-                prompt4 = gr.Textbox(label="prompt 4")
-            with gr.Row():
-                prompt5 = gr.Textbox(label="prompt 5")
-
-
         genprom.click(gen_prompt, inputs=[insanitylevel,subject, artist, imagetype], outputs=[prompt1, prompt2, prompt3,prompt4,prompt5])
 
+        
+        
+        
         return [insanitylevel,subject, artist, imagetype, promptlocation, promptcompounderlevel, ANDtoggle, silentmode]
             
     

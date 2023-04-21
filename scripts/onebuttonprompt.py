@@ -192,7 +192,7 @@ class Script(scripts.Script):
                     
                     In the main tab, set the subject to humanoids
                     
-                    In the prompt field then add for example: Art by <artist name>, 2 people
+                    In the prompt field then add for example: Art by artistname, 2 people
                     
                     Set the prompt compounder to: 2
 

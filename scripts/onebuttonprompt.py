@@ -13,7 +13,7 @@ subjects = ["all","object","animal","humanoid", "landscape", "concept"]
 artists = ["all", "none"]
 imagetypes = ["all", "all - force multiple",  "photograph", "octane render","digital art","concept art", "painting", "portrait", "anime key visual", "only other types"]
 promptmode = ["at the back", "in the front"]
-promptcompounder = [1,2,3,4,5]
+promptcompounder = ["1", "2", "3", "4", "5"]
 ANDtogglemode = ["comma", "AND", "current prompt + AND", "automatic AND"]
 
 
@@ -185,7 +185,7 @@ class Script(scripts.Script):
         with gr.Tab("Advanced"):
             with gr.Row():
                 promptcompounderlevel = gr.Dropdown(
-                    promptcompounder, label="Prompt compounder", value=1)
+                    promptcompounder, label="Prompt compounder", value="1")
             with gr.Row():
                 ANDtoggle = gr.Dropdown(
                     ANDtogglemode, label="Prompt seperator mode", value="comma")
@@ -280,25 +280,25 @@ class Script(scripts.Script):
                     if(artist != "none"):
                         originalprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype, True) 
                     if(subject == "humanoid"):
-                        originalprompt += ", " + str(promptcompounderlevel) + " people"
+                        originalprompt += ", " + promptcompounderlevel + " people"
                     if(subject == "landscape"):
                         originalprompt += ", landscape"
                     if(subject == "animal"):
-                        originalprompt += ", " + str(promptcompounderlevel)  + " animals"
+                        originalprompt += ", " + promptcompounderlevel  + " animals"
                     if(subject == "object"):
-                        originalprompt += ", " + str(promptcompounderlevel)  + " objects"
+                        originalprompt += ", " + promptcompounderlevel  + " objects"
 
                 if(ANDtoggle != "AND" and ANDtoggle != "comma" and originalprompt != ""):
                     preppedprompt += originalprompt + " \n AND "
                 
-                for i in range(promptcompounderlevel):
+                for i in range(int(promptcompounderlevel)):
                     if(ANDtoggle == "automatic AND"):
                         preppedprompt += originalprompt + ", " + build_dynamic_prompt(insanitylevel,subject,"none", imagetype)
                     elif(ANDtoggle != "AND" and ANDtoggle != "comma" and originalprompt != ""):
                         preppedprompt += originalprompt + ", " + build_dynamic_prompt(insanitylevel,subject,artist, imagetype)
                     else:
                         preppedprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype)
-                    if(i + 1 != promptcompounderlevel):
+                    if(i + 1 != int(promptcompounderlevel)):
                         if(ANDtoggle == "comma"):
                             preppedprompt += ", "
                         else:

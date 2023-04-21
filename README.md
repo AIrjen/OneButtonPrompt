@@ -65,7 +65,7 @@ For each Batch you run, it will create a new prompt. For each batch size, it wil
 
 # Installing in automatic1111
 It can be used in automatic1111. Simply install this from via install from URL. After that you can see OneButtonPrompt in the script fields for txt2img and img2img.
-Set the following URL to install from: https://github.com/AIrjen/OneButtonPrompt/
+Set the following URL to install from: https://github.com/AIrjen/OneButtonPrompt
 
 <img src="https://user-images.githubusercontent.com/130234949/230917712-60a3c1f4-fea6-4ecd-bc68-da52f1ff86fe.png" alt="Easy to install" width="50%" height="50%">
 

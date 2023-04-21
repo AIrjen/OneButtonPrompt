@@ -36,6 +36,10 @@ class Script(scripts.Script):
 
             return promptlist
         
+        def prompttoworkflowprompt(text):
+            return text
+            
+
         with gr.Tab("Main"):
             with gr.Row():
                 insanitylevel = gr.Slider(1, 10, value=7, step=1, label="Higher levels increases complexity and randomness of generated prompt")
@@ -137,34 +141,51 @@ class Script(scripts.Script):
         with gr.Tab("Workflow assist"):
             with gr.Row():
                     silentmode = gr.Checkbox(
-                        label="surpressing mode, turns off prompt generation")
+                        label="Workflow mode, turns off prompt generation and uses below Workflow prompt instead.")
+            with gr.Row():
+                workprompt = gr.Textbox(label="Workflow prompt")
             with gr.Row():
                 gr.Markdown(
                      """
                      <font size="2"> 
                      Workflow assist, suggestions by redditor Woisek.
 
-                     With surpressing mode, you turn off the automatic generation of new prompts on 'generate', and can just use normal prompting. So you can work and finetune any fun prompts without turning of the script.
+                     With Workflow mode, you turn off the automatic generation of new prompts on 'generate', and it will use the Workflow prompt field instead. So you can work and finetune any fun prompts without turning of the script.
 
-                     Below here, you can generate a set of random prompts, and start working from there instead. It works on the settings in the Main tab.
+                     Below here, you can generate a set of random prompts, and send them to the Workflow prompt field. The generation of the prompt uses the settings in the Main tab.
                      </font>
                      """)
             with gr.Row():
                 genprom = gr.Button("Generate me some prompts!")
             with gr.Row():
-                prompt1 = gr.Textbox(label="prompt 1")
+                    with gr.Column():
+                        prompt1 = gr.Textbox(label="prompt 1")
+                    with gr.Column():
+                        prompt1toworkflow = gr.Button("Send this to workflow prompt")
             with gr.Row():
-                prompt2 = gr.Textbox(label="prompt 2")
+                    with gr.Column():
+                        prompt2 = gr.Textbox(label="prompt 2")
+                    with gr.Column():
+                        prompt2toworkflow = gr.Button("Send this to workflow prompt")
             with gr.Row():
-                prompt3 = gr.Textbox(label="prompt 3")
+                    with gr.Column():
+                        prompt3 = gr.Textbox(label="prompt 3")
+                    with gr.Column():
+                        prompt3toworkflow = gr.Button("Send this to workflow prompt")
             with gr.Row():
-                prompt4 = gr.Textbox(label="prompt 4")
+                    with gr.Column():
+                        prompt4 = gr.Textbox(label="prompt 4")
+                    with gr.Column():
+                        prompt4toworkflow = gr.Button("Send this to workflow prompt")
             with gr.Row():
-                prompt5 = gr.Textbox(label="prompt 5")
+                    with gr.Column():
+                        prompt5 = gr.Textbox(label="prompt 5")
+                    with gr.Column():
+                        prompt5toworkflow = gr.Button("Send this to workflow prompt")
         with gr.Tab("Advanced"):
             with gr.Row():
                 promptcompounderlevel = gr.Dropdown(
-                    promptcompounder, label="Prompt compunder", value=1)
+                    promptcompounder, label="Prompt compounder", value=1)
             with gr.Row():
                 ANDtoggle = gr.Dropdown(
                     ANDtogglemode, label="Prompt seperator mode", value="comma")
@@ -215,23 +236,28 @@ class Script(scripts.Script):
                     )
         genprom.click(gen_prompt, inputs=[insanitylevel,subject, artist, imagetype], outputs=[prompt1, prompt2, prompt3,prompt4,prompt5])
 
+        prompt1toworkflow.click(prompttoworkflowprompt, inputs=prompt1, outputs=workprompt)
+        prompt2toworkflow.click(prompttoworkflowprompt, inputs=prompt2, outputs=workprompt)
+        prompt3toworkflow.click(prompttoworkflowprompt, inputs=prompt3, outputs=workprompt)
+        prompt4toworkflow.click(prompttoworkflowprompt, inputs=prompt4, outputs=workprompt)
+        prompt5toworkflow.click(prompttoworkflowprompt, inputs=prompt5, outputs=workprompt)
         
         
         
-        return [insanitylevel,subject, artist, imagetype, promptlocation, promptcompounderlevel, ANDtoggle, silentmode]
+        return [insanitylevel,subject, artist, imagetype, promptlocation, promptcompounderlevel, ANDtoggle, silentmode, workprompt]
             
     
 
     
-    def run(self, p, insanitylevel, subject, artist, imagetype, promptlocation, promptcompounderlevel, ANDtoggle, silentmode):
+    def run(self, p, insanitylevel, subject, artist, imagetype, promptlocation, promptcompounderlevel, ANDtoggle, silentmode, workprompt):
         
         images = []
         infotexts = []
 
-        if(silentmode and p.prompt != ""):
-            print("Silent mode turned on, not generating a prompt. Using current prompt.")
+        if(silentmode and workprompt != ""):
+            print("Workflow mode turned on, not generating a prompt. Using workflow prompt.")
         elif(silentmode):
-            print("Warning, silent mode is turned on, but no current prompt has been given.")
+            print("Warning, workflow mode is turned on, but no workprompt has been given.")
         elif p.prompt != "":
             print("Prompt is not empty, adding current prompt " + promptlocation + " of the generated prompt")
         
@@ -286,6 +312,8 @@ class Script(scripts.Script):
                 else:
                     p.prompt = preppedprompt  # dont add anything
 
+            if(silentmode == True):
+                p.prompt = workprompt
 
             for j in range(batchsize):
        

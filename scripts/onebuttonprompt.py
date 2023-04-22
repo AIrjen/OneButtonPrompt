@@ -44,13 +44,13 @@ class Script(scripts.Script):
             with gr.Row():
                 insanitylevel = gr.Slider(1, 10, value=7, step=1, label="Higher levels increases complexity and randomness of generated prompt")
             with gr.Row():
-                with gr.Column():
+                with gr.Column(scale=1, variant="compact"):
                     subject = gr.Dropdown(
                                     subjects, label="Subject Types", value="all")
-                with gr.Column():
+                with gr.Column(scale=1, variant="compact"):
                     artist = gr.Dropdown(
                                     artists, label="Artists", value="all")
-                with gr.Column():
+                with gr.Column(scale=2, variant="compact"):
                     imagetype = gr.Dropdown(
                                     imagetypes, label="type of image", value="all")
             with gr.Row():
@@ -158,37 +158,38 @@ class Script(scripts.Script):
             with gr.Row():
                 genprom = gr.Button("Generate me some prompts!")
             with gr.Row():
-                    with gr.Column():
+                    with gr.Column(scale=4):
                         prompt1 = gr.Textbox(label="prompt 1")
-                    with gr.Column():
-                        prompt1toworkflow = gr.Button("Send this to workflow prompt")
+                    with gr.Column(scale=1, variant="compact"):
+                        prompt1toworkflow = gr.Button("Send prompt up")
             with gr.Row():
-                    with gr.Column():
+                    with gr.Column(scale=4):
                         prompt2 = gr.Textbox(label="prompt 2")
-                    with gr.Column():
-                        prompt2toworkflow = gr.Button("Send this to workflow prompt")
+                    with gr.Column(scale=1, variant="compact"):
+                        prompt2toworkflow = gr.Button("Send prompt up")
             with gr.Row():
-                    with gr.Column():
+                    with gr.Column(scale=4):
                         prompt3 = gr.Textbox(label="prompt 3")
-                    with gr.Column():
-                        prompt3toworkflow = gr.Button("Send this to workflow prompt")
+                    with gr.Column(scale=1, variant="compact"):
+                        prompt3toworkflow = gr.Button("Send prompt up")
             with gr.Row():
-                    with gr.Column():
+                    with gr.Column(scale=4):
                         prompt4 = gr.Textbox(label="prompt 4")
-                    with gr.Column():
-                        prompt4toworkflow = gr.Button("Send this to workflow prompt")
+                    with gr.Column(scale=1, variant="compact"):
+                        prompt4toworkflow = gr.Button("Send prompt up")
             with gr.Row():
-                    with gr.Column():
+                    with gr.Column(scale=4):
                         prompt5 = gr.Textbox(label="prompt 5")
-                    with gr.Column():
-                        prompt5toworkflow = gr.Button("Send this to workflow prompt")
+                    with gr.Column(scale=1, variant="compact"):
+                        prompt5toworkflow = gr.Button("Send prompt up")
         with gr.Tab("Advanced"):
             with gr.Row():
-                promptcompounderlevel = gr.Dropdown(
-                    promptcompounder, label="Prompt compounder", value="1")
-            with gr.Row():
-                ANDtoggle = gr.Dropdown(
-                    ANDtogglemode, label="Prompt seperator mode", value="comma")
+                with gr.Column(scale=1):
+                    promptcompounderlevel = gr.Dropdown(
+                        promptcompounder, label="Prompt compounder", value="1")
+                with gr.Column(scale=2):
+                    ANDtoggle = gr.Dropdown(
+                        ANDtogglemode, label="Prompt seperator mode", value="comma")
             with gr.Row():
                 gr.Markdown(
                     """

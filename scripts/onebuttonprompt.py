@@ -14,7 +14,7 @@ artists = ["all", "none"]
 imagetypes = ["all", "all - force multiple",  "photograph", "octane render","digital art","concept art", "painting", "portrait", "anime key visual", "only other types"]
 promptmode = ["at the back", "in the front"]
 promptcompounder = ["1", "2", "3", "4", "5"]
-ANDtogglemode = ["comma", "AND", "current prompt + AND", "automatic AND"]
+ANDtogglemode = ["comma", "AND", "current prompt + AND", "current prompt + AND + current prompt", "automatic AND"]
 
 
 class Script(scripts.Script):
@@ -205,7 +205,7 @@ class Script(scripts.Script):
                     
                     You can toggle the separator mode. Standardly this is a comma, but you can choose an AND and a newline.
                     
-                    You can also choose for "current prompt + AND". This is best used in conjuction with the Latent Couple extension when you want some control. Set the prompt compounder equal to the amount of areas defined in Laten Couple.
+                    You can also choose for "current prompt + AND" or "current prompt + AND + current prompt". This is best used in conjuction with the Latent Couple extension when you want some control. Set the prompt compounder equal to the amount of areas defined in Laten Couple.
                     
                     Example flow:
 
@@ -254,13 +254,6 @@ class Script(scripts.Script):
         images = []
         infotexts = []
 
-        if(silentmode and workprompt != ""):
-            print("Workflow mode turned on, not generating a prompt. Using workflow prompt.")
-        elif(silentmode):
-            print("Warning, workflow mode is turned on, but no workprompt has been given.")
-        elif p.prompt != "":
-            print("Prompt is not empty, adding current prompt " + promptlocation + " of the generated prompt")
-        
         batches = p.n_iter
         initialbatchsize = p.batch_size
         batchsize = p.batch_size
@@ -268,6 +261,21 @@ class Script(scripts.Script):
         p.batch_size = 1
         originalprompt = p.prompt
 
+        if(silentmode and workprompt != ""):
+            print("Workflow mode turned on, not generating a prompt. Using workflow prompt.")
+        elif(silentmode):
+            print("Warning, workflow mode is turned on, but no workprompt has been given.")
+        elif p.prompt != "":
+            print("Prompt is not empty, adding current prompt " + promptlocation + " of the generated prompt")
+        
+        if(ANDtoggle == "automatic AND" and artist == "none"):
+            print("Automatic AND and artist mode set to none, don't work together well. Ignoring this setting!")
+            artist = "all"
+
+        if(ANDtoggle == "automatic AND" and originalprompt != ""):
+            print("Automatic AND doesnt work well if there is an original prompt filled in. Ignoring the original prompt!")
+            originalprompt = ""
+        
 
 
         for i in range(batches):
@@ -294,7 +302,7 @@ class Script(scripts.Script):
                 for i in range(int(promptcompounderlevel)):
                     if(ANDtoggle == "automatic AND"):
                         preppedprompt += originalprompt + ", " + build_dynamic_prompt(insanitylevel,subject,"none", imagetype)
-                    elif(ANDtoggle != "AND" and ANDtoggle != "comma" and originalprompt != ""):
+                    elif(ANDtoggle != "AND" and ANDtoggle != "comma" and originalprompt != "" and ANDtoggle != "current prompt + AND" ):
                         preppedprompt += originalprompt + ", " + build_dynamic_prompt(insanitylevel,subject,artist, imagetype)
                     else:
                         preppedprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype)

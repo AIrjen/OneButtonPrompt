@@ -632,6 +632,14 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     completeprompt = re.sub(' +', ' ', completeprompt[2:]) # remove first character, that is always a comma. Remove any excess spaces
 
     completeprompt = completeprompt.strip(", ")
+
+    #just for me, some fun with posting fake dev messages (ala old sim games)
+    if(random.randint(1, 50)==1):
+        devmessagelist = csv_to_list("devmessages")
+        print("")
+        print(random.choice(devmessagelist))
+        print("")
+
     print(completeprompt)
     return completeprompt
     

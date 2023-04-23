@@ -254,6 +254,8 @@ class Script(scripts.Script):
         
         images = []
         infotexts = []
+        all_seeds = []
+        all_prompts = []
 
         batches = p.n_iter
         initialbatchsize = p.batch_size
@@ -261,6 +263,7 @@ class Script(scripts.Script):
         p.n_iter = 1
         p.batch_size = 1
         originalprompt = p.prompt
+
 
         if(silentmode and workprompt != ""):
             print("Workflow mode turned on, not generating a prompt. Using workflow prompt.")
@@ -333,6 +336,8 @@ class Script(scripts.Script):
                 processed = process_images(p)
                 images += processed.images
                 infotexts += processed.infotexts
+                all_seeds.append(processed.seed)
+                all_prompts.append(processed.prompt)
             
                 # Only move up a seed, when there are multiple batchsizes, and we had the first one done.
                 if(initialbatchsize != 1):
@@ -342,4 +347,4 @@ class Script(scripts.Script):
         # just return all the things
         p.n_iter = 0
         p.batch_size = 0
-        return Processed(p=p, images_list=images, info=infotexts[0], infotexts=infotexts)
+        return Processed(p=p, images_list=images, info=infotexts[0], infotexts=infotexts, all_seeds=all_seeds, all_prompts=all_prompts)

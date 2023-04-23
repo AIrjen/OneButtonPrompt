@@ -17,7 +17,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     isphoto = 0
     othertype = 0
     humanspecial = 0
-    wereanimaladded = 0
+    animaladdedsomething = 0
     isweighted = 0
     amountofimagetypes = 0
     hybridorswap = ""
@@ -221,9 +221,10 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             completeprompt += "["
             
         if unique_dist(insanitylevel):
-            wereanimaladded = 1
-            completeprompt += "were-animal-"
-        if(wereanimaladded != 1):
+            animaladdlist = ["baby", "were", "giant", "monster"]
+            animaladdedsomething = 1
+            completeprompt += random.choice(animaladdlist) + " -animal-"
+        if(animaladdedsomething != 1):
             completeprompt = add_from_csv(completeprompt, "animals", 0, "","")
 
         if(hybridorswap == "hybrid"):
@@ -302,7 +303,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         hybridorswap = ""
 
         # shots from inside can create cool effects in landscapes
-        if(legendary_dist(insanitylevel)):
+        if(unique_dist(insanitylevel)):
             insideshot = 1
             completeprompt += " from inside of a "
             addontolocation = ["locations","buildings"]
@@ -408,6 +409,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     if(subjectchooser in ["animal as human,","human","fictional", "non fictional", "humanoid"]  and normal_dist(insanitylevel)):
         completeprompt = add_from_csv(completeprompt, "accessories", 1, "","")
         # Sometimes get 2
+        if(uncommon_dist(insanitylevel)):
+            completeprompt = add_from_csv(completeprompt, "accessories", 1, "","")
+        # or even three, these are fun and often minor :)
         if(uncommon_dist(insanitylevel)):
             completeprompt = add_from_csv(completeprompt, "accessories", 1, "","")
 

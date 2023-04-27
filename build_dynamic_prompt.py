@@ -17,7 +17,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     isphoto = 0
     othertype = 0
     humanspecial = 0
-    wereanimaladded = 0
+    animaladdedsomething = 0
     isweighted = 0
     amountofimagetypes = 0
     hybridorswap = ""
@@ -59,11 +59,19 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     hybridhumanlist = ["-fictional-", "-nonfictional-"]
     
     # possible?: think about curated artist list?
+
+    # create artist list to use in the code, maybe based on category
+    if(artists != "all" and artists != "none"):
+        artistlist = artist_category_csv_to_list("artists_and_category",artists)
+    else:
+        artistlist = csv_to_list("artists")
+
+
     artistsplacement = "front"
     if(uncommon_dist(insanitylevel) and onlyartists == False):
         artistsplacement = "back"
 
-    if(artists == "all" and artistsplacement == "front"):
+    if(artists != "none" and artistsplacement == "front"):
         # take 1-3 artists, weighted to 1-2
         step = random.randint(0, 1)
         end = random.randint(1, insanitylevel3)
@@ -104,7 +112,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             if isweighted == 1:
                 completeprompt += " ("
 
-            completeprompt = add_from_csv(completeprompt, "artists", 0, "art by ","")
+            #completeprompt = add_from_csv(completeprompt, "artists", 0, "art by ","")
+            completeprompt += "art by " + random.choice(artistlist)
             
             if isweighted == 1:
                 completeprompt += ":" + str(1 + (random.randint(-3,3)/10)) + ")"       
@@ -221,9 +230,10 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             completeprompt += "["
             
         if unique_dist(insanitylevel):
-            wereanimaladded = 1
-            completeprompt += "were-animal-"
-        if(wereanimaladded != 1):
+            animaladdlist = ["baby", "were", "giant", "monster"]
+            animaladdedsomething = 1
+            completeprompt += random.choice(animaladdlist) + " -animal-"
+        if(animaladdedsomething != 1):
             completeprompt = add_from_csv(completeprompt, "animals", 0, "","")
 
         if(hybridorswap == "hybrid"):
@@ -302,7 +312,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         hybridorswap = ""
 
         # shots from inside can create cool effects in landscapes
-        if(legendary_dist(insanitylevel)):
+        if(unique_dist(insanitylevel)):
             insideshot = 1
             completeprompt += " from inside of a "
             addontolocation = ["locations","buildings"]
@@ -410,6 +420,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         # Sometimes get 2
         if(uncommon_dist(insanitylevel)):
             completeprompt = add_from_csv(completeprompt, "accessories", 1, "","")
+        # or even three, these are fun and often minor :)
+        if(uncommon_dist(insanitylevel)):
+            completeprompt = add_from_csv(completeprompt, "accessories", 1, "","")
 
     if(legendary_dist(insanitylevel) and subjectchooser not in ["landscape", "concept"]):
         insideshot = 1
@@ -494,7 +507,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
 
 
-    if(artists == "all" and artistsplacement == "back"):
+    if(artists != "none" and artistsplacement == "back"):
         completeprompt += ", "
         # take 1-3 artists, weighted to 1-2
         step = random.randint(0, 1)
@@ -528,7 +541,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             if isweighted == 1:
                 completeprompt += " ("
 
-            completeprompt = add_from_csv(completeprompt, "artists", 0, "art by ","")
+            #completeprompt = add_from_csv(completeprompt, "artists", 0, "art by ","")
+            completeprompt += "art by " + random.choice(artistlist)
             
             if isweighted == 1:
                 completeprompt += ":" + str(1 + (random.randint(-3,3)/10)) + ")"       
@@ -628,6 +642,14 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     completeprompt = re.sub(' +', ' ', completeprompt[2:]) # remove first character, that is always a comma. Remove any excess spaces
 
     completeprompt = completeprompt.strip(", ")
+
+    #just for me, some fun with posting fake dev messages (ala old sim games)
+    if(random.randint(1, 50)==1):
+        devmessagelist = csv_to_list("devmessages")
+        print("")
+        print(random.choice(devmessagelist))
+        print("")
+
     print(completeprompt)
     return completeprompt
     

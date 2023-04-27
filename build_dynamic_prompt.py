@@ -59,11 +59,19 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     hybridhumanlist = ["-fictional-", "-nonfictional-"]
     
     # possible?: think about curated artist list?
+
+    # create artist list to use in the code, maybe based on category
+    if(artists != "all" and artists != "none"):
+        artistlist = artist_category_csv_to_list("artists_and_category",artists)
+    else:
+        artistlist = csv_to_list("artists")
+
+
     artistsplacement = "front"
     if(uncommon_dist(insanitylevel) and onlyartists == False):
         artistsplacement = "back"
 
-    if(artists == "all" and artistsplacement == "front"):
+    if(artists != "none" and artistsplacement == "front"):
         # take 1-3 artists, weighted to 1-2
         step = random.randint(0, 1)
         end = random.randint(1, insanitylevel3)
@@ -104,7 +112,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             if isweighted == 1:
                 completeprompt += " ("
 
-            completeprompt = add_from_csv(completeprompt, "artists", 0, "art by ","")
+            #completeprompt = add_from_csv(completeprompt, "artists", 0, "art by ","")
+            completeprompt += "art by " + random.choice(artistlist)
             
             if isweighted == 1:
                 completeprompt += ":" + str(1 + (random.randint(-3,3)/10)) + ")"       
@@ -498,7 +507,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
 
 
-    if(artists == "all" and artistsplacement == "back"):
+    if(artists != "none" and artistsplacement == "back"):
         completeprompt += ", "
         # take 1-3 artists, weighted to 1-2
         step = random.randint(0, 1)
@@ -532,7 +541,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             if isweighted == 1:
                 completeprompt += " ("
 
-            completeprompt = add_from_csv(completeprompt, "artists", 0, "art by ","")
+            #completeprompt = add_from_csv(completeprompt, "artists", 0, "art by ","")
+            completeprompt += "art by " + random.choice(artistlist)
             
             if isweighted == 1:
                 completeprompt += ":" + str(1 + (random.randint(-3,3)/10)) + ")"       

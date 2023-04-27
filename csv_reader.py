@@ -28,4 +28,15 @@ def csv_to_list(csvfilename):
                         csvlist.append(row[0])
         return csvlist
 
+def artist_category_csv_to_list(csvfilename,category):
+        csvlist = []
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        full_path = os.path.join(script_dir, "./csvfiles/" )
+        with open(full_path + csvfilename + ".csv", "r", newline="",encoding="utf8") as file:
+                reader = csv.DictReader(file, delimiter=",")
+                for row in reader:
+                        if(row[category] == "1"):
+                                csvlist.append(row["Artist"])
+        return csvlist
+
 

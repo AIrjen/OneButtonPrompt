@@ -27,12 +27,12 @@ class Script(scripts.Script):
 
         
     def ui(self, is_img2img):
-        def gen_prompt(insanitylevel, subject, artist, imagetype):
+        def gen_prompt(insanitylevel, subject, artist, imagetype, antistring):
 
             promptlist = []
 
             for i in range(5):
-                promptlist.append(build_dynamic_prompt(insanitylevel,subject,artist, imagetype))
+                promptlist.append(build_dynamic_prompt(insanitylevel,subject,artist, imagetype, False, antistring))
 
             return promptlist
         
@@ -57,6 +57,9 @@ class Script(scripts.Script):
                 with gr.Column():
                     promptlocation = gr.Dropdown(
                                     promptmode, label="Location of existing prompt", value="at the back")
+            with gr.Row():
+                with gr.Column():
+                    antistring = gr.Textbox(label="Filter out following properties (comma seperated). Example ""film grain, purple, cat"" ")
             with gr.Row():
                     gr.Markdown(
                         """
@@ -134,6 +137,16 @@ class Script(scripts.Script):
                         1. at the back
 
                         2. in the front
+
+                        </font>
+
+                        ### Filter values
+                        <font size="2">
+                        You can put comma seperated values here, those will be ignored from any list processing. For example, adding ""film grain, sepia"", will make these values not appear during generation.
+
+                        For advanced users, you can create a permanent file in \\OneButtonPrompt\\userfiles\\ called antilist.csv
+                        
+                        This way, you don't ever have to add it manually again. This file won't be overwritten during upgrades.
 
                         </font>
                         """
@@ -235,7 +248,7 @@ class Script(scripts.Script):
                     
                     """
                     )
-        genprom.click(gen_prompt, inputs=[insanitylevel,subject, artist, imagetype], outputs=[prompt1, prompt2, prompt3,prompt4,prompt5])
+        genprom.click(gen_prompt, inputs=[insanitylevel,subject, artist, imagetype, antistring], outputs=[prompt1, prompt2, prompt3,prompt4,prompt5])
 
         prompt1toworkflow.click(prompttoworkflowprompt, inputs=prompt1, outputs=workprompt)
         prompt2toworkflow.click(prompttoworkflowprompt, inputs=prompt2, outputs=workprompt)
@@ -245,12 +258,12 @@ class Script(scripts.Script):
         
         
         
-        return [insanitylevel,subject, artist, imagetype, promptlocation, promptcompounderlevel, ANDtoggle, silentmode, workprompt]
+        return [insanitylevel,subject, artist, imagetype, promptlocation, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring]
             
     
 
     
-    def run(self, p, insanitylevel, subject, artist, imagetype, promptlocation, promptcompounderlevel, ANDtoggle, silentmode, workprompt):
+    def run(self, p, insanitylevel, subject, artist, imagetype, promptlocation, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring):
         
         images = []
         infotexts = []
@@ -290,7 +303,7 @@ class Script(scripts.Script):
                 preppedprompt = ""
                 if(ANDtoggle == "automatic AND" and originalprompt == ""):
                     if(artist != "none"):
-                        originalprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype, True) 
+                        originalprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype, True, antistring) 
                     if(subject == "humanoid"):
                         originalprompt += ", " + promptcompounderlevel + " people"
                     if(subject == "landscape"):
@@ -305,11 +318,11 @@ class Script(scripts.Script):
                 
                 for i in range(int(promptcompounderlevel)):
                     if(ANDtoggle == "automatic AND"):
-                        preppedprompt += originalprompt + ", " + build_dynamic_prompt(insanitylevel,subject,"none", imagetype)
+                        preppedprompt += originalprompt + ", " + build_dynamic_prompt(insanitylevel,subject,"none", imagetype, False, antistring)
                     elif(ANDtoggle != "AND" and ANDtoggle != "comma" and originalprompt != "" and ANDtoggle != "current prompt + AND" ):
-                        preppedprompt += originalprompt + ", " + build_dynamic_prompt(insanitylevel,subject,artist, imagetype)
+                        preppedprompt += originalprompt + ", " + build_dynamic_prompt(insanitylevel,subject,artist, imagetype, False, antistring)
                     else:
-                        preppedprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype)
+                        preppedprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype, False, antistring)
                     if(i + 1 != int(promptcompounderlevel)):
                         if(ANDtoggle == "comma"):
                             preppedprompt += ", "

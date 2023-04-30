@@ -19,7 +19,7 @@ steps = 0
 
 while steps < loops:
     # build prompt
-    randomprompt = build_dynamic_prompt(7,"object","all","all", False)
+    randomprompt = build_dynamic_prompt(7,"all","all","all", False)
     
     # prompt + size
 

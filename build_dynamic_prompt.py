@@ -10,7 +10,7 @@ from random_functions import *
 # insanity level controls randomness of propmt 0-10
 # forcesubject van be used to force a certain type of subject
 # Set artistmode to none, to exclude artists 
-def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False):
+def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = ""):
 
     completeprompt = ", "
 
@@ -24,52 +24,59 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     artistmode = "normal"
     insideshot = 0
 
+    # first build up a complete anti list. Those values are removing during list building
+    # this uses the antivalues string AND the antilist.csv
+    emptylist = []
+    antilist = csv_to_list("antilist",emptylist , "./userfiles/",1)
+    antivaluelist = antivalues.split(",")
+
+    antilist += antivaluelist
 
     # build all lists here
 
-    colorlist = csv_to_list("colors")
-    animallist = csv_to_list("animals")    
-    materiallist = csv_to_list("materials")
-    objectlist = csv_to_list("objects")
-    fictionallist = csv_to_list("fictional characters")
-    nonfictionallist = csv_to_list("nonfictional characters")
-    conceptsuffixlist = csv_to_list("concept_suffix")
-    buildinglist = csv_to_list("buildings")
-    vehiclelist = csv_to_list("vehicles")
-    outfitlist = csv_to_list("outfits")
-    locationlist = csv_to_list("locations")
+    colorlist = csv_to_list("colors",antilist)
+    animallist = csv_to_list("animals",antilist)    
+    materiallist = csv_to_list("materials",antilist)
+    objectlist = csv_to_list("objects",antilist)
+    fictionallist = csv_to_list("fictional characters",antilist)
+    nonfictionallist = csv_to_list("nonfictional characters",antilist)
+    conceptsuffixlist = csv_to_list("concept_suffix",antilist)
+    buildinglist = csv_to_list("buildings",antilist)
+    vehiclelist = csv_to_list("vehicles",antilist)
+    outfitlist = csv_to_list("outfits",antilist)
+    locationlist = csv_to_list("locations",antilist)
 
-    accessorielist = csv_to_list("accessories")
-    artmovementlist = csv_to_list("artmovements")
-    bodytypelist = csv_to_list("body_types")
-    cameralist = csv_to_list("cameras")
-    colorschemelist = csv_to_list("colorscheme")
-    conceptprefixlist = csv_to_list("concept_prefix")
-    culturelist = csv_to_list("cultures")
-    descriptorlist = csv_to_list("descriptors")
-    devmessagelist = csv_to_list("devmessages")
-    directionlist = csv_to_list("directions")
-    emojilist = csv_to_list("emojis")
-    eventlist = csv_to_list("events")
-    focuslist = csv_to_list("focus")
-    greatworklist = csv_to_list("greatworks")
-    haircolorlist = csv_to_list("haircolors")
-    hairstylelist = csv_to_list("hairstyles")
-    humanactivitylist = csv_to_list("human_activities")
-    humanoidlist = csv_to_list("humanoids")
-    imagetypelist = csv_to_list("imagetypes")
-    joblist = csv_to_list("jobs")
-    lenslist = csv_to_list("lenses")
-    lightinglist = csv_to_list("lighting")
-    malefemalelist = csv_to_list("malefemale")
-    manwomanlist = csv_to_list("manwoman")
-    moodlist = csv_to_list("moods")
-    othertypelist = csv_to_list("othertypes")
-    poselist = csv_to_list("poses")
-    qualitylist = csv_to_list("quality")
-    shotsizelist = csv_to_list("shotsizes")
-    timeperiodlist = csv_to_list("timeperiods")
-    vomitlist = csv_to_list("vomit")
+    accessorielist = csv_to_list("accessories",antilist)
+    artmovementlist = csv_to_list("artmovements",antilist)
+    bodytypelist = csv_to_list("body_types",antilist)
+    cameralist = csv_to_list("cameras",antilist)
+    colorschemelist = csv_to_list("colorscheme",antilist)
+    conceptprefixlist = csv_to_list("concept_prefix",antilist)
+    culturelist = csv_to_list("cultures",antilist)
+    descriptorlist = csv_to_list("descriptors",antilist)
+    devmessagelist = csv_to_list("devmessages",antilist)
+    directionlist = csv_to_list("directions",antilist)
+    emojilist = csv_to_list("emojis",antilist)
+    eventlist = csv_to_list("events",antilist)
+    focuslist = csv_to_list("focus",antilist)
+    greatworklist = csv_to_list("greatworks",antilist)
+    haircolorlist = csv_to_list("haircolors",antilist)
+    hairstylelist = csv_to_list("hairstyles",antilist)
+    humanactivitylist = csv_to_list("human_activities",antilist)
+    humanoidlist = csv_to_list("humanoids",antilist)
+    imagetypelist = csv_to_list("imagetypes",antilist)
+    joblist = csv_to_list("jobs",antilist)
+    lenslist = csv_to_list("lenses",antilist)
+    lightinglist = csv_to_list("lighting",antilist)
+    malefemalelist = csv_to_list("malefemale",antilist)
+    manwomanlist = csv_to_list("manwoman",antilist)
+    moodlist = csv_to_list("moods",antilist)
+    othertypelist = csv_to_list("othertypes",antilist)
+    poselist = csv_to_list("poses",antilist)
+    qualitylist = csv_to_list("quality",antilist)
+    shotsizelist = csv_to_list("shotsizes",antilist)
+    timeperiodlist = csv_to_list("timeperiods",antilist)
+    vomitlist = csv_to_list("vomit",antilist)
 
 
 
@@ -533,7 +540,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     # determine wether we have a photo or not
     if("hoto" in completeprompt):
         isphoto = 1
-        if(common_dist(insanitylevel)):
+        if(common_dist(insanitylevel) and not "film grain" in antilist):
             completeprompt += ", film grain, "
             
     if(isphoto == 1):

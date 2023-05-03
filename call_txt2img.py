@@ -3,6 +3,7 @@ import requests
 import io
 import base64
 import uuid
+import os
 from PIL import Image, PngImagePlugin
 
 def call_txt2img(passingprompt,ratio,upscale,debugmode):
@@ -11,8 +12,8 @@ def call_txt2img(passingprompt,ratio,upscale,debugmode):
     prompt = passingprompt
 
     #rest of prompt things
-    sampler_index = "DPM2 Karras"
-    steps = "20"
+    sampler_index = "DPM++ SDE Karras"
+    steps = "40"
     if(debugmode==1):
         steps="10"
     cfg_scale = "7"
@@ -34,20 +35,34 @@ def call_txt2img(passingprompt,ratio,upscale,debugmode):
     enable_hr = upscale
     if(debugmode==1):
         enable_hr="False"
-    denoising_strength = "0.35"
+    
+    #defaults
     hr_scale = "2"
+    denoising_strength = "0.6"
     hr_upscaler = "4x-UltraSharp"
-    hr_second_pass_steps = str(round(int(steps)/2))
+    #hr_upscaler = "LDSR" # We have the time, why not use LDSR
+
+    if(hr_upscaler== "4x-UltraSharp"):
+        denoising_strength = "0.35"
+        hr_second_pass_steps = str(round(int(steps)/2))
+    if(hr_upscaler== "LDSR"):
+        denoising_strength = "0.5"
+        hr_second_pass_steps = 40
+        hr_scale = "2" # So LDSR wants to always scale up by 4, lower and it starts downsampling the image. But my PC can't handle it.
+    if(hr_upscaler== "R-ESRGAN 4x+"):
+        denoising_strength = "0.5" # default 0.6 is a lot and changes a lot of details
+        hr_second_pass_steps = str(round(int(steps)/2))
 
     
 
     #params to stay the same
     url = "http://127.0.0.1:7860"
-    outputTXT2IMGfolder = 'C:\\automated_output\\txt2img\\'
+    script_dir = os.path.dirname(os.path.abspath(__file__))  # Script directory
+    outputTXT2IMGfolder = os.path.join(script_dir, "./automated_outputs/txt2img/" )
     outputTXT2IMGfilename = str(uuid.uuid4())
     outputTXT2IMGpng = '.png'
     outputTXT2IMGFull = '{}{}{}'.format(outputTXT2IMGfolder,outputTXT2IMGfilename,outputTXT2IMGpng)
-    outputTXT2IMGtxtfolder = 'C:\\automated_output\\prompts\\'
+    outputTXT2IMGtxtfolder = os.path.join(script_dir, "./automated_outputs/prompts/")
     outputTXT2IMGtxt = '.txt'
     outputTXT2IMGtxtFull = '{}{}{}'.format(outputTXT2IMGtxtfolder,outputTXT2IMGfilename,outputTXT2IMGtxt)
 

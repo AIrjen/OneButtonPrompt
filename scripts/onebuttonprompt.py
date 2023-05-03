@@ -8,6 +8,7 @@ from modules.processing import Processed
 from modules.shared import opts, cmd_opts, state
 
 from build_dynamic_prompt import *
+from main import *
 
 subjects = ["all","object","animal","humanoid", "landscape", "concept"]
 artists = ["all", "none", "popular", "greg mode", "3D",	"abstract",	"angular", "anime"	,"architecture",	"art nouveau",	"art deco",	"baroque",	"bauhaus", 	"cartoon",	"character",	"children's illustration", 	"cityscape", 	"clean",	"cloudscape",	"collage",	"colorful",	"comics",	"cubism",	"dark",	"detailed", 	"digital",	"expressionism",	"fantasy",	"fashion",	"fauvism",	"figurativism",	"gore",	"graffiti",	"graphic design",	"high contrast",	"horror",	"impressionism",	"installation",	"landscape",	"light",	"line drawing",	"low contrast",	"luminism",	"magical realism",	"manga",	"melanin",	"messy",	"monochromatic",	"nature",	"nudity",	"photography",	"pop art",	"portrait",	"primitivism",	"psychedelic",	"realism",	"renaissance",	"romanticism",	"scene",	"sci-fi",	"sculpture",	"seascape",	"space",	"stained glass",	"still life",	"storybook realism",	"street art",	"streetscape",	"surrealism",	"symbolism",	"textile",	"ukiyo-e",	"vibrant",	"watercolor",	"whimsical"]
@@ -15,6 +16,9 @@ imagetypes = ["all", "all - force multiple",  "photograph", "octane render","dig
 promptmode = ["at the back", "in the front"]
 promptcompounder = ["1", "2", "3", "4", "5"]
 ANDtogglemode = ["comma", "AND", "current prompt + AND", "current prompt + AND + current prompt", "automatic AND"]
+
+#for autorun and upscale
+sizelist = ["all", "portrait", "wide", "square", "ultrawide"]
 
 
 class Script(scripts.Script):
@@ -248,6 +252,15 @@ class Script(scripts.Script):
                     
                     """
                     )
+        with gr.Tab("Autorun and upscale"):
+            with gr.Row():
+                with gr.Column(scale=1):
+                    amountofimages = gr.Slider(1, 50, value="1", step=1, label="Amount of images to generate")
+                    size = gr.Dropdown(
+                                    sizelist, label="Size to generate", value="all")
+                with gr.Column(scale=1):
+                    startmain = gr.Button("Start generating")
+
         genprom.click(gen_prompt, inputs=[insanitylevel,subject, artist, imagetype, antistring], outputs=[prompt1, prompt2, prompt3,prompt4,prompt5])
 
         prompt1toworkflow.click(prompttoworkflowprompt, inputs=prompt1, outputs=workprompt)
@@ -255,6 +268,8 @@ class Script(scripts.Script):
         prompt3toworkflow.click(prompttoworkflowprompt, inputs=prompt3, outputs=workprompt)
         prompt4toworkflow.click(prompttoworkflowprompt, inputs=prompt4, outputs=workprompt)
         prompt5toworkflow.click(prompttoworkflowprompt, inputs=prompt5, outputs=workprompt)
+
+        startmain.click(generateimages, inputs=[amountofimages,size])
         
         
         

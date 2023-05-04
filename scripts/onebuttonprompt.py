@@ -2,10 +2,11 @@ import modules.scripts as scripts
 import gradio as gr
 import os
 
-from modules import images
+from modules import images, modelloader, paths, shared
 from modules.processing import process_images, Processed
 from modules.processing import Processed
 from modules.shared import opts, cmd_opts, state
+from modules.paths import models_path
 
 from build_dynamic_prompt import *
 from main import *
@@ -19,6 +20,14 @@ ANDtogglemode = ["comma", "AND", "current prompt + AND", "current prompt + AND +
 
 #for autorun and upscale
 sizelist = ["all", "portrait", "wide", "square", "ultrawide"]
+
+model_dir = "Stable-diffusion"
+model_path = os.path.abspath(os.path.join(paths.models_path, model_dir))
+model_url = None
+modellist = modelloader.load_models(model_path=model_path, model_url=model_url, command_path=shared.cmd_opts.ckpt_dir, ext_filter=[".ckpt", ".safetensors"], download_name="v1-5-pruned-emaonly.safetensors", ext_blacklist=[".vae.ckpt", ".vae.safetensors"])
+modellist = [s.replace(model_path, "") for s in modellist]
+modellist.insert(0,"all")
+modellist.insert(0,"currently selected model") # First value us the currently selected model
 
 
 class Script(scripts.Script):
@@ -260,6 +269,7 @@ class Script(scripts.Script):
                                     sizelist, label="Size to generate", value="all")
                 with gr.Column(scale=1):
                     startmain = gr.Button("Start generating")
+                    model = gr.Dropdown(modellist, label="model to use", value="currently selected model")
 
         genprom.click(gen_prompt, inputs=[insanitylevel,subject, artist, imagetype, antistring], outputs=[prompt1, prompt2, prompt3,prompt4,prompt5])
 

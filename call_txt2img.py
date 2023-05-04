@@ -6,7 +6,7 @@ import uuid
 import os
 from PIL import Image, PngImagePlugin
 
-def call_txt2img(passingprompt,ratio,upscale,debugmode):
+def call_txt2img(passingprompt,ratio,upscale,debugmode,filename=""):
 
     #set the prompt!
     prompt = passingprompt
@@ -59,12 +59,14 @@ def call_txt2img(passingprompt,ratio,upscale,debugmode):
     url = "http://127.0.0.1:7860"
     script_dir = os.path.dirname(os.path.abspath(__file__))  # Script directory
     outputTXT2IMGfolder = os.path.join(script_dir, "./automated_outputs/txt2img/" )
-    outputTXT2IMGfilename = str(uuid.uuid4())
+    if(filename==""):
+        filename = str(uuid.uuid4())
+    
     outputTXT2IMGpng = '.png'
-    outputTXT2IMGFull = '{}{}{}'.format(outputTXT2IMGfolder,outputTXT2IMGfilename,outputTXT2IMGpng)
+    outputTXT2IMGFull = '{}{}{}'.format(outputTXT2IMGfolder,filename,outputTXT2IMGpng)
     outputTXT2IMGtxtfolder = os.path.join(script_dir, "./automated_outputs/prompts/")
     outputTXT2IMGtxt = '.txt'
-    outputTXT2IMGtxtFull = '{}{}{}'.format(outputTXT2IMGtxtfolder,outputTXT2IMGfilename,outputTXT2IMGtxt)
+    outputTXT2IMGtxtFull = '{}{}{}'.format(outputTXT2IMGtxtfolder,filename,outputTXT2IMGtxt)
 
 
 

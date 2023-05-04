@@ -239,6 +239,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         completeprompt += random.choice(shotsizelist) + " of a "
     elif("portrait" in completeprompt):
         completeprompt += " ,close up of a "
+    elif(mainchooser in ["landscape"]):
+        completeprompt += " landscape of a "
    
 
     # start subject building

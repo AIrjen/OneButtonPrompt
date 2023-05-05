@@ -27,6 +27,7 @@ modellist.insert(0,"all")
 modellist.insert(0,"currently selected model") # First value us the currently selected model
 
 upscalerlist = get_upscalers()
+upscalerlist.insert(0,"automatic")
 upscalerlist.insert(0,"all")
 
 samplerlist = get_samplers()
@@ -276,6 +277,7 @@ class Script(scripts.Script):
                     with gr.Row(scale=1):                              
                         hiresfix = gr.Checkbox(label="hires. fix", value=True)
                         hiressteps = gr.Slider(0, 100, value = "0", step=1, label="Hires steps")
+                        hiresscale = gr.Slider(1, 4, value = "2", step=0.05, label="Scale")
                         denoisestrength = gr.Slider(0, 1, value="0.60", step=0.01, label="Denoising strength")
                 with gr.Column(scale=1):
                     startmain = gr.Button("Start generating")
@@ -297,7 +299,7 @@ class Script(scripts.Script):
         prompt4toworkflow.click(prompttoworkflowprompt, inputs=prompt4, outputs=workprompt)
         prompt5toworkflow.click(prompttoworkflowprompt, inputs=prompt5, outputs=workprompt)
 
-        startmain.click(generateimages, inputs=[amountofimages,size,model,samplingsteps,cfg,hiresfix,hiressteps,denoisestrength,samplingmethod, upscaler, apiurl])
+        startmain.click(generateimages, inputs=[amountofimages,size,model,samplingsteps,cfg,hiresfix,hiressteps,denoisestrength,samplingmethod, upscaler,hiresscale, apiurl])
         
         
         

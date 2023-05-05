@@ -1,6 +1,7 @@
 import sys, os
 import random
 import uuid
+import re
 from datetime import datetime
 sys.path.append(os.path.abspath(".."))
 
@@ -18,7 +19,7 @@ from model_lists import *
 # C:\automated_output\img2img\
 # C:\automated_output\txt2img\
 # C:\automated_output\Prompts\
-def generateimages(amount = 1, size = "all",model = "currently selected model",samplingsteps = "40",cfg= "7",hiresfix = True,hiressteps ="0",denoisestrength="0.6",samplingmethod="DPM++ SDE Karras", upscaler="R-ESRGAN 4x+", apiurl="http://127.0.0.1:7860"):
+def generateimages(amount = 1, size = "all",model = "currently selected model",samplingsteps = "40",cfg= "7",hiresfix = True,hiressteps ="0",denoisestrength="0.6",samplingmethod="DPM++ SDE Karras", upscaler="R-ESRGAN 4x+", hiresscale="2",apiurl="http://127.0.0.1:7860"):
     loops = int(amount)  # amount of images to generate
     steps = 0
 
@@ -40,7 +41,14 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
 
         # extract the desired substring using slicing
         filename = randomprompt[start_index:end_index]
-        filename = filename.replace("\"", "_")
+
+        # cleanup some unsafe things in the filename
+        filename = filename.replace("\"", "")
+        filename = filename.replace("[", "")
+        filename = filename.replace("|", "")
+        filename = filename.replace("]", "")
+        filename = filename.replace(":", "_")
+        filename = re.sub(r'[0-9]+', '', filename)
 
         if(filename==""):
             filename = str(uuid.uuid4())
@@ -58,17 +66,17 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
         #Check if there is any random value we have to choose or not
         if(model=="all"):
             model = random.choice(modellist)
-            print("Random choice: Going to run on model " + model)
+            print("Going to run on model " + model)
 
         if(samplingmethod=="all"):
             samplingmethod = random.choice(samplerlist)
-            print ("Random choice: Going to run with sampling method " + samplingmethod)   
+            print ("Going to run with sampling method " + samplingmethod)   
 
         if(upscaler=="all"):
             upscaler = random.choice(upscalerlist)
-            print ("Random choice: Going to run with upscaler " + upscaler)  
+            print ("Going to run with upscaler " + upscaler)  
             
-        txt2img = call_txt2img(randomprompt, size ,hiresfix, 0, filenamecomplete,model ,samplingsteps,cfg, hiressteps, denoisestrength,samplingmethod, upscaler,apiurl)
+        txt2img = call_txt2img(randomprompt, size ,hiresfix, 0, filenamecomplete,model ,samplingsteps,cfg, hiressteps, denoisestrength,samplingmethod, upscaler,hiresscale,apiurl)
 
         
         # upscale via img2img first

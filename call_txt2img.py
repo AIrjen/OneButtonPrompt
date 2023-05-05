@@ -5,8 +5,9 @@ import base64
 import uuid
 import os
 from PIL import Image, PngImagePlugin
+from model_lists import *
 
-def call_txt2img(passingprompt,ratio,upscale,debugmode,filename="",model = "currently selected model",samplingsteps = "40",cfg= "7",hiressteps ="0",denoisestrength="0.6",samplingmethod="DPM++ SDE Karras", upscaler="R-ESRGAN 4x+",apiurl="http://127.0.0.1:7860"):
+def call_txt2img(passingprompt,ratio,upscale,debugmode,filename="",model = "currently selected model",samplingsteps = "40",cfg= "7",hiressteps ="0",denoisestrength="0.6",samplingmethod="DPM++ SDE Karras", upscaler="R-ESRGAN 4x+",hiresscale="2",apiurl="http://127.0.0.1:7860"):
 
     #set the prompt!
     prompt = passingprompt
@@ -40,24 +41,40 @@ def call_txt2img(passingprompt,ratio,upscale,debugmode,filename="",model = "curr
         enable_hr="False"
     
     #defaults
-    hr_scale = "2"
+    hr_scale = hiresscale
     denoising_strength = denoisestrength
-    hr_upscaler = upscaler
+    
     hr_second_pass_steps = hiressteps
     #hr_upscaler = "LDSR" # We have the time, why not use LDSR
 
-    #if(hr_upscaler== "4x-UltraSharp"):
-    #    denoising_strength = "0.35"
-    #    hr_second_pass_steps = hiressteps
-    #if(hr_upscaler== "LDSR"):
-    #    denoising_strength = "0.5"
-    #    hr_second_pass_steps = hiressteps
-    #    hr_scale = "2" # So LDSR wants to always scale up by 4, lower and it starts downsampling the image. But my PC can't handle it.
-    #if(hr_upscaler== "R-ESRGAN 4x+"):
-    #    denoising_strength = "0.5" # default 0.6 is a lot and changes a lot of details
-    #    hr_second_pass_steps = hiressteps
+    if(upscaler != "automatic"):
+        hr_upscaler = upscaler
+    else:
+        upscalerlist = get_upscalers()
+        # on automatic, make some choices about what upscaler to use
+        # photos, prefer 4x ultrasharp
+        # anime, cartoon or drawing, go for R-ESRGAN 4x+ Anime6B
+        # else, R-ESRGAN 4x+"
+        if("hoto" in passingprompt and "4x-UltraSharp" in upscalerlist):
+            hr_upscaler = "4x-UltraSharp"
+        elif("anime" in passingprompt or "cartoon" in passingprompt or "draw" in passingprompt):
+            hr_upscaler = "R-ESRGAN 4x+ Anime6B"
+        else:
+            hr_upscaler = "R-ESRGAN 4x+"
 
-    
+        if(hiressteps==0):
+            hiressteps = samplingsteps
+        hr_second_pass_steps = int(hiressteps/2)
+
+        hr_scale = 2
+        
+        if(hr_upscaler== "4x-UltraSharp"):
+            denoising_strength = "0.35"
+        if(hr_upscaler== "R-ESRGAN 4x+ Anime6B+"):
+            denoising_strength = "0.6" # 0.6 is fine for the anime upscaler
+        if(hr_upscaler== "R-ESRGAN 4x+"):
+            denoising_strength = "0.5" # default 0.6 is a lot and changes a lot of details
+            
 
     #params to stay the same
 

@@ -17,7 +17,7 @@ from call_extras import *
 # C:\automated_output\img2img\
 # C:\automated_output\txt2img\
 # C:\automated_output\Prompts\
-def generateimages(amount = 1, size = "all"):
+def generateimages(amount = 1, size = "all",model = "currently selected model",samplingsteps = "40",cfg= "7",hiresfix = True,hiressteps ="0",denoisestrength="0.6",samplingmethod="DPM++ SDE Karras", upscaler="R-ESRGAN 4x+",modellist=[], samplerlist=[],upscalerlist=[]):
     loops = int(amount)  # amount of images to generate
     steps = 0
 
@@ -49,7 +49,22 @@ def generateimages(amount = 1, size = "all"):
             sizelist = ["portrait", "wide", "square", "ultrawide"]
             size = random.choice(sizelist)
 
-        txt2img = call_txt2img(randomprompt, size ,True, 0, filenamecomplete)
+
+        #Check if there is any random value we have to choose or not
+        if(model=="all"):
+            modellist.remove("all")
+            modellist.remove("currently selected model")
+            model = random.choice(modellist)
+
+        if(samplingmethod=="all"):
+            samplerlist.remove("all")
+            samplingmethod = random.choice(samplerlist)
+
+        if(upscaler=="all"):
+            upscalerlist.remove("all")
+            upscaler = random.choice(upscalerlist)
+            
+        txt2img = call_txt2img(randomprompt, size ,hiresfix, 0, filenamecomplete,model ,samplingsteps,cfg, hiressteps, denoisestrength,samplingmethod, upscaler)
 
         
         # upscale via img2img first

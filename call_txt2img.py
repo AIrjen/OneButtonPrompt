@@ -6,17 +6,19 @@ import uuid
 import os
 from PIL import Image, PngImagePlugin
 
-def call_txt2img(passingprompt,ratio,upscale,debugmode,filename=""):
+def call_txt2img(passingprompt,ratio,upscale,debugmode,filename="",model = "currently selected model",samplingsteps = "40",cfg= "7",hiressteps ="0",denoisestrength="0.6",samplingmethod="DPM++ SDE Karras", upscaler="R-ESRGAN 4x+"):
 
     #set the prompt!
     prompt = passingprompt
 
+
+
     #rest of prompt things
-    sampler_index = "DPM++ SDE Karras"
-    steps = "40"
+    sampler_index = samplingmethod
+    steps = samplingsteps
     if(debugmode==1):
         steps="10"
-    cfg_scale = "7"
+    cfg_scale = cfg
 
     #size
     if(ratio=='wide'):
@@ -38,20 +40,21 @@ def call_txt2img(passingprompt,ratio,upscale,debugmode,filename=""):
     
     #defaults
     hr_scale = "2"
-    denoising_strength = "0.6"
-    hr_upscaler = "4x-UltraSharp"
+    denoising_strength = denoisestrength
+    hr_upscaler = upscaler
+    hr_second_pass_steps = hiressteps
     #hr_upscaler = "LDSR" # We have the time, why not use LDSR
 
-    if(hr_upscaler== "4x-UltraSharp"):
-        denoising_strength = "0.35"
-        hr_second_pass_steps = str(round(int(steps)/2))
-    if(hr_upscaler== "LDSR"):
-        denoising_strength = "0.5"
-        hr_second_pass_steps = 40
-        hr_scale = "2" # So LDSR wants to always scale up by 4, lower and it starts downsampling the image. But my PC can't handle it.
-    if(hr_upscaler== "R-ESRGAN 4x+"):
-        denoising_strength = "0.5" # default 0.6 is a lot and changes a lot of details
-        hr_second_pass_steps = str(round(int(steps)/2))
+    #if(hr_upscaler== "4x-UltraSharp"):
+    #    denoising_strength = "0.35"
+    #    hr_second_pass_steps = hiressteps
+    #if(hr_upscaler== "LDSR"):
+    #    denoising_strength = "0.5"
+    #    hr_second_pass_steps = hiressteps
+    #    hr_scale = "2" # So LDSR wants to always scale up by 4, lower and it starts downsampling the image. But my PC can't handle it.
+    #if(hr_upscaler== "R-ESRGAN 4x+"):
+    #    denoising_strength = "0.5" # default 0.6 is a lot and changes a lot of details
+    #    hr_second_pass_steps = hiressteps
 
     
 
@@ -84,8 +87,10 @@ def call_txt2img(passingprompt,ratio,upscale,debugmode,filename=""):
         "hr_scale": hr_scale,
         "hr_upscaler": hr_upscaler,
         "hr_second_pass_steps": hr_second_pass_steps
-
     }
+
+    if(model != "currently selected model"):
+        payload.update({"sd_model": model})
 
     response = requests.post(url=f'{url}/sdapi/v1/txt2img', json=payload)
 

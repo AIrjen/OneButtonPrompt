@@ -2,14 +2,15 @@ import modules.scripts as scripts
 import gradio as gr
 import os
 
-from modules import images, modelloader, paths, shared
+from modules import images
 from modules.processing import process_images, Processed
 from modules.processing import Processed
 from modules.shared import opts, cmd_opts, state
-from modules.paths import models_path
+
 
 from build_dynamic_prompt import *
 from main import *
+from model_lists import *
 
 subjects = ["all","object","animal","humanoid", "landscape", "concept"]
 artists = ["all", "none", "popular", "greg mode", "3D",	"abstract",	"angular", "anime"	,"architecture",	"art nouveau",	"art deco",	"baroque",	"bauhaus", 	"cartoon",	"character",	"children's illustration", 	"cityscape", 	"clean",	"cloudscape",	"collage",	"colorful",	"comics",	"cubism",	"dark",	"detailed", 	"digital",	"expressionism",	"fantasy",	"fashion",	"fauvism",	"figurativism",	"gore",	"graffiti",	"graphic design",	"high contrast",	"horror",	"impressionism",	"installation",	"landscape",	"light",	"line drawing",	"low contrast",	"luminism",	"magical realism",	"manga",	"melanin",	"messy",	"monochromatic",	"nature",	"nudity",	"photography",	"pop art",	"portrait",	"primitivism",	"psychedelic",	"realism",	"renaissance",	"romanticism",	"scene",	"sci-fi",	"sculpture",	"seascape",	"space",	"stained glass",	"still life",	"storybook realism",	"street art",	"streetscape",	"surrealism",	"symbolism",	"textile",	"ukiyo-e",	"vibrant",	"watercolor",	"whimsical"]
@@ -21,47 +22,15 @@ ANDtogglemode = ["comma", "AND", "current prompt + AND", "current prompt + AND +
 #for autorun and upscale
 sizelist = ["all", "portrait", "wide", "square", "ultrawide"]
 
-model_dir = "Stable-diffusion"
-model_path = os.path.abspath(os.path.join(paths.models_path, model_dir))
-model_url = None
-modellist = modelloader.load_models(model_path=model_path, model_url=model_url, command_path=shared.cmd_opts.ckpt_dir, ext_filter=[".ckpt", ".safetensors"], download_name="v1-5-pruned-emaonly.safetensors", ext_blacklist=[".vae.ckpt", ".vae.safetensors"])
-modellist = [s.replace(model_path, "") for s in modellist]
-modellist = [s.replace("\\\\", "") for s in modellist]
-modellist = [s.replace("\\", "") for s in modellist]
-modellist = [s.replace(".ckpt", "") for s in modellist]
-modellist = [s.replace(".safetensors", "") for s in modellist]
+modellist = get_models()
 modellist.insert(0,"all")
 modellist.insert(0,"currently selected model") # First value us the currently selected model
 
-#Samplers are hardcoded in WEBui, so lets do it here as well
-samplerlist = ["all","Euler a", "Euler", "LMS","Heun","DPM2","DPM2 a","DPM++ 2S a","DPM++ 2M","DPM++ SDE","DPM fast","DPM adaptive","LMS Karras","DPM2 Karras","DPM2 a Karras","DPM++ 2S a Karras","DPM++ 2M Karras","DPM++ SDE Karras"]
-samplerlist += ["DDIM","UniPC", "PLMS"]
-
-
-#Upscalers are sort of hardcoded as well for Latent, but not for the 2 others. So build it up!
-latentlist=["Latent","Latent (antialiased)","Latent (bicubic)","Latent (bicubic antialiased)","Latent (nearest)","Latent (nearest-exact)"]
-
-RealESRGAN_dir = "RealESRGAN"
-RealESRGAN_path = os.path.abspath(os.path.join(paths.models_path, RealESRGAN_dir))
-RealESRGANlist = modelloader.load_models(model_path=RealESRGAN_path, model_url=model_url, command_path=shared.cmd_opts.ckpt_dir, ext_filter=[".pt", ".pth"], download_name="", ext_blacklist=[".vae.ckpt", ".vae.safetensors"])
-RealESRGANlist = [s.replace(RealESRGAN_path, "") for s in RealESRGANlist]
-RealESRGANlist = [s.replace("\\\\", "") for s in RealESRGANlist]
-RealESRGANlist = [s.replace("\\", "") for s in RealESRGANlist]
-RealESRGANlist = [s.replace(".pth", "") for s in RealESRGANlist]
-RealESRGANlist = [s.replace(".pt", "") for s in RealESRGANlist]
-
-ESRGAN_dir = "ESRGAN"
-ESRGAN_path = os.path.abspath(os.path.join(paths.models_path, ESRGAN_dir))
-ESRGANlist = modelloader.load_models(model_path=ESRGAN_path, model_url=model_url, command_path=shared.cmd_opts.ckpt_dir, ext_filter=[".pt", ".pth"], download_name="", ext_blacklist=[".vae.ckpt", ".vae.safetensors"])
-ESRGANlist = [s.replace(ESRGAN_path, "") for s in ESRGANlist]
-ESRGANlist = [s.replace("\\\\", "") for s in ESRGANlist]
-ESRGANlist = [s.replace("\\", "") for s in ESRGANlist]
-ESRGANlist = [s.replace(".pth", "") for s in ESRGANlist]
-ESRGANlist = [s.replace(".pt", "") for s in ESRGANlist]
-
-upscalerlist = latentlist + RealESRGANlist + ESRGANlist
+upscalerlist = get_upscalers()
 upscalerlist.insert(0,"all")
 
+samplerlist = get_samplers()
+samplerlist.insert(0,"all")
 
 
 class Script(scripts.Script):
@@ -303,19 +272,21 @@ class Script(scripts.Script):
                                     sizelist, label="Size to generate", value="all")
                     with gr.Row(scale=1):
                         samplingsteps = gr.Slider(1, 100, value="20", step=1, label="Sampling steps")
-                        cfg = gr.Slider(1,20, value="7", step=0.1, label="CFG Scale")
+                        cfg = gr.Slider(1,20, value="7", step=0.1, label="CFG")
                     with gr.Row(scale=1):                              
                         hiresfix = gr.Checkbox(label="hires. fix", value=True)
                         hiressteps = gr.Slider(0, 100, value = "0", step=1, label="Hires steps")
                         denoisestrength = gr.Slider(0, 1, value="0.60", step=0.01, label="Denoising strength")
                 with gr.Column(scale=1):
                     startmain = gr.Button("Start generating")
+                    apiurl = gr.Textbox(label="URL", value="http://127.0.0.1:7860")
                     model = gr.Dropdown(
                                     modellist, label="model to use", value="currently selected model")
-                    samplingmethod = gr.Dropdown(
-                                    samplerlist, label= "Sampling method", value="all")
-                    upscaler = gr.Dropdown(
-                                    upscalerlist, label="hires upscaler", value="all"
+                    with gr.Column(scale=1):
+                        samplingmethod = gr.Dropdown(
+                                        samplerlist, label= "Sampler", value="all")
+                        upscaler = gr.Dropdown(
+                                        upscalerlist, label="hires upscaler", value="all"
                     )
 
         genprom.click(gen_prompt, inputs=[insanitylevel,subject, artist, imagetype, antistring], outputs=[prompt1, prompt2, prompt3,prompt4,prompt5])
@@ -326,7 +297,7 @@ class Script(scripts.Script):
         prompt4toworkflow.click(prompttoworkflowprompt, inputs=prompt4, outputs=workprompt)
         prompt5toworkflow.click(prompttoworkflowprompt, inputs=prompt5, outputs=workprompt)
 
-        startmain.click(generateimages, inputs=[amountofimages,size,model,samplingsteps,cfg,hiresfix,hiressteps,denoisestrength,samplingmethod, upscaler, modellist, samplerlist,upscalerlist])
+        startmain.click(generateimages, inputs=[amountofimages,size,model,samplingsteps,cfg,hiresfix,hiressteps,denoisestrength,samplingmethod, upscaler, apiurl])
         
         
         

@@ -8,6 +8,7 @@ from call_txt2img import *
 from call_img2img import *
 from build_dynamic_prompt import *
 from call_extras import *
+from model_lists import *
 
 
 
@@ -17,9 +18,13 @@ from call_extras import *
 # C:\automated_output\img2img\
 # C:\automated_output\txt2img\
 # C:\automated_output\Prompts\
-def generateimages(amount = 1, size = "all",model = "currently selected model",samplingsteps = "40",cfg= "7",hiresfix = True,hiressteps ="0",denoisestrength="0.6",samplingmethod="DPM++ SDE Karras", upscaler="R-ESRGAN 4x+",modellist=[], samplerlist=[],upscalerlist=[]):
+def generateimages(amount = 1, size = "all",model = "currently selected model",samplingsteps = "40",cfg= "7",hiresfix = True,hiressteps ="0",denoisestrength="0.6",samplingmethod="DPM++ SDE Karras", upscaler="R-ESRGAN 4x+", apiurl="http://127.0.0.1:7860"):
     loops = int(amount)  # amount of images to generate
     steps = 0
+
+    modellist=get_models()
+    samplerlist=get_samplers()
+    upscalerlist=get_upscalers()
 
     while steps < loops:
         # build prompt
@@ -52,19 +57,18 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
 
         #Check if there is any random value we have to choose or not
         if(model=="all"):
-            modellist.remove("all")
-            modellist.remove("currently selected model")
             model = random.choice(modellist)
+            print("Random choice: Going to run on model " + model)
 
         if(samplingmethod=="all"):
-            samplerlist.remove("all")
             samplingmethod = random.choice(samplerlist)
+            print ("Random choice: Going to run with sampling method " + samplingmethod)   
 
         if(upscaler=="all"):
-            upscalerlist.remove("all")
             upscaler = random.choice(upscalerlist)
+            print ("Random choice: Going to run with upscaler " + upscaler)  
             
-        txt2img = call_txt2img(randomprompt, size ,hiresfix, 0, filenamecomplete,model ,samplingsteps,cfg, hiressteps, denoisestrength,samplingmethod, upscaler)
+        txt2img = call_txt2img(randomprompt, size ,hiresfix, 0, filenamecomplete,model ,samplingsteps,cfg, hiressteps, denoisestrength,samplingmethod, upscaler,apiurl)
 
         
         # upscale via img2img first

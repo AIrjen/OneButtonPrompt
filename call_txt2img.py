@@ -6,12 +6,13 @@ import uuid
 import os
 from PIL import Image, PngImagePlugin
 
-def call_txt2img(passingprompt,ratio,upscale,debugmode,filename="",model = "currently selected model",samplingsteps = "40",cfg= "7",hiressteps ="0",denoisestrength="0.6",samplingmethod="DPM++ SDE Karras", upscaler="R-ESRGAN 4x+"):
+def call_txt2img(passingprompt,ratio,upscale,debugmode,filename="",model = "currently selected model",samplingsteps = "40",cfg= "7",hiressteps ="0",denoisestrength="0.6",samplingmethod="DPM++ SDE Karras", upscaler="R-ESRGAN 4x+",apiurl="http://127.0.0.1:7860"):
 
     #set the prompt!
     prompt = passingprompt
 
-
+    #set the URL for the API
+    url = apiurl
 
     #rest of prompt things
     sampler_index = samplingmethod
@@ -59,7 +60,7 @@ def call_txt2img(passingprompt,ratio,upscale,debugmode,filename="",model = "curr
     
 
     #params to stay the same
-    url = "http://127.0.0.1:7860"
+
     script_dir = os.path.dirname(os.path.abspath(__file__))  # Script directory
     outputTXT2IMGfolder = os.path.join(script_dir, "./automated_outputs/txt2img/" )
     if(filename==""):

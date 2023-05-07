@@ -72,8 +72,9 @@ class Script(scripts.Script):
                                     imagetypes, label="type of image", value="all")
             with gr.Row():
                 with gr.Column():
-                    promptlocation = gr.Dropdown(
-                                    promptmode, label="Location of existing prompt", value="at the back")
+                    prefixprompt = gr.Textbox(label="Place this in front of generated prompt (prefix)",value="")
+                    suffixprompt = gr.Textbox(label="Place this in back of generated prompt (suffix)",value="")
+                    negativeprompt = gr.Textbox(label="Use this negative prompt",value="")
             with gr.Row():
                 with gr.Column():
                     antistring = gr.Textbox(label="Filter out following properties (comma seperated). Example ""film grain, purple, cat"" ")
@@ -146,14 +147,11 @@ class Script(scripts.Script):
 
 
 
-                        ### Location of existing prompt
+                        ### Other prompt fields
 
-                        <font size="2">
-                        If you put a prompt in the prompt field, it will be added onto the generated prompt. You can determine where to put it in the front or the back of the generated prompt.
+                        The existing prompt and negative prompt fields are ignored.
                         
-                        1. at the back
-
-                        2. in the front
+                        Add a prompt prefix, suffix and the negative prompt in the respective fields. They will be automatically added during processing.
 
                         </font>
 
@@ -164,6 +162,8 @@ class Script(scripts.Script):
                         For advanced users, you can create a permanent file in \\OneButtonPrompt\\userfiles\\ called antilist.csv
                         
                         This way, you don't ever have to add it manually again. This file won't be overwritten during upgrades.
+
+                        Idea by redditor jonesaid.
 
                         </font>
                         """
@@ -278,7 +278,7 @@ class Script(scripts.Script):
                         hiresfix = gr.Checkbox(label="hires. fix", value=True)
                         hiressteps = gr.Slider(0, 100, value = "0", step=1, label="Hires steps")
                         hiresscale = gr.Slider(1, 4, value = "2", step=0.05, label="Scale")
-                        denoisestrength = gr.Slider(0, 1, value="0.60", step=0.01, label="Denoising strength")
+                        denoisestrength = gr.Slider(0, 1, value="0.60", step=0.01, label="Denoise strength")
                 with gr.Column(scale=1):
                     startmain = gr.Button("Start generating")
                     apiurl = gr.Textbox(label="URL", value="http://127.0.0.1:7860")
@@ -288,8 +288,28 @@ class Script(scripts.Script):
                         samplingmethod = gr.Dropdown(
                                         samplerlist, label= "Sampler", value="all")
                         upscaler = gr.Dropdown(
-                                        upscalerlist, label="hires upscaler", value="all"
-                    )
+                                        upscalerlist, label="hires upscaler", value="all")
+            with gr.Row():
+                gr.Markdown(
+                        """
+                        ### Quality Gate
+                        <font size="2">
+                        Uses aesthetic image scorer extension to check the quality of the image.
+                        
+                        Once turned on, it will retry for n amount of times to get an image with the quality score. If not, it will take the best image so far and continue.
+                        
+                        Idea and inspiration by xKean. 
+                        </font>""")    
+            with gr.Row():
+                    qualitygate = gr.Checkbox(label="Quality Gate", value=False)
+                    quality = gr.Slider(1, 10, value = "7.6", step=0.1, label="Quality")
+                    runs = gr.Slider(1, 50, value = "5", step=1, label="Amount of tries")
+            with gr.Row():
+                gr.Markdown(
+                        """
+                        ### IMG2IMG upscale
+                        """)    
+                    
 
         genprom.click(gen_prompt, inputs=[insanitylevel,subject, artist, imagetype, antistring], outputs=[prompt1, prompt2, prompt3,prompt4,prompt5])
 
@@ -299,16 +319,16 @@ class Script(scripts.Script):
         prompt4toworkflow.click(prompttoworkflowprompt, inputs=prompt4, outputs=workprompt)
         prompt5toworkflow.click(prompttoworkflowprompt, inputs=prompt5, outputs=workprompt)
 
-        startmain.click(generateimages, inputs=[amountofimages,size,model,samplingsteps,cfg,hiresfix,hiressteps,denoisestrength,samplingmethod, upscaler,hiresscale, apiurl])
+        startmain.click(generateimages, inputs=[amountofimages,size,model,samplingsteps,cfg,hiresfix,hiressteps,denoisestrength,samplingmethod, upscaler,hiresscale, apiurl, qualitygate, quality, runs,insanitylevel,subject, artist, imagetype, silentmode, workprompt, antistring, prefixprompt, suffixprompt,negativeprompt])
         
         
         
-        return [insanitylevel,subject, artist, imagetype, promptlocation, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring]
+        return [insanitylevel,subject, artist, imagetype, prefixprompt,suffixprompt,negativeprompt, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring]
             
     
 
     
-    def run(self, p, insanitylevel, subject, artist, imagetype, promptlocation, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring):
+    def run(self, p, insanitylevel, subject, artist, imagetype, prefixprompt,suffixprompt,negativeprompt, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring):
         
         images = []
         infotexts = []
@@ -327,16 +347,17 @@ class Script(scripts.Script):
             print("Workflow mode turned on, not generating a prompt. Using workflow prompt.")
         elif(silentmode):
             print("Warning, workflow mode is turned on, but no workprompt has been given.")
-        elif p.prompt != "":
-            print("Prompt is not empty, adding current prompt " + promptlocation + " of the generated prompt")
+        elif p.prompt != "" or p.negative_prompt != "":
+            print("Please note that existing prompt and negative prompt fields are (no longer) used")
         
         if(ANDtoggle == "automatic AND" and artist == "none"):
             print("Automatic AND and artist mode set to none, don't work together well. Ignoring this setting!")
             artist = "all"
 
-        if(ANDtoggle == "automatic AND" and originalprompt != ""):
-            print("Automatic AND doesnt work well if there is an original prompt filled in. Ignoring the original prompt!")
-            originalprompt = ""
+        if(ANDtoggle == "automatic AND" and (prefixprompt != "" or suffixprompt !="")):
+            print("Automatic AND doesnt work well if there is an prefix or suffix prompt filled in. Ignoring those prompt fields!")
+            prefixprompt = ""
+            suffixprompt = ""
         
 
 
@@ -346,7 +367,7 @@ class Script(scripts.Script):
                 # prompt compounding
                 print("Starting generating the prompt")
                 preppedprompt = ""
-                if(ANDtoggle == "automatic AND" and originalprompt == ""):
+                if(ANDtoggle == "automatic AND"):
                     if(artist != "none"):
                         originalprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype, True, antistring) 
                     if(subject == "humanoid"):
@@ -363,11 +384,11 @@ class Script(scripts.Script):
                 
                 for i in range(int(promptcompounderlevel)):
                     if(ANDtoggle == "automatic AND"):
-                        preppedprompt += originalprompt + ", " + build_dynamic_prompt(insanitylevel,subject,"none", imagetype, False, antistring)
+                        preppedprompt += build_dynamic_prompt(insanitylevel,subject,"none", imagetype, False, antistring, prefixprompt, suffixprompt)
                     elif(ANDtoggle != "AND" and ANDtoggle != "comma" and originalprompt != "" and ANDtoggle != "current prompt + AND" ):
-                        preppedprompt += originalprompt + ", " + build_dynamic_prompt(insanitylevel,subject,artist, imagetype, False, antistring)
+                        preppedprompt += ", " + build_dynamic_prompt(insanitylevel,subject,artist, imagetype, False, antistring, prefixprompt, suffixprompt)
                     else:
-                        preppedprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype, False, antistring)
+                        preppedprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype, False, antistring, prefixprompt, suffixprompt)
                     if(i + 1 != int(promptcompounderlevel)):
                         if(ANDtoggle == "comma"):
                             preppedprompt += ", "
@@ -375,12 +396,15 @@ class Script(scripts.Script):
                             preppedprompt += " \n AND "
 
 
-                if(promptlocation == "in the front" and originalprompt != "" and (ANDtoggle == "AND" or ANDtoggle == "comma")):
-                    p.prompt = originalprompt + ", " + preppedprompt
-                elif(promptlocation == "at the back" and originalprompt != "" and (ANDtoggle == "AND" or ANDtoggle == "comma")):
-                    p.prompt = preppedprompt + ", " + originalprompt  # add existing prompt to the back?
-                else:
-                    p.prompt = preppedprompt  # dont add anything
+                #if(promptlocation == "in the front" and originalprompt != "" and (ANDtoggle == "AND" or ANDtoggle == "comma")):
+                #    p.prompt = originalprompt + ", " + preppedprompt
+                #elif(promptlocation == "at the back" and originalprompt != "" and (ANDtoggle == "AND" or ANDtoggle == "comma")):
+                #    p.prompt = preppedprompt + ", " + originalprompt  # add existing prompt to the back?
+                #else:
+                
+                # set everything ready
+                p.prompt = preppedprompt  
+                p.negative_prompt = negativeprompt
 
             if(silentmode == True):
                 p.prompt = workprompt

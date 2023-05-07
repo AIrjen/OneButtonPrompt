@@ -12,14 +12,7 @@ from call_extras import *
 from model_lists import *
 
 
-
-# needs following directories to exist:
-# C:\automated_output\
-# C:\automated_output\extras\
-# C:\automated_output\img2img\
-# C:\automated_output\txt2img\
-# C:\automated_output\Prompts\
-def generateimages(amount = 1, size = "all",model = "currently selected model",samplingsteps = "40",cfg= "7",hiresfix = True,hiressteps ="0",denoisestrength="0.6",samplingmethod="DPM++ SDE Karras", upscaler="R-ESRGAN 4x+", hiresscale="2",apiurl="http://127.0.0.1:7860"):
+def generateimages(amount = 1, size = "all",model = "currently selected model",samplingsteps = "40",cfg= "7",hiresfix = True,hiressteps ="0",denoisestrength="0.6",samplingmethod="DPM++ SDE Karras", upscaler="R-ESRGAN 4x+", hiresscale="2",apiurl="http://127.0.0.1:7860",qualitygate=False,quality="7.6",runs="5",insanitylevel="5",subject="all", artist="all", imagetype="all",silentmode=False, workprompt="", antistring="",prefixprompt="", suffixprompt="", negativeprompt=""):
     loops = int(amount)  # amount of images to generate
     steps = 0
 
@@ -27,9 +20,14 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
     samplerlist=get_samplers()
     upscalerlist=get_upscalers()
 
+
+    
     while steps < loops:
         # build prompt
-        randomprompt = build_dynamic_prompt(7,"all","all","all", False)
+        if(silentmode==True and workprompt != ""):
+            randomprompt = workprompt
+        else:    
+            randomprompt = build_dynamic_prompt(insanitylevel,subject,artist,imagetype, False,antistring,prefixprompt,suffixprompt)
 
         # make the filename, from from a to the first comma
         start_index = randomprompt.find("of a ") + len("of a ")
@@ -66,19 +64,24 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
         #Check if there is any random value we have to choose or not
         if(model=="all"):
             model = random.choice(modellist)
-            print("Going to run on model " + model)
+            #lets not do inpainting models
+            while "inpaint" in model:
+                model = random.choice(modellist)
 
         if(samplingmethod=="all"):
             samplingmethod = random.choice(samplerlist)
             print ("Going to run with sampling method " + samplingmethod)   
 
-        if(upscaler=="all"):
+        if(upscaler=="all" and hiresfix == True):
             upscaler = random.choice(upscalerlist)
-            print ("Going to run with upscaler " + upscaler)  
-            
-        txt2img = call_txt2img(randomprompt, size ,hiresfix, 0, filenamecomplete,model ,samplingsteps,cfg, hiressteps, denoisestrength,samplingmethod, upscaler,hiresscale,apiurl)
+            print ("Going to run with upscaler " + upscaler)
 
-        
+
+
+            
+        txt2img = call_txt2img(randomprompt, size ,hiresfix, 0, filenamecomplete,model ,samplingsteps,cfg, hiressteps, denoisestrength,samplingmethod, upscaler,hiresscale,apiurl,qualitygate,quality,runs,negativeprompt)
+      
+            
         # upscale via img2img first
         #img2img = call_img2img(txt2img,0.25,1.5,256)
 
@@ -86,3 +89,6 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
         #finalfile = call_extras(img2img)
 
         steps += 1
+    
+    print("")
+    print("All done!")

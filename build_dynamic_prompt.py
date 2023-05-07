@@ -10,9 +10,12 @@ from random_functions import *
 # insanity level controls randomness of propmt 0-10
 # forcesubject van be used to force a certain type of subject
 # Set artistmode to none, to exclude artists 
-def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = ""):
+def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt =""):
 
-    completeprompt = ", "
+    completeprompt = ""
+    completeprompt += prefixprompt
+
+    completeprompt += ", "
 
     isphoto = 0
     othertype = 0
@@ -227,10 +230,13 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     for i in range(amountofimagetypes):
     # one in 6 images is a complex/other type
         if(random.randint(0,5) < 5):
-            completeprompt += random.choice(imagetypelist) + ", "
+            completeprompt += ", " + random.choice(imagetypelist) + " "
         else:
             othertype = 1
-            completeprompt += random.choice(othertypelist) + " of a "
+            completeprompt += ", " + random.choice(othertypelist) + " "
+    
+    if(othertype==1):
+        completeprompt += " of a "
 
 
     # start shot size
@@ -678,6 +684,10 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         while "-animal-" in completeprompt:
             completeprompt = completeprompt.replace('-animal-', random.choice(animallist),1)
 
+    
+    
+    completeprompt += suffixprompt
+    
     completeprompt = re.sub('\[ ', '[', completeprompt)
     completeprompt = re.sub(' \]', ']', completeprompt)
     completeprompt = re.sub(' \|', '|', completeprompt)
@@ -701,6 +711,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     completeprompt = re.sub(' +', ' ', completeprompt[2:]) # remove first character, that is always a comma. Remove any excess spaces
 
     completeprompt = completeprompt.strip(", ")
+
+
 
     #just for me, some fun with posting fake dev messages (ala old sim games)
     if(random.randint(1, 50)==1):

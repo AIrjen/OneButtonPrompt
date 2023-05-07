@@ -3,14 +3,15 @@ import requests
 import io
 import base64
 import uuid
-import os
+import sys, os
 from PIL import Image, PngImagePlugin
 from model_lists import *
 
-def call_txt2img(passingprompt,ratio,upscale,debugmode,filename="",model = "currently selected model",samplingsteps = "40",cfg= "7",hiressteps ="0",denoisestrength="0.6",samplingmethod="DPM++ SDE Karras", upscaler="R-ESRGAN 4x+",hiresscale="2",apiurl="http://127.0.0.1:7860"):
+def call_txt2img(passingprompt,ratio,upscale,debugmode,filename="",model = "currently selected model",samplingsteps = "40",cfg= "7",hiressteps ="0",denoisestrength="0.6",samplingmethod="DPM++ SDE Karras", upscaler="R-ESRGAN 4x+",hiresscale="2",apiurl="http://127.0.0.1:7860", qualitygate=False,quality="7.6",runs="5",negativeprompt=""):
 
     #set the prompt!
     prompt = passingprompt
+    checkprompt = passingprompt.lower()
 
     #set the URL for the API
     url = apiurl
@@ -55,9 +56,9 @@ def call_txt2img(passingprompt,ratio,upscale,debugmode,filename="",model = "curr
         # photos, prefer 4x ultrasharp
         # anime, cartoon or drawing, go for R-ESRGAN 4x+ Anime6B
         # else, R-ESRGAN 4x+"
-        if("hoto" in passingprompt and "4x-UltraSharp" in upscalerlist):
+        if("hoto" in checkprompt and "4x-UltraSharp" in upscalerlist):
             hr_upscaler = "4x-UltraSharp"
-        elif("anime" in passingprompt or "cartoon" in passingprompt or "draw" in passingprompt):
+        elif("anime" in checkprompt or "cartoon" in checkprompt or "draw" in checkprompt or "vector" in checkprompt or "cel shad" in checkprompt or "visual novel" in checkprompt):
             hr_upscaler = "R-ESRGAN 4x+ Anime6B"
         else:
             hr_upscaler = "R-ESRGAN 4x+"
@@ -84,11 +85,19 @@ def call_txt2img(passingprompt,ratio,upscale,debugmode,filename="",model = "curr
         filename = str(uuid.uuid4())
     
     outputTXT2IMGpng = '.png'
-    outputTXT2IMGFull = '{}{}{}'.format(outputTXT2IMGfolder,filename,outputTXT2IMGpng)
+    #outputTXT2IMGFull = '{}{}{}'.format(outputTXT2IMGfolder,filename,outputTXT2IMGpng)
     outputTXT2IMGtxtfolder = os.path.join(script_dir, "./automated_outputs/prompts/")
     outputTXT2IMGtxt = '.txt'
     outputTXT2IMGtxtFull = '{}{}{}'.format(outputTXT2IMGtxtfolder,filename,outputTXT2IMGtxt)
 
+    # params for quality gate
+    isGoodNumber = float(quality)
+    foundgood = False
+    MaxRuns = int(runs)
+    Runs = 0
+    scorelist = []
+    scoredeclist = []
+    imagelist = []
 
 
     #call TXT2IMG
@@ -109,23 +118,87 @@ def call_txt2img(passingprompt,ratio,upscale,debugmode,filename="",model = "curr
 
     if(model != "currently selected model"):
         payload.update({"sd_model": model})
-
-    response = requests.post(url=f'{url}/sdapi/v1/txt2img', json=payload)
-
-    r = response.json()
-
-    for i in r['images']:
-        image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
-
-        png_payload = {
-            "image": "data:image/png;base64," + i
-        }
-        response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json=png_payload)
-
-        pnginfo = PngImagePlugin.PngInfo()
-        pnginfo.add_text("parameters", response2.json().get("info"))
-        image.save(outputTXT2IMGFull, pnginfo=pnginfo)
     
+    if(negativeprompt != ""):
+        payload.update({"negative_prompt": negativeprompt})
+
+    while Runs < MaxRuns:
+
+        # make the filename unique for each run _0, _1, etc.
+        addrun = "_" + str(Runs)
+        filenamefull = filename + addrun
+        outputTXT2IMGFull = '{}{}{}'.format(outputTXT2IMGfolder,filenamefull,outputTXT2IMGpng)
+
+
+        response = requests.post(url=f'{url}/sdapi/v1/txt2img', json=payload)
+
+        r = response.json()
+
+        for i in r['images']:
+            image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
+
+            png_payload = {
+                "image": "data:image/png;base64," + i
+            }
+            response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json=png_payload)
+
+            pnginfo = PngImagePlugin.PngInfo()
+            pnginfo.add_text("parameters", response2.json().get("info"))
+            image.save(outputTXT2IMGFull, pnginfo=pnginfo)
+
+            if(qualitygate==True):
+                # check if the file exists in the parent directory
+                imagescorer_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'stable-diffusion-webui-aesthetic-image-scorer', 'scripts'))
+                print(imagescorer_path)
+                if imagescorer_path not in sys.path:
+                    sys.path.append(imagescorer_path)      
+                try:
+                    
+                    import image_scorer
+                    print("Found aesthetic-image-scorer! Using this to measure the results...")
+                    score = image_scorer.get_score(image)
+                    scoredeclist.append(score)
+                    score = round(score,1)
+
+                    scorelist.append(score)
+                    imagelist.append(outputTXT2IMGFull)
+
+                    print("This image has scored: "+ str(score) + " out of " + str(isGoodNumber))
+                    if(score >= isGoodNumber or debugmode == 1):
+                        foundgood = True
+                        print("Yay its good! Keeping this result.")
+                    else:
+                        runstodo = MaxRuns - Runs - 1
+                        print("Not a good result. Retrying for another " + str(runstodo) + " times or until the image is good enough.")
+                        
+                except ImportError:
+                    foundgood = True # just continue :)
+
+                    # handle the case where the module doesn't exist
+                    print("Could not find the stable-diffusion-webui-aesthetic-image-scorer extension.")
+                    print("Install this extension via the WebUI to use Quality Gate")
+                    pass
+            else:
+                foundgood = True # If there is no quality gate, then everything is good. So we escape this loop
+            
+        Runs += 1
+        if(foundgood == True):
+            break #Break the loop if we found something good. Or if we set it to good :)
+
+    if(len(imagelist) > 0):
+
+        if(foundgood == True):
+            print("Removing any other images generated this run (if any).")
+        else:
+            print("Stopped trying, keeping the best image we had so far.")
+
+        # Get the index of the first occurrence of the maximum value in the list
+        indexofimagetokeep = scoredeclist.index(max(scoredeclist))
+        imagelist.pop(indexofimagetokeep)  
+        #remove all other images
+        for imagelocation in imagelist:
+            os.remove(imagelocation)
+
 
     with open(outputTXT2IMGtxtFull,'w',encoding="utf8") as txt:
         json_object = json.dumps(payload, indent = 4)

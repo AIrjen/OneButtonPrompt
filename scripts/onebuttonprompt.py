@@ -17,7 +17,8 @@ artists = ["all", "none", "popular", "greg mode", "3D",	"abstract",	"angular", "
 imagetypes = ["all", "all - force multiple",  "photograph", "octane render","digital art","concept art", "painting", "portrait", "anime key visual", "only other types"]
 promptmode = ["at the back", "in the front"]
 promptcompounder = ["1", "2", "3", "4", "5"]
-ANDtogglemode = ["comma", "AND", "current prompt + AND", "current prompt + AND + current prompt", "automatic AND"]
+ANDtogglemode = ["none", "automatic", "prefix AND prompt + suffix", "prefix + prefix + prompt + suffix"]
+seperatorlist = ["comma", "AND", "BREAK"]
 
 #for autorun and upscale
 sizelist = ["all", "portrait", "wide", "square", "ultrawide"]
@@ -217,9 +218,13 @@ class Script(scripts.Script):
                 with gr.Column(scale=1):
                     promptcompounderlevel = gr.Dropdown(
                         promptcompounder, label="Prompt compounder", value="1")
+            with gr.Row():
+                with gr.Column(scale=1):
+                    seperator = gr.Dropdown(
+                        seperatorlist, label="Prompt seperator", value="comma")    
                 with gr.Column(scale=2):
                     ANDtoggle = gr.Dropdown(
-                        ANDtogglemode, label="Prompt seperator mode", value="comma")
+                        ANDtogglemode, label="Prompt seperator mode", value="none")
             with gr.Row():
                 gr.Markdown(
                     """
@@ -234,9 +239,9 @@ class Script(scripts.Script):
                     This was originally a bug in the first release when using multiple batches, now brought back as a feature. 
                     Raised by redditor drone2222, to bring this back as a toggle, since it did create interesting results. So here it is. 
                     
-                    You can toggle the separator mode. Standardly this is a comma, but you can choose an AND and a newline.
+                    You can toggle the separator mode. Standardly this is a comma, but you can choose an AND or a BREAK.
                     
-                    You can also choose for "current prompt + AND" or "current prompt + AND + current prompt". This is best used in conjuction with the Latent Couple extension when you want some control. Set the prompt compounder equal to the amount of areas defined in Laten Couple.
+                    You can also choose the prompt seperator mode for use with Latent Couple extension
                     
                     Example flow:
 
@@ -244,11 +249,15 @@ class Script(scripts.Script):
                     
                     In the main tab, set the subject to humanoids
                     
-                    In the prompt field then add for example: Art by artistname, 2 people
+                    In the prefix prompt field then add for example: Art by artistname, 2 people
                     
                     Set the prompt compounder to: 2
+                    
+                    Set the Prompt seperator to: AND
 
-                    "automatic AND" is entirely build around Latent Couple. It will pass artists and the amount of people/animals/objects to generate in the prompt automatically. Set the prompt compounder equal to the amount of areas defined in Laten Couple.
+                    Set the Prompt Seperator mode to: prefix AND prompt + suffix
+
+                    "automatic" is entirely build around Latent Couple. It will pass artists and the amount of people/animals/objects to generate in the prompt automatically. Set the prompt compounder equal to the amount of areas defined in Laten Couple.
                     
                     Example flow:
 
@@ -259,6 +268,10 @@ class Script(scripts.Script):
                     Leave the prompt field empty
                     
                     Set the prompt compounder to: 2
+
+                    Set the Prompt seperator to: AND
+
+                    Set the Prompt Seperator mode to: automatic
 
 
                     </font>
@@ -319,16 +332,16 @@ class Script(scripts.Script):
         prompt4toworkflow.click(prompttoworkflowprompt, inputs=prompt4, outputs=workprompt)
         prompt5toworkflow.click(prompttoworkflowprompt, inputs=prompt5, outputs=workprompt)
 
-        startmain.click(generateimages, inputs=[amountofimages,size,model,samplingsteps,cfg,hiresfix,hiressteps,denoisestrength,samplingmethod, upscaler,hiresscale, apiurl, qualitygate, quality, runs,insanitylevel,subject, artist, imagetype, silentmode, workprompt, antistring, prefixprompt, suffixprompt,negativeprompt])
+        startmain.click(generateimages, inputs=[amountofimages,size,model,samplingsteps,cfg,hiresfix,hiressteps,denoisestrength,samplingmethod, upscaler,hiresscale, apiurl, qualitygate, quality, runs,insanitylevel,subject, artist, imagetype, silentmode, workprompt, antistring, prefixprompt, suffixprompt,negativeprompt,promptcompounderlevel, seperator])
         
         
         
-        return [insanitylevel,subject, artist, imagetype, prefixprompt,suffixprompt,negativeprompt, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring]
+        return [insanitylevel,subject, artist, imagetype, prefixprompt,suffixprompt,negativeprompt, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring, seperator]
             
     
 
     
-    def run(self, p, insanitylevel, subject, artist, imagetype, prefixprompt,suffixprompt,negativeprompt, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring):
+    def run(self, p, insanitylevel, subject, artist, imagetype, prefixprompt,suffixprompt,negativeprompt, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring,seperator):
         
         images = []
         infotexts = []
@@ -340,8 +353,7 @@ class Script(scripts.Script):
         batchsize = p.batch_size
         p.n_iter = 1
         p.batch_size = 1
-        originalprompt = p.prompt
-
+        
 
         if(silentmode and workprompt != ""):
             print("Workflow mode turned on, not generating a prompt. Using workflow prompt.")
@@ -350,14 +362,14 @@ class Script(scripts.Script):
         elif p.prompt != "" or p.negative_prompt != "":
             print("Please note that existing prompt and negative prompt fields are (no longer) used")
         
-        if(ANDtoggle == "automatic AND" and artist == "none"):
-            print("Automatic AND and artist mode set to none, don't work together well. Ignoring this setting!")
+        if(ANDtoggle == "automatic" and artist == "none"):
+            print("Automatic and artist mode set to none, don't work together well. Ignoring this setting!")
             artist = "all"
 
-        if(ANDtoggle == "automatic AND" and (prefixprompt != "" or suffixprompt !="")):
-            print("Automatic AND doesnt work well if there is an prefix or suffix prompt filled in. Ignoring those prompt fields!")
+        if(ANDtoggle == "automatic" and (prefixprompt != "")):
+            print("Automatic doesnt work well if there is an prefix prompt filled in. Ignoring this prompt fields!")
             prefixprompt = ""
-            suffixprompt = ""
+
         
 
 
@@ -367,41 +379,34 @@ class Script(scripts.Script):
                 # prompt compounding
                 print("Starting generating the prompt")
                 preppedprompt = ""
-                if(ANDtoggle == "automatic AND"):
+                
+                if(ANDtoggle == "automatic"):
+                    preppedprompt += prefixprompt + ", "
                     if(artist != "none"):
-                        originalprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype, True, antistring) 
+                        preppedprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype, True, antistring) 
                     if(subject == "humanoid"):
-                        originalprompt += ", " + promptcompounderlevel + " people"
+                        preppedprompt += ", " + promptcompounderlevel + " people"
                     if(subject == "landscape"):
-                        originalprompt += ", landscape"
+                        preppedprompt += ", landscape"
                     if(subject == "animal"):
-                        originalprompt += ", " + promptcompounderlevel  + " animals"
+                        preppedprompt += ", " + promptcompounderlevel  + " animals"
                     if(subject == "object"):
-                        originalprompt += ", " + promptcompounderlevel  + " objects"
+                        preppedprompt += ", " + promptcompounderlevel  + " objects"
 
-                if(ANDtoggle != "AND" and ANDtoggle != "comma" and originalprompt != ""):
-                    preppedprompt += originalprompt + " \n AND "
+                if(ANDtoggle != "none" and ANDtoggle != "automatic"):
+                    preppedprompt += prefixprompt
                 
-                for i in range(int(promptcompounderlevel)):
-                    if(ANDtoggle == "automatic AND"):
-                        preppedprompt += build_dynamic_prompt(insanitylevel,subject,"none", imagetype, False, antistring, prefixprompt, suffixprompt)
-                    elif(ANDtoggle != "AND" and ANDtoggle != "comma" and originalprompt != "" and ANDtoggle != "current prompt + AND" ):
-                        preppedprompt += ", " + build_dynamic_prompt(insanitylevel,subject,artist, imagetype, False, antistring, prefixprompt, suffixprompt)
+                if(ANDtoggle != "none"):
+                    if(ANDtoggle!="prefix + prefix + prompt + suffix"):
+                        prefixprompt = ""
+                    if(seperator == "comma"):
+                        preppedprompt += " \n , "
                     else:
-                        preppedprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype, False, antistring, prefixprompt, suffixprompt)
-                    if(i + 1 != int(promptcompounderlevel)):
-                        if(ANDtoggle == "comma"):
-                            preppedprompt += ", "
-                        else:
-                            preppedprompt += " \n AND "
+                        preppedprompt += " \n " + seperator + " "
+                      
+                #Here is where we build a "normal" prompt
+                preppedprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype, False, antistring, prefixprompt, suffixprompt,promptcompounderlevel, seperator)
 
-
-                #if(promptlocation == "in the front" and originalprompt != "" and (ANDtoggle == "AND" or ANDtoggle == "comma")):
-                #    p.prompt = originalprompt + ", " + preppedprompt
-                #elif(promptlocation == "at the back" and originalprompt != "" and (ANDtoggle == "AND" or ANDtoggle == "comma")):
-                #    p.prompt = preppedprompt + ", " + originalprompt  # add existing prompt to the back?
-                #else:
-                
                 # set everything ready
                 p.prompt = preppedprompt  
                 p.negative_prompt = negativeprompt

@@ -12,7 +12,7 @@ from call_extras import *
 from model_lists import *
 
 
-def generateimages(amount = 1, size = "all",model = "currently selected model",samplingsteps = "40",cfg= "7",hiresfix = True,hiressteps ="0",denoisestrength="0.6",samplingmethod="DPM++ SDE Karras", upscaler="R-ESRGAN 4x+", hiresscale="2",apiurl="http://127.0.0.1:7860",qualitygate=False,quality="7.6",runs="5",insanitylevel="5",subject="all", artist="all", imagetype="all",silentmode=False, workprompt="", antistring="",prefixprompt="", suffixprompt="", negativeprompt=""):
+def generateimages(amount = 1, size = "all",model = "currently selected model",samplingsteps = "40",cfg= "7",hiresfix = True,hiressteps ="0",denoisestrength="0.6",samplingmethod="DPM++ SDE Karras", upscaler="R-ESRGAN 4x+", hiresscale="2",apiurl="http://127.0.0.1:7860",qualitygate=False,quality="7.6",runs="5",insanitylevel="5",subject="all", artist="all", imagetype="all",silentmode=False, workprompt="", antistring="",prefixprompt="", suffixprompt="", negativeprompt="",promptcompounderlevel = "1", seperator="comma"):
     loops = int(amount)  # amount of images to generate
     steps = 0
 
@@ -24,10 +24,16 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
     
     while steps < loops:
         # build prompt
+        if(silentmode==True and workprompt == ""):
+            print("Trying to use provided workflow prompt, but is empty. Generating a random prompt instead.")
+    
         if(silentmode==True and workprompt != ""):
             randomprompt = workprompt
+            print("Using provided workflow prompt")
+            print(workprompt)
+
         else:    
-            randomprompt = build_dynamic_prompt(insanitylevel,subject,artist,imagetype, False,antistring,prefixprompt,suffixprompt)
+            randomprompt = build_dynamic_prompt(insanitylevel,subject,artist,imagetype, False,antistring,prefixprompt,suffixprompt,promptcompounderlevel, seperator)
 
         # make the filename, from from a to the first comma
         start_index = randomprompt.find("of a ") + len("of a ")

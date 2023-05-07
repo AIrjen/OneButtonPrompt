@@ -89,7 +89,7 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
       
             
         # upscale via img2img first
-        #img2img = call_img2img(txt2img,0.25,1.5,256)
+        img2img = call_img2img(txt2img,apiurl,filenamecomplete,0.25,1.5,256)
 
         # upscale via extras upscaler next
         #finalfile = call_extras(img2img)

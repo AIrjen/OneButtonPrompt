@@ -1,4 +1,4 @@
-import json
+import os
 import requests
 import io
 import base64
@@ -7,14 +7,19 @@ from PIL import Image, PngImagePlugin
 
 
 
-def call_img2img(imagelocation, denoising_strength = 0.25, scale = 1.5, padding = 64):
+def call_img2img(imagelocation,apiurl="http://127.0.0.1:7860",filename="", denoising_strength = "0.25", scale = "1.5", padding = "64"):
 
+    negativepromptfound = 0
+    negative_prompt = ""
+    prompt = ""
        #params to stay the same
-    url = "http://127.0.0.1:7860"
-    outputimg2imgfolder = 'C:\\automated_output\\img2img\\'
-    outputimg2imgfilename = str(uuid.uuid4())
+    url = apiurl
+    script_dir = os.path.dirname(os.path.abspath(__file__))  # Script directory
+    outputimg2imgfolder = os.path.join(script_dir, "./automated_outputs/img2img/" )
+    if(filename==""):
+        filename = str(uuid.uuid4())
     outputimg2imgpng = '.png'
-    outputimg2imgFull = '{}{}{}'.format(outputimg2imgfolder,outputimg2imgfilename,outputimg2imgpng)
+    outputimg2imgFull = '{}{}{}'.format(outputimg2imgfolder,filename,outputimg2imgpng)
 
 
     encodedstringlist = []
@@ -24,8 +29,8 @@ def call_img2img(imagelocation, denoising_strength = 0.25, scale = 1.5, padding 
     steps = "20"
     prompt = "hello world"
     cfg_scale = "7"
-    width = "512"
-    height = "512"
+    # width = "512"
+    # height = "512"
 
     with open(imagelocation, "rb") as image_file:
        encoded_string = base64.b64encode(image_file.read())
@@ -41,7 +46,19 @@ def call_img2img(imagelocation, denoising_strength = 0.25, scale = 1.5, padding 
 
     pnginfo = str(response3.json().get("info"))
 
+    print(pnginfo)
+
     prompt = pnginfo[:pnginfo.rfind("Steps")]
+    if(prompt.rfind("Negative prompt") != -1):
+        prompt = prompt[prompt.rfind("Negative prompt")]
+        negativepromptfound = 1
+    
+    if(negativepromptfound == 1):
+        negative_prompt = pnginfo[:pnginfo.rfind("Steps")]
+        negative_prompt = negative_prompt.replace(prompt,"")
+
+    print(negative_prompt)
+    print(prompt)
 
     payload = {
         "resize_mode": 0,
@@ -50,10 +67,11 @@ def call_img2img(imagelocation, denoising_strength = 0.25, scale = 1.5, padding 
         "batch_size": "1",
         "n_iter": "1",
         "prompt": prompt,
+        "negative_prompt": negative_prompt,
         "steps": steps,
         "cfg_scale": cfg_scale,
-        "width": width,
-        "height": height,
+        #"width": width,
+        #"height": height,
         "include_init_images": "true",
         "init_images": encodedstringlist,
         "script_name": "SD upscale",
@@ -66,13 +84,20 @@ def call_img2img(imagelocation, denoising_strength = 0.25, scale = 1.5, padding 
 
     r = response.json()
 
+
     for i in r['images']:
         image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
 
         png_payload = {
         "image": "data:image/png;base64," + i
         }
+
+        print("and here!")
+        print(png_payload)
         response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json=png_payload)
+
+        print("here!")
+        print(response2)
 
         pnginfo = PngImagePlugin.PngInfo()
         pnginfo.add_text("parameters", response2.json().get("info"))

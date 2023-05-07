@@ -7,10 +7,10 @@ from PIL import Image, PngImagePlugin
 
 
 
-def call_img2img(imagelocation,apiurl="http://127.0.0.1:7860",filename="", denoising_strength = "0.25", scale = "1.5", padding = "64"):
+def call_img2img(imagelocation,originalimage, apiurl="http://127.0.0.1:7860",filename="", prompt = "", negativeprompt = "", denoising_strength = "0.25", scale = "1.5", padding = "64"):
 
     negativepromptfound = 0
-    negative_prompt = ""
+    negativeprompt = ""
     prompt = ""
        #params to stay the same
     url = apiurl
@@ -35,30 +35,35 @@ def call_img2img(imagelocation,apiurl="http://127.0.0.1:7860",filename="", denoi
     with open(imagelocation, "rb") as image_file:
        encoded_string = base64.b64encode(image_file.read())
     encodedstringlist.append(encoded_string.decode('utf-8'))
-    encodedstring2 = encoded_string.decode('utf-8')
-
-
-    # prompt from picture?
-    png_payload = {
-            "image": encodedstring2
-        }
-    response3 = requests.post(url=f'{url}/sdapi/v1/png-info', json=png_payload)
-
-    pnginfo = str(response3.json().get("info"))
-
-    print(pnginfo)
-
-    prompt = pnginfo[:pnginfo.rfind("Steps")]
-    if(prompt.rfind("Negative prompt") != -1):
-        prompt = prompt[prompt.rfind("Negative prompt")]
-        negativepromptfound = 1
     
-    if(negativepromptfound == 1):
-        negative_prompt = pnginfo[:pnginfo.rfind("Steps")]
-        negative_prompt = negative_prompt.replace(prompt,"")
+    # If we don't have a prompt, get it from the original image file
+    if(prompt==""):
+        with open(originalimage, "rb") as originalimage_file:
+            originalencoded_string = base64.b64encode(originalimage_file.read())
+        encodedstring2 = originalencoded_string.decode('utf-8')
 
-    print(negative_prompt)
-    print(prompt)
+
+        # get prompt from picture
+        png_payload = {
+                "image": encodedstring2
+            }
+        response3 = requests.post(url=f'{url}/sdapi/v1/png-info', json=png_payload)
+
+        pnginfo = str(response3.json().get("info"))
+
+
+        prompt = pnginfo[:pnginfo.rfind("Steps")]
+
+
+        if(prompt.rfind("Negative prompt") != -1):
+            prompt = prompt[:prompt.rfind("Negative prompt")]
+
+            negativepromptfound = 1
+        
+        if(negativepromptfound == 1):
+            negativeprompt = pnginfo[:pnginfo.rfind("Steps")]
+            negativeprompt = negativeprompt.replace(prompt,"")
+        
 
     payload = {
         "resize_mode": 0,
@@ -67,7 +72,7 @@ def call_img2img(imagelocation,apiurl="http://127.0.0.1:7860",filename="", denoi
         "batch_size": "1",
         "n_iter": "1",
         "prompt": prompt,
-        "negative_prompt": negative_prompt,
+        "negative_prompt": negativeprompt,
         "steps": steps,
         "cfg_scale": cfg_scale,
         #"width": width,
@@ -88,20 +93,22 @@ def call_img2img(imagelocation,apiurl="http://127.0.0.1:7860",filename="", denoi
     for i in r['images']:
         image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
 
-        png_payload = {
-        "image": "data:image/png;base64," + i
-        }
+        #note, this doesn't seem to work yet <_<
 
-        print("and here!")
-        print(png_payload)
-        response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json=png_payload)
+        #png_payload = {
+        #"image": "data:image/png;base64," + i
+        #}
 
-        print("here!")
-        print(response2)
+        #print("and here!")
+        #print(png_payload)
+        #response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json=png_payload)
+
+        #print("here!")
+        #print(response2)
 
         pnginfo = PngImagePlugin.PngInfo()
-        pnginfo.add_text("parameters", response2.json().get("info"))
+        pnginfo.add_text('parameters', originalimage.image.info["parameters"]) # Get the generation info from the original image
+        #pnginfo.add_text("parameters", response2.json().get("info"))
         image.save(outputimg2imgFull, pnginfo=pnginfo)
 
     return outputimg2imgFull
-

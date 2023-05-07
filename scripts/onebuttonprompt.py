@@ -280,6 +280,13 @@ class Script(scripts.Script):
                     )
         with gr.Tab("One Button Run and Upscale"):
             with gr.Row():
+                gr.Markdown(
+                        """
+                        ### TXT2IMG
+                        <font size="2">
+                        Start WebUi with option --api for this to work.
+                        </font>
+                        """)
                 with gr.Column(scale=1):
                     amountofimages = gr.Slider(1, 50, value="1", step=1, label="Amount of images to generate")
                     size = gr.Dropdown(

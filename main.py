@@ -86,10 +86,10 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
 
             
         txt2img = call_txt2img(randomprompt, size ,hiresfix, 0, filenamecomplete,model ,samplingsteps,cfg, hiressteps, denoisestrength,samplingmethod, upscaler,hiresscale,apiurl,qualitygate,quality,runs,negativeprompt)
-      
+        originalimage = txt2img #Set this for later use
             
         # upscale via img2img first
-        img2img = call_img2img(txt2img,apiurl,filenamecomplete,0.25,1.5,256)
+        img2img = call_img2img(txt2img, originalimage, apiurl, filenamecomplete, randomprompt,negativeprompt, 0.25, 1.5, 256)
 
         # upscale via extras upscaler next
         #finalfile = call_extras(img2img)

@@ -7,12 +7,10 @@ from PIL import Image, PngImagePlugin
 
 
 
-def call_img2img(imagelocation,originalimage, apiurl="http://127.0.0.1:7860",filename="", prompt = "", negativeprompt = "", denoising_strength = "0.25", scale = "1.5", padding = "64"):
+def call_img2img(imagelocation,originalimage, originalpnginfo ="", apiurl="http://127.0.0.1:7860",filename="", prompt = "", negativeprompt = "", img2imgsamplingsteps = "20", img2imgcfg = "7", img2imgsamplingmethod = "DPM++ SDE Karras", img2imgupscaler = "R-ESRGAN 4x+", img2imgmodel = "currently selected model", denoising_strength = "0.3", scale = "2", padding = "64"):
 
     negativepromptfound = 0
-    negativeprompt = ""
-    prompt = ""
-       #params to stay the same
+    #params to stay the same
     url = apiurl
     script_dir = os.path.dirname(os.path.abspath(__file__))  # Script directory
     outputimg2imgfolder = os.path.join(script_dir, "./automated_outputs/img2img/" )
@@ -25,12 +23,11 @@ def call_img2img(imagelocation,originalimage, apiurl="http://127.0.0.1:7860",fil
     encodedstringlist = []
     #rest of prompt things
 
-    sampler_index = "DPM2 Karras"
-    steps = "20"
-    prompt = "hello world"
-    cfg_scale = "7"
-    # width = "512"
-    # height = "512"
+    sampler_index = img2imgsamplingmethod
+    steps = img2imgsamplingsteps
+    cfg_scale = img2imgcfg
+    upscaler = img2imgupscaler
+
 
     with open(imagelocation, "rb") as image_file:
        encoded_string = base64.b64encode(image_file.read())
@@ -80,10 +77,11 @@ def call_img2img(imagelocation,originalimage, apiurl="http://127.0.0.1:7860",fil
         "include_init_images": "true",
         "init_images": encodedstringlist,
         "script_name": "SD upscale",
-        "script_args": ["",padding,"4x-UltraSharp",scale]
+        "script_args": ["",padding,upscaler,scale]
     }
 
-
+    if(img2imgmodel != "currently selected model"):
+        payload.update({"sd_model": img2imgmodel})
     #
     response = requests.post(url=f'{url}/sdapi/v1/img2img', json=payload)
 
@@ -93,22 +91,24 @@ def call_img2img(imagelocation,originalimage, apiurl="http://127.0.0.1:7860",fil
     for i in r['images']:
         image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
 
-        #note, this doesn't seem to work yet <_<
+        if(originalpnginfo!=""):
+            png_payload = {
+            "image": "data:image/png;base64," + i
+            }
 
-        #png_payload = {
-        #"image": "data:image/png;base64," + i
-        #}
+            #print("and here!")
+            #print(png_payload)
+            response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json=png_payload)
 
-        #print("and here!")
-        #print(png_payload)
-        #response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json=png_payload)
+            #print("here!")
+            #print(response2)
+    
 
-        #print("here!")
-        #print(response2)
 
-        pnginfo = PngImagePlugin.PngInfo()
-        pnginfo.add_text('parameters', originalimage.image.info["parameters"]) # Get the generation info from the original image
-        #pnginfo.add_text("parameters", response2.json().get("info"))
-        image.save(outputimg2imgFull, pnginfo=pnginfo)
+            pnginfo = PngImagePlugin.PngInfo()
+            pnginfo.add_text("parameters", response2.json().get("info"))
+
+            originalpnginfo = pnginfo
+        image.save(outputimg2imgFull, pnginfo=originalpnginfo)
 
     return outputimg2imgFull

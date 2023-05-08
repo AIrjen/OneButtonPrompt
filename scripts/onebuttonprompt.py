@@ -34,6 +34,11 @@ upscalerlist.insert(0,"all")
 samplerlist = get_samplers()
 samplerlist.insert(0,"all")
 
+#for img2img
+img2imgupscalerlist = get_upscalers_for_img2img()
+img2imgupscalerlist.insert(0,"automatic")
+img2imgupscalerlist.insert(0,"all")
+
 
 class Script(scripts.Script):
     
@@ -287,6 +292,7 @@ class Script(scripts.Script):
                         Start WebUi with option --api for this to work.
                         </font>
                         """)
+            with gr.Row():
                 with gr.Column(scale=1):
                     amountofimages = gr.Slider(1, 50, value="1", step=1, label="Amount of images to generate")
                     size = gr.Dropdown(
@@ -325,10 +331,30 @@ class Script(scripts.Script):
                     quality = gr.Slider(1, 10, value = "7.6", step=0.1, label="Quality")
                     runs = gr.Slider(1, 50, value = "5", step=1, label="Amount of tries")
             with gr.Row():
-                gr.Markdown(
+                    gr.Markdown(
                         """
                         ### IMG2IMG upscale
-                        """)    
+                        """)
+            with gr.Row():
+                    img2imgactivate = gr.Checkbox(label="Upscale image with IMG2IMG", value=True)
+            with gr.Row():
+                    with gr.Column(scale=1):
+                        img2imgbatch = gr.Slider(1, 5, value="1", step=1, label="Amount times to repeat upscaling with IMG2IMG")
+                        img2imgsamplingsteps = gr.Slider(1, 100, value="20", step=1, label="img2img Sampling steps")
+                        img2imgcfg = gr.Slider(1,20, value="7", step=0.1, label="img2img CFG")
+                        img2imgdenoisestrength = gr.Slider(0, 1, value="0.30", step=0.01, label="img2img denoise strength")
+                    with gr.Column(scale=1):
+                        img2imgmodel = gr.Dropdown(
+                                    modellist, label="img2img model to use", value="currently selected model")
+                        img2imgsamplingmethod = gr.Dropdown(
+                                        samplerlist, label= "img2img sampler", value="all")   
+                        img2imgupscaler = gr.Dropdown(
+                                        img2imgupscalerlist, label="img2img upscaler", value="all")
+                    with gr.Row():
+                        img2imgscale = gr.Slider(1, 4, value="2", step=0.1, label="img2img scale")
+                        img2imgpadding = gr.Slider(32, 256, value="64", step=12, label="img2img padding")
+                    
+
                     
 
         genprom.click(gen_prompt, inputs=[insanitylevel,subject, artist, imagetype, antistring], outputs=[prompt1, prompt2, prompt3,prompt4,prompt5])
@@ -339,7 +365,7 @@ class Script(scripts.Script):
         prompt4toworkflow.click(prompttoworkflowprompt, inputs=prompt4, outputs=workprompt)
         prompt5toworkflow.click(prompttoworkflowprompt, inputs=prompt5, outputs=workprompt)
 
-        startmain.click(generateimages, inputs=[amountofimages,size,model,samplingsteps,cfg,hiresfix,hiressteps,denoisestrength,samplingmethod, upscaler,hiresscale, apiurl, qualitygate, quality, runs,insanitylevel,subject, artist, imagetype, silentmode, workprompt, antistring, prefixprompt, suffixprompt,negativeprompt,promptcompounderlevel, seperator])
+        startmain.click(generateimages, inputs=[amountofimages,size,model,samplingsteps,cfg,hiresfix,hiressteps,denoisestrength,samplingmethod, upscaler,hiresscale, apiurl, qualitygate, quality, runs,insanitylevel,subject, artist, imagetype, silentmode, workprompt, antistring, prefixprompt, suffixprompt,negativeprompt,promptcompounderlevel, seperator, img2imgbatch, img2imgsamplingsteps, img2imgcfg, img2imgsamplingmethod, img2imgupscaler, img2imgmodel,img2imgactivate, img2imgscale, img2imgpadding,img2imgdenoisestrength])
         
         
         

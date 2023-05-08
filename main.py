@@ -12,13 +12,19 @@ from call_extras import *
 from model_lists import *
 
 
-def generateimages(amount = 1, size = "all",model = "currently selected model",samplingsteps = "40",cfg= "7",hiresfix = True,hiressteps ="0",denoisestrength="0.6",samplingmethod="DPM++ SDE Karras", upscaler="R-ESRGAN 4x+", hiresscale="2",apiurl="http://127.0.0.1:7860",qualitygate=False,quality="7.6",runs="5",insanitylevel="5",subject="all", artist="all", imagetype="all",silentmode=False, workprompt="", antistring="",prefixprompt="", suffixprompt="", negativeprompt="",promptcompounderlevel = "1", seperator="comma"):
+def generateimages(amount = 1, size = "all",model = "currently selected model",samplingsteps = "40",cfg= "7",hiresfix = True,hiressteps ="0",denoisestrength="0.6",samplingmethod="DPM++ SDE Karras", upscaler="R-ESRGAN 4x+", hiresscale="2",apiurl="http://127.0.0.1:7860",qualitygate=False,quality="7.6",runs="5",insanitylevel="5",subject="all", artist="all", imagetype="all",silentmode=False, workprompt="", antistring="",prefixprompt="", suffixprompt="", negativeprompt="",promptcompounderlevel = "1", seperator="comma", img2imgbatch = "1", img2imgsamplingsteps = "20", img2imgcfg = "7", img2imgsamplingmethod = "DPM++ SDE Karras", img2imgupscaler = "R-ESRGAN 4x+", img2imgmodel = "currently selected model", img2imgactivate = False, img2imgscale = "2", img2imgpadding = "64",img2imgdenoisestrength="0.3"):
     loops = int(amount)  # amount of images to generate
     steps = 0
+
+    img2imgloops = int(img2imgbatch)
+    if(img2imgactivate == False):  # If we dont want to run, turn it off
+        img2imgloops = 0
+    img2imgsteps = 0
 
     modellist=get_models()
     samplerlist=get_samplers()
     upscalerlist=get_upscalers()
+    img2imgupscalerlist=get_upscalers_for_img2img()
 
 
     
@@ -73,6 +79,7 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
             #lets not do inpainting models
             while "inpaint" in model:
                 model = random.choice(modellist)
+                print("Going to run with model " + model)
 
         if(samplingmethod=="all"):
             samplingmethod = random.choice(samplerlist)
@@ -86,10 +93,39 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
 
             
         txt2img = call_txt2img(randomprompt, size ,hiresfix, 0, filenamecomplete,model ,samplingsteps,cfg, hiressteps, denoisestrength,samplingmethod, upscaler,hiresscale,apiurl,qualitygate,quality,runs,negativeprompt)
-        originalimage = txt2img #Set this for later use
-            
-        # upscale via img2img first
-        img2img = call_img2img(txt2img, originalimage, apiurl, filenamecomplete, randomprompt,negativeprompt, 0.25, 1.5, 256)
+        originalimage = txt2img[0] #Set this for later use
+        originalpnginfo = txt2img[1] #Sort of hacky way of bringing this forward. But if it works, it works
+
+        image = txt2img[0]
+
+        print("some testing")    
+        print(originalpnginfo)
+        
+        # upscale via img2img
+        
+        # start the batching!
+        while img2imgsteps < img2imgloops:
+
+
+            #Check if there is any random value we have to choose or not
+            if(img2imgmodel=="all"):
+                img2imgmodel = random.choice(modellist)
+                #lets not do inpainting models
+                while "inpaint" in model:
+                    img2imgmodel = random.choice(modellist)
+                    print("Going to upscale with model " + img2imgmodel)
+
+            if(img2imgsamplingmethod=="all"):
+                img2imgsamplingmethod = random.choice(samplerlist)
+                print ("Going to upscale with sampling method " + img2imgsamplingmethod)   
+
+            if(img2imgupscaler=="all"):
+                img2imgupscaler = random.choice(img2imgupscalerlist)
+                print ("Going to run with upscaler " + img2imgupscaler)
+
+            image = call_img2img(image, originalimage, originalpnginfo, apiurl, filenamecomplete, randomprompt,negativeprompt,img2imgsamplingsteps, img2imgcfg, img2imgsamplingmethod, img2imgupscaler, img2imgmodel, img2imgdenoisestrength, img2imgscale, img2imgpadding)
+
+            img2imgsteps += 1
 
         # upscale via extras upscaler next
         #finalfile = call_extras(img2img)

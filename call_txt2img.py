@@ -98,6 +98,7 @@ def call_txt2img(passingprompt,ratio,upscale,debugmode,filename="",model = "curr
     scorelist = []
     scoredeclist = []
     imagelist = []
+    pnginfolist = []
 
 
     #call TXT2IMG
@@ -149,7 +150,7 @@ def call_txt2img(passingprompt,ratio,upscale,debugmode,filename="",model = "curr
             if(qualitygate==True):
                 # check if the file exists in the parent directory
                 imagescorer_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'stable-diffusion-webui-aesthetic-image-scorer', 'scripts'))
-                print(imagescorer_path)
+                #print(imagescorer_path)
                 if imagescorer_path not in sys.path:
                     sys.path.append(imagescorer_path)      
                 try:
@@ -162,6 +163,7 @@ def call_txt2img(passingprompt,ratio,upscale,debugmode,filename="",model = "curr
 
                     scorelist.append(score)
                     imagelist.append(outputTXT2IMGFull)
+                    pnginfolist.append(pnginfo)
 
                     print("This image has scored: "+ str(score) + " out of " + str(isGoodNumber))
                     if(score >= isGoodNumber or debugmode == 1):
@@ -195,6 +197,7 @@ def call_txt2img(passingprompt,ratio,upscale,debugmode,filename="",model = "curr
         # Get the index of the first occurrence of the maximum value in the list
         indexofimagetokeep = scoredeclist.index(max(scoredeclist))
         outputTXT2IMGFull = imagelist[indexofimagetokeep] #store the image to keep in here, so we can pass it along
+        pnginfo = pnginfolist=[indexofimagetokeep]
         imagelist.pop(indexofimagetokeep)  
         #remove all other images
         for imagelocation in imagelist:
@@ -205,4 +208,4 @@ def call_txt2img(passingprompt,ratio,upscale,debugmode,filename="",model = "curr
         json_object = json.dumps(payload, indent = 4)
         txt.write(json_object)
 
-    return outputTXT2IMGFull
+    return [outputTXT2IMGFull,pnginfo]

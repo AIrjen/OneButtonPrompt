@@ -41,7 +41,8 @@ def get_upscalers():
 
     #hardcode some things for Real ESGRAN, because its named differently (note, I could have just hardcoded this. Oh well...)
     RealESRGANlist = [s.replace("RealESRGAN_x4plus","R-ESRGAN 4x+") for s in RealESRGANlist]
-    RealESRGANlist = [s.replace("RealESRGAN_x4plus_anime_6B","R-ESRGAN 4x+ Anime6B") for s in RealESRGANlist]
+    RealESRGANlist = [s.replace("RealESRGAN x4plus_anime_6B","R-ESRGAN 4x+ Anime6B") for s in RealESRGANlist]
+    RealESRGANlist = [s.replace("R-ESRGAN 4x+_anime_6B","R-ESRGAN 4x+ Anime6B") for s in RealESRGANlist]
 
     upscalerlist = latentlist + RealESRGANlist + ESRGANlist
     return upscalerlist

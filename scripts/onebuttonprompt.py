@@ -39,6 +39,11 @@ img2imgupscalerlist = get_upscalers_for_img2img()
 img2imgupscalerlist.insert(0,"automatic")
 img2imgupscalerlist.insert(0,"all")
 
+#for ultimate SD upscale
+
+seams_fix_types = ["None","Band pass","Half tile offset pass","Half tile offset pass + intersections"]
+redrow_modes = ["Linear","Chess","None"]
+
 
 class Script(scripts.Script):
     
@@ -79,7 +84,7 @@ class Script(scripts.Script):
             with gr.Row():
                 with gr.Column():
                     prefixprompt = gr.Textbox(label="Place this in front of generated prompt (prefix)",value="")
-                    suffixprompt = gr.Textbox(label="Place this in back of generated prompt (suffix)",value="")
+                    suffixprompt = gr.Textbox(label="Place this at back of generated prompt (suffix)",value="")
                     negativeprompt = gr.Textbox(label="Use this negative prompt",value="")
             with gr.Row():
                 with gr.Column():
@@ -328,8 +333,8 @@ class Script(scripts.Script):
                         </font>""")    
             with gr.Row():
                     qualitygate = gr.Checkbox(label="Quality Gate", value=False)
-                    quality = gr.Slider(1, 10, value = "7.6", step=0.1, label="Quality")
-                    runs = gr.Slider(1, 50, value = "5", step=1, label="Amount of tries")
+                    quality = gr.Slider(1, 10, value = "7.6", step=0.1, label="Quality", visible = False)
+                    runs = gr.Slider(1, 50, value = "5", step=1, label="Amount of tries", visible = False)
             with gr.Row():
                     gr.Markdown(
                         """
@@ -351,8 +356,16 @@ class Script(scripts.Script):
                         img2imgupscaler = gr.Dropdown(
                                         img2imgupscalerlist, label="img2img upscaler", value="all")
                     with gr.Row():
-                        img2imgscale = gr.Slider(1, 4, value="2", step=0.1, label="img2img scale")
+                        img2imgscale = gr.Slider(1, 4, value="2", step=0.05, label="img2img scale")
                         img2imgpadding = gr.Slider(32, 256, value="64", step=12, label="img2img padding")
+                    with gr.Row():
+                         ultimatesdupscale = gr.Checkbox(label="Use Ultimate SD Upscale script instead", value=False)
+                         gr.Markdown(
+                        """
+                        <font size="2">
+                        This requires the Ultimate SD Upscale extension, install this if you haven't
+                        </font>
+                        """)
                     
 
                     
@@ -365,8 +378,35 @@ class Script(scripts.Script):
         prompt4toworkflow.click(prompttoworkflowprompt, inputs=prompt4, outputs=workprompt)
         prompt5toworkflow.click(prompttoworkflowprompt, inputs=prompt5, outputs=workprompt)
 
-        startmain.click(generateimages, inputs=[amountofimages,size,model,samplingsteps,cfg,hiresfix,hiressteps,denoisestrength,samplingmethod, upscaler,hiresscale, apiurl, qualitygate, quality, runs,insanitylevel,subject, artist, imagetype, silentmode, workprompt, antistring, prefixprompt, suffixprompt,negativeprompt,promptcompounderlevel, seperator, img2imgbatch, img2imgsamplingsteps, img2imgcfg, img2imgsamplingmethod, img2imgupscaler, img2imgmodel,img2imgactivate, img2imgscale, img2imgpadding,img2imgdenoisestrength])
+        startmain.click(generateimages, inputs=[amountofimages,size,model,samplingsteps,cfg,hiresfix,hiressteps,denoisestrength,samplingmethod, upscaler,hiresscale, apiurl, qualitygate, quality, runs,insanitylevel,subject, artist, imagetype, silentmode, workprompt, antistring, prefixprompt, suffixprompt,negativeprompt,promptcompounderlevel, seperator, img2imgbatch, img2imgsamplingsteps, img2imgcfg, img2imgsamplingmethod, img2imgupscaler, img2imgmodel,img2imgactivate, img2imgscale, img2imgpadding,img2imgdenoisestrength,ultimatesdupscale])
         
+        # Turn things off and on for hiresfix
+        def hireschangevalues(hiresfix):
+             return {
+                  hiressteps: gr.update(visible=hiresfix),
+                  hiresscale: gr.update(visible=hiresfix),
+                  denoisestrength: gr.update(visible=hiresfix),
+                  upscaler: gr.update(visible=hiresfix)
+             }
+        
+        hiresfix.change(
+            hireschangevalues,
+            [hiresfix],
+            [hiressteps,hiresscale,denoisestrength,upscaler]
+        )
+
+        # Turn things off and on for quality gate
+        def qgatechangevalues(qualitygate):
+             return {
+                  quality: gr.update(visible=qualitygate),
+                  runs: gr.update(visible=qualitygate)
+             }
+        
+        qualitygate.change(
+            qgatechangevalues,
+            [qualitygate],
+            [quality,runs]
+        )
         
         
         return [insanitylevel,subject, artist, imagetype, prefixprompt,suffixprompt,negativeprompt, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring, seperator]

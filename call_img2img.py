@@ -4,10 +4,10 @@ import io
 import base64
 import uuid
 from PIL import Image, PngImagePlugin
+from modules import shared
 
 
-
-def call_img2img(imagelocation,originalimage, originalpnginfo ="", apiurl="http://127.0.0.1:7860",filename="", prompt = "", negativeprompt = "", img2imgsamplingsteps = "20", img2imgcfg = "7", img2imgsamplingmethod = "DPM++ SDE Karras", img2imgupscaler = "R-ESRGAN 4x+", img2imgmodel = "currently selected model", denoising_strength = "0.3", scale = "2", padding = "64"):
+def call_img2img(imagelocation,originalimage, originalpnginfo ="", apiurl="http://127.0.0.1:7860",filename="", prompt = "", negativeprompt = "", img2imgsamplingsteps = "20", img2imgcfg = "7", img2imgsamplingmethod = "DPM++ SDE Karras", img2imgupscaler = "R-ESRGAN 4x+", img2imgmodel = "currently selected model", denoising_strength = "0.3", scale = "2", padding = "64",upscalescript="SD upscale"):
 
     negativepromptfound = 0
     #params to stay the same
@@ -76,14 +76,32 @@ def call_img2img(imagelocation,originalimage, originalpnginfo ="", apiurl="http:
         #"height": height,
         "include_init_images": "true",
         "init_images": encodedstringlist,
-        "script_name": "SD upscale",
-        "script_args": ["",padding,upscaler,scale]
     }
 
     if(img2imgmodel != "currently selected model"):
         payload.update({"sd_model": img2imgmodel})
     #
+
+    if(upscalescript=="SD upscale"):
+        payload.update({"script_name": upscalescript})
+        payload.update({"script_args": ["",int(padding),upscaler,scale]})
+
+    if(upscalescript=="Ultimate SD upscale"):
+        upscaler_index = [x.name.lower() for x in shared.sd_upscalers].index(upscaler.lower())
+        payload.update({"script_name": upscalescript})
+        payload.update({"script_args": ["",512,0,8,int(padding), 64, 0.35,32,
+                                        upscaler_index,True,2,False,8,
+                                        0,2,"","",2]})
+    
+    # Ultimate SD Upscale params:
+    #_, tile_width, tile_height, mask_blur, padding, seams_fix_width, seams_fix_denoise, seams_fix_padding,
+    #        upscaler_index, save_upscaled_image, redraw_mode, save_seams_fix_image, seams_fix_mask_blur,
+    #        seams_fix_type, target_size_type, custom_width, custom_height, custom_scale):
+
+# target_size_type = 2
+# custom_scale = 2
     response = requests.post(url=f'{url}/sdapi/v1/img2img', json=payload)
+
 
     r = response.json()
 
@@ -91,7 +109,7 @@ def call_img2img(imagelocation,originalimage, originalpnginfo ="", apiurl="http:
     for i in r['images']:
         image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
 
-        if(originalpnginfo!=""):
+        if(originalpnginfo==""):
             png_payload = {
             "image": "data:image/png;base64," + i
             }

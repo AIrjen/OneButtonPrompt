@@ -650,11 +650,11 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 completeprompt += ":" + str(random.randint(1,18))
             if artistmode in ["hybrid", "stopping","adding", "switching"]:
                 completeprompt += "]"
+            # end of the artist stuff
 
-
-            completeprompt += ", "
-
-            completeprompt += suffixprompt
+        
+        completeprompt += ", "
+        completeprompt += suffixprompt
 
         # and then up the compounding stuff
         compoundcounter += 1

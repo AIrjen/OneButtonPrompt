@@ -197,7 +197,7 @@ def call_txt2img(passingprompt,ratio,upscale,debugmode,filename="",model = "curr
         # Get the index of the first occurrence of the maximum value in the list
         indexofimagetokeep = scoredeclist.index(max(scoredeclist))
         outputTXT2IMGFull = imagelist[indexofimagetokeep] #store the image to keep in here, so we can pass it along
-        pnginfo = pnginfolist=[indexofimagetokeep]
+        pnginfo = pnginfolist[indexofimagetokeep]
         imagelist.pop(indexofimagetokeep)  
         #remove all other images
         for imagelocation in imagelist:

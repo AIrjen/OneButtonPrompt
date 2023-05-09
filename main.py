@@ -12,14 +12,11 @@ from call_extras import *
 from model_lists import *
 
 
-def generateimages(amount = 1, size = "all",model = "currently selected model",samplingsteps = "40",cfg= "7",hiresfix = True,hiressteps ="0",denoisestrength="0.6",samplingmethod="DPM++ SDE Karras", upscaler="R-ESRGAN 4x+", hiresscale="2",apiurl="http://127.0.0.1:7860",qualitygate=False,quality="7.6",runs="5",insanitylevel="5",subject="all", artist="all", imagetype="all",silentmode=False, workprompt="", antistring="",prefixprompt="", suffixprompt="", negativeprompt="",promptcompounderlevel = "1", seperator="comma", img2imgbatch = "1", img2imgsamplingsteps = "20", img2imgcfg = "7", img2imgsamplingmethod = "DPM++ SDE Karras", img2imgupscaler = "R-ESRGAN 4x+", img2imgmodel = "currently selected model", img2imgactivate = False, img2imgscale = "2", img2imgpadding = "64",img2imgdenoisestrength="0.3",ultimatesdupscale=False):
+def generateimages(amount = 1, size = "all",model = "currently selected model",samplingsteps = "40",cfg= "7",hiresfix = True,hiressteps ="0",denoisestrength="0.6",samplingmethod="DPM++ SDE Karras", upscaler="R-ESRGAN 4x+", hiresscale="2",apiurl="http://127.0.0.1:7860",qualitygate=False,quality="7.6",runs="5",insanitylevel="5",subject="all", artist="all", imagetype="all",silentmode=False, workprompt="", antistring="",prefixprompt="", suffixprompt="", negativeprompt="",promptcompounderlevel = "1", seperator="comma", img2imgbatch = "1", img2imgsamplingsteps = "20", img2imgcfg = "7", img2imgsamplingmethod = "DPM++ SDE Karras", img2imgupscaler = "R-ESRGAN 4x+", img2imgmodel = "currently selected model", img2imgactivate = False, img2imgscale = "2", img2imgpadding = "64",img2imgdenoisestrength="0.3",ultimatesdupscale=False,usdutilewidth = "512", usdutileheight = "0", usdumaskblur = "8", usduredraw ="Linear", usduSeamsfix = "None", usdusdenoise = "0.35", usduswidth = "64", usduspadding ="32", usdusmaskblur = "8"):
     loops = int(amount)  # amount of images to generate
     steps = 0
 
-    img2imgloops = int(img2imgbatch)
-    if(img2imgactivate == False):  # If we dont want to run, turn it off
-        img2imgloops = 0
-    img2imgsteps = 0
+   
 
     modellist=get_models()
     samplerlist=get_samplers()
@@ -102,10 +99,14 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
 
         image = txt2img[0]
 
-        print("some testing")    
-        print(originalpnginfo)
+
         
         # upscale via img2img
+
+        img2imgloops = int(img2imgbatch)
+        if(img2imgactivate == False):  # If we dont want to run, turn it off
+            img2imgloops = 0
+        img2imgsteps = 0
         
         # start the batching!
         while img2imgsteps < img2imgloops:
@@ -127,7 +128,7 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
                 img2imgupscaler = random.choice(img2imgupscalerlist)
                 print ("Going to run with upscaler " + img2imgupscaler)
 
-            image = call_img2img(image, originalimage, originalpnginfo, apiurl, filenamecomplete, randomprompt,negativeprompt,img2imgsamplingsteps, img2imgcfg, img2imgsamplingmethod, img2imgupscaler, img2imgmodel, img2imgdenoisestrength, img2imgscale, img2imgpadding,upscalescript)
+            image = call_img2img(image, originalimage, originalpnginfo, apiurl, filenamecomplete, randomprompt,negativeprompt,img2imgsamplingsteps, img2imgcfg, img2imgsamplingmethod, img2imgupscaler, img2imgmodel, img2imgdenoisestrength, img2imgscale, img2imgpadding,upscalescript,usdutilewidth, usdutileheight, usdumaskblur, usduredraw, usduSeamsfix, usdusdenoise, usduswidth, usduspadding, usdusmaskblur)
 
             img2imgsteps += 1
 

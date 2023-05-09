@@ -5,9 +5,10 @@ import base64
 import uuid
 from PIL import Image, PngImagePlugin
 from modules import shared
+from model_lists import *
 
 
-def call_img2img(imagelocation,originalimage, originalpnginfo ="", apiurl="http://127.0.0.1:7860",filename="", prompt = "", negativeprompt = "", img2imgsamplingsteps = "20", img2imgcfg = "7", img2imgsamplingmethod = "DPM++ SDE Karras", img2imgupscaler = "R-ESRGAN 4x+", img2imgmodel = "currently selected model", denoising_strength = "0.3", scale = "2", padding = "64",upscalescript="SD upscale"):
+def call_img2img(imagelocation,originalimage, originalpnginfo ="", apiurl="http://127.0.0.1:7860",filename="", prompt = "", negativeprompt = "", img2imgsamplingsteps = "20", img2imgcfg = "7", img2imgsamplingmethod = "DPM++ SDE Karras", img2imgupscaler = "R-ESRGAN 4x+", img2imgmodel = "currently selected model", denoising_strength = "0.3", scale = "2", padding = "64",upscalescript="SD upscale",usdutilewidth = "512", usdutileheight = "0", usdumaskblur = "8", usduredraw ="Linear", usduSeamsfix = "None", usdusdenoise = "0.35", usduswidth = "64", usduspadding ="32", usdusmaskblur = "8"):
 
     negativepromptfound = 0
     #params to stay the same
@@ -21,12 +22,26 @@ def call_img2img(imagelocation,originalimage, originalpnginfo ="", apiurl="http:
 
 
     encodedstringlist = []
+    # need to convert the values to the correct index number for Ultimate SD Upscaler
+    redrawmodelist =["Linear","Chess","None"]
+    seamsfixmodelist = ["None","Band pass","Half tile offset pass","Half tile offset pass + intersections"]
+    usduredrawint = redrawmodelist.index(usduredraw)
+    seamsfixmodeint = seamsfixmodelist.index(usduSeamsfix)
+    
+
+
+
+
     #rest of prompt things
 
     sampler_index = img2imgsamplingmethod
     steps = img2imgsamplingsteps
     cfg_scale = img2imgcfg
-    upscaler = img2imgupscaler
+
+   
+
+
+
 
 
     with open(imagelocation, "rb") as image_file:
@@ -62,6 +77,33 @@ def call_img2img(imagelocation,originalimage, originalpnginfo ="", apiurl="http:
             negativeprompt = negativeprompt.replace(prompt,"")
         
 
+     # set the automatic upscale
+    
+    checkprompt = prompt.lower()
+    if(img2imgupscaler != "automatic"):
+        upscaler = img2imgupscaler
+    else:
+        upscalerlist = get_upscalers_for_img2img()
+        # on automatic, make some choices about what upscaler to use
+        # photos, prefer 4x ultrasharp
+        # anime, cartoon or drawing, go for R-ESRGAN 4x+ Anime6B
+        # else, R-ESRGAN 4x+"
+        if("hoto" in checkprompt and "4x-UltraSharp" in upscalerlist):
+            upscaler = "4x-UltraSharp"
+        elif("anime" in checkprompt or "cartoon" in checkprompt or "draw" in checkprompt or "vector" in checkprompt or "cel shad" in checkprompt or "visual novel" in checkprompt):
+            upscaler = "R-ESRGAN 4x+ Anime6B"
+        else:
+            upscaler = "R-ESRGAN 4x+"
+        
+        if(upscaler== "4x-UltraSharp"):
+            denoising_strength = "0.35"
+        if(upscaler== "R-ESRGAN 4x+ Anime6B+"):
+            denoising_strength = "0.6" # 0.6 is fine for the anime upscaler
+        if(upscaler== "R-ESRGAN 4x+"):
+            denoising_strength = "0.5" # default 0.6 is a lot and changes a lot of details
+
+
+
     payload = {
         "resize_mode": 0,
         "denoising_strength": denoising_strength,
@@ -89,17 +131,17 @@ def call_img2img(imagelocation,originalimage, originalpnginfo ="", apiurl="http:
     if(upscalescript=="Ultimate SD upscale"):
         upscaler_index = [x.name.lower() for x in shared.sd_upscalers].index(upscaler.lower())
         payload.update({"script_name": upscalescript})
-        payload.update({"script_args": ["",512,0,8,int(padding), 64, 0.35,32,
-                                        upscaler_index,True,2,False,8,
-                                        0,2,"","",2]})
+        payload.update({"script_args": ["",int(usdutilewidth),int(usdutileheight),int(usdumaskblur),int(padding), int(usduswidth), usdusdenoise,int(usduspadding),
+                                        upscaler_index,True,usduredrawint,False,int(usdusmaskblur),
+                                        seamsfixmodeint,2,"","",int(scale)]})
     
     # Ultimate SD Upscale params:
     #_, tile_width, tile_height, mask_blur, padding, seams_fix_width, seams_fix_denoise, seams_fix_padding,
     #        upscaler_index, save_upscaled_image, redraw_mode, save_seams_fix_image, seams_fix_mask_blur,
     #        seams_fix_type, target_size_type, custom_width, custom_height, custom_scale):
 
-# target_size_type = 2
-# custom_scale = 2
+    # target_size_type = 2
+    # custom_scale = 2
     response = requests.post(url=f'{url}/sdapi/v1/img2img', json=payload)
 
 

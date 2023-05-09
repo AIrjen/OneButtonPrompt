@@ -42,7 +42,7 @@ img2imgupscalerlist.insert(0,"all")
 #for ultimate SD upscale
 
 seams_fix_types = ["None","Band pass","Half tile offset pass","Half tile offset pass + intersections"]
-redrow_modes = ["Linear","Chess","None"]
+redraw_modes = ["Linear","Chess","None"]
 
 
 class Script(scripts.Script):
@@ -55,12 +55,12 @@ class Script(scripts.Script):
 
         
     def ui(self, is_img2img):
-        def gen_prompt(insanitylevel, subject, artist, imagetype, antistring):
+        def gen_prompt(insanitylevel, subject, artist, imagetype, antistring, prefixprompt, suffixprompt, promptcompounderlevel, seperator):
 
             promptlist = []
 
             for i in range(5):
-                promptlist.append(build_dynamic_prompt(insanitylevel,subject,artist, imagetype, False, antistring))
+                promptlist.append(build_dynamic_prompt(insanitylevel,subject,artist, imagetype, False, antistring,prefixprompt,suffixprompt,promptcompounderlevel,seperator))
 
             return promptlist
         
@@ -290,28 +290,30 @@ class Script(scripts.Script):
                     )
         with gr.Tab("One Button Run and Upscale"):
             with gr.Row():
-                gr.Markdown(
-                        """
-                        ### TXT2IMG
-                        <font size="2">
-                        Start WebUi with option --api for this to work.
-                        </font>
-                        """)
+                with gr.Column(scale=1):
+                    gr.Markdown(
+                            """
+                            ### TXT2IMG
+                            <font size="2">
+                            Start WebUi with option --api for this to work.
+                            </font>
+                            """)
+                    with gr.Column(scale=1):
+                         startmain = gr.Button("Start generating")
             with gr.Row():
                 with gr.Column(scale=1):
-                    amountofimages = gr.Slider(1, 50, value="1", step=1, label="Amount of images to generate")
+                    amountofimages = gr.Slider(1, 50, value="20", step=1, label="Amount of images to generate")
                     size = gr.Dropdown(
                                     sizelist, label="Size to generate", value="all")
                     with gr.Row(scale=1):
                         samplingsteps = gr.Slider(1, 100, value="20", step=1, label="Sampling steps")
-                        cfg = gr.Slider(1,20, value="7", step=0.1, label="CFG")
+                        cfg = gr.Slider(1,20, value="6", step=0.1, label="CFG")
                     with gr.Row(scale=1):                              
                         hiresfix = gr.Checkbox(label="hires. fix", value=True)
                         hiressteps = gr.Slider(0, 100, value = "0", step=1, label="Hires steps")
                         hiresscale = gr.Slider(1, 4, value = "2", step=0.05, label="Scale")
                         denoisestrength = gr.Slider(0, 1, value="0.60", step=0.01, label="Denoise strength")
-                with gr.Column(scale=1):
-                    startmain = gr.Button("Start generating")
+                with gr.Column(scale=1):    
                     apiurl = gr.Textbox(label="URL", value="http://127.0.0.1:7860")
                     model = gr.Dropdown(
                                     modellist, label="model to use", value="currently selected model")
@@ -333,7 +335,7 @@ class Script(scripts.Script):
                         </font>""")    
             with gr.Row():
                     qualitygate = gr.Checkbox(label="Quality Gate", value=False)
-                    quality = gr.Slider(1, 10, value = "7.6", step=0.1, label="Quality", visible = False)
+                    quality = gr.Slider(1, 10, value = "7.2", step=0.1, label="Quality", visible = False)
                     runs = gr.Slider(1, 50, value = "5", step=1, label="Amount of tries", visible = False)
             with gr.Row():
                     gr.Markdown(
@@ -346,7 +348,7 @@ class Script(scripts.Script):
                     with gr.Column(scale=1):
                         img2imgbatch = gr.Slider(1, 5, value="1", step=1, label="Amount times to repeat upscaling with IMG2IMG")
                         img2imgsamplingsteps = gr.Slider(1, 100, value="20", step=1, label="img2img Sampling steps")
-                        img2imgcfg = gr.Slider(1,20, value="7", step=0.1, label="img2img CFG")
+                        img2imgcfg = gr.Slider(1,20, value="6", step=0.1, label="img2img CFG")
                         img2imgdenoisestrength = gr.Slider(0, 1, value="0.30", step=0.01, label="img2img denoise strength")
                     with gr.Column(scale=1):
                         img2imgmodel = gr.Dropdown(
@@ -356,21 +358,38 @@ class Script(scripts.Script):
                         img2imgupscaler = gr.Dropdown(
                                         img2imgupscalerlist, label="img2img upscaler", value="all")
                     with gr.Row():
-                        img2imgscale = gr.Slider(1, 4, value="2", step=0.05, label="img2img scale")
+                        img2imgscale = gr.Slider(1, 4, value="1.5", step=0.05, label="img2img scale")
                         img2imgpadding = gr.Slider(32, 256, value="64", step=12, label="img2img padding")
-                    with gr.Row():
-                         ultimatesdupscale = gr.Checkbox(label="Use Ultimate SD Upscale script instead", value=False)
-                         gr.Markdown(
+            with gr.Row():
+                    ultimatesdupscale = gr.Checkbox(label="Use Ultimate SD Upscale script instead", value=False)
+                    gr.Markdown(
                         """
                         <font size="2">
                         This requires the Ultimate SD Upscale extension, install this if you haven't
                         </font>
                         """)
+            with gr.Row():
+                    with gr.Column(scale = 1):
+                        #usdutilewidth, usdutileheight, usdumaskblur, usduredraw, usduSeamsfix, usdusdenoise, usduswidth, usduspadding, usdusmaskblur
+                        #usdutilewidth = "512", usdutileheight = "0", usdumaskblur = "8", usduredraw ="Linear", usduSeamsfix = "None", usdusdenoise = "0.35", usduswidth = "64", usduspadding ="32", usdusmaskblur = "8"
+                        usdutilewidth = gr.Slider(0, 2048, value="512", step=12, label="tile width")
+                        usdutileheight = gr.Slider(0, 2048, value="0", step=12, label="tile height")
+                        usdumaskblur = gr.Slider(0, 64, value="8", step=1, label="Mask blur")
+                        usduredraw = gr.Dropdown(
+                                    redraw_modes, label="Type", value="Linear")
+                    with gr.Column(scale = 1):
+                        usduSeamsfix = gr.Dropdown(
+                                    seams_fix_types, label="Seams fix", value="None")
+                        usdusdenoise = gr.Slider(0, 1, value="0.35", step=0.01, label="Seams denoise strenght")
+                        usduswidth = gr.Slider(0, 128, value="64", step=12, label="Seams Width")
+                        usduspadding = gr.Slider(0, 128, value="32", step=12, label="Seams padding")
+                        usdusmaskblur = gr.Slider(0, 64, value="8", step=1, label="Seams Mask blur (offset pass only)")
+                        
                     
 
                     
 
-        genprom.click(gen_prompt, inputs=[insanitylevel,subject, artist, imagetype, antistring], outputs=[prompt1, prompt2, prompt3,prompt4,prompt5])
+        genprom.click(gen_prompt, inputs=[insanitylevel,subject, artist, imagetype, antistring,prefixprompt, suffixprompt,promptcompounderlevel, seperator], outputs=[prompt1, prompt2, prompt3,prompt4,prompt5])
 
         prompt1toworkflow.click(prompttoworkflowprompt, inputs=prompt1, outputs=workprompt)
         prompt2toworkflow.click(prompttoworkflowprompt, inputs=prompt2, outputs=workprompt)
@@ -378,7 +397,7 @@ class Script(scripts.Script):
         prompt4toworkflow.click(prompttoworkflowprompt, inputs=prompt4, outputs=workprompt)
         prompt5toworkflow.click(prompttoworkflowprompt, inputs=prompt5, outputs=workprompt)
 
-        startmain.click(generateimages, inputs=[amountofimages,size,model,samplingsteps,cfg,hiresfix,hiressteps,denoisestrength,samplingmethod, upscaler,hiresscale, apiurl, qualitygate, quality, runs,insanitylevel,subject, artist, imagetype, silentmode, workprompt, antistring, prefixprompt, suffixprompt,negativeprompt,promptcompounderlevel, seperator, img2imgbatch, img2imgsamplingsteps, img2imgcfg, img2imgsamplingmethod, img2imgupscaler, img2imgmodel,img2imgactivate, img2imgscale, img2imgpadding,img2imgdenoisestrength,ultimatesdupscale])
+        startmain.click(generateimages, inputs=[amountofimages,size,model,samplingsteps,cfg,hiresfix,hiressteps,denoisestrength,samplingmethod, upscaler,hiresscale, apiurl, qualitygate, quality, runs,insanitylevel,subject, artist, imagetype, silentmode, workprompt, antistring, prefixprompt, suffixprompt,negativeprompt,promptcompounderlevel, seperator, img2imgbatch, img2imgsamplingsteps, img2imgcfg, img2imgsamplingmethod, img2imgupscaler, img2imgmodel,img2imgactivate, img2imgscale, img2imgpadding,img2imgdenoisestrength,ultimatesdupscale,usdutilewidth, usdutileheight, usdumaskblur, usduredraw, usduSeamsfix, usdusdenoise, usduswidth, usduspadding, usdusmaskblur])
         
         # Turn things off and on for hiresfix
         def hireschangevalues(hiresfix):
@@ -408,7 +427,27 @@ class Script(scripts.Script):
             [quality,runs]
         )
         
+        # Turn things off and on for USDU
+        def ultimatesdupscalechangevalues(ultimatesdupscale):
+             return {
+                  usdutilewidth: gr.update(visible=ultimatesdupscale),
+                  usdutileheight: gr.update(visible=ultimatesdupscale),
+                  usdumaskblur: gr.update(visible=ultimatesdupscale),
+                  usduredraw: gr.update(visible=ultimatesdupscale),
+
+                  usduSeamsfix: gr.update(visible=ultimatesdupscale),
+                  usdusdenoise: gr.update(visible=ultimatesdupscale),
+                  usduswidth: gr.update(visible=ultimatesdupscale),
+                  usduspadding: gr.update(visible=ultimatesdupscale),
+                  usdusmaskblur: gr.update(visible=ultimatesdupscale)
+             }
         
+        ultimatesdupscale.change(
+            ultimatesdupscalechangevalues,
+            [ultimatesdupscale],
+            [usdutilewidth,usdutileheight,usdumaskblur,usduredraw,usduSeamsfix,usdusdenoise,usduswidth,usduspadding,usdusmaskblur]
+        )
+
         return [insanitylevel,subject, artist, imagetype, prefixprompt,suffixprompt,negativeprompt, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring, seperator]
             
     

@@ -297,11 +297,10 @@ class Script(scripts.Script):
                             <font size="2">
                             Start WebUi with option --api for this to work.
                             </font>
-                            """)
-                    with gr.Column(scale=1):
-                         startmain = gr.Button("Start generating")
+                            """)                         
             with gr.Row():
                 with gr.Column(scale=1):
+                    startmain = gr.Button("Start generating")
                     amountofimages = gr.Slider(1, 50, value="20", step=1, label="Amount of images to generate")
                     size = gr.Dropdown(
                                     sizelist, label="Size to generate", value="all")
@@ -384,6 +383,20 @@ class Script(scripts.Script):
                         usduswidth = gr.Slider(0, 128, value="64", step=12, label="Seams Width")
                         usduspadding = gr.Slider(0, 128, value="32", step=12, label="Seams padding")
                         usdusmaskblur = gr.Slider(0, 64, value="8", step=1, label="Seams Mask blur (offset pass only)")
+            with gr.Row():
+                    with gr.Column(scale = 1):
+                        controlnetenabled = gr.Checkbox(label="Enable controlnet tile resample", value=False)
+                    gr.Markdown(
+                        """
+                        <font size="2">
+                        This requires Controlnet 1.1 extension and the tile resample model, install this if you haven't
+                        In settings for Controlnet, enable "Allow other script to control this extension" 
+                        </font>
+                        """)
+                    with gr.Column(scale = 1):
+                        controlnetmodel = gr.Textbox(label="Controlnet tile model name", value = "control_v11f1e_sd15_tile [a371b31b]")
+                
+                      
                         
                     
 
@@ -397,7 +410,7 @@ class Script(scripts.Script):
         prompt4toworkflow.click(prompttoworkflowprompt, inputs=prompt4, outputs=workprompt)
         prompt5toworkflow.click(prompttoworkflowprompt, inputs=prompt5, outputs=workprompt)
 
-        startmain.click(generateimages, inputs=[amountofimages,size,model,samplingsteps,cfg,hiresfix,hiressteps,denoisestrength,samplingmethod, upscaler,hiresscale, apiurl, qualitygate, quality, runs,insanitylevel,subject, artist, imagetype, silentmode, workprompt, antistring, prefixprompt, suffixprompt,negativeprompt,promptcompounderlevel, seperator, img2imgbatch, img2imgsamplingsteps, img2imgcfg, img2imgsamplingmethod, img2imgupscaler, img2imgmodel,img2imgactivate, img2imgscale, img2imgpadding,img2imgdenoisestrength,ultimatesdupscale,usdutilewidth, usdutileheight, usdumaskblur, usduredraw, usduSeamsfix, usdusdenoise, usduswidth, usduspadding, usdusmaskblur])
+        startmain.click(generateimages, inputs=[amountofimages,size,model,samplingsteps,cfg,hiresfix,hiressteps,denoisestrength,samplingmethod, upscaler,hiresscale, apiurl, qualitygate, quality, runs,insanitylevel,subject, artist, imagetype, silentmode, workprompt, antistring, prefixprompt, suffixprompt,negativeprompt,promptcompounderlevel, seperator, img2imgbatch, img2imgsamplingsteps, img2imgcfg, img2imgsamplingmethod, img2imgupscaler, img2imgmodel,img2imgactivate, img2imgscale, img2imgpadding,img2imgdenoisestrength,ultimatesdupscale,usdutilewidth, usdutileheight, usdumaskblur, usduredraw, usduSeamsfix, usdusdenoise, usduswidth, usduspadding, usdusmaskblur, controlnetenabled, controlnetmodel])
         
         # Turn things off and on for hiresfix
         def hireschangevalues(hiresfix):

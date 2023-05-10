@@ -8,7 +8,7 @@ from modules import shared
 from model_lists import *
 
 
-def call_img2img(imagelocation,originalimage, originalpnginfo ="", apiurl="http://127.0.0.1:7860",filename="", prompt = "", negativeprompt = "", img2imgsamplingsteps = "20", img2imgcfg = "7", img2imgsamplingmethod = "DPM++ SDE Karras", img2imgupscaler = "R-ESRGAN 4x+", img2imgmodel = "currently selected model", denoising_strength = "0.3", scale = "2", padding = "64",upscalescript="SD upscale",usdutilewidth = "512", usdutileheight = "0", usdumaskblur = "8", usduredraw ="Linear", usduSeamsfix = "None", usdusdenoise = "0.35", usduswidth = "64", usduspadding ="32", usdusmaskblur = "8"):
+def call_img2img(imagelocation,originalimage, originalpnginfo ="", apiurl="http://127.0.0.1:7860",filename="", prompt = "", negativeprompt = "", img2imgsamplingsteps = "20", img2imgcfg = "7", img2imgsamplingmethod = "DPM++ SDE Karras", img2imgupscaler = "R-ESRGAN 4x+", img2imgmodel = "currently selected model", denoising_strength = "0.3", scale = "2", padding = "64",upscalescript="SD upscale",usdutilewidth = "512", usdutileheight = "0", usdumaskblur = "8", usduredraw ="Linear", usduSeamsfix = "None", usdusdenoise = "0.35", usduswidth = "64", usduspadding ="32", usdusmaskblur = "8",controlnetenabled=False, controlnetmodel=""):
 
     negativepromptfound = 0
     #params to stay the same
@@ -142,6 +142,29 @@ def call_img2img(imagelocation,originalimage, originalpnginfo ="", apiurl="http:
 
     # target_size_type = 2
     # custom_scale = 2
+
+
+
+    #
+    # https://github.com/Mikubill/sd-webui-controlnet/wiki/API
+    if(controlnetenabled==True and controlnetmodel!=""):
+        payload.update({"alwayson_scripts": {
+                            "controlnet": {
+                                    "args": [
+                                        {
+                                            "module": "tile_resample",
+                                            "model": controlnetmodel,
+                                            "controlnet_input_image": encodedstringlist,
+                                            "control_mode": 2 #"ControlNet is more important" : the controlnet model has more impact than the prompt
+                                            }
+                                            ]
+                                            }
+                                }
+                        })
+
+
+
+
     response = requests.post(url=f'{url}/sdapi/v1/img2img', json=payload)
 
 

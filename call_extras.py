@@ -1,15 +1,15 @@
-import json
+import os
 import requests
 import io
 import base64
 import uuid
-from PIL import Image, PngImagePlugin
+from PIL import Image
 
 
 
-def call_extras(imagelocation):
+def call_extras(imagelocation,originalimage, originalpnginfo ="", apiurl="http://127.0.0.1:7860",filename=""):
 
-    imagewip = Image.open(imagelocation)
+
     #rest of prompt things
     upscaling_resize = "2"
     upscaler_1 = "4x-UltraSharp"
@@ -19,9 +19,12 @@ def call_extras(imagelocation):
        encoded_string = base64.b64encode(image_file.read())
     encodedstring2 = encoded_string.decode('utf-8')
     #params to stay the same
-    url = "http://127.0.0.1:7860"
-    outputextrasfolder = 'C:\\automated_output\\extras\\'
-    outputextrasilename = str(uuid.uuid4())
+    url = apiurl
+    script_dir = os.path.dirname(os.path.abspath(__file__))  # Script directory
+    outputextrasfolder = os.path.join(script_dir, "./automated_outputs/extras/" )
+    if(filename==""):
+        filename = str(uuid.uuid4())
+    outputextrasilename = filename
     outputextraspng = '.png'
     outputextrasFull = '{}{}{}'.format(outputextrasfolder,outputextrasilename,outputextraspng)
 

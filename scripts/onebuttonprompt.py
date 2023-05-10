@@ -349,6 +349,7 @@ class Script(scripts.Script):
                         img2imgsamplingsteps = gr.Slider(1, 100, value="20", step=1, label="img2img Sampling steps")
                         img2imgcfg = gr.Slider(1,20, value="6", step=0.1, label="img2img CFG")
                         img2imgdenoisestrength = gr.Slider(0, 1, value="0.30", step=0.01, label="img2img denoise strength")
+                        img2imgdenoisestrengthmod = gr.Slider(-1,1, value = "-0.05", step=0.01, label="adjust denoise each img2img batch")
                     with gr.Column(scale=1):
                         img2imgmodel = gr.Dropdown(
                                     modellist, label="img2img model to use", value="currently selected model")
@@ -379,22 +380,27 @@ class Script(scripts.Script):
                     with gr.Column(scale = 1):
                         usduSeamsfix = gr.Dropdown(
                                     seams_fix_types, label="Seams fix", value="None")
-                        usdusdenoise = gr.Slider(0, 1, value="0.35", step=0.01, label="Seams denoise strenght")
+                        usdusdenoise = gr.Slider(0, 1, value="0.35", step=0.01, label="Seams  denoise strenght")
                         usduswidth = gr.Slider(0, 128, value="64", step=12, label="Seams Width")
                         usduspadding = gr.Slider(0, 128, value="32", step=12, label="Seams padding")
                         usdusmaskblur = gr.Slider(0, 64, value="8", step=1, label="Seams Mask blur (offset pass only)")
             with gr.Row():
                     with gr.Column(scale = 1):
                         controlnetenabled = gr.Checkbox(label="Enable controlnet tile resample", value=False)
-                    gr.Markdown(
-                        """
-                        <font size="2">
-                        This requires Controlnet 1.1 extension and the tile resample model, install this if you haven't
-                        In settings for Controlnet, enable "Allow other script to control this extension" 
-                        </font>
-                        """)
                     with gr.Column(scale = 1):
                         controlnetmodel = gr.Textbox(label="Controlnet tile model name", value = "control_v11f1e_sd15_tile [a371b31b]")
+            with gr.Row():
+                 gr.Markdown(
+                                """
+                                <font size="2">
+                                This requires Controlnet 1.1 extension and the tile resample model, install this if you haven't
+                                In settings for Controlnet, enable "Allow other script to control this extension" 
+                                </font>
+                                """)
+            with gr.Row():
+                 with gr.Column(scale = 1):
+                            enableextraupscale = gr.Checkbox(label="Enable upscale with extras", value=False)
+                 
                 
                       
                         
@@ -410,7 +416,7 @@ class Script(scripts.Script):
         prompt4toworkflow.click(prompttoworkflowprompt, inputs=prompt4, outputs=workprompt)
         prompt5toworkflow.click(prompttoworkflowprompt, inputs=prompt5, outputs=workprompt)
 
-        startmain.click(generateimages, inputs=[amountofimages,size,model,samplingsteps,cfg,hiresfix,hiressteps,denoisestrength,samplingmethod, upscaler,hiresscale, apiurl, qualitygate, quality, runs,insanitylevel,subject, artist, imagetype, silentmode, workprompt, antistring, prefixprompt, suffixprompt,negativeprompt,promptcompounderlevel, seperator, img2imgbatch, img2imgsamplingsteps, img2imgcfg, img2imgsamplingmethod, img2imgupscaler, img2imgmodel,img2imgactivate, img2imgscale, img2imgpadding,img2imgdenoisestrength,ultimatesdupscale,usdutilewidth, usdutileheight, usdumaskblur, usduredraw, usduSeamsfix, usdusdenoise, usduswidth, usduspadding, usdusmaskblur, controlnetenabled, controlnetmodel])
+        startmain.click(generateimages, inputs=[amountofimages,size,model,samplingsteps,cfg,hiresfix,hiressteps,denoisestrength,samplingmethod, upscaler,hiresscale, apiurl, qualitygate, quality, runs,insanitylevel,subject, artist, imagetype, silentmode, workprompt, antistring, prefixprompt, suffixprompt,negativeprompt,promptcompounderlevel, seperator, img2imgbatch, img2imgsamplingsteps, img2imgcfg, img2imgsamplingmethod, img2imgupscaler, img2imgmodel,img2imgactivate, img2imgscale, img2imgpadding,img2imgdenoisestrength,ultimatesdupscale,usdutilewidth, usdutileheight, usdumaskblur, usduredraw, usduSeamsfix, usdusdenoise, usduswidth, usduspadding, usdusmaskblur, controlnetenabled, controlnetmodel,img2imgdenoisestrengthmod,enableextraupscale])
         
         # Turn things off and on for hiresfix
         def hireschangevalues(hiresfix):

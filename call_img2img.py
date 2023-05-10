@@ -123,7 +123,24 @@ def call_img2img(imagelocation,originalimage, originalpnginfo ="", apiurl="http:
     if(img2imgmodel != "currently selected model"):
         payload.update({"sd_model": img2imgmodel})
     #
-
+    
+    # https://github.com/Mikubill/sd-webui-controlnet/wiki/API
+    if(controlnetenabled==True and controlnetmodel!=""):
+        payload.update({"alwayson_scripts": {
+                            "controlnet": {
+                                    "args": [
+                                        {
+                                            "module": "tile_resample",
+                                            "model": controlnetmodel, # control_v11f1e_sd15_tile [a371b31b]
+                                            #"input_image": encodedstringlist,
+                                            "control_mode": 2, #"ControlNet is more important" : the controlnet model has more impact than the prompt
+                                            #"resize_mode": 0
+                                            "Down Sampling Rate": 1
+                                            }
+                                            ]
+                                            }
+                                }
+                        })
     if(upscalescript=="SD upscale"):
         payload.update({"script_name": upscalescript})
         payload.update({"script_args": ["",int(padding),upscaler,scale]})
@@ -146,21 +163,7 @@ def call_img2img(imagelocation,originalimage, originalpnginfo ="", apiurl="http:
 
 
     #
-    # https://github.com/Mikubill/sd-webui-controlnet/wiki/API
-    if(controlnetenabled==True and controlnetmodel!=""):
-        payload.update({"alwayson_scripts": {
-                            "controlnet": {
-                                    "args": [
-                                        {
-                                            "module": "tile_resample",
-                                            "model": controlnetmodel,
-                                            "controlnet_input_image": encodedstringlist,
-                                            "control_mode": 2 #"ControlNet is more important" : the controlnet model has more impact than the prompt
-                                            }
-                                            ]
-                                            }
-                                }
-                        })
+  
 
 
 

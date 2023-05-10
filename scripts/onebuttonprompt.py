@@ -387,6 +387,7 @@ class Script(scripts.Script):
             with gr.Row():
                     with gr.Column(scale = 1):
                         controlnetenabled = gr.Checkbox(label="Enable controlnet tile resample", value=False)
+                        controlnetblockymode = gr.Checkbox(label="also enable wierd blocky upscale mode", value=False)
                     with gr.Column(scale = 1):
                         controlnetmodel = gr.Textbox(label="Controlnet tile model name", value = "control_v11f1e_sd15_tile [a371b31b]")
             with gr.Row():
@@ -394,12 +395,20 @@ class Script(scripts.Script):
                                 """
                                 <font size="2">
                                 This requires Controlnet 1.1 extension and the tile resample model, install this if you haven't
-                                In settings for Controlnet, enable "Allow other script to control this extension" 
+                                In settings for Controlnet, enable "Allow other script to control this extension"
+                                
+                                Don't use wierd blocky upscale mode
                                 </font>
                                 """)
             with gr.Row():
                  with gr.Column(scale = 1):
                             enableextraupscale = gr.Checkbox(label="Enable upscale with extras", value=False)
+                 with gr.Column(scale = 1):
+                            extrasupscaler1 = gr.Dropdown(
+                                        img2imgupscalerlist, label="upscaler 1", value="all")
+                            extrasupscaler2 = gr.Dropdown(
+                                        img2imgupscalerlist, label="upscaler 2", value="all")
+                      
                  
                 
                       
@@ -416,7 +425,7 @@ class Script(scripts.Script):
         prompt4toworkflow.click(prompttoworkflowprompt, inputs=prompt4, outputs=workprompt)
         prompt5toworkflow.click(prompttoworkflowprompt, inputs=prompt5, outputs=workprompt)
 
-        startmain.click(generateimages, inputs=[amountofimages,size,model,samplingsteps,cfg,hiresfix,hiressteps,denoisestrength,samplingmethod, upscaler,hiresscale, apiurl, qualitygate, quality, runs,insanitylevel,subject, artist, imagetype, silentmode, workprompt, antistring, prefixprompt, suffixprompt,negativeprompt,promptcompounderlevel, seperator, img2imgbatch, img2imgsamplingsteps, img2imgcfg, img2imgsamplingmethod, img2imgupscaler, img2imgmodel,img2imgactivate, img2imgscale, img2imgpadding,img2imgdenoisestrength,ultimatesdupscale,usdutilewidth, usdutileheight, usdumaskblur, usduredraw, usduSeamsfix, usdusdenoise, usduswidth, usduspadding, usdusmaskblur, controlnetenabled, controlnetmodel,img2imgdenoisestrengthmod,enableextraupscale])
+        startmain.click(generateimages, inputs=[amountofimages,size,model,samplingsteps,cfg,hiresfix,hiressteps,denoisestrength,samplingmethod, upscaler,hiresscale, apiurl, qualitygate, quality, runs,insanitylevel,subject, artist, imagetype, silentmode, workprompt, antistring, prefixprompt, suffixprompt,negativeprompt,promptcompounderlevel, seperator, img2imgbatch, img2imgsamplingsteps, img2imgcfg, img2imgsamplingmethod, img2imgupscaler, img2imgmodel,img2imgactivate, img2imgscale, img2imgpadding,img2imgdenoisestrength,ultimatesdupscale,usdutilewidth, usdutileheight, usdumaskblur, usduredraw, usduSeamsfix, usdusdenoise, usduswidth, usduspadding, usdusmaskblur, controlnetenabled, controlnetmodel,img2imgdenoisestrengthmod,enableextraupscale,controlnetblockymode])
         
         # Turn things off and on for hiresfix
         def hireschangevalues(hiresfix):

@@ -50,6 +50,6 @@ def call_extras(imagelocation,originalimage, originalpnginfo ="", apiurl="http:/
     response = requests.post(url=f'{url}/sdapi/v1/extra-single-image', json=payload)
 
     image = Image.open(io.BytesIO(base64.b64decode(response.json().get("image"))))
-    image.save(outputextrasFull)
+    image.save(outputextrasFull, pnginfo=originalpnginfo)
 
     return outputextrasFull

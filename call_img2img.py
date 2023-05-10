@@ -8,7 +8,7 @@ from modules import shared
 from model_lists import *
 
 
-def call_img2img(imagelocation,originalimage, originalpnginfo ="", apiurl="http://127.0.0.1:7860",filename="", prompt = "", negativeprompt = "", img2imgsamplingsteps = "20", img2imgcfg = "7", img2imgsamplingmethod = "DPM++ SDE Karras", img2imgupscaler = "R-ESRGAN 4x+", img2imgmodel = "currently selected model", denoising_strength = "0.3", scale = "2", padding = "64",upscalescript="SD upscale",usdutilewidth = "512", usdutileheight = "0", usdumaskblur = "8", usduredraw ="Linear", usduSeamsfix = "None", usdusdenoise = "0.35", usduswidth = "64", usduspadding ="32", usdusmaskblur = "8",controlnetenabled=False, controlnetmodel=""):
+def call_img2img(imagelocation,originalimage, originalpnginfo ="", apiurl="http://127.0.0.1:7860",filename="", prompt = "", negativeprompt = "", img2imgsamplingsteps = "20", img2imgcfg = "7", img2imgsamplingmethod = "DPM++ SDE Karras", img2imgupscaler = "R-ESRGAN 4x+", img2imgmodel = "currently selected model", denoising_strength = "0.3", scale = "2", padding = "64",upscalescript="SD upscale",usdutilewidth = "512", usdutileheight = "0", usdumaskblur = "8", usduredraw ="Linear", usduSeamsfix = "None", usdusdenoise = "0.35", usduswidth = "64", usduspadding ="32", usdusmaskblur = "8",controlnetenabled=False, controlnetmodel="",controlnetblockymode=False):
 
     negativepromptfound = 0
     #params to stay the same
@@ -125,6 +125,12 @@ def call_img2img(imagelocation,originalimage, originalpnginfo ="", apiurl="http:
     #
     
     # https://github.com/Mikubill/sd-webui-controlnet/wiki/API
+    #
+    if(controlnetblockymode==True):
+        treshold = int(padding)
+    else:
+        treshold = 1
+
     if(controlnetenabled==True and controlnetmodel!=""):
         payload.update({"alwayson_scripts": {
                             "controlnet": {
@@ -132,10 +138,10 @@ def call_img2img(imagelocation,originalimage, originalpnginfo ="", apiurl="http:
                                         {
                                             "module": "tile_resample",
                                             "model": controlnetmodel, # control_v11f1e_sd15_tile [a371b31b]
-                                            #"input_image": encodedstringlist,
+                                            #"input_image": encodedstringlist, 
                                             "control_mode": 2, #"ControlNet is more important" : the controlnet model has more impact than the prompt
                                             #"resize_mode": 0
-                                            "Down Sampling Rate": 1
+                                            "threshold_a": treshold
                                             }
                                             ]
                                             }

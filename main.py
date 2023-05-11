@@ -12,11 +12,34 @@ from call_extras import *
 from model_lists import *
 
 
-def generateimages(amount = 1, size = "all",model = "currently selected model",samplingsteps = "40",cfg= "7",hiresfix = True,hiressteps ="0",denoisestrength="0.6",samplingmethod="DPM++ SDE Karras", upscaler="R-ESRGAN 4x+", hiresscale="2",apiurl="http://127.0.0.1:7860",qualitygate=False,quality="7.6",runs="5",insanitylevel="5",subject="all", artist="all", imagetype="all",silentmode=False, workprompt="", antistring="",prefixprompt="", suffixprompt="", negativeprompt="",promptcompounderlevel = "1", seperator="comma", img2imgbatch = "1", img2imgsamplingsteps = "20", img2imgcfg = "7", img2imgsamplingmethod = "DPM++ SDE Karras", img2imgupscaler = "R-ESRGAN 4x+", img2imgmodel = "currently selected model", img2imgactivate = False, img2imgscale = "2", img2imgpadding = "64",img2imgdenoisestrength="0.3",ultimatesdupscale=False,usdutilewidth = "512", usdutileheight = "0", usdumaskblur = "8", usduredraw ="Linear", usduSeamsfix = "None", usdusdenoise = "0.35", usduswidth = "64", usduspadding ="32", usdusmaskblur = "8",controlnetenabled=False, controlnetmodel="",img2imgdenoisestrengthmod="-0.05",enableextraupscale = False,controlnetblockymode = False,extrasupscaler1 = "all",extrasupscaler2 ="all",extrasupscaler2visiblity="0.5",extrasupscaler2gfpgan="0",extrasupscaler2codeformer="0.15",extrasupscaler2codeformerweight="0.1",extrasresize="2"):
+def generateimages(amount = 1, size = "all",model = "currently selected model",samplingsteps = "40",cfg= "7",hiresfix = True,hiressteps ="0",denoisestrength="0.6",samplingmethod="DPM++ SDE Karras", upscaler="R-ESRGAN 4x+", hiresscale="2",apiurl="http://127.0.0.1:7860",qualitygate=False,quality="7.6",runs="5",insanitylevel="5",subject="all", artist="all", imagetype="all",silentmode=False, workprompt="", antistring="",prefixprompt="", suffixprompt="", negativeprompt="",promptcompounderlevel = "1", seperator="comma", img2imgbatch = "1", img2imgsamplingsteps = "20", img2imgcfg = "7", img2imgsamplingmethod = "DPM++ SDE Karras", img2imgupscaler = "R-ESRGAN 4x+", img2imgmodel = "currently selected model", img2imgactivate = False, img2imgscale = "2", img2imgpadding = "64",img2imgdenoisestrength="0.3",ultimatesdupscale=False,usdutilewidth = "512", usdutileheight = "0", usdumaskblur = "8", usduredraw ="Linear", usduSeamsfix = "None", usdusdenoise = "0.35", usduswidth = "64", usduspadding ="32", usdusmaskblur = "8",controlnetenabled=False, controlnetmodel="",img2imgdenoisestrengthmod="-0.05",enableextraupscale = False,controlnetblockymode = False,extrasupscaler1 = "all",extrasupscaler2 ="all",extrasupscaler2visiblity="0.5",extrasupscaler2gfpgan="0",extrasupscaler2codeformer="0.15",extrasupscaler2codeformerweight="0.1",extrasresize="2",onlyupscale="false"):
     loops = int(amount)  # amount of images to generate
     steps = 0
+    upscalefilelist=[]
+    originalimage = ""
+    originalpnginfo =""
+    randomprompt = ""
 
-   
+    if(onlyupscale==True):
+        script_dir = os.path.dirname(os.path.abspath(__file__))  # Script directory
+        inputupscalemefolder = os.path.join(script_dir, "./automated_outputs/upscale_me/" )
+        
+        for upscalefilename in os.listdir(inputupscalemefolder):
+            f = os.path.join(inputupscalemefolder, upscalefilename)
+            # checking if it is a file
+            if os.path.isfile(f):
+                if(f[:-3]!="txt"):
+                    upscalefilelist.append(f)
+            loops = len(upscalefilelist)
+
+            if(loops==0):
+                print('No files to upscale found! Please place images in //upscale_me// folder')
+            else:
+                print("")
+                print("Found and upscaling the following files")
+                print(upscalefilelist)
+                print("")
+
 
     modellist=get_models()
     samplerlist=get_samplers()
@@ -34,71 +57,80 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
         if(silentmode==True and workprompt == ""):
             print("Trying to use provided workflow prompt, but is empty. Generating a random prompt instead.")
     
-        if(silentmode==True and workprompt != ""):
-            randomprompt = workprompt
-            print("Using provided workflow prompt")
-            print(workprompt)
+        if(onlyupscale==False):  # only do txt2img when onlyupscale is False
+            if(silentmode==True and workprompt != ""):
+                randomprompt = workprompt
+                print("Using provided workflow prompt")
+                print(workprompt)
 
-        else:    
-            randomprompt = build_dynamic_prompt(insanitylevel,subject,artist,imagetype, False,antistring,prefixprompt,suffixprompt,promptcompounderlevel, seperator)
+            else:    
+                randomprompt = build_dynamic_prompt(insanitylevel,subject,artist,imagetype, False,antistring,prefixprompt,suffixprompt,promptcompounderlevel, seperator)
 
-        # make the filename, from from a to the first comma
-        start_index = randomprompt.find("of a ") + len("of a ")
+            # make the filename, from from a to the first comma
+            start_index = randomprompt.find("of a ") + len("of a ")
 
-        # find the index of the first comma after "of a" or end of the prompt
-        end_index = randomprompt.find(",", start_index)
-        if(end_index == -1):
-            end_index=len(randomprompt)
+            # find the index of the first comma after "of a" or end of the prompt
+            end_index = randomprompt.find(",", start_index)
+            if(end_index == -1):
+                end_index=len(randomprompt)
 
-        # extract the desired substring using slicing
-        filename = randomprompt[start_index:end_index]
+            # extract the desired substring using slicing
+            filename = randomprompt[start_index:end_index]
 
-        # cleanup some unsafe things in the filename
-        filename = filename.replace("\"", "")
-        filename = filename.replace("[", "")
-        filename = filename.replace("|", "")
-        filename = filename.replace("]", "")
-        filename = filename.replace(":", "_")
-        filename = re.sub(r'[0-9]+', '', filename)
+            # cleanup some unsafe things in the filename
+            filename = filename.replace("\"", "")
+            filename = filename.replace("[", "")
+            filename = filename.replace("|", "")
+            filename = filename.replace("]", "")
+            filename = filename.replace(":", "_")
+            filename = re.sub(r'[0-9]+', '', filename)
 
-        if(filename==""):
-            filename = str(uuid.uuid4())
-        
-        # create a datetime object for the current date and time
-        now = datetime.now()
-        filenamecomplete = now.strftime("%Y%m%d%H%M%S") + "_" + filename.replace(" ", "_").strip()
-
-        # prompt + size
-        if(size == "all"):
-            sizelist = ["portrait", "wide", "square", "ultrawide"]
-            size = random.choice(sizelist)
-
-
-        #Check if there is any random value we have to choose or not
-        if(model=="all"):
-            model = random.choice(modellist)
-            #lets not do inpainting models
-            while "inpaint" in model:
-                model = random.choice(modellist)
-                print("Going to run with model " + model)
-
-        if(samplingmethod=="all"):
-            samplingmethod = random.choice(samplerlist)
-            print ("Going to run with sampling method " + samplingmethod)   
-
-        if(upscaler=="all" and hiresfix == True):
-            upscaler = random.choice(upscalerlist)
-            print ("Going to run with upscaler " + upscaler)
-
-
-
+            if(filename==""):
+                filename = str(uuid.uuid4())
             
-        txt2img = call_txt2img(randomprompt, size ,hiresfix, 0, filenamecomplete,model ,samplingsteps,cfg, hiressteps, denoisestrength,samplingmethod, upscaler,hiresscale,apiurl,qualitygate,quality,runs,negativeprompt)
-        originalimage = txt2img[0] #Set this for later use
-        originalpnginfo = txt2img[1] #Sort of hacky way of bringing this forward. But if it works, it works
+            # create a datetime object for the current date and time
+            now = datetime.now()
+            filenamecomplete = now.strftime("%Y%m%d%H%M%S") + "_" + filename.replace(" ", "_").strip()
 
-        image = txt2img[0]
+            # prompt + size
+            if(size == "all"):
+                sizelist = ["portrait", "wide", "square"]
+                size = random.choice(sizelist)
 
+
+            #Check if there is any random value we have to choose or not
+            if(model=="all"):
+                model = random.choice(modellist)
+                #lets not do inpainting models
+                while "inpaint" in model:
+                    model = random.choice(modellist)
+                    print("Going to run with model " + model)
+
+            if(samplingmethod=="all"):
+                samplingmethod = random.choice(samplerlist)
+                print ("Going to run with sampling method " + samplingmethod)   
+
+            if(upscaler=="all" and hiresfix == True):
+                upscaler = random.choice(upscalerlist)
+                print ("Going to run with upscaler " + upscaler)
+
+
+
+                
+            txt2img = call_txt2img(randomprompt, size ,hiresfix, 0, filenamecomplete,model ,samplingsteps,cfg, hiressteps, denoisestrength,samplingmethod, upscaler,hiresscale,apiurl,qualitygate,quality,runs,negativeprompt)
+            originalimage = txt2img[0] #Set this for later use
+            originalpnginfo = txt2img[1] #Sort of hacky way of bringing this forward. But if it works, it works
+
+            image = txt2img[0]
+        else:
+            if(filename==""):
+                filename = str(uuid.uuid4())
+            
+            # create a datetime object for the current date and time
+            now = datetime.now()
+            filenamecomplete = now.strftime("%Y%m%d%H%M%S") + "_" + filename.replace(" ", "_").strip()
+            image = upscalefilelist[steps]  # else we get the image from the upscale file list
+            originalimage = image # this is also the original image file
 
         
         # upscale via img2img

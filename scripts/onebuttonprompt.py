@@ -290,17 +290,29 @@ class Script(scripts.Script):
                     )
         with gr.Tab("One Button Run and Upscale"):
             with gr.Row():
-                with gr.Column(scale=1):
                     gr.Markdown(
                             """
                             ### TXT2IMG
                             <font size="2">
                             Start WebUi with option --api for this to work.
                             </font>
-                            """)                         
+                            """
+                            )                         
+            with gr.Row():
+                    startmain = gr.Button("Start generating and upscaling!")
+                    onlyupscale = gr.Checkbox(label="Don't generate, only upscale", value=False)
+                    gr.Markdown(
+                            """
+                            <font size="2">
+                            Only upscale will not use txt2img to generate an image.
+
+                            Instead it will pick up all files in the \\upscale_me\\ folder and upscale them with below settings.
+                            </font>
+                            """
+                            )   
             with gr.Row():
                 with gr.Column(scale=1):
-                    startmain = gr.Button("Start generating")
+                    
                     amountofimages = gr.Slider(1, 50, value="20", step=1, label="Amount of images to generate")
                     size = gr.Dropdown(
                                     sizelist, label="Size to generate", value="all")
@@ -312,7 +324,7 @@ class Script(scripts.Script):
                         hiressteps = gr.Slider(0, 100, value = "0", step=1, label="Hires steps")
                         hiresscale = gr.Slider(1, 4, value = "2", step=0.05, label="Scale")
                         denoisestrength = gr.Slider(0, 1, value="0.60", step=0.01, label="Denoise strength")
-                with gr.Column(scale=1):    
+                with gr.Column(scale=1):
                     apiurl = gr.Textbox(label="URL", value="http://127.0.0.1:7860")
                     model = gr.Dropdown(
                                     modellist, label="model to use", value="currently selected model")
@@ -331,7 +343,9 @@ class Script(scripts.Script):
                         Once turned on, it will retry for n amount of times to get an image with the quality score. If not, it will take the best image so far and continue.
                         
                         Idea and inspiration by xKean. 
-                        </font>""")    
+                        </font>
+                        """
+                        )    
             with gr.Row():
                     qualitygate = gr.Checkbox(label="Quality Gate", value=False)
                     quality = gr.Slider(1, 10, value = "7.2", step=0.1, label="Quality", visible = False)
@@ -340,7 +354,8 @@ class Script(scripts.Script):
                     gr.Markdown(
                         """
                         ### IMG2IMG upscale
-                        """)
+                        """
+                        )
             with gr.Row():
                     img2imgactivate = gr.Checkbox(label="Upscale image with IMG2IMG", value=True)
             with gr.Row():
@@ -367,7 +382,8 @@ class Script(scripts.Script):
                         <font size="2">
                         This requires the Ultimate SD Upscale extension, install this if you haven't
                         </font>
-                        """)
+                        """
+                        )
             with gr.Row():
                     with gr.Column(scale = 1):
                         #usdutilewidth, usdutileheight, usdumaskblur, usduredraw, usduSeamsfix, usdusdenoise, usduswidth, usduspadding, usdusmaskblur
@@ -399,7 +415,8 @@ class Script(scripts.Script):
                                 
                                 Don't use wierd blocky upscale mode
                                 </font>
-                                """)
+                                """
+                                )
             with gr.Row():
                  with gr.Column(scale = 1):
                             enableextraupscale = gr.Checkbox(label="Enable upscale with extras", value=False)
@@ -425,7 +442,33 @@ class Script(scripts.Script):
         prompt4toworkflow.click(prompttoworkflowprompt, inputs=prompt4, outputs=workprompt)
         prompt5toworkflow.click(prompttoworkflowprompt, inputs=prompt5, outputs=workprompt)
 
-        startmain.click(generateimages, inputs=[amountofimages,size,model,samplingsteps,cfg,hiresfix,hiressteps,denoisestrength,samplingmethod, upscaler,hiresscale, apiurl, qualitygate, quality, runs,insanitylevel,subject, artist, imagetype, silentmode, workprompt, antistring, prefixprompt, suffixprompt,negativeprompt,promptcompounderlevel, seperator, img2imgbatch, img2imgsamplingsteps, img2imgcfg, img2imgsamplingmethod, img2imgupscaler, img2imgmodel,img2imgactivate, img2imgscale, img2imgpadding,img2imgdenoisestrength,ultimatesdupscale,usdutilewidth, usdutileheight, usdumaskblur, usduredraw, usduSeamsfix, usdusdenoise, usduswidth, usduspadding, usdusmaskblur, controlnetenabled, controlnetmodel,img2imgdenoisestrengthmod,enableextraupscale,controlnetblockymode,extrasupscaler1,extrasupscaler2,extrasupscaler2visiblity,extrasupscaler2gfpgan,extrasupscaler2codeformer,extrasupscaler2codeformerweight,extrasresize])
+        startmain.click(generateimages, inputs=[amountofimages,size,model,samplingsteps,cfg,hiresfix,hiressteps,denoisestrength,samplingmethod, upscaler,hiresscale, apiurl, qualitygate, quality, runs,insanitylevel,subject, artist, imagetype, silentmode, workprompt, antistring, prefixprompt, suffixprompt,negativeprompt,promptcompounderlevel, seperator, img2imgbatch, img2imgsamplingsteps, img2imgcfg, img2imgsamplingmethod, img2imgupscaler, img2imgmodel,img2imgactivate, img2imgscale, img2imgpadding,img2imgdenoisestrength,ultimatesdupscale,usdutilewidth, usdutileheight, usdumaskblur, usduredraw, usduSeamsfix, usdusdenoise, usduswidth, usduspadding, usdusmaskblur, controlnetenabled, controlnetmodel,img2imgdenoisestrengthmod,enableextraupscale,controlnetblockymode,extrasupscaler1,extrasupscaler2,extrasupscaler2visiblity,extrasupscaler2gfpgan,extrasupscaler2codeformer,extrasupscaler2codeformerweight,extrasresize,onlyupscale])
+        
+        # Turn things off and on for onlyupscale and txt2img
+        def onlyupscalevalues(onlyupscale):
+             return {
+                  amountofimages: gr.update(visible=onlyupscale),
+                  size: gr.update(visible=onlyupscale),
+                  samplingsteps: gr.update(visible=onlyupscale),
+                  cfg: gr.update(visible=onlyupscale),
+
+                  hiresfix: gr.update(visible=onlyupscale),
+                  hiressteps: gr.update(visible=onlyupscale),
+                  hiresscale: gr.update(visible=onlyupscale),
+                  denoisestrength: gr.update(visible=onlyupscale),
+                  upscaler: gr.update(visible=onlyupscale),
+
+                  model: gr.update(visible=onlyupscale),
+                  samplingmethod: gr.update(visible=onlyupscale),
+                  upscaler: gr.update(visible=onlyupscale)
+             }
+        
+        onlyupscale.change(
+            onlyupscalevalues,
+            [not onlyupscale],
+            [amountofimages,size,samplingsteps,cfg,hiresfix,hiressteps,hiresscale,denoisestrength,upscaler,model,samplingmethod,upscaler]
+        )
+        
         
         # Turn things off and on for hiresfix
         def hireschangevalues(hiresfix):

@@ -49,6 +49,7 @@ def call_img2img(imagelocation,originalimage, originalpnginfo ="", apiurl="http:
     encodedstringlist.append(encoded_string.decode('utf-8'))
     
     # If we don't have a prompt, get it from the original image file
+    # This is used when only_upscale is activated
     if(prompt==""):
         with open(originalimage, "rb") as originalimage_file:
             originalencoded_string = base64.b64encode(originalimage_file.read())
@@ -103,6 +104,12 @@ def call_img2img(imagelocation,originalimage, originalpnginfo ="", apiurl="http:
             denoising_strength = "0.5" # default 0.6 is a lot and changes a lot of details
 
 
+    #wierd blocky mode comes up when the treshold is set way too high and the denoising strenght is strong
+    if(controlnetblockymode==True):
+        treshold = int(padding)
+        denoising_strength = "0.8"
+    else:
+        treshold = 1
 
     payload = {
         "resize_mode": 0,
@@ -126,10 +133,7 @@ def call_img2img(imagelocation,originalimage, originalpnginfo ="", apiurl="http:
     
     # https://github.com/Mikubill/sd-webui-controlnet/wiki/API
     #
-    if(controlnetblockymode==True):
-        treshold = int(padding)
-    else:
-        treshold = 1
+
 
     if(controlnetenabled==True and controlnetmodel!=""):
         payload.update({"alwayson_scripts": {
@@ -165,12 +169,6 @@ def call_img2img(imagelocation,originalimage, originalpnginfo ="", apiurl="http:
 
     # target_size_type = 2
     # custom_scale = 2
-
-
-
-    #
-  
-
 
 
 

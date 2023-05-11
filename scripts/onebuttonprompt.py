@@ -345,7 +345,7 @@ class Script(scripts.Script):
                     img2imgactivate = gr.Checkbox(label="Upscale image with IMG2IMG", value=True)
             with gr.Row():
                     with gr.Column(scale=1):
-                        img2imgbatch = gr.Slider(1, 5, value="1", step=1, label="Amount times to repeat upscaling with IMG2IMG")
+                        img2imgbatch = gr.Slider(1, 5, value="1", step=1, label="Amount times to repeat upscaling with IMG2IMG (loopback)")
                         img2imgsamplingsteps = gr.Slider(1, 100, value="20", step=1, label="img2img Sampling steps")
                         img2imgcfg = gr.Slider(1,20, value="6", step=0.1, label="img2img CFG")
                         img2imgdenoisestrength = gr.Slider(0, 1, value="0.30", step=0.01, label="img2img denoise strength")
@@ -372,18 +372,18 @@ class Script(scripts.Script):
                     with gr.Column(scale = 1):
                         #usdutilewidth, usdutileheight, usdumaskblur, usduredraw, usduSeamsfix, usdusdenoise, usduswidth, usduspadding, usdusmaskblur
                         #usdutilewidth = "512", usdutileheight = "0", usdumaskblur = "8", usduredraw ="Linear", usduSeamsfix = "None", usdusdenoise = "0.35", usduswidth = "64", usduspadding ="32", usdusmaskblur = "8"
-                        usdutilewidth = gr.Slider(0, 2048, value="512", step=12, label="tile width")
-                        usdutileheight = gr.Slider(0, 2048, value="0", step=12, label="tile height")
-                        usdumaskblur = gr.Slider(0, 64, value="8", step=1, label="Mask blur")
+                        usdutilewidth = gr.Slider(0, 2048, value="512", step=12, label="tile width", visible = False)
+                        usdutileheight = gr.Slider(0, 2048, value="0", step=12, label="tile height", visible = False)
+                        usdumaskblur = gr.Slider(0, 64, value="8", step=1, label="Mask blur", visible = False)
                         usduredraw = gr.Dropdown(
-                                    redraw_modes, label="Type", value="Linear")
+                                    redraw_modes, label="Type", value="Linear", visible = False)
                     with gr.Column(scale = 1):
                         usduSeamsfix = gr.Dropdown(
-                                    seams_fix_types, label="Seams fix", value="None")
-                        usdusdenoise = gr.Slider(0, 1, value="0.35", step=0.01, label="Seams  denoise strenght")
-                        usduswidth = gr.Slider(0, 128, value="64", step=12, label="Seams Width")
-                        usduspadding = gr.Slider(0, 128, value="32", step=12, label="Seams padding")
-                        usdusmaskblur = gr.Slider(0, 64, value="8", step=1, label="Seams Mask blur (offset pass only)")
+                                    seams_fix_types, label="Seams fix", value="None", visible = False)
+                        usdusdenoise = gr.Slider(0, 1, value="0.35", step=0.01, label="Seams  denoise strenght", visible = False)
+                        usduswidth = gr.Slider(0, 128, value="64", step=12, label="Seams Width", visible = False)
+                        usduspadding = gr.Slider(0, 128, value="32", step=12, label="Seams padding", visible = False)
+                        usdusmaskblur = gr.Slider(0, 64, value="8", step=1, label="Seams Mask blur (offset pass only)", visible = False)
             with gr.Row():
                     with gr.Column(scale = 1):
                         controlnetenabled = gr.Checkbox(label="Enable controlnet tile resample", value=False)
@@ -403,18 +403,18 @@ class Script(scripts.Script):
             with gr.Row():
                  with gr.Column(scale = 1):
                             enableextraupscale = gr.Checkbox(label="Enable upscale with extras", value=False)
+            with gr.Row():
                  with gr.Column(scale = 1):
+                            extrasresize = gr.Slider(0, 8, value="2", step=0.05, label="Upscale resize", visible = False)
                             extrasupscaler1 = gr.Dropdown(
-                                        img2imgupscalerlist, label="upscaler 1", value="all")
+                                        img2imgupscalerlist, label="upscaler 1", value="all", visible = False)
                             extrasupscaler2 = gr.Dropdown(
-                                        img2imgupscalerlist, label="upscaler 2", value="all")
-                      
-                 
-                
-                      
-                        
-                    
-
+                                        img2imgupscalerlist, label="upscaler 2", value="all", visible = False)
+                            extrasupscaler2visiblity = gr.Slider(0, 1, value="0.5", step=0.05, label="Upscaler 2 vis.", visible = False)
+                 with gr.Column(scale = 1):
+                            extrasupscaler2gfpgan = gr.Slider(0, 1, value="0", step=0.05, label="GFPGAN vis.", visible = False)
+                            extrasupscaler2codeformer = gr.Slider(0, 1, value="0.15", step=0.05, label="CodeFormer vis.", visible = False)
+                            extrasupscaler2codeformerweight = gr.Slider(0, 1, value="0.1", step=0.05, label="CodeFormer weight", visible = False)
                     
 
         genprom.click(gen_prompt, inputs=[insanitylevel,subject, artist, imagetype, antistring,prefixprompt, suffixprompt,promptcompounderlevel, seperator], outputs=[prompt1, prompt2, prompt3,prompt4,prompt5])
@@ -425,7 +425,7 @@ class Script(scripts.Script):
         prompt4toworkflow.click(prompttoworkflowprompt, inputs=prompt4, outputs=workprompt)
         prompt5toworkflow.click(prompttoworkflowprompt, inputs=prompt5, outputs=workprompt)
 
-        startmain.click(generateimages, inputs=[amountofimages,size,model,samplingsteps,cfg,hiresfix,hiressteps,denoisestrength,samplingmethod, upscaler,hiresscale, apiurl, qualitygate, quality, runs,insanitylevel,subject, artist, imagetype, silentmode, workprompt, antistring, prefixprompt, suffixprompt,negativeprompt,promptcompounderlevel, seperator, img2imgbatch, img2imgsamplingsteps, img2imgcfg, img2imgsamplingmethod, img2imgupscaler, img2imgmodel,img2imgactivate, img2imgscale, img2imgpadding,img2imgdenoisestrength,ultimatesdupscale,usdutilewidth, usdutileheight, usdumaskblur, usduredraw, usduSeamsfix, usdusdenoise, usduswidth, usduspadding, usdusmaskblur, controlnetenabled, controlnetmodel,img2imgdenoisestrengthmod,enableextraupscale,controlnetblockymode])
+        startmain.click(generateimages, inputs=[amountofimages,size,model,samplingsteps,cfg,hiresfix,hiressteps,denoisestrength,samplingmethod, upscaler,hiresscale, apiurl, qualitygate, quality, runs,insanitylevel,subject, artist, imagetype, silentmode, workprompt, antistring, prefixprompt, suffixprompt,negativeprompt,promptcompounderlevel, seperator, img2imgbatch, img2imgsamplingsteps, img2imgcfg, img2imgsamplingmethod, img2imgupscaler, img2imgmodel,img2imgactivate, img2imgscale, img2imgpadding,img2imgdenoisestrength,ultimatesdupscale,usdutilewidth, usdutileheight, usdumaskblur, usduredraw, usduSeamsfix, usdusdenoise, usduswidth, usduspadding, usdusmaskblur, controlnetenabled, controlnetmodel,img2imgdenoisestrengthmod,enableextraupscale,controlnetblockymode,extrasupscaler1,extrasupscaler2,extrasupscaler2visiblity,extrasupscaler2gfpgan,extrasupscaler2codeformer,extrasupscaler2codeformerweight,extrasresize])
         
         # Turn things off and on for hiresfix
         def hireschangevalues(hiresfix):
@@ -475,6 +475,27 @@ class Script(scripts.Script):
             [ultimatesdupscale],
             [usdutilewidth,usdutileheight,usdumaskblur,usduredraw,usduSeamsfix,usdusdenoise,usduswidth,usduspadding,usdusmaskblur]
         )
+
+        # Turn things off and on for EXTRAS
+        def enableextraupscalechangevalues(enableextraupscale):
+             return {
+                  extrasupscaler1: gr.update(visible=enableextraupscale),
+                  extrasupscaler2: gr.update(visible=enableextraupscale),
+                  extrasupscaler2visiblity: gr.update(visible=enableextraupscale),
+                  extrasresize: gr.update(visible=enableextraupscale),
+
+                  extrasupscaler2gfpgan: gr.update(visible=enableextraupscale),
+                  extrasupscaler2codeformer: gr.update(visible=enableextraupscale),
+                  extrasupscaler2codeformerweight: gr.update(visible=enableextraupscale)
+             }
+        
+        enableextraupscale.change(
+            enableextraupscalechangevalues,
+            [enableextraupscale],
+            [extrasupscaler1,extrasupscaler2,extrasupscaler2visiblity,extrasresize, extrasupscaler2gfpgan,extrasupscaler2codeformer,extrasupscaler2codeformerweight]
+        )
+
+
 
         return [insanitylevel,subject, artist, imagetype, prefixprompt,suffixprompt,negativeprompt, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring, seperator]
             

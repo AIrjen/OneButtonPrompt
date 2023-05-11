@@ -3,17 +3,17 @@ import requests
 import io
 import base64
 import uuid
-from PIL import Image
+from PIL import Image, PngImagePlugin
 
 
 
-def call_extras(imagelocation,originalimage, originalpnginfo ="", apiurl="http://127.0.0.1:7860",filename=""):
+def call_extras(imagelocation,originalimage, originalpnginfo ="", apiurl="http://127.0.0.1:7860",filename="",extrasupscaler1 = "all",extrasupscaler2 ="all",extrasupscaler2visiblity="0.5",extrasupscaler2gfpgan="0",extrasupscaler2codeformer="0.15",extrasupscaler2codeformerweight="0.1",extrasresize="2"):
 
 
     #rest of prompt things
-    upscaling_resize = "2"
-    upscaler_1 = "4x-UltraSharp"
-    upscaler_2 = "R-ESRGAN 4x+"
+    upscaling_resize = extrasresize
+    upscaler_1 = extrasupscaler1
+    upscaler_2 = extrasupscaler2
     
     with open(imagelocation, "rb") as image_file:
        encoded_string = base64.b64encode(image_file.read())
@@ -35,12 +35,12 @@ def call_extras(imagelocation,originalimage, originalpnginfo ="", apiurl="http:/
         "image": encodedstring2,
         "resize_mode": 0,
         "show_extras_results": "false",
-        "gfpgan_visibility": 0,
-        "codeformer_visibility": 0.15,
-        "codeformer_weight": 0.1,
+        "gfpgan_visibility": extrasupscaler2gfpgan ,
+        "codeformer_visibility": extrasupscaler2visiblity,
+        "codeformer_weight": extrasupscaler2codeformerweight,
         "upscaling_crop": "false",
         "upscaler_2": upscaler_2,
-        "extras_upscaler_2_visibility": 0.5,
+        "extras_upscaler_2_visibility": extrasupscaler2visiblity,
         "upscale_first": "true",
         "rb_enabled": "false",  # the remove backgrounds plugin is  automatically turned on, need to turn it off
         "models": "None" # the remove backgrounds plugin is  automatically turned on, need to turn it off
@@ -48,6 +48,25 @@ def call_extras(imagelocation,originalimage, originalpnginfo ="", apiurl="http:/
 
 
     response = requests.post(url=f'{url}/sdapi/v1/extra-single-image', json=payload)
+
+    if(originalpnginfo==""):
+            png_payload = {
+            "image": "data:image/png;base64,"
+            }
+
+            #print("and here!")
+            #print(png_payload)
+            response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json=png_payload)
+
+            #print("here!")
+            #print(response2)
+    
+
+
+            pnginfo = PngImagePlugin.PngInfo()
+            pnginfo.add_text("parameters", response2.json().get("info"))
+
+            originalpnginfo = pnginfo
 
     image = Image.open(io.BytesIO(base64.b64decode(response.json().get("image"))))
     image.save(outputextrasFull, pnginfo=originalpnginfo)

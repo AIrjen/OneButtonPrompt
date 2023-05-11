@@ -19,6 +19,7 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
     originalimage = ""
     originalpnginfo =""
     randomprompt = ""
+    filename=""
 
     if(onlyupscale==True):
         script_dir = os.path.dirname(os.path.abspath(__file__))  # Script directory
@@ -28,7 +29,7 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
             f = os.path.join(inputupscalemefolder, upscalefilename)
             # checking if it is a file
             if os.path.isfile(f):
-                if(f[:-3]!="txt"):
+                if(f[-3:]!="txt"):
                     upscalefilelist.append(f)
             loops = len(upscalefilelist)
 

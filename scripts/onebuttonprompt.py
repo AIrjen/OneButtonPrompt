@@ -299,17 +299,20 @@ class Script(scripts.Script):
                             """
                             )                         
             with gr.Row():
-                    startmain = gr.Button("Start generating and upscaling!")
-                    onlyupscale = gr.Checkbox(label="Don't generate, only upscale", value=False)
-                    gr.Markdown(
-                            """
-                            <font size="2">
-                            Only upscale will not use txt2img to generate an image.
+                    with gr.Column(scale=1):
+                        startmain = gr.Button("Start generating and upscaling!")
+                        onlyupscale = gr.Checkbox(label="Don't generate, only upscale", value=False)
+                        apiurl = gr.Textbox(label="URL", value="http://127.0.0.1:7860")
+                    with gr.Column(scale=1):
+                        gr.Markdown(
+                                """
+                                <font size="2">
+                                Only upscale will not use txt2img to generate an image.
 
-                            Instead it will pick up all files in the \\upscale_me\\ folder and upscale them with below settings.
-                            </font>
-                            """
-                            )   
+                                Instead it will pick up all files in the \\upscale_me\\ folder and upscale them with below settings.
+                                </font>
+                                """
+                                )   
             with gr.Row():
                 with gr.Column(scale=1):
                     
@@ -325,7 +328,7 @@ class Script(scripts.Script):
                         hiresscale = gr.Slider(1, 4, value = "2", step=0.05, label="Scale")
                         denoisestrength = gr.Slider(0, 1, value="0.60", step=0.01, label="Denoise strength")
                 with gr.Column(scale=1):
-                    apiurl = gr.Textbox(label="URL", value="http://127.0.0.1:7860")
+                    
                     model = gr.Dropdown(
                                     modellist, label="model to use", value="currently selected model")
                     with gr.Column(scale=1):
@@ -446,6 +449,7 @@ class Script(scripts.Script):
         
         # Turn things off and on for onlyupscale and txt2img
         def onlyupscalevalues(onlyupscale):
+             onlyupscale = not onlyupscale
              return {
                   amountofimages: gr.update(visible=onlyupscale),
                   size: gr.update(visible=onlyupscale),
@@ -460,13 +464,18 @@ class Script(scripts.Script):
 
                   model: gr.update(visible=onlyupscale),
                   samplingmethod: gr.update(visible=onlyupscale),
-                  upscaler: gr.update(visible=onlyupscale)
+                  upscaler: gr.update(visible=onlyupscale),
+
+                  qualitygate: gr.update(visible=onlyupscale),
+                  quality: gr.update(visible=onlyupscale),
+                  runs: gr.update(visible=onlyupscale)
+
              }
         
         onlyupscale.change(
             onlyupscalevalues,
-            [not onlyupscale],
-            [amountofimages,size,samplingsteps,cfg,hiresfix,hiressteps,hiresscale,denoisestrength,upscaler,model,samplingmethod,upscaler]
+            [onlyupscale],
+            [amountofimages,size,samplingsteps,cfg,hiresfix,hiressteps,hiresscale,denoisestrength,upscaler,model,samplingmethod,upscaler,qualitygate,quality,runs]
         )
         
         

@@ -59,8 +59,9 @@ I set the complexity of the prompt to 5, which is a nice middle ground for promp
 As a "Subject Type" I select "humanoid", as the Realistic Vision model likes to generate humans.
 
 For "Artists" I select "photograph". This is a list of photography artists. However "fashion" is also a good option here. I can also recommend "none", so no artist is generated at all
+When using Photograph artists, there is a very high chance of getting a portrait image.
 
-As "Type of image" I select "photograph", so that it will always default to a portait image.
+As "Type of image" I select "photograph", so that it will always default to a portrait image.
 
 ![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/928ba5ee-800c-4937-a641-595d6357af1c)
 

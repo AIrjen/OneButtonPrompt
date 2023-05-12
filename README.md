@@ -124,20 +124,36 @@ If you want more control, use "current prompt + AND". An example would be "Art b
 > 
 >AND art by brandon woelfel, 2 people, Abstract, selfie shot angle of a 1920's Nasty slight Michelle Yeoh surrounded by Grapefruits, Blonde hair styled as Short and messy, glowing Turquoise eyes, Anime screencap, Panfuturism, Magic the gathering, photolab, High quality
 
-# off-hands, automatic generation
-This project started out as a personal project, to automatically generate windows wallpapers. The code is still in here, and can be used. You would need to set it up correctly, so it is for advanced users only.
+# One Button Run and Upscale
+Using the API feature of WebUI, this allows you to:
 
-In the main.py script, there is logic that calls the API's from automatic1111. Uncomment the lines you need, such as txt2img. You also need to create some folders on your computer (see code)
-Start automatic1111 with the option --api and run the main script.
-Edit the main script to set the amount of loops/images to generate, and uncomment the txt2img, img2img and upscale scripts to taste.
+This will allow you to:
+1. Generate an image with TXT2IMG
+    1. Can enable Hi res. fix
+    2. Possible to set up a __Quality Gate__, so only the best images get upscaled
+    3. Possible to ignore the One Button Prompt generation, and __use your own prompts__
+2. Upscale that image with IMG2IMG
+    1. This proces can be repeated. Loopback enabled.
+    2. Supports __SD Upscale__, __Ultimate SD Upscale__ and __Controlnet tile_resample__ methods of upscaling
+3. Upscale with EXTRAS
+4. Possiblities for __just upscale__ existing images
 
-It was build for personal development, so adjust directories and settings accordingly.
+All with a single press of __One Button__.
+
+[User Guide here!](https://github.com/AIrjen/OneButtonPrompt/user_guides/one_button_run_and_upscale.md#one-button-run-and-upscale)
+
+
 
 # roadmap
 Some ideas I'd like to implement:
-- Better workflow management in workflow assist tab
-- Curated artist lists
-- SD 2.1 support (inversion negative prompt)
+- The In Control update
+  - Choose your own subject
+  - Split up subjects more, and pick more detailed subjects, such as food, female, building, etc
+  - Support for LoRA and textual inversions
+  - Trigger word support
+- ~~Bring upscale automation to front-end~~ Done
+- ~~Better workflow management in workflow assist tab~~ Done
+- ~~Curated artist lists~~ Done
 - Ongoing: list refinements and new features in the prompt generation
 
 If you have a good idea or suggestion, let me know, or build it yourself ;)

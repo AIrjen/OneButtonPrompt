@@ -22,7 +22,7 @@ As a "Subject Type" I select "humanoid", this will ensure I will get a human, or
 
 For "Artists" I select "popular". This is a list of popular artists from images from CivitAI. Such as LOIS, Artgerm, alphonse mucha and many others.
 
-As "Type of image" I select "portait", so that it will always default to a portait image.
+As "Type of image" I select "portrait", so that it will always default to a portrait image.
 
 ![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/28e79a02-aba5-4a71-983b-d5edc9744cdc)
 
@@ -30,7 +30,7 @@ At that point, you can just press generate.
 
 Some other tips:
 - You can switch "Type of image" to "digital art"
-- You can switch "artists" to "Portait" or "Character"
+- You can switch "artists" to "Portrait" or "Character"
 
 Examples:
 

@@ -20,6 +20,7 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
     originalpnginfo =""
     randomprompt = ""
     filename=""
+    originalsize=size
 
     if(onlyupscale==True):
         script_dir = os.path.dirname(os.path.abspath(__file__))  # Script directory
@@ -94,7 +95,7 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
             filenamecomplete = now.strftime("%Y%m%d%H%M%S") + "_" + filename.replace(" ", "_").strip()
 
             # prompt + size
-            if(size == "all"):
+            if(originalsize == "all"):
                 sizelist = ["portrait", "wide", "square"]
                 size = random.choice(sizelist)
 

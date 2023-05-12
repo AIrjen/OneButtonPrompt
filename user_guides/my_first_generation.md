@@ -81,3 +81,42 @@ Examples:
 
 > art by Geof Kern, (art by Guo Pei:0.8), photograph, 3/4 view of a Reiwa Era Kehlani, Writing, Dark hair styled as Wavy, Necklace, Soul patch, Sunny, Dada Art, volumetric lighting, film grain, dslr, F/1.8, Plain white background
 
+## Sci-fi Animals (adding trigger words and prompt prefix)
+In this example, I am using the [dreamlike diffusion](https://civitai.com/models/1274/dreamlike-diffusion-10) model.
+
+I've set the Sampling method to "DPM++ SDE Karras", Sampling steps to "25" and kept the CFG Scale to "7"
+I've set the Widht to 768 to create some widescreen images.
+
+You can increase the batch count, to keep creating new images.
+
+I set the complexity of the prompt to 7, since we can go a little crazy here, but not too much.
+
+As a "Subject Type" I select "animal", we want to create some cool animals.
+
+For "Artists" I select "sci-fi". This is a list of sci-fi artists. However "fantasy" is also a good option here.
+
+As "Type of image" I select "concept art", because we want some cool concept art to show up.
+
+As an addition, I am also filling in the prompt prefix field with "dreamlikeart, sci-fi animal"
+
+"dreamlikeart" is the triggerword of the dreamlike diffusion model, so we want to add that as the start
+
+Adding "sci-fi animal" at the start, makes sure it understand it needs to create a sci-fi animal, regardless of what else the prompts generates.
+
+![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/7e4185d4-f93e-493b-b515-676783aa4162)
+
+Examples:
+
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/52714307-a2f6-4a22-a011-a1752f2e8523.png" alt="click!" width="30%" height="30%">
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/375c0995-cade-46c8-8a92-d093aa6cb2d6.png" alt="click!" width="30%" height="30%">
+
+> dreamlikeart, sci-fi animal, (art by Kilian Eng:1.1), concept art, Street level shot of a Floating were badger, from inside of The Tablets of Stone, Foggy, Movie still, Seapunk Art, Low shutter, Lomography, opulent
+
+> dreamlikeart, sci-fi animal, concept art, ground level shot of a Glam monster Chicken, Realistic, in the style of Bust of Nefertiti, (art by Brian Sum:1.3)
+
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/6e23079a-1981-4707-8058-ff8acd474666.png" alt="click!" width="30%" height="30%">
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/15a11263-a9db-42c2-a8da-cae63479c802.png" alt="click!" width="30%" height="30%">
+
+> dreamlikeart, sci-fi animal, concept art, aerial shot of a Happy Stegosaurus, Triathlon, wearing 1920's dark pastel Denim shorts, Adventure pose, moody lighting, Fish-eye Lens, Cinestill, National Geographic, dripping Mustard, photolab, (art by Ed Emshwiller:1.3),art by Andy Fairhurst
+
+> dreamlikeart, sci-fi animal, concept art, full shot of a Lovely Scorpion, background is Mountain, Spring, Rough sketch, key light, 50mm, Film grain, Dota style, inticrate details

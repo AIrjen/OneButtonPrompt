@@ -107,7 +107,8 @@ def call_img2img(imagelocation,originalimage, originalpnginfo ="", apiurl="http:
     #wierd blocky mode comes up when the treshold is set way too high and the denoising strenght is strong
     if(controlnetblockymode==True):
         treshold = int(padding)
-        denoising_strength = "0.8"
+        if(float(denoising_strength) < 0.65):
+            denoising_strength = "0.65"
     else:
         treshold = 1
 

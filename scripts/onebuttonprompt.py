@@ -301,9 +301,9 @@ class Script(scripts.Script):
             with gr.Row():
                     with gr.Column(scale=1):
                         startmain = gr.Button("Start generating and upscaling!")
-                        onlyupscale = gr.Checkbox(label="Don't generate, only upscale", value=False)
                         apiurl = gr.Textbox(label="URL", value="http://127.0.0.1:7860")
                     with gr.Column(scale=1):
+                        onlyupscale = gr.Checkbox(label="Don't generate, only upscale", value=False)
                         gr.Markdown(
                                 """
                                 <font size="2">
@@ -321,7 +321,7 @@ class Script(scripts.Script):
                                     sizelist, label="Size to generate", value="all")
                     with gr.Row(scale=1):
                         samplingsteps = gr.Slider(1, 100, value="20", step=1, label="Sampling steps")
-                        cfg = gr.Slider(1,20, value="6", step=0.1, label="CFG")
+                        cfg = gr.Slider(1,20, value="6.0", step=0.1, label="CFG")
                     with gr.Row(scale=1):                              
                         hiresfix = gr.Checkbox(label="hires. fix", value=True)
                         hiressteps = gr.Slider(0, 100, value = "0", step=1, label="Hires steps")
@@ -376,7 +376,7 @@ class Script(scripts.Script):
                         img2imgupscaler = gr.Dropdown(
                                         img2imgupscalerlist, label="img2img upscaler", value="all")
                     with gr.Row():
-                        img2imgscale = gr.Slider(1, 4, value="1.5", step=0.05, label="img2img scale")
+                        img2imgscale = gr.Slider(1, 4, value="2", step=0.05, label="img2img scale")
                         img2imgpadding = gr.Slider(32, 256, value="64", step=12, label="img2img padding")
             with gr.Row():
                     ultimatesdupscale = gr.Checkbox(label="Use Ultimate SD Upscale script instead", value=False)
@@ -416,7 +416,7 @@ class Script(scripts.Script):
                                 This requires Controlnet 1.1 extension and the tile resample model, install this if you haven't
                                 In settings for Controlnet, enable "Allow other script to control this extension"
                                 
-                                Don't use wierd blocky upscale mode
+                                Don't use wierd blocky upscale mode. Or maybe do?
                                 </font>
                                 """
                                 )

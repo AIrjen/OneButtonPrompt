@@ -38,8 +38,7 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
                 print('No files to upscale found! Please place images in //upscale_me// folder')
             else:
                 print("")
-                print("Found and upscaling the following files")
-                print(upscalefilelist)
+                print("Found and upscaling files")
                 print("")
 
 
@@ -116,6 +115,10 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
                 upscaler = random.choice(upscalerlist)
                 print ("Going to run with upscaler " + upscaler)
 
+            # WebUI fix for PLMS and UniPC and hiresfix
+            if(samplingmethod in ['PLMS', 'UniPC']):  # PLMS/UniPC do not support hirefix so we just silently switch to DDIM
+                samplingmethod = 'DDIM'
+
 
 
                 
@@ -161,6 +164,10 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
             if(img2imgupscaler=="all"):
                 img2imgupscaler = random.choice(img2imgupscalerlist)
                 print ("Going to run with upscaler " + img2imgupscaler)
+
+            # WebUI fix for PLMS and UniPC and img2img
+            if(img2imgsamplingmethod in ['PLMS', 'UniPC']):  # PLMS/UniPC do not support img2img so we just silently switch to DDIM
+                img2imgsamplingmethod = 'DDIM'
 
             image = call_img2img(image, originalimage, originalpnginfo, apiurl, filenamecomplete, randomprompt,negativeprompt,img2imgsamplingsteps, img2imgcfg, img2imgsamplingmethod, img2imgupscaler, img2imgmodel, img2imgdenoisestrength, img2imgscale, img2imgpadding,upscalescript,usdutilewidth, usdutileheight, usdumaskblur, usduredraw, usduSeamsfix, usdusdenoise, usduswidth, usduspadding, usdusmaskblur,controlnetenabled, controlnetmodel,controlnetblockymode)
             

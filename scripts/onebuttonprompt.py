@@ -1,6 +1,8 @@
 import modules.scripts as scripts
 import gradio as gr
 import os
+import platform
+import subprocess as sp
 
 from modules import images
 from modules.processing import process_images, Processed
@@ -44,6 +46,11 @@ img2imgupscalerlist.insert(0,"all")
 seams_fix_types = ["None","Band pass","Half tile offset pass","Half tile offset pass + intersections"]
 redraw_modes = ["Linear","Chess","None"]
 
+#folder stuff
+folder_symbol = '\U0001f4c2'  # 📂
+sys.path.append(os.path.abspath(".."))
+
+
 
 class Script(scripts.Script):
     
@@ -66,6 +73,22 @@ class Script(scripts.Script):
         
         def prompttoworkflowprompt(text):
             return text
+        
+        # Copied code from WebUI
+        def openfolder():
+            script_dir = os.path.dirname(os.path.abspath(__file__))  # Script directory
+            automatedoutputsfolder = os.path.join(script_dir, "../automated_outputs/" )
+
+            path = os.path.normpath(automatedoutputsfolder)
+
+            if platform.system() == "Windows":
+                os.startfile(path)
+            elif platform.system() == "Darwin":
+                sp.Popen(["open", path])
+            elif "microsoft-standard-WSL2" in platform.uname().release:
+                sp.Popen(["wsl-open", path])
+            else:
+                sp.Popen(["xdg-open", path])
             
 
         with gr.Tab("Main"):
@@ -301,6 +324,7 @@ class Script(scripts.Script):
             with gr.Row():
                     with gr.Column(scale=1):
                         startmain = gr.Button("Start generating and upscaling!")
+                        automatedoutputsfolderbutton = gr.Button(folder_symbol)
                         apiurl = gr.Textbox(label="URL", value="http://127.0.0.1:7860")
                     with gr.Column(scale=1):
                         onlyupscale = gr.Checkbox(label="Don't generate, only upscale", value=False)
@@ -447,6 +471,8 @@ class Script(scripts.Script):
 
         startmain.click(generateimages, inputs=[amountofimages,size,model,samplingsteps,cfg,hiresfix,hiressteps,denoisestrength,samplingmethod, upscaler,hiresscale, apiurl, qualitygate, quality, runs,insanitylevel,subject, artist, imagetype, silentmode, workprompt, antistring, prefixprompt, suffixprompt,negativeprompt,promptcompounderlevel, seperator, img2imgbatch, img2imgsamplingsteps, img2imgcfg, img2imgsamplingmethod, img2imgupscaler, img2imgmodel,img2imgactivate, img2imgscale, img2imgpadding,img2imgdenoisestrength,ultimatesdupscale,usdutilewidth, usdutileheight, usdumaskblur, usduredraw, usduSeamsfix, usdusdenoise, usduswidth, usduspadding, usdusmaskblur, controlnetenabled, controlnetmodel,img2imgdenoisestrengthmod,enableextraupscale,controlnetblockymode,extrasupscaler1,extrasupscaler2,extrasupscaler2visiblity,extrasupscaler2gfpgan,extrasupscaler2codeformer,extrasupscaler2codeformerweight,extrasresize,onlyupscale])
         
+        automatedoutputsfolderbutton.click(openfolder)
+        
         # Turn things off and on for onlyupscale and txt2img
         def onlyupscalevalues(onlyupscale):
              onlyupscale = not onlyupscale
@@ -547,7 +573,7 @@ class Script(scripts.Script):
             [extrasupscaler1,extrasupscaler2,extrasupscaler2visiblity,extrasresize, extrasupscaler2gfpgan,extrasupscaler2codeformer,extrasupscaler2codeformerweight]
         )
 
-
+      
 
         return [insanitylevel,subject, artist, imagetype, prefixprompt,suffixprompt,negativeprompt, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring, seperator]
             

@@ -730,6 +730,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     completeprompt = re.sub(',\(', ', (', completeprompt)
 
     completeprompt = re.sub('a The', 'The', completeprompt)
+    completeprompt = re.sub(', ,', ',', completeprompt)
 
 
     completeprompt = completeprompt.strip(", ")

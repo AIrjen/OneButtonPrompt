@@ -80,7 +80,7 @@ def call_txt2img(passingprompt,ratio,upscale,debugmode,filename="",model = "curr
     #params to stay the same
 
     script_dir = os.path.dirname(os.path.abspath(__file__))  # Script directory
-    outputTXT2IMGfolder = os.path.join(script_dir, "./automated_outputs/txt2img/" )
+    outputTXT2IMGfolder = os.path.join(script_dir, "./automated_outputs/txt2img/")
     if(filename==""):
         filename = str(uuid.uuid4())
     

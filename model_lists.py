@@ -63,3 +63,9 @@ def get_upscalers_for_img2img():
     upscalerlist.remove("Latent (nearest)")
     upscalerlist.remove("Latent (nearest-exact)")
     return upscalerlist
+
+def get_samplers_for_img2img():
+    #Samplers are hardcoded in WEBui, so lets do it here as well
+    samplerlist = ["Euler a", "Euler", "LMS","Heun","DPM2","DPM2 a","DPM++ 2S a","DPM++ 2M","DPM++ SDE","DPM fast","DPM adaptive","LMS Karras","DPM2 Karras","DPM2 a Karras","DPM++ 2S a Karras","DPM++ 2M Karras","DPM++ SDE Karras"]
+    samplerlist += ["DDIM"] #UniPC and PLMS dont support upscaling apparently
+    return samplerlist

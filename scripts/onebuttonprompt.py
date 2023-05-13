@@ -41,6 +41,9 @@ img2imgupscalerlist = get_upscalers_for_img2img()
 img2imgupscalerlist.insert(0,"automatic")
 img2imgupscalerlist.insert(0,"all")
 
+img2imgsamplerlist = get_samplers_for_img2img()
+img2imgsamplerlist.insert(0,"all")
+
 #for ultimate SD upscale
 
 seams_fix_types = ["None","Band pass","Half tile offset pass","Half tile offset pass + intersections"]
@@ -396,7 +399,7 @@ class Script(scripts.Script):
                         img2imgmodel = gr.Dropdown(
                                     modellist, label="img2img model to use", value="currently selected model")
                         img2imgsamplingmethod = gr.Dropdown(
-                                        samplerlist, label= "img2img sampler", value="all")   
+                                        img2imgsamplerlist, label= "img2img sampler", value="all")   
                         img2imgupscaler = gr.Dropdown(
                                         img2imgupscalerlist, label="img2img upscaler", value="all")
                     with gr.Row():

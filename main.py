@@ -46,6 +46,7 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
     samplerlist=get_samplers()
     upscalerlist=get_upscalers()
     img2imgupscalerlist=get_upscalers_for_img2img()
+    img2imgsamplerlist=get_samplers_for_img2img()
 
     if(ultimatesdupscale==False):
         upscalescript="SD upscale"
@@ -158,7 +159,7 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
                     print("Going to upscale with model " + img2imgmodel)
 
             if(img2imgsamplingmethod=="all"):
-                img2imgsamplingmethod = random.choice(samplerlist)
+                img2imgsamplingmethod = random.choice(img2imgsamplerlist)
                 print ("Going to upscale with sampling method " + img2imgsamplingmethod)   
 
             if(img2imgupscaler=="all"):
@@ -172,7 +173,8 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
             image = call_img2img(image, originalimage, originalpnginfo, apiurl, filenamecomplete, randomprompt,negativeprompt,img2imgsamplingsteps, img2imgcfg, img2imgsamplingmethod, img2imgupscaler, img2imgmodel, img2imgdenoisestrength, img2imgscale, img2imgpadding,upscalescript,usdutilewidth, usdutileheight, usdumaskblur, usduredraw, usduSeamsfix, usdusdenoise, usduswidth, usduspadding, usdusmaskblur,controlnetenabled, controlnetmodel,controlnetblockymode)
             
             img2imgdenoisestrength = str(float(img2imgdenoisestrength) + float(img2imgdenoisestrengthmod)) # lower or increase the denoise strength for each batch
-            img2imgpadding = int(img2imgpadding) + int(img2imgpadding) # also double the padding
+            img2imgpadding = int(int(img2imgpadding) * float(img2imgscale)) # also increase padding by scale
+            
             if(int(img2imgpadding)>256): # but not overdo it :D
                 img2imgpadding="256"
             

@@ -10,7 +10,7 @@ This will allow you to:
     1. This proces can be repeated. Loopback enabled.
     2. Supports __SD Upscale__, __Ultimate SD Upscale__ and __Controlnet tile_resample__ methods of upscaling
 3. Upscale with EXTRAS
-4. Possiblities for __just upscale__ existing images
+4. Possiblity to __just batch upscale__ existing images
 
 All with a single press of __One Button__.
 

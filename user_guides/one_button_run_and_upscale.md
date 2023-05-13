@@ -79,116 +79,123 @@ Important to note, is that the TXT2IMG prompt generation process works with the 
 
 So you can set up any specifics you want for the prompt generation first.
 
+The __"folder"__ buttons opens to your One Button Prompt automated outputs folders.
+
 There are some general options to set first.
 
-URL -> This should be the URL used by WebUI (see your webbrowser). This is standardly http://127.0.0.1:7860
+__URL__ -> This should be the URL used by WebUI (see your webbrowser). This is standardly __http://127.0.0.1:7860__ , but change it to your specific instance.
 
-Amount of images to generate -> How many times should it repeat the entire process. So how many images to generate and upscale
+__Amount of images to generate__ -> How many times should it repeat the entire process. So how many images to generate and upscale
 
-Don't generate, only upscale -> Place images in the /upscale_me/ folder, when enabled, it will skip the TXT2IMG part, and will start batch upscaling the images with the set parameters
+__Don't generate, only upscale__ -> Place images in the /upscale_me/ folder, when enabled, it will skip the TXT2IMG part, and will start batch upscaling the images with the set parameters
 
-model to use -> Select which model to use during generation. "Currently Selected Model" meand the model you have loaded right now. "all" means a random model (not inpainting models). Or select a specific one.
+__model to use__ -> Select which model to use during generation. __"Currently Selected Model"__ meand the model you have loaded right now. __"all"__ means a random model (not inpainting models). Or select a specific one.
 
 
 For TXT2IMG most options should be familiar. I will here explain some of the additions and changes.
 
 
-Size to generate:
+__Size to generate__:
 
-1. all -> picks randomly between portait, wide and square
-2. portait -> 512x768
-3. wide -> 768x512
-4. square -> 512x512
-5. ultrawide -> 1280x360 (Don't worry, this one is just for me, and won't be used when picking "all")
+1. __all__ -> picks randomly between __portrait__, __wide__ and __square__
+2. __portrait__ -> 512x768
+3. __wide__ -> 768x512
+4. __square__ -> 512x512
+5. __ultrawide__ -> 1280x360 (Don't worry, this one is just for me, and won't be used when picking "all")
 
-Sampler:
+__Sampler__:
 
-Added option for "all", picks randomly
+Added option for __"all"__, picks randomly
 
-Hirex upscaler:
+__Hirex upscaler__:
 
-Added option for "all", picks randomly
+Added option for __"all"__, picks randomly
 
-Added option "automatic", sets Upscaler and Denoise Strength based on prompt. Example, if the prompt contains anime, it will try to use the anime upscaler.
+Added option __"automatic"__, sets Upscaler and Denoise Strength based on prompt. Example, if the prompt contains anime, it will try to use the anime upscaler.
 
+![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/7588989a-5254-4ead-8045-b4e147803670)
 
-![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/2a397d4c-e7bd-4d00-a949-063cecb30af4)
 
 #### Quality Gate
 Idea and inspired by xKean. Such an awesome addition.
 See requirements above.
 
-When enabling Quality Gate, it will repeat the above TXT2IMG process until:
-- an Image reaches the Quality Score
-- we have reached the amount of tries
+When enabling __Quality Gate__, it will repeat the above TXT2IMG process until:
+- an Image reaches the __Quality Score__
+- we have reached the __amount of tries__
 
 When an image reaches the quality score, all other images are removed. It will then continue with the quality image.
-If we reach the amount of tries, it will pick the image with the highest score. All other images are removed. It will then continue with the highest quality image.
+If we reach the amount of tries, it will __pick the image with the highest score__. All other images are removed. It will then continue with the highest quality image.
+
+![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/53e67142-7eed-4a45-8168-4054545b3206)
+
 
 ### IMG2IMG
-Again, most options should be familiar for using IMG2IMG when upscaling. It defaults to using "SD Upscale" method which is included in WebUI standardly.
-Enable "Upscale image with IMG2IMG" to actually turn this on.
+Again, most options should be familiar for using IMG2IMG when upscaling. It defaults to using __"SD Upscale"__ method which is included in WebUI standardly.
+Enable __"Upscale image with IMG2IMG"__ to actually turn this on.
 
-Amount times to repeat upscaling with IMG2IMG (loopback) -> This controls the amount of times to use IMG2IMG to upscale.
+__Amount times to repeat upscaling with IMG2IMG (loopback)__ -> This controls the amount of times to use IMG2IMG to upscale.
 
 I will describe some of the changes from normal.
 
-model to use -> Select which model to use during generation. "Currently Selected Model" meand the model you have loaded right now. "all" means a random model (not inpainting models). Or select a specific one.
+__model to use__ -> Select which model to use during generation. __"Currently Selected Model"__ meand the model you have loaded right now. __"all"__ means a random model (not inpainting models). Or select a specific one.
 
 Note that you can have a different model selected here, than used in the TXT2IMG process.
 
-Sampler:
+__Sampler__:
 
-Added option for "all", picks randomly
+Added option for __"all"__, picks randomly
 
-Upscaler:
+__Upscaler__:
 
-Added option for "all", picks randomly
+Added option for __"all"__, picks randomly
 
-Added option "automatic", sets Upscaler and Denoise Strength based on prompt. Example, if the prompt contains anime, it will try to use the anime upscaler.
+Added option __"automatic"__, sets Upscaler and Denoise Strength based on prompt. Example, if the prompt contains anime, it will try to use the anime upscaler.
 
-adjust denoise each img2img batch -> Adds or subtracts this amount of denoise, during each IMG2IMG batch. Usually you want a lower denoise when upscaling larger images.
+__adjust denoise each img2img batch__ -> Adds or subtracts this amount of denoise, during each IMG2IMG batch. Usually you want a lower denoise when upscaling larger images.
 
 
 
 ![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/59756d2b-4e97-41b3-accb-ffa603b07152)
 
 #### Use Ultimate SD Upscale script
-Turn on "Use Ultimate SD Upscale script instead" to use Ultimate SD Upscale. You need to have that extension installed, see requirements above.
+Turn on __"Use Ultimate SD Upscale script instead"__ to use Ultimate SD Upscale. You need to have that extension installed, see requirements above.
 
 Here, all options from Ultimate SD Upscale are available.
 
 It uses img2img padding for the padding.
-It will always be set to "Scale from image size"
+It will always be set to __"Scale from image size"__
 
 ![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/23ad556a-4e53-462b-90ab-d8d5ff9e2302)
 
 
 #### Controlnet tile resample
 Best used in combination with Ultimate SD Upscale and the 4x-UltraSharp upscaler, however you can use it with the normal SD Upscaler as well.
-The controlnet tile model name is filled in for you, but if a later or newer version comes out, you might have to change this to that specific one. Current version is "control_v11f1e_sd15_tile [a371b31b]"
+The controlnet tile model name is filled in for you, but if a later or newer version comes out, you might have to change this to that specific one. Current version is __"control_v11f1e_sd15_tile [a371b31b]"__
 
 ![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/9ec27d75-a559-4b13-9a3c-60c5382117ba)
 
-There is also a option for "also enable wierd blocky upscale mode". This was a bug I found during development, but brought in as a feature. Best used with 4x-UltraSharp upscaler and a decent denoise (0.7-0.8).
+There is also a option for __"also enable wierd blocky upscale mode".__ This was a bug I found during development, but brought in as a feature. Best used with 4x-UltraSharp upscaler and a decent denoise (0.7-0.8).
 
 Here is an example result, so you can see what to expect.
 
 ![20230510220750_City](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/b8bc0544-62f2-428e-9f1a-6d42063c3518)
 
+> art by Daria Petrilli,art by J.C. Leyendecker, landscape of a City, at Overcast, Simple illustration, Lonely, Industrial Art, volumetric lighting, DayGlo and electric pink hue, under water
+
 ## Upscale with EXTRAS
 The last part is rather straightforward. You can at the last step, upscale the image through the EXTRAS tab.
-All the main options are here, you do need to enable "Enable upscale with extras".
-Again, the upscalers set to "all" are random. You can get both the same upscaler.
+All the main options are here, you do need to enable __"Enable upscale with extras"__.
+Again, the upscalers set to __"all"__ are random. You can get both the same upscaler.
 
 ![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/6e15a067-1f11-47ba-8fa4-da0eb808640e)
 
 # Just Upscale mode
-Next to the Start button, is a checkbox for "Don't generate, only upscale"
+Next to the Start button, is a checkbox for __"Don't generate, only upscale"__
 
 ![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/03380806-d81e-4bbf-8d6e-d2cb5595e3bb)
 
-This mode skips the entire TXT2IMG part of the batch. Instead, it will pick up all image files placed in the \extensions\OneButtonPrompt-dev\automated_outputs\upscale_me\ folder, and starts looping over those instead.
+This mode __skips the entire TXT2IMG part__ of the batch. Instead, it will pick up all image files placed in the __\extensions\OneButtonPrompt-dev\automated_outputs\upscale_me\ folder__, and starts looping over those instead.
 It will ignore any .txt file.
 It will keep the original files, so you have to remove them before starting the next batch again.
 
@@ -196,10 +203,10 @@ Example:
 
 ![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/a28403e3-71b8-4457-95a9-55135a61c62d)
 
-This method will read the original prompt and negative prompt from the image file (if it exists) and use that during the upscaling process.
-Thus it can be used for any image generated by the WebUI, not specific to OneButtonPrompt image files.
+This method will __read the original prompt and negative prompt__ from the image file (if it exists) and use that during the upscaling process.
+Thus it can be used for __any image generated by the WebUI__, not specific to OneButtonPrompt image files.
 
-This method is perfect for anyone who just generates their images via TXT2IMG, and then upscale in batch the best results automatically.
+This method is perfect for anyone who just generates their images via TXT2IMG, and then __upscale in batch__ the best results automatically.
 
 
 # Workflows
@@ -212,16 +219,16 @@ You can set everything to "all", and just start generating a bunch of random stu
 I'm sure your specific way of upscaling and working is supported by all the options offered here. Missing something? Let me know!
 
 ## Using your own prompts
-If you don't like the results of the One Button Prompt generator (how could you not!), you can turn off the prompt generation, and use your own prompts instead.
+If you don't like the results of the One Button Prompt generator (how could you not!), you can __turn off the prompt generation, and use your own prompts__ instead.
 
-Go to the "Workflow assist" tab, and enable "Workflow mode".
-Put your prompt in the Workflow prompt field, and it will start using that
+Go to the __"Workflow assist"__ tab, and enable __"Workflow mode"__.
+Put your prompt in the __Workflow prompt__ field, and it will start using that
 
 ![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/bad22640-3932-4122-a935-e38473a4fa56)
 
-For the negative prompt, use the "Main" tab
+For the __negative prompt__, use the __"Main"__ tab
 
-Put the negative prompt in the "Use this negative prompt" field.
+Put the negative prompt in the __"Use this negative prompt"__ field.
 
 ![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/195ac566-fecd-4cc6-8b1b-7924b72db41f)
 

@@ -12,7 +12,7 @@ It generates an entire prompt from scratch. It is random, but controlled. You si
 
 It is best used on all-purpose models, such as Stable Difussion 1.5 or those based on 1.5. Such as [deliberate](https://civitai.com/models/4823/deliberate) and [dreamlike diffusion](https://civitai.com/models/1274/dreamlike-diffusion-10). However, feel free to use it on your personal favorite models.
 
-A simple user guide for first time use and settings is available [here](https://github.com/AIrjen/OneButtonPrompt/user_guides/my_first_generation.md).
+A simple user guide for first time use and settings is available [here](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/my_first_generation.md).
 
 ## How to use in automatic1111
 In TXT2IMG or IMG2IMG, select the script "One Button Prompt".
@@ -35,7 +35,7 @@ Enjoy creating awesome pictures:
 Please be aware, that not each picture will be awesome due to the randomness of the prompt, artist and model used.
 You might get an epic landscape, or a photo of an Aggregavated Trout. In my experience, about 1 in 5 is good. Everyone of them is interesting.
 
-Some more examples below. And check the first time user guide [here](https://github.com/AIrjen/OneButtonPrompt/user_guides/my_first_generation.md).
+Some more examples below. And check the first time user guide [here](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/my_first_generation.md).
 
 ### Some details
 It will generate between 0 and 3 artists, and add those the prompt.
@@ -142,7 +142,7 @@ This will allow you to:
 
 All with a single press of __One Button__.
 
-[User Guide here!](https://github.com/AIrjen/OneButtonPrompt/user_guides/one_button_run_and_upscale.md#one-button-run-and-upscale)
+[User Guide here!](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/one_button_run_and_upscale.md#one-button-run-and-upscale)
 
 
 

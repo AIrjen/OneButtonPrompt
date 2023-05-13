@@ -5,6 +5,8 @@ Maybe it can give you some ideas and inspiration on how to use this tool. You ca
 
 It works best with models that are more general and multi purpose. Such as [deliberate](https://civitai.com/models/4823/deliberate) and [dreamlike diffusion](https://civitai.com/models/1274/dreamlike-diffusion-10). However, feel free to use it on your personal favorite models.
 
+For models which are more trained on specific subjects, match the subject to the model to get the best results.
+
 ## Portraits
 
 In this example, I am using the deliberate model.
@@ -20,17 +22,13 @@ I set the complexity of the prompt to 5, which is a nice middle ground for promp
 
 As a "Subject Type" I select "humanoid", this will ensure I will get a human, or humanoid like result from the prompt.
 
-For "Artists" I select "popular". This is a list of popular artists from images from CivitAI. Such as LOIS, Artgerm, alphonse mucha and many others.
+For "Artists" I select "popular". This is a list of popular artists from images from CivitAI. Such as LOIS, Artgerm, alphonse mucha and many others. You can also try and switch "artists" to "Portrait" or "Character"
 
-As "Type of image" I select "portrait", so that it will always default to a portrait image.
+As "Type of image" I select "portrait", so that it will always default to a portrait image. You can also try to switch "Type of image" to "digital art" to get more full body shots.
 
 ![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/28e79a02-aba5-4a71-983b-d5edc9744cdc)
 
 At that point, you can just press generate.
-
-Some other tips:
-- You can switch "Type of image" to "digital art"
-- You can switch "artists" to "Portrait" or "Character"
 
 Examples:
 
@@ -101,7 +99,7 @@ As an addition, I am also filling in the prompt prefix field with "dreamlikeart,
 
 "dreamlikeart" is the triggerword of the dreamlike diffusion model, so we want to add that as the start
 
-Adding "sci-fi animal" at the start, makes sure it understand it needs to create a sci-fi animal, regardless of what else the prompts generates.
+Adding "sci-fi animal" at the start, makes sure it understand it needs to create a sci-fi animal, regardless of what else the prompts generates. You can play around with these settings, also depending on the model you are using and the results you want.
 
 ![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/7e4185d4-f93e-493b-b515-676783aa4162)
 

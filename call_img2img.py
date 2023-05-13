@@ -161,7 +161,7 @@ def call_img2img(imagelocation,originalimage, originalpnginfo ="", apiurl="http:
         payload.update({"script_name": upscalescript})
         payload.update({"script_args": ["",int(usdutilewidth),int(usdutileheight),int(usdumaskblur),int(padding), int(usduswidth), usdusdenoise,int(usduspadding),
                                         upscaler_index,True,usduredrawint,False,int(usdusmaskblur),
-                                        seamsfixmodeint,2,"","",int(scale)]})
+                                        seamsfixmodeint,2,"","",scale]})
     
     # Ultimate SD Upscale params:
     #_, tile_width, tile_height, mask_blur, padding, seams_fix_width, seams_fix_denoise, seams_fix_padding,

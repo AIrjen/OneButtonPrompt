@@ -1,0 +1,5 @@
+From One Button run and upscale
+There needs to be a file in each directory for GIT to work properly.
+
+In this directory, place all images that you want to upscale in a batch.
+Then start One Button run and upscale with just 'only upscale'

@@ -202,4 +202,4 @@ def call_img2img(imagelocation,originalimage, originalpnginfo ="", apiurl="http:
             originalpnginfo = pnginfo
         image.save(outputimg2imgFull, pnginfo=originalpnginfo)
 
-    return [outputimg2imgFull,pnginfo]
+    return [outputimg2imgFull,originalpnginfo]

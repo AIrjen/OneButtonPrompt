@@ -32,14 +32,15 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
             if os.path.isfile(f):
                 if(f[-3:]!="txt"):
                     upscalefilelist.append(f)
-            loops = len(upscalefilelist)
+        
+        loops = len(upscalefilelist)
 
-            if(loops==0):
-                print('No files to upscale found! Please place images in //upscale_me// folder')
-            else:
-                print("")
-                print("Found and upscaling files")
-                print("")
+        if(loops==0):
+            print('No files to upscale found! Please place images in //upscale_me// folder')
+        else:
+            print("")
+            print("Found and upscaling files")
+            print("")
 
 
     modellist=get_models()
@@ -170,11 +171,15 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
             if(img2imgsamplingmethod in ['PLMS', 'UniPC']):  # PLMS/UniPC do not support img2img so we just silently switch to DDIM
                 img2imgsamplingmethod = 'DDIM'
 
-            image = call_img2img(image, originalimage, originalpnginfo, apiurl, filenamecomplete, randomprompt,negativeprompt,img2imgsamplingsteps, img2imgcfg, img2imgsamplingmethod, img2imgupscaler, img2imgmodel, img2imgdenoisestrength, img2imgscale, img2imgpadding,upscalescript,usdutilewidth, usdutileheight, usdumaskblur, usduredraw, usduSeamsfix, usdusdenoise, usduswidth, usduspadding, usdusmaskblur,controlnetenabled, controlnetmodel,controlnetblockymode)
+            img2img = call_img2img(image, originalimage, originalpnginfo, apiurl, filenamecomplete, randomprompt,negativeprompt,img2imgsamplingsteps, img2imgcfg, img2imgsamplingmethod, img2imgupscaler, img2imgmodel, img2imgdenoisestrength, img2imgscale, img2imgpadding,upscalescript,usdutilewidth, usdutileheight, usdumaskblur, usduredraw, usduSeamsfix, usdusdenoise, usduswidth, usduspadding, usdusmaskblur,controlnetenabled, controlnetmodel,controlnetblockymode)
             
+            image = img2img[0]
+            if(originalpnginfo==""):
+                originalpnginfo = img2img[1]
+
             img2imgdenoisestrength = str(float(img2imgdenoisestrength) + float(img2imgdenoisestrengthmod)) # lower or increase the denoise strength for each batch
             img2imgpadding = int(int(img2imgpadding) * float(img2imgscale)) # also increase padding by scale
-            
+
             if(int(img2imgpadding)>256): # but not overdo it :D
                 img2imgpadding="256"
             

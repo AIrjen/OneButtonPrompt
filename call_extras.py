@@ -30,7 +30,7 @@ def call_extras(imagelocation,originalimage, originalpnginfo ="", apiurl="http:/
 
 
     payload = {
-        "upscaling_resize": upscaling_resize,
+        "upscaling_resize": float(upscaling_resize),
         "upscaler_1": upscaler_1,
         "image": encodedstring2,
         "resize_mode": 0,
@@ -49,26 +49,31 @@ def call_extras(imagelocation,originalimage, originalpnginfo ="", apiurl="http:/
 
     response = requests.post(url=f'{url}/sdapi/v1/extra-single-image', json=payload)
 
-    if(originalpnginfo==""):
-            png_payload = {
-            "image": "data:image/png;base64,"
-            }
+    image = Image.open(io.BytesIO(base64.b64decode(response.json().get("image"))))
+
+    # when using just upscale, we somehow can't get the png info. Unless we do IMG2IMG or TXT2IMG first, then it is added.
+    # minor issue, so this solves it for now
+
+    #if(originalpnginfo==""):
+    #        png_payload = {
+    #        "image": "data:image/png;base64," + image[0]
+    #        }
 
             #print("and here!")
             #print(png_payload)
-            response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json=png_payload)
+    #        response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json=png_payload)
 
             #print("here!")
             #print(response2)
     
 
 
-            pnginfo = PngImagePlugin.PngInfo()
-            pnginfo.add_text("parameters", response2.json().get("info"))
+        #    pnginfo = PngImagePlugin.PngInfo()
+        #    pnginfo.add_text("parameters", response2.json().get("info"))
 
-            originalpnginfo = pnginfo
+        #    originalpnginfo = pnginfo
 
-    image = Image.open(io.BytesIO(base64.b64decode(response.json().get("image"))))
+    
     image.save(outputextrasFull, pnginfo=originalpnginfo)
 
     return outputextrasFull

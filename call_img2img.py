@@ -154,14 +154,14 @@ def call_img2img(imagelocation,originalimage, originalpnginfo ="", apiurl="http:
                         })
     if(upscalescript=="SD upscale"):
         payload.update({"script_name": upscalescript})
-        payload.update({"script_args": ["",int(padding),upscaler,scale]})
+        payload.update({"script_args": ["",int(padding),upscaler,float(scale)]})
 
     if(upscalescript=="Ultimate SD upscale"):
         upscaler_index = [x.name.lower() for x in shared.sd_upscalers].index(upscaler.lower())
         payload.update({"script_name": upscalescript})
         payload.update({"script_args": ["",int(usdutilewidth),int(usdutileheight),int(usdumaskblur),int(padding), int(usduswidth), usdusdenoise,int(usduspadding),
                                         upscaler_index,True,usduredrawint,False,int(usdusmaskblur),
-                                        seamsfixmodeint,2,"","",scale]})
+                                        seamsfixmodeint,2,"","",float(scale)]})
     
     # Ultimate SD Upscale params:
     #_, tile_width, tile_height, mask_blur, padding, seams_fix_width, seams_fix_denoise, seams_fix_padding,
@@ -202,4 +202,4 @@ def call_img2img(imagelocation,originalimage, originalpnginfo ="", apiurl="http:
             originalpnginfo = pnginfo
         image.save(outputimg2imgFull, pnginfo=originalpnginfo)
 
-    return outputimg2imgFull
+    return [outputimg2imgFull,pnginfo]

@@ -656,21 +656,29 @@ class Script(scripts.Script):
             if(silentmode == True):
                 p.prompt = workprompt
 
-            for j in range(batchsize):
+            #for j in range(batchsize):
        
-                print(" ")
-                print("Full prompt to be processed:")
-                print(" ")
-                print(p.prompt)
-                processed = process_images(p)
-                images += processed.images
-                infotexts += processed.infotexts
-                all_seeds.append(processed.seed)
-                all_prompts.append(processed.prompt)
-            
-                # Only move up a seed, when there are multiple batchsizes, and we had the first one done.
-                if(initialbatchsize != 1):
-                    p.seed += 1
+            print(" ")
+            print("Full prompt to be processed:")
+            print(" ")
+            print(p.prompt)
+
+            # finally figured out how to do multiple batch sizes
+            promptlist = []
+            for i in range(batchsize):
+                promptlist.append(p.prompt)
+
+            p.prompt = promptlist
+            p.batch_size = batchsize
+            processed = process_images(p)
+            images += processed.images
+            infotexts += processed.infotexts
+            all_seeds.append(processed.seed)
+            all_prompts.append(processed.prompt)
+        
+            # Only move up a seed, when there are multiple batchsizes, and we had the first one done.
+            if(initialbatchsize != 1):
+                p.seed += 1
             
             p.seed +=1    
         # just return all the things

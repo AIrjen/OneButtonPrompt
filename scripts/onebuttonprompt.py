@@ -65,12 +65,12 @@ class Script(scripts.Script):
 
         
     def ui(self, is_img2img):
-        def gen_prompt(insanitylevel, subject, artist, imagetype, antistring, prefixprompt, suffixprompt, promptcompounderlevel, seperator):
+        def gen_prompt(insanitylevel, subject, artist, imagetype, antistring, prefixprompt, suffixprompt, promptcompounderlevel, seperator,givensubject):
 
             promptlist = []
 
             for i in range(5):
-                promptlist.append(build_dynamic_prompt(insanitylevel,subject,artist, imagetype, False, antistring,prefixprompt,suffixprompt,promptcompounderlevel,seperator))
+                promptlist.append(build_dynamic_prompt(insanitylevel,subject,artist, imagetype, False, antistring,prefixprompt,suffixprompt,promptcompounderlevel,seperator,givensubject))
 
             return promptlist
         
@@ -101,6 +101,7 @@ class Script(scripts.Script):
                 with gr.Column(scale=1, variant="compact"):
                     subject = gr.Dropdown(
                                     subjects, label="Subject Types", value="all")
+                    givensubject = gr.Textbox(label="Overwrite subject with this: ", value="")
                 with gr.Column(scale=1, variant="compact"):
                     artist = gr.Dropdown(
                                     artists, label="Artists", value="all")
@@ -464,7 +465,7 @@ class Script(scripts.Script):
                             extrasupscaler2codeformerweight = gr.Slider(0, 1, value="0.1", step=0.05, label="CodeFormer weight", visible = False)
                     
 
-        genprom.click(gen_prompt, inputs=[insanitylevel,subject, artist, imagetype, antistring,prefixprompt, suffixprompt,promptcompounderlevel, seperator], outputs=[prompt1, prompt2, prompt3,prompt4,prompt5])
+        genprom.click(gen_prompt, inputs=[insanitylevel,subject, artist, imagetype, antistring,prefixprompt, suffixprompt,promptcompounderlevel, seperator, givensubject], outputs=[prompt1, prompt2, prompt3,prompt4,prompt5])
 
         prompt1toworkflow.click(prompttoworkflowprompt, inputs=prompt1, outputs=workprompt)
         prompt2toworkflow.click(prompttoworkflowprompt, inputs=prompt2, outputs=workprompt)
@@ -472,7 +473,7 @@ class Script(scripts.Script):
         prompt4toworkflow.click(prompttoworkflowprompt, inputs=prompt4, outputs=workprompt)
         prompt5toworkflow.click(prompttoworkflowprompt, inputs=prompt5, outputs=workprompt)
 
-        startmain.click(generateimages, inputs=[amountofimages,size,model,samplingsteps,cfg,hiresfix,hiressteps,denoisestrength,samplingmethod, upscaler,hiresscale, apiurl, qualitygate, quality, runs,insanitylevel,subject, artist, imagetype, silentmode, workprompt, antistring, prefixprompt, suffixprompt,negativeprompt,promptcompounderlevel, seperator, img2imgbatch, img2imgsamplingsteps, img2imgcfg, img2imgsamplingmethod, img2imgupscaler, img2imgmodel,img2imgactivate, img2imgscale, img2imgpadding,img2imgdenoisestrength,ultimatesdupscale,usdutilewidth, usdutileheight, usdumaskblur, usduredraw, usduSeamsfix, usdusdenoise, usduswidth, usduspadding, usdusmaskblur, controlnetenabled, controlnetmodel,img2imgdenoisestrengthmod,enableextraupscale,controlnetblockymode,extrasupscaler1,extrasupscaler2,extrasupscaler2visiblity,extrasupscaler2gfpgan,extrasupscaler2codeformer,extrasupscaler2codeformerweight,extrasresize,onlyupscale])
+        startmain.click(generateimages, inputs=[amountofimages,size,model,samplingsteps,cfg,hiresfix,hiressteps,denoisestrength,samplingmethod, upscaler,hiresscale, apiurl, qualitygate, quality, runs,insanitylevel,subject, artist, imagetype, silentmode, workprompt, antistring, prefixprompt, suffixprompt,negativeprompt,promptcompounderlevel, seperator, img2imgbatch, img2imgsamplingsteps, img2imgcfg, img2imgsamplingmethod, img2imgupscaler, img2imgmodel,img2imgactivate, img2imgscale, img2imgpadding,img2imgdenoisestrength,ultimatesdupscale,usdutilewidth, usdutileheight, usdumaskblur, usduredraw, usduSeamsfix, usdusdenoise, usduswidth, usduspadding, usdusmaskblur, controlnetenabled, controlnetmodel,img2imgdenoisestrengthmod,enableextraupscale,controlnetblockymode,extrasupscaler1,extrasupscaler2,extrasupscaler2visiblity,extrasupscaler2gfpgan,extrasupscaler2codeformer,extrasupscaler2codeformerweight,extrasresize,onlyupscale,givensubject])
         
         automatedoutputsfolderbutton.click(openfolder)
         
@@ -578,12 +579,12 @@ class Script(scripts.Script):
 
       
 
-        return [insanitylevel,subject, artist, imagetype, prefixprompt,suffixprompt,negativeprompt, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring, seperator]
+        return [insanitylevel,subject, artist, imagetype, prefixprompt,suffixprompt,negativeprompt, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring, seperator, givensubject]
             
     
 
     
-    def run(self, p, insanitylevel, subject, artist, imagetype, prefixprompt,suffixprompt,negativeprompt, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring,seperator):
+    def run(self, p, insanitylevel, subject, artist, imagetype, prefixprompt,suffixprompt,negativeprompt, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring,seperator, givensubject):
         
         images = []
         infotexts = []
@@ -647,7 +648,7 @@ class Script(scripts.Script):
                         preppedprompt += " \n " + seperator + " "
                       
                 #Here is where we build a "normal" prompt
-                preppedprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype, False, antistring, prefixprompt, suffixprompt,promptcompounderlevel, seperator)
+                preppedprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype, False, antistring, prefixprompt, suffixprompt,promptcompounderlevel, seperator,givensubject)
 
                 # set everything ready
                 p.prompt = preppedprompt  

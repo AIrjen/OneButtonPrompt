@@ -10,7 +10,7 @@ from random_functions import *
 # insanity level controls randomness of propmt 0-10
 # forcesubject van be used to force a certain type of subject
 # Set artistmode to none, to exclude artists 
-def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma"):
+def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", givensubject=""):
 
     
     # first build up a complete anti list. Those values are removing during list building
@@ -277,117 +277,143 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         if(mainchooser == "object"):
             objecttypelist = [objectlist, buildinglist, vehiclelist]  # first select a random list, then randomly select from the corresponding list
             
-            if rare_dist(insanitylevel):
-                hybridorswaplist = ["hybrid", "swap"]
-                hybridorswap = random.choice(hybridorswaplist)
-                completeprompt += "["
+            # if we have a given subject, we should skip making an actual subject
+            if(givensubject == ""):
 
-            chosenobjecttype = random.choice(objecttypelist)
+                if rare_dist(insanitylevel):
+                    hybridorswaplist = ["hybrid", "swap"]
+                    hybridorswap = random.choice(hybridorswaplist)
+                    completeprompt += "["
 
-            completeprompt += random.choice(chosenobjecttype) + " "
+                chosenobjecttype = random.choice(objecttypelist)
 
-            if(hybridorswap == "hybrid"):
-                if(uncommon_dist(insanitylevel)):
-                    completeprompt += "|" + random.choice(hybridlist) + "]"
-                else:
-                    completeprompt += "|" 
-                    completeprompt += random.choice(chosenobjecttype) + " "
-                    completeprompt += "]"
-            if(hybridorswap == "swap"):
-                if(uncommon_dist(insanitylevel)):
-                    completeprompt += ":" + random.choice(hybridlist) + ":" + str(random.randint(1,5)) +  "]"
-                else:
-                    completeprompt += ":"
-                    completeprompt += random.choice(chosenobjecttype) + " "
-                    completeprompt += ":" + str(random.randint(1,5)) +  "]"
+                completeprompt += random.choice(chosenobjecttype) + " "
+
+                if(hybridorswap == "hybrid"):
+                    if(uncommon_dist(insanitylevel)):
+                        completeprompt += "|" + random.choice(hybridlist) + "]"
+                    else:
+                        completeprompt += "|" 
+                        completeprompt += random.choice(chosenobjecttype) + " "
+                        completeprompt += "]"
+                if(hybridorswap == "swap"):
+                    if(uncommon_dist(insanitylevel)):
+                        completeprompt += ":" + random.choice(hybridlist) + ":" + str(random.randint(1,5)) +  "]"
+                    else:
+                        completeprompt += ":"
+                        completeprompt += random.choice(chosenobjecttype) + " "
+                        completeprompt += ":" + str(random.randint(1,5)) +  "]"
+            else:
+                completeprompt += " " + givensubject + " "
+            
             hybridorswap = ""
 
         if(mainchooser == "animal"):
-            if rare_dist(insanitylevel):
-                hybridorswaplist = ["hybrid", "swap"]
-                hybridorswap = random.choice(hybridorswaplist)
-                completeprompt += "["
-                
-            if unique_dist(insanitylevel):
-                animaladdlist = ["baby", "were", "giant", "monster"]
-                animaladdedsomething = 1
-                completeprompt += random.choice(animaladdlist) + " -animal-"
-            if(animaladdedsomething != 1):
-                completeprompt += random.choice(animallist) + " "
+            
+            # if we have a given subject, we should skip making an actual subject
+            if(givensubject == ""):
 
-            if(hybridorswap == "hybrid"):
-                if(uncommon_dist(insanitylevel)):
-                    completeprompt += "|" + random.choice(hybridlist) + "]"
-                else:
-                    completeprompt += "| -animal- ]"
-            if(hybridorswap == "swap"):
-                if(uncommon_dist(insanitylevel)):
-                    completeprompt += ":" + random.choice(hybridlist) + ":" + str(random.randint(1,5)) +  "]"
-                else:
-                    completeprompt += ":-animal-:" + str(random.randint(1,5)) +  "]"
+                if rare_dist(insanitylevel):
+                    hybridorswaplist = ["hybrid", "swap"]
+                    hybridorswap = random.choice(hybridorswaplist)
+                    completeprompt += "["
+                    
+                if unique_dist(insanitylevel):
+                    animaladdlist = ["baby", "were", "giant", "monster"]
+                    animaladdedsomething = 1
+                    completeprompt += random.choice(animaladdlist) + " -animal-"
+                if(animaladdedsomething != 1):
+                    completeprompt += random.choice(animallist) + " "
+
+                if(hybridorswap == "hybrid"):
+                    if(uncommon_dist(insanitylevel)):
+                        completeprompt += "|" + random.choice(hybridlist) + "]"
+                    else:
+                        completeprompt += "| -animal- ]"
+                if(hybridorswap == "swap"):
+                    if(uncommon_dist(insanitylevel)):
+                        completeprompt += ":" + random.choice(hybridlist) + ":" + str(random.randint(1,5)) +  "]"
+                    else:
+                        completeprompt += ":-animal-:" + str(random.randint(1,5)) +  "]"
+            else:
+                completeprompt += " " + givensubject + " "
+            
             hybridorswap = ""
         
-        if(subjectchooser == "human"):
-            completeprompt += random.choice(manwomanlist) + " "
+        # if we have a given subject, we should skip making an actual subject
+        if(mainchooser == "humanoid"):
+            if(givensubject==""):
 
-        if(subjectchooser == "job"):
-            completeprompt += random.choice(malefemalelist) + " "
-            completeprompt += random.choice(joblist) + " "
+                if(subjectchooser == "human"):
+                    completeprompt += random.choice(manwomanlist) + " "
 
-        if(subjectchooser == "fictional"):
-            if rare_dist(insanitylevel):
-                hybridorswaplist = ["hybrid", "swap"]
-                hybridorswap = random.choice(hybridorswaplist)
-                completeprompt += "["
-            
-            completeprompt += random.choice(fictionallist) + " "
+                if(subjectchooser == "job"):
+                    completeprompt += random.choice(malefemalelist) + " "
+                    completeprompt += random.choice(joblist) + " "
 
-            if(hybridorswap == "hybrid"):
-                completeprompt += "|" + random.choice(hybridhumanlist) + "]"
-            if(hybridorswap == "swap"):
-                completeprompt += ":" + random.choice(hybridhumanlist) + ":" + str(random.randint(1,5)) +  "]"
-            hybridorswap = ""
+                if(subjectchooser == "fictional"):
+                    if rare_dist(insanitylevel):
+                        hybridorswaplist = ["hybrid", "swap"]
+                        hybridorswap = random.choice(hybridorswaplist)
+                        completeprompt += "["
+                    
+                    completeprompt += random.choice(fictionallist) + " "
 
-        if(subjectchooser == "non fictional"):
-            if rare_dist(insanitylevel):
-                hybridorswaplist = ["hybrid", "swap"]
-                hybridorswap = random.choice(hybridorswaplist)
-                completeprompt += "["
+                    if(hybridorswap == "hybrid"):
+                        completeprompt += "|" + random.choice(hybridhumanlist) + "]"
+                    if(hybridorswap == "swap"):
+                        completeprompt += ":" + random.choice(hybridhumanlist) + ":" + str(random.randint(1,5)) +  "]"
+                    hybridorswap = ""
 
-            completeprompt += random.choice(nonfictionallist) + " "
+                if(subjectchooser == "non fictional"):
+                    if rare_dist(insanitylevel):
+                        hybridorswaplist = ["hybrid", "swap"]
+                        hybridorswap = random.choice(hybridorswaplist)
+                        completeprompt += "["
 
-            if(hybridorswap == "hybrid"):
-                completeprompt += "|" + random.choice(hybridhumanlist) + "]"
-            if(hybridorswap == "swap"):
-                completeprompt += ":" + random.choice(hybridhumanlist) + ":" + str(random.randint(1,5)) +  "]"
-            hybridorswap = ""
+                    completeprompt += random.choice(nonfictionallist) + " "
 
-        if(subjectchooser == "humanoid"):
-            if rare_dist(insanitylevel):
-                hybridorswaplist = ["hybrid", "swap"]
-                hybridorswap = random.choice(hybridorswaplist)
-                completeprompt += "["
-            
-            completeprompt += random.choice(humanoidlist) + " "
+                    if(hybridorswap == "hybrid"):
+                        completeprompt += "|" + random.choice(hybridhumanlist) + "]"
+                    if(hybridorswap == "swap"):
+                        completeprompt += ":" + random.choice(hybridhumanlist) + ":" + str(random.randint(1,5)) +  "]"
+                    hybridorswap = ""
 
-            if(hybridorswap == "hybrid"):
-                completeprompt += "|" + random.choice(hybridhumanlist) + "]"
-            if(hybridorswap == "swap"):
-                completeprompt += ":" + random.choice(hybridhumanlist) + ":" + str(random.randint(1,5)) +  "]"
-            hybridorswap = ""
+                if(subjectchooser == "humanoid"):
+                    if rare_dist(insanitylevel):
+                        hybridorswaplist = ["hybrid", "swap"]
+                        hybridorswap = random.choice(hybridorswaplist)
+                        completeprompt += "["
+                    
+                    completeprompt += random.choice(humanoidlist) + " "
 
+                    if(hybridorswap == "hybrid"):
+                        completeprompt += "|" + random.choice(hybridhumanlist) + "]"
+                    if(hybridorswap == "swap"):
+                        completeprompt += ":" + random.choice(hybridhumanlist) + ":" + str(random.randint(1,5)) +  "]"
+                    hybridorswap = ""
+            else:
+                completeprompt += " " + givensubject + " "     
+
+        
         if(subjectchooser == "landscape"):
-            if rare_dist(insanitylevel):
-                hybridorswaplist = ["hybrid", "swap"]
-                hybridorswap = random.choice(hybridorswaplist)
-                completeprompt += "["
             
-            completeprompt += random.choice(locationlist) + " "
+            # if we have a given subject, we should skip making an actual subject
+            if(givensubject == ""):
+                if rare_dist(insanitylevel):
+                    hybridorswaplist = ["hybrid", "swap"]
+                    hybridorswap = random.choice(hybridorswaplist)
+                    completeprompt += "["
+                
+                completeprompt += random.choice(locationlist) + " "
 
-            if(hybridorswap == "hybrid"):
-                completeprompt += "|" + "-location-"  + "]"
-            if(hybridorswap == "swap"):
-                completeprompt += ":" + "-location-" + ":" + str(random.randint(1,5)) +  "]"        
+                if(hybridorswap == "hybrid"):
+                    completeprompt += "|" + "-location-"  + "]"
+                if(hybridorswap == "swap"):
+                    completeprompt += ":" + "-location-" + ":" + str(random.randint(1,5)) +  "]"        
+            else:
+                completeprompt += " " + givensubject + " " 
+            
             hybridorswap = ""
 
             # shots from inside can create cool effects in landscapes
@@ -408,11 +434,15 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 completeprompt += random.choice(random.choice(addontolocation)) + " "
 
 
-        if(subjectchooser == "event"):
-            completeprompt += " \"" + random.choice(eventlist) + "\" "
-        
-        if(subjectchooser == "concept"):
-            completeprompt += " \" The " + random.choice(conceptprefixlist) + " of " + random.choice(conceptsuffixlist) + "\" "
+        if(mainchooser == "concept"):
+            if(givensubject == ""):
+                if(subjectchooser == "event"):
+                    completeprompt += " \"" + random.choice(eventlist) + "\" "
+                
+                if(subjectchooser == "concept"):
+                    completeprompt += " \" The " + random.choice(conceptprefixlist) + " of " + random.choice(conceptsuffixlist) + "\" "
+            else:
+                completeprompt += " " + givensubject + " " 
 
         # object with a face
         if(mainchooser == "object" and unique_dist(insanitylevel)):

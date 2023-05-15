@@ -114,6 +114,7 @@ class Script(scripts.Script):
                             </font>
                             """
                  )
+            with gr.Row():
                  givensubject = gr.Textbox(label="Overwrite subject: ", value="")
                  smartsubject = gr.Checkbox(label="Smart subject", value = True)
             with gr.Row():
@@ -123,6 +124,7 @@ class Script(scripts.Script):
                             </font>
                             """
                 )
+            with gr.Row():
                 with gr.Column():
                     prefixprompt = gr.Textbox(label="Place this in front of generated prompt (prefix)",value="")
                     suffixprompt = gr.Textbox(label="Place this at back of generated prompt (suffix)",value="")
@@ -134,6 +136,7 @@ class Script(scripts.Script):
                             </font>
                             """
                 )
+            with gr.Row():
                 with gr.Column():
                     antistring = gr.Textbox(label="Filter out following properties (comma seperated). Example ""film grain, purple, cat"" ")
             with gr.Row():

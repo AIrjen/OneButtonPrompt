@@ -680,7 +680,7 @@ class Script(scripts.Script):
                         preppedprompt += " \n " + seperator + " "
                       
                 #Here is where we build a "normal" prompt
-                preppedprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype, False, antistring, prefixprompt, suffixprompt,promptcompounderlevel, seperator,givensubject)
+                preppedprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype, False, antistring, prefixprompt, suffixprompt,promptcompounderlevel, seperator,givensubject,smartsubject)
 
                 # set everything ready
                 p.prompt = preppedprompt  

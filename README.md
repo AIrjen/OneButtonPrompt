@@ -66,7 +66,11 @@ For each Batch you run, it will create a new prompt. For each batch size, it wil
 
 
 # Installing in automatic1111
-It can be used in automatic1111. Simply install this from via install from URL. After that you can see OneButtonPrompt in the script fields for txt2img and img2img.
+One Button Prompt can be found in the normal installation list of Automatic1111. Go to Extension -> Available and press Load From. In the list you will see One Button Prompt, and press install.
+![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/d98cba69-d249-4f4a-8965-2dd4509dc11c)
+
+
+If you want to do it manually,sSimply install this from via install from URL. After that you can see OneButtonPrompt in the script fields for txt2img and img2img.
 Set the following URL to install from: https://github.com/AIrjen/OneButtonPrompt
 
 <img src="https://user-images.githubusercontent.com/130234949/230917712-60a3c1f4-fea6-4ecd-bc68-da52f1ff86fe.png" alt="Easy to install" width="50%" height="50%">
@@ -84,7 +88,11 @@ You can turn it off. Add your own artists to the prompt, and they will be added 
 
 Type of image can be used to force a certian direction. For example when using Realistic Vision, it might be a good idea to set it to photograph. For an anime model, you might want to use "Anime key visual"
 
-If you write anything in the prompt field, it will be added to the generated prompt. You can select where it goes, in the front or at the back. Users have been using this to add their own LoRA's or textual inversions. You can also add your own artists here if wou'd like, or anything else you want to have control over.
+The existing prompt and negative prompt fields are ignored.
+                        
+Add a prompt prefix, suffix and the negative prompt in the respective fields. They will be automatically added during processing.
+
+These can be used to add textual inversion and LoRA's. They can also be used to add your models trigger words.
 
 ![image](https://user-images.githubusercontent.com/130234949/233621990-ebbab403-86dd-4764-8448-26ab5729a7e9.png)
 

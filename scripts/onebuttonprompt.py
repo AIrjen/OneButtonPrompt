@@ -65,12 +65,12 @@ class Script(scripts.Script):
 
         
     def ui(self, is_img2img):
-        def gen_prompt(insanitylevel, subject, artist, imagetype, antistring, prefixprompt, suffixprompt, promptcompounderlevel, seperator):
+        def gen_prompt(insanitylevel, subject, artist, imagetype, antistring, prefixprompt, suffixprompt, promptcompounderlevel, seperator,givensubject,smartsubject):
 
             promptlist = []
 
             for i in range(5):
-                promptlist.append(build_dynamic_prompt(insanitylevel,subject,artist, imagetype, False, antistring,prefixprompt,suffixprompt,promptcompounderlevel,seperator))
+                promptlist.append(build_dynamic_prompt(insanitylevel,subject,artist, imagetype, False, antistring,prefixprompt,suffixprompt,promptcompounderlevel,seperator,givensubject,smartsubject))
 
             return promptlist
         
@@ -100,7 +100,7 @@ class Script(scripts.Script):
             with gr.Row():
                 with gr.Column(scale=1, variant="compact"):
                     subject = gr.Dropdown(
-                                    subjects, label="Subject Types", value="all")
+                                    subjects, label="Subject Types", value="all")                   
                 with gr.Column(scale=1, variant="compact"):
                     artist = gr.Dropdown(
                                     artists, label="Artists", value="all")
@@ -108,10 +108,34 @@ class Script(scripts.Script):
                     imagetype = gr.Dropdown(
                                     imagetypes, label="type of image", value="all")
             with gr.Row():
+                 gr.Markdown("""
+                            <font size="2">
+                            Override options (choose the related subject type first for better results)
+                            </font>
+                            """
+                 )
+            with gr.Row():
+                 givensubject = gr.Textbox(label="Overwrite subject: ", value="")
+                 smartsubject = gr.Checkbox(label="Smart subject", value = True)
+            with gr.Row():
+                gr.Markdown("""
+                            <font size="2">
+                            Prompt fields
+                            </font>
+                            """
+                )
+            with gr.Row():
                 with gr.Column():
                     prefixprompt = gr.Textbox(label="Place this in front of generated prompt (prefix)",value="")
                     suffixprompt = gr.Textbox(label="Place this at back of generated prompt (suffix)",value="")
                     negativeprompt = gr.Textbox(label="Use this negative prompt",value="")
+            with gr.Row():
+                gr.Markdown("""
+                            <font size="2">
+                            Additional options
+                            </font>
+                            """
+                )
             with gr.Row():
                 with gr.Column():
                     antistring = gr.Textbox(label="Filter out following properties (comma seperated). Example ""film grain, purple, cat"" ")
@@ -126,8 +150,7 @@ class Script(scripts.Script):
 
                         There are a lot of special things build in, based on various research papers. Just try it, and let it surprise you.
 
-                        Suggestion is to leave the prompt field empty, anything here will be added at the end of the generated prompt.  
-                        It doesn't add anything to the negative prompt field, so feel free to add your favorite negative prompts here.  
+                        Add additional prompting to the prefix, suffix and negative prompt in this screen. The actual prompt fields are ignored. 
                         </font>
                         
                         ### Subject Types
@@ -152,7 +175,7 @@ class Script(scripts.Script):
                         <font size="2">
                         Artists have a major impact on the result. Automatically, it will select between 0-3 artists out of 3483 artists for your prompt.  
                         
-                        You can turn it off. Add your own artists to the prompt, and they will be added to the end of the prompt.
+                        You can turn it off and maybe add your own in the prefix or suffix prompt fields
                         </font>
 
                         ### type of image
@@ -182,13 +205,23 @@ class Script(scripts.Script):
                         
                         8. only other types --> Will pick only from the more unique types, such as stained glass window or a funko pop
 
+                        ### Overwrite subject
 
+                        When you fill in the Overwrite subject field, that subject will be used to build the dynamic prompt around. It is best, if you set the subject type to match the subject. For example, set it to humanoid if you place a person in the override subject field.
+                        
+                        This way, you can create unlimited variants of a subject.
+
+                        Smart subject tries to determine what to and not to generate based on your subject. Example, if your Overwrite subject is formed like this: Obese man wearing a kimono
+                        
+                        It will then recognize the body type and not generate it. It also recognizes the keyword wearing, and will not generate an outfit.
 
                         ### Other prompt fields
 
                         The existing prompt and negative prompt fields are ignored.
                         
                         Add a prompt prefix, suffix and the negative prompt in the respective fields. They will be automatically added during processing.
+
+                        These can be used to add textual inversion and LoRA's. They can also be used to add your models trigger words.
 
                         </font>
 
@@ -464,7 +497,7 @@ class Script(scripts.Script):
                             extrasupscaler2codeformerweight = gr.Slider(0, 1, value="0.1", step=0.05, label="CodeFormer weight", visible = False)
                     
 
-        genprom.click(gen_prompt, inputs=[insanitylevel,subject, artist, imagetype, antistring,prefixprompt, suffixprompt,promptcompounderlevel, seperator], outputs=[prompt1, prompt2, prompt3,prompt4,prompt5])
+        genprom.click(gen_prompt, inputs=[insanitylevel,subject, artist, imagetype, antistring,prefixprompt, suffixprompt,promptcompounderlevel, seperator, givensubject,smartsubject], outputs=[prompt1, prompt2, prompt3,prompt4,prompt5])
 
         prompt1toworkflow.click(prompttoworkflowprompt, inputs=prompt1, outputs=workprompt)
         prompt2toworkflow.click(prompttoworkflowprompt, inputs=prompt2, outputs=workprompt)
@@ -472,7 +505,7 @@ class Script(scripts.Script):
         prompt4toworkflow.click(prompttoworkflowprompt, inputs=prompt4, outputs=workprompt)
         prompt5toworkflow.click(prompttoworkflowprompt, inputs=prompt5, outputs=workprompt)
 
-        startmain.click(generateimages, inputs=[amountofimages,size,model,samplingsteps,cfg,hiresfix,hiressteps,denoisestrength,samplingmethod, upscaler,hiresscale, apiurl, qualitygate, quality, runs,insanitylevel,subject, artist, imagetype, silentmode, workprompt, antistring, prefixprompt, suffixprompt,negativeprompt,promptcompounderlevel, seperator, img2imgbatch, img2imgsamplingsteps, img2imgcfg, img2imgsamplingmethod, img2imgupscaler, img2imgmodel,img2imgactivate, img2imgscale, img2imgpadding,img2imgdenoisestrength,ultimatesdupscale,usdutilewidth, usdutileheight, usdumaskblur, usduredraw, usduSeamsfix, usdusdenoise, usduswidth, usduspadding, usdusmaskblur, controlnetenabled, controlnetmodel,img2imgdenoisestrengthmod,enableextraupscale,controlnetblockymode,extrasupscaler1,extrasupscaler2,extrasupscaler2visiblity,extrasupscaler2gfpgan,extrasupscaler2codeformer,extrasupscaler2codeformerweight,extrasresize,onlyupscale])
+        startmain.click(generateimages, inputs=[amountofimages,size,model,samplingsteps,cfg,hiresfix,hiressteps,denoisestrength,samplingmethod, upscaler,hiresscale, apiurl, qualitygate, quality, runs,insanitylevel,subject, artist, imagetype, silentmode, workprompt, antistring, prefixprompt, suffixprompt,negativeprompt,promptcompounderlevel, seperator, img2imgbatch, img2imgsamplingsteps, img2imgcfg, img2imgsamplingmethod, img2imgupscaler, img2imgmodel,img2imgactivate, img2imgscale, img2imgpadding,img2imgdenoisestrength,ultimatesdupscale,usdutilewidth, usdutileheight, usdumaskblur, usduredraw, usduSeamsfix, usdusdenoise, usduswidth, usduspadding, usdusmaskblur, controlnetenabled, controlnetmodel,img2imgdenoisestrengthmod,enableextraupscale,controlnetblockymode,extrasupscaler1,extrasupscaler2,extrasupscaler2visiblity,extrasupscaler2gfpgan,extrasupscaler2codeformer,extrasupscaler2codeformerweight,extrasresize,onlyupscale,givensubject,smartsubject])
         
         automatedoutputsfolderbutton.click(openfolder)
         
@@ -578,12 +611,12 @@ class Script(scripts.Script):
 
       
 
-        return [insanitylevel,subject, artist, imagetype, prefixprompt,suffixprompt,negativeprompt, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring, seperator]
+        return [insanitylevel,subject, artist, imagetype, prefixprompt,suffixprompt,negativeprompt, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring, seperator, givensubject, smartsubject]
             
     
 
     
-    def run(self, p, insanitylevel, subject, artist, imagetype, prefixprompt,suffixprompt,negativeprompt, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring,seperator):
+    def run(self, p, insanitylevel, subject, artist, imagetype, prefixprompt,suffixprompt,negativeprompt, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring,seperator, givensubject, smartsubject):
         
         images = []
         infotexts = []
@@ -647,7 +680,7 @@ class Script(scripts.Script):
                         preppedprompt += " \n " + seperator + " "
                       
                 #Here is where we build a "normal" prompt
-                preppedprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype, False, antistring, prefixprompt, suffixprompt,promptcompounderlevel, seperator)
+                preppedprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype, False, antistring, prefixprompt, suffixprompt,promptcompounderlevel, seperator,givensubject,smartsubject)
 
                 # set everything ready
                 p.prompt = preppedprompt  

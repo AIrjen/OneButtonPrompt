@@ -10,7 +10,7 @@ from random_functions import *
 # insanity level controls randomness of propmt 0-10
 # forcesubject van be used to force a certain type of subject
 # Set artistmode to none, to exclude artists 
-def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", givensubject=""):
+def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", givensubject="",smartsubject = True):
 
     
     # first build up a complete anti list. Those values are removing during list building
@@ -89,7 +89,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     generatetimeperiod = True
 
     # Smart subject logic
-    if(givensubject !="" ):
+    if(givensubject !="" and smartsubject == True):
     
         # Remove any list that has a matching word in the list
         # Remove any list/logic with keywords, such as:
@@ -883,7 +883,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     #end of the while loop, now clean up the prompt
     
     # lol, this needs a rewrite :D
-    while "-color-" in completeprompt or "-material-" in completeprompt or "-animal-" in completeprompt or "-object-" in completeprompt or "-fictional-" in completeprompt or "-nonfictional-" in completeprompt or "-conceptsuffix-" in completeprompt or "-building-" in completeprompt or "-vehicle-" in completeprompt or "-outfit-" in completeprompt or "-location-" in completeprompt:
+    while "-color-" in completeprompt or "-material-" in completeprompt or "-animal-" in completeprompt or "-object-" in completeprompt or "-fictional-" in completeprompt or "-nonfictional-" in completeprompt or "-conceptsuffix-" in completeprompt or "-building-" in completeprompt or "-vehicle-" in completeprompt or "-outfit-" in completeprompt or "-location-" in completeprompt or "-conceptprefix-" in completeprompt or "-descriptor-" in completeprompt:
         while "-object-" in completeprompt:
             completeprompt = completeprompt.replace('-object-', random.choice(objectlist),1)
 
@@ -916,8 +916,13 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
         while "-animal-" in completeprompt:
             completeprompt = completeprompt.replace('-animal-', random.choice(animallist),1)
+        
+        while "-conceptprefix-" in completeprompt:
+            completeprompt = completeprompt.replace('-conceptprefix-', random.choice(conceptprefixlist),1)
 
-    
+        while "-descriptor-" in completeprompt:
+            completeprompt = completeprompt.replace('-descriptor-', random.choice(descriptorlist),1)
+
     
 
     

@@ -60,7 +60,7 @@ userfilesfolder = os.path.join(script_dir, "../userfiles/" )
 for filename in os.listdir(userfilesfolder):
     if(filename.endswith(".csv") and filename.startswith("personal_artists") and filename != "personal_artists_sample.csv"):
         name = os.path.splitext(filename)[0]
-        name.replace("_"," ")
+        name = name.replace("_"," ",-1)
         # directly insert into the artists list
         artists.insert(2, name)
 

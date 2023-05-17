@@ -53,7 +53,18 @@ redraw_modes = ["Linear","Chess","None"]
 folder_symbol = '\U0001f4c2'  # 📂
 sys.path.append(os.path.abspath(".."))
 
+# Load up stuff for personal artists list, if any
+# find all artist files starting with personal_artits in userfiles
+script_dir = os.path.dirname(os.path.abspath(__file__))  # Script directory
+userfilesfolder = os.path.join(script_dir, "../userfiles/" )
+for filename in os.listdir(userfilesfolder):
+    if(filename.endswith(".csv") and filename.startswith("personal_artists") and filename != "personal_artists_sample.csv"):
+        name = os.path.splitext(filename)[0]
+        name.replace("_"," ")
+        # directly insert into the artists list
+        artists.insert(2, name)
 
+     
 
 class Script(scripts.Script):
     

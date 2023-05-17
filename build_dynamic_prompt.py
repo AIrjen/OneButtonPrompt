@@ -67,6 +67,16 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     timeperiodlist = csv_to_list("timeperiods",antilist)
     vomitlist = csv_to_list("vomit",antilist)
 
+    # build artists list
+    # create artist list to use in the code, maybe based on category  or personal lists
+    if(artists != "all" and artists != "none" and artists.startswith("personal_artists") == False):
+        artistlist = artist_category_csv_to_list("artists_and_category",artists)
+    elif(artists.startswith("personal_artists") == True):
+        artists = artists.name.replace(" ","_") # add underscores back in
+        artistlist = csv_to_list(artists,antilist,"./userfiles/")
+    else:
+        artistlist = csv_to_list("artists",antilist)
+
 
     generateoutfit = True
     generatebodytype = True
@@ -269,11 +279,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         completeprompt += ", "
 
 
-        # create artist list to use in the code, maybe based on category
-        if(artists != "all" and artists != "none"):
-            artistlist = artist_category_csv_to_list("artists_and_category",artists)
-        else:
-            artistlist = csv_to_list("artists")
+
 
 
 

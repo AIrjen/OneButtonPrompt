@@ -82,6 +82,15 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     stylestiloralist = csv_to_list("styles_ti_lora",antilist,"./userfiles/")
     generatestyle = bool(stylestiloralist) # True of not empty
 
+    custominputprefixlist = csv_to_list("custom_input_prefix",antilist,"./userfiles/")
+    generatecustominputprefix = bool(custominputprefixlist) # True of not empty
+
+    custominputmidlist = csv_to_list("custom_input_mid",antilist,"./userfiles/")
+    generatecustominputmid = bool(custominputmidlist) # True of not empty
+
+    custominputsuffixlist = csv_to_list("custom_input_suffix",antilist,"./userfiles/")
+    generatecustominputsuffix = bool(custominputsuffixlist) # True of not empty
+
 
     generateoutfit = True
     generatebodytype = True
@@ -284,7 +293,11 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         completeprompt += ", "
 
 
-
+        # custom prefix list
+        if(uncommon_dist(insanitylevel) and generatecustominputprefix == True):
+            completeprompt += random.choice(custominputprefixlist) + ", "
+            if(uncommon_dist(insanitylevel)):
+                completeprompt += random.choice(custominputprefixlist) + ", "
 
 
 
@@ -681,6 +694,13 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             skintypelist = ["-color-", "-material-"]
             completeprompt += ", with " + random.choice(skintypelist) + " skin, "
 
+        # custom mid list
+        if(uncommon_dist(insanitylevel) and generatecustominputmid == True):
+            completeprompt += random.choice(custominputmidlist) + ", "
+            if(uncommon_dist(insanitylevel)):
+                completeprompt += random.choice(custominputmidlist) + ", "
+        
+        
         # outfit builder
         if(subjectchooser in ["animal as human","human","fictional", "non fictional", "humanoid"]  and normal_dist(insanitylevel) and generateoutfit == True):
             completeprompt += ", wearing "
@@ -810,6 +830,13 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             completeprompt += random.choice(stylestiloralist) + ", "
             if(uncommon_dist(insanitylevel)):
                 completeprompt += random.choice(stylestiloralist) + ", "
+
+
+        # custom suffix list
+        if(uncommon_dist(insanitylevel) and generatecustominputsuffix == True):
+            completeprompt += random.choice(custominputsuffixlist) + ", "
+            if(uncommon_dist(insanitylevel)):
+                completeprompt += random.choice(custominputsuffixlist) + ", "
 
 
 

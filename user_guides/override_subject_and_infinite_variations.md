@@ -1,4 +1,4 @@
-# override subject and how to create infinite variations of a set subject
+# Override subject and how to create infinite variations of a set subject
 Overriding a subject is one of the most __powerful__ ways of experiencing One Button Prompt.
 
 This will allow you to explore infinite variants of a subject of your own choice.
@@ -86,10 +86,106 @@ There is a lot less freedom here, also because of the model used. But the variet
 
 <img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/a5c7669c-952d-441e-8e58-644ff8a594b2.png" alt="Daenerys Targaryen settings" width="60%" height="60%">
 
-## Using a LoRA as a subject
-You can use a LoRA as a subject as well. Sometimes you need to add the triggerword as the subject, and the LoRA in the prompt suffix field. Sometimes you need to add both in the overwrite subject field.
+## Using a LoRA as a subject: Gul Dukat
+__ATTENTION BAJORAN WORKERS: You can use a LoRA as a subject as well.__ 
+
+![LoRA character example](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/476f84a7-e71e-4ecb-a790-54629ec0e386)
+Sometimes you need to add the triggerword as the subject, and the LoRA in the prompt suffix field. Sometimes you need to add both in the overwrite subject field.
+In this example, I'm using the main character of star trek's DS9 series, Gul Dukat. Thanks to the amazing [Terok Nor Lora](https://civitai.com/models/58470/terok-nor-lora)!
+
+In this example, I used the Dreamshaper model. In the settings, I set the following properties:
+
+Subject Types: __humanoid__
+
+Artists: __all__
+
+type of image: __all__
+
+Overwrite subject: __gul dukat wearing cardassian uniform__
+
+Prompt prefix: __sdn__
+
+Prompt suffix: __<lora:diffusiondesign_SDN_LoRA_1.12:0.6>, star trek__
+
+With this method, the initial trigger word is in the prompt prefix field, sdn. The subject is "gul dukat wearing cardassian uniform", since smart subject is activated, it will not generate another outfit for our buddy during prompt generation.
+
+Lastly, in the prompt suffix is the actual LoRA and another trigger word, star trek.
+
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/0ccf8cf3-c2c9-4cd7-b183-eb6b7a640a5a.png" alt="Gul Dukat" width="60%" height="60%">
+
 
 ### Smart Subject in detail
+Smart subject will try to interpret your override subject, and turn off any related lists.
+Example, if the word "Obese" in the override subject, it will find this exact word in the "body_types" list. It will disable body type generation. And so it works for all individual words in the override subject, as well as all combined words between comma's.
 
+Additionaly the following keywords have additional hardcoded keyword triggers:
+
+"wearing","outfit" or "dressed" will turn off outfit generation
+
+"bodytype" or "body type" will turn off body type generation
+
+"hair" will turn of hairstyle generation
+
+"location" or "background" will turn off background generation
+
+"lighting" will turn off lighting generation
+
+"mood" will turn off mood generation
+
+"pose" or "posing" will turn of pose generation
+
+"quality" will turn off all quality generation
+
+"shot" will turn off all framing/shot size generation
+
+This means, you can form override subject prompts like this:
+
+"full body shot of a obese donald trump"  --> turns off shot sizing and body type generation
+
+"fantastical skull, candle lighting" --> turns off description (via fantastical) and lighting generation
+
+"lifeguard, background is beach" --> turns off background generation
 
 ### Wildcards
+In the backend of the code, some of the things run on wildcards. These can be used in the prompt prefix, prompt suffix and subject override fields.  They get values from their specific related lists.
+
+Currently, One Button Prompt supports the following wildcards.
+
+- -color-
+- -material-
+- -animal-
+- -object-
+- -fictional-
+- -nonfictional-
+- -building-
+- -vehicle-
+- -outfit-
+- -location-
+- -conceptprefix-
+- -conceptsuffix-
+- -descriptor-
+- -food-
+
+
+## Bringing it all together, generating awesome cyborgs with One Button
+![awesome cyborgs](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/9e252a45-2600-44a3-a789-de7a66211e1b)
+
+In this example, I used the (Lyriel)https://civitai.com/models/22922/lyriel model. In the settings, I set the following properties:
+
+Subject Types: __humanoid__
+
+Artists: __sci-fi__
+
+type of image: __portrait__
+
+Overwrite subject: __-descriptor- cyberpunk cyborg, -material- details__
+
+In this case, I am using the wildcards to my advantage in the override subject. Since I use the word "cyberpunk" the standard description generation is turned off. In this case, I add a random descriptor in my subject override, to get some randomness back.
+Next to that, I add -material- details. This way, it will generate some random materials to the results, creating interesting stuff.
+
+With these settings, all results are good and varied.
+
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/9dad7d31-cb1e-4375-9d64-600942e8e884.png" alt="Beep Boop!" width="60%" height="60%">
+
+# Thank you
+Hope to have inspired you, and get generating!

@@ -449,6 +449,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             
             if(othertype==1):
                 completeprompt += " of a "
+            else:
+                completeprompt += ", "
         else:
             othertype = 1
             completeprompt += giventypeofimage + " of a "
@@ -670,7 +672,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         # riding an animal, holding an object or driving a vehicle, rare
         if(subjectchooser in ["animal as human,","human","fictional", "non fictional", "humanoid"] and rare_dist(insanitylevel)):
             humanspecial = 1
-            speciallist = [" riding a -animal- ", " holding a -object- ", " driving a -vehicle-", " visiting a -building-", " with a -animal-", " surrounded by -object-s", "eating -food-"]
+            speciallist = [" riding a -animal- ", " holding a -object- ", " driving a -vehicle-", " visiting a -building-", " with a -animal-", " surrounded by -object-s", " eating -food-"]
             completeprompt += random.choice(speciallist)
             
 

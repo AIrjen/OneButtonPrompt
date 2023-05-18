@@ -59,7 +59,17 @@ def csv_to_list(csvfilename, antilist=[], directory="./csvfiles/", lowerandstrip
                                                 csvlist.append(row[0])
 
 
-        return csvlist
+        # remove duplicates, but check only for lowercase stuff
+        deduplicated_list = []
+        lowercase_elements = set()
+
+        for element in csvlist:
+                lowercase_element = element.lower()
+                if lowercase_element not in lowercase_elements:
+                        lowercase_elements.add(lowercase_element)
+                        deduplicated_list.append(element)
+        
+        return deduplicated_list
 
 def artist_category_csv_to_list(csvfilename,category):
         csvlist = []

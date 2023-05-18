@@ -757,7 +757,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             addontolocation = [locationlist,buildinglist]
             completeprompt += random.choice(random.choice(addontolocation)) + ", "
         
-        if(subjectchooser not in ["landscape", "concept"] and humanspecial != 1 and insideshot == 0 and normal_dist(insanitylevel) and generatebackground == True):
+        if(subjectchooser not in ["landscape", "concept"] and humanspecial != 1 and insideshot == 0 and uncommon_dist(insanitylevel) and generatebackground == True):
             backgroundtypelist = ["landscape", "buildingbackground", "insidebuilding"]
             backgroundtype = random.choice(backgroundtypelist)
             if(backgroundtype == "landscape"):

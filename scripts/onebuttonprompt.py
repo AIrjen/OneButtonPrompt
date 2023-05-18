@@ -107,7 +107,7 @@ class Script(scripts.Script):
 
         with gr.Tab("Main"):
             with gr.Row():
-                insanitylevel = gr.Slider(1, 10, value=7, step=1, label="Higher levels increases complexity and randomness of generated prompt")
+                insanitylevel = gr.Slider(1, 10, value=5, step=1, label="Higher levels increases complexity and randomness of generated prompt")
             with gr.Row():
                 with gr.Column(scale=1, variant="compact"):
                     subject = gr.Dropdown(

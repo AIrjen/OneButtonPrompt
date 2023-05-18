@@ -78,6 +78,11 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         artistlist = csv_to_list("artists",antilist)
 
 
+    # add any other custom lists
+    stylestiloralist = csv_to_list("styles_ti_lora",antilist,"./userfiles/")
+    generatestyle = bool(stylestiloralist) # True of not empty
+
+
     generateoutfit = True
     generatebodytype = True
     generateaccesorie = True
@@ -799,6 +804,13 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             completeprompt += random.choice(qualitylist) + ", "
             if(uncommon_dist(insanitylevel)):
                 completeprompt += random.choice(qualitylist) + ", "
+
+        # custom style list
+        if(uncommon_dist(insanitylevel) and generatestyle == True):
+            completeprompt += random.choice(stylestiloralist) + ", "
+            if(uncommon_dist(insanitylevel)):
+                completeprompt += random.choice(stylestiloralist) + ", "
+
 
 
         if artistmode in ["enhancing"]:

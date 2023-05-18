@@ -18,7 +18,7 @@ def add_from_csv(completeprompt, csvfilename, addcomma, prefix, suffix):
                 return ", ".join([completeprompt,addtoprompt])
         return " ".join([completeprompt,addtoprompt])
 
-def csv_to_list(csvfilename, antilist=[], directory="./csvfiles/", lowerandstrip=0):
+def csv_to_list(csvfilename, antilist=[], directory="./csvfiles/", lowerandstrip=0, delimiter=";"):
         userfilesdirectory = "./userfiles/"
         userfileaddonname = csvfilename + "_addon.csv"
         userfilereplacename = csvfilename + "_replace.csv"
@@ -38,7 +38,7 @@ def csv_to_list(csvfilename, antilist=[], directory="./csvfiles/", lowerandstrip
         # return empty list if we can't find the file. Build for antilist.csv
         if(os.path.isfile(full_path + csvfilename + ".csv")):
                 with open(full_path + csvfilename + ".csv", "r", newline="",encoding="utf8") as file:
-                        reader = csv.reader(file, delimiter=",")
+                        reader = csv.reader(file, delimiter=delimiter)
                         for row in reader:
                                 value = row[0]
                                 if(value.lower().strip() not in antilist):

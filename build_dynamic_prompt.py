@@ -66,6 +66,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     shotsizelist = csv_to_list("shotsizes",antilist)
     timeperiodlist = csv_to_list("timeperiods",antilist)
     vomitlist = csv_to_list("vomit",antilist)
+    foodlist = csv_to_list("foods", antilist)
 
     # build artists list
     # create artist list to use in the code, maybe based on category  or personal lists
@@ -332,7 +333,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             subjectchooser = subjectchooserlist[random.randint(0, 1)] 
 
 
-        hybridlist = ["-animal-", "-object-", "-fictional-", "-nonfictional-", "-building-", "-vehicle-"]
+        hybridlist = ["-animal-", "-object-", "-fictional-", "-nonfictional-", "-building-", "-vehicle-","-food-"]
         hybridhumanlist = ["-fictional-", "-nonfictional-"]
         
 
@@ -481,7 +482,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             completeprompt += random.choice(culturelist) + " "
 
         if(mainchooser == "object"):
-            objecttypelist = [objectlist, buildinglist, vehiclelist]  # first select a random list, then randomly select from the corresponding list
+            objecttypelist = [objectlist, buildinglist, vehiclelist, foodlist]  # first select a random list, then randomly select from the corresponding list
             
             # if we have a given subject, we should skip making an actual subject
             if(givensubject == ""):
@@ -669,7 +670,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         # riding an animal, holding an object or driving a vehicle, rare
         if(subjectchooser in ["animal as human,","human","fictional", "non fictional", "humanoid"] and rare_dist(insanitylevel)):
             humanspecial = 1
-            speciallist = [" riding a -animal- ", " holding a -object- ", " driving a -vehicle-", " visiting a -building-", " with a -animal-", " surrounded by -object-s"]
+            speciallist = [" riding a -animal- ", " holding a -object- ", " driving a -vehicle-", " visiting a -building-", " with a -animal-", " surrounded by -object-s", "eating -food-"]
             completeprompt += random.choice(speciallist)
             
 
@@ -932,7 +933,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     #end of the while loop, now clean up the prompt
     
     # lol, this needs a rewrite :D
-    while "-color-" in completeprompt or "-material-" in completeprompt or "-animal-" in completeprompt or "-object-" in completeprompt or "-fictional-" in completeprompt or "-nonfictional-" in completeprompt or "-conceptsuffix-" in completeprompt or "-building-" in completeprompt or "-vehicle-" in completeprompt or "-outfit-" in completeprompt or "-location-" in completeprompt or "-conceptprefix-" in completeprompt or "-descriptor-" in completeprompt:
+    while "-color-" in completeprompt or "-material-" in completeprompt or "-animal-" in completeprompt or "-object-" in completeprompt or "-fictional-" in completeprompt or "-nonfictional-" in completeprompt or "-conceptsuffix-" in completeprompt or "-building-" in completeprompt or "-vehicle-" in completeprompt or "-outfit-" in completeprompt or "-location-" in completeprompt or "-conceptprefix-" in completeprompt or "-descriptor-" in completeprompt or "-food-" in completeprompt:
         while "-object-" in completeprompt:
             completeprompt = completeprompt.replace('-object-', random.choice(objectlist),1)
 
@@ -971,6 +972,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
         while "-descriptor-" in completeprompt:
             completeprompt = completeprompt.replace('-descriptor-', random.choice(descriptorlist),1)
+        
+        while "-food-" in completeprompt:
+            completeprompt = completeprompt.replace('-food-', random.choice(foodlist),1)
 
     
 

@@ -433,7 +433,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 amountofimagetypes = random.randint(2,3)
             elif(imagetype == "only other types"):
                 othertype = 1
-                completeprompt += random.choice(othertypelist) + " of a "
+                completeprompt += random.choice(othertypelist)
             
             if(imagetype == "all" and normal_dist(insanitylevel) and amountofimagetypes <= 1):
                 amountofimagetypes = 1
@@ -449,6 +449,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             if(othertype==1):
                 completeprompt += " of a "
         else:
+            othertype = 1
             completeprompt += giventypeofimage + " of a "
 
 

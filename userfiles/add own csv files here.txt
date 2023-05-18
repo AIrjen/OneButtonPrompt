@@ -1,5 +1,6 @@
 In this directory, manually add Files that are used during the generation process.
 The sample files here are ignored, but can be used as a copy or base to start with.
+Each word should be on his own row (so don't comma seperate it)
 Adding files here, will not be overwritten during updating this extension.
 
 There are 5 types of files that can be manually added here:
@@ -15,7 +16,7 @@ Fill this one with style textual inversions and LoRA's. They will then randomly 
 Addon files will be automatically added to the existing csv files in the ./csvfiles/ directory. So you can add your own personal stuff. They need to be named the same, such as vehicles_addon.csv
 
 - listname_replace.csv
-Addon files will automatically replace the existing csv files in the ./csvfiles/ directory during prompt generation. This way, you can run of your own custom lists if you need. They need to be named the same, such as vehicles_replace.csv
+Replace files will automatically replace the existing csv files in the ./csvfiles/ directory during prompt generation. This way, you can run of your own custom lists if you need. They need to be named the same, such as vehicles_replace.csv
 
 - custom_input_prefix.csv, custom_input_mid.csv and custom_input_suffix.csv
 Add anything in these files, and they will show up in the front of the prompt, in the middle, or at the end. This adds some additional flexiblity, if you want certain specific results. They will be randomly used in the prompt generation.
@@ -23,7 +24,6 @@ Add anything in these files, and they will show up in the front of the prompt, i
 - antilist.csv
 Any value in this csv file will be removed from any list/csv file used during prompt generation.
 For example, if you don't want "film grain" to show up, add this to the antilist.csv
-Each word should be on his own row (so don't comma seperate it)
 It should look like this:
 film grain
 purple

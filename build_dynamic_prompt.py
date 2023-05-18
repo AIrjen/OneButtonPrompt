@@ -10,7 +10,7 @@ from random_functions import *
 # insanity level controls randomness of propmt 0-10
 # forcesubject van be used to force a certain type of subject
 # Set artistmode to none, to exclude artists 
-def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", givensubject="",smartsubject = True):
+def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", givensubject="",smartsubject = True,giventypeofimage=""):
 
     
     # first build up a complete anti list. Those values are removing during list building
@@ -426,27 +426,30 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         
         # start image type
 
-        if(imagetype != "all" and imagetype != "all - force multiple" and imagetype != "only other types"):
-                completeprompt += " " + imagetype + ", "
-        elif(imagetype == "all - force multiple" or unique_dist(insanitylevel)):
-            amountofimagetypes = random.randint(2,3)
-        elif(imagetype == "only other types"):
-            othertype = 1
-            completeprompt += random.choice(othertypelist) + " of a "
-        
-        if(imagetype == "all" and normal_dist(insanitylevel) and amountofimagetypes <= 1):
-            amountofimagetypes = 1
-        
-        for i in range(amountofimagetypes):
-        # one in 6 images is a complex/other type
-            if(random.randint(0,5) < 5):
-                completeprompt += ", " + random.choice(imagetypelist) + " "
-            else:
+        if(giventypeofimage==""):
+            if(imagetype != "all" and imagetype != "all - force multiple" and imagetype != "only other types"):
+                    completeprompt += " " + imagetype + ", "
+            elif(imagetype == "all - force multiple" or unique_dist(insanitylevel)):
+                amountofimagetypes = random.randint(2,3)
+            elif(imagetype == "only other types"):
                 othertype = 1
-                completeprompt += ", " + random.choice(othertypelist) + " "
-        
-        if(othertype==1):
-            completeprompt += " of a "
+                completeprompt += random.choice(othertypelist) + " of a "
+            
+            if(imagetype == "all" and normal_dist(insanitylevel) and amountofimagetypes <= 1):
+                amountofimagetypes = 1
+            
+            for i in range(amountofimagetypes):
+            # one in 6 images is a complex/other type
+                if(random.randint(0,5) < 5):
+                    completeprompt += ", " + random.choice(imagetypelist) + " "
+                else:
+                    othertype = 1
+                    completeprompt += ", " + random.choice(othertypelist) + " "
+            
+            if(othertype==1):
+                completeprompt += " of a "
+        else:
+            completeprompt += giventypeofimage + " of a "
 
 
         # start shot size

@@ -85,6 +85,8 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
             filename = filename.replace("[", "")
             filename = filename.replace("|", "")
             filename = filename.replace("]", "")
+            filename = filename.replace("<", "")
+            filename = filename.replace(">", "")
             filename = filename.replace(":", "_")
             filename = re.sub(r'[0-9]+', '', filename)
 

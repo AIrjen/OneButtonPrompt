@@ -10,7 +10,7 @@ from random_functions import *
 # insanity level controls randomness of propmt 0-10
 # forcesubject van be used to force a certain type of subject
 # Set artistmode to none, to exclude artists 
-def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", givensubject="",smartsubject = True):
+def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", givensubject="",smartsubject = True,giventypeofimage=""):
 
     
     # first build up a complete anti list. Those values are removing during list building
@@ -66,6 +66,31 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     shotsizelist = csv_to_list("shotsizes",antilist)
     timeperiodlist = csv_to_list("timeperiods",antilist)
     vomitlist = csv_to_list("vomit",antilist)
+    foodlist = csv_to_list("foods", antilist)
+
+    # build artists list
+    # create artist list to use in the code, maybe based on category  or personal lists
+    if(artists != "all" and artists != "none" and artists.startswith("personal_artists") == False and artists.startswith("personal artists") == False):
+        artistlist = artist_category_csv_to_list("artists_and_category",artists)
+    elif(artists.startswith("personal_artists") == True or artists.startswith("personal artists") == True):
+        artists = artists.replace(" ","_",-1) # add underscores back in
+        artistlist = csv_to_list(artists,antilist,"./userfiles/")
+    else:
+        artistlist = csv_to_list("artists",antilist)
+
+
+    # add any other custom lists
+    stylestiloralist = csv_to_list("styles_ti_lora",antilist,"./userfiles/")
+    generatestyle = bool(stylestiloralist) # True of not empty
+
+    custominputprefixlist = csv_to_list("custom_input_prefix",antilist,"./userfiles/")
+    generatecustominputprefix = bool(custominputprefixlist) # True of not empty
+
+    custominputmidlist = csv_to_list("custom_input_mid",antilist,"./userfiles/")
+    generatecustominputmid = bool(custominputmidlist) # True of not empty
+
+    custominputsuffixlist = csv_to_list("custom_input_suffix",antilist,"./userfiles/")
+    generatecustominputsuffix = bool(custominputsuffixlist) # True of not empty
 
 
     generateoutfit = True
@@ -269,11 +294,11 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         completeprompt += ", "
 
 
-        # create artist list to use in the code, maybe based on category
-        if(artists != "all" and artists != "none"):
-            artistlist = artist_category_csv_to_list("artists_and_category",artists)
-        else:
-            artistlist = csv_to_list("artists")
+        # custom prefix list
+        if(uncommon_dist(insanitylevel) and generatecustominputprefix == True):
+            completeprompt += random.choice(custominputprefixlist) + ", "
+            if(uncommon_dist(insanitylevel)):
+                completeprompt += random.choice(custominputprefixlist) + ", "
 
 
 
@@ -308,7 +333,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             subjectchooser = subjectchooserlist[random.randint(0, 1)] 
 
 
-        hybridlist = ["-animal-", "-object-", "-fictional-", "-nonfictional-", "-building-", "-vehicle-"]
+        hybridlist = ["-animal-", "-object-", "-fictional-", "-nonfictional-", "-building-", "-vehicle-","-food-"]
         hybridhumanlist = ["-fictional-", "-nonfictional-"]
         
 
@@ -402,27 +427,33 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         
         # start image type
 
-        if(imagetype != "all" and imagetype != "all - force multiple" and imagetype != "only other types"):
-                completeprompt += " " + imagetype + ", "
-        elif(imagetype == "all - force multiple" or unique_dist(insanitylevel)):
-            amountofimagetypes = random.randint(2,3)
-        elif(imagetype == "only other types"):
-            othertype = 1
-            completeprompt += random.choice(othertypelist) + " of a "
-        
-        if(imagetype == "all" and normal_dist(insanitylevel) and amountofimagetypes <= 1):
-            amountofimagetypes = 1
-        
-        for i in range(amountofimagetypes):
-        # one in 6 images is a complex/other type
-            if(random.randint(0,5) < 5):
-                completeprompt += ", " + random.choice(imagetypelist) + " "
-            else:
+        if(giventypeofimage==""):
+            if(imagetype != "all" and imagetype != "all - force multiple" and imagetype != "only other types"):
+                    completeprompt += " " + imagetype + ", "
+            elif(imagetype == "all - force multiple" or unique_dist(insanitylevel)):
+                amountofimagetypes = random.randint(2,3)
+            elif(imagetype == "only other types"):
                 othertype = 1
-                completeprompt += ", " + random.choice(othertypelist) + " "
-        
-        if(othertype==1):
-            completeprompt += " of a "
+                completeprompt += random.choice(othertypelist)
+            
+            if(imagetype == "all" and normal_dist(insanitylevel) and amountofimagetypes <= 1):
+                amountofimagetypes = 1
+            
+            for i in range(amountofimagetypes):
+            # one in 6 images is a complex/other type
+                if(random.randint(0,5) < 5):
+                    completeprompt += ", " + random.choice(imagetypelist) + " "
+                else:
+                    othertype = 1
+                    completeprompt += ", " + random.choice(othertypelist) + " "
+            
+            if(othertype==1):
+                completeprompt += " of a "
+            else:
+                completeprompt += ", "
+        else:
+            othertype = 1
+            completeprompt += giventypeofimage + " of a "
 
 
         # start shot size
@@ -453,7 +484,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             completeprompt += random.choice(culturelist) + " "
 
         if(mainchooser == "object"):
-            objecttypelist = [objectlist, buildinglist, vehiclelist]  # first select a random list, then randomly select from the corresponding list
+            objecttypelist = [objectlist, buildinglist, vehiclelist, foodlist]  # first select a random list, then randomly select from the corresponding list
             
             # if we have a given subject, we should skip making an actual subject
             if(givensubject == ""):
@@ -641,7 +672,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         # riding an animal, holding an object or driving a vehicle, rare
         if(subjectchooser in ["animal as human,","human","fictional", "non fictional", "humanoid"] and rare_dist(insanitylevel)):
             humanspecial = 1
-            speciallist = [" riding a -animal- ", " holding a -object- ", " driving a -vehicle-", " visiting a -building-", " with a -animal-", " surrounded by -object-s"]
+            speciallist = [" riding a -animal- ", " holding a -object- ", " driving a -vehicle-", " visiting a -building-", " with a -animal-", " surrounded by -object-s", " eating -food-"]
             completeprompt += random.choice(speciallist)
             
 
@@ -670,6 +701,13 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             skintypelist = ["-color-", "-material-"]
             completeprompt += ", with " + random.choice(skintypelist) + " skin, "
 
+        # custom mid list
+        if(uncommon_dist(insanitylevel) and generatecustominputmid == True):
+            completeprompt += random.choice(custominputmidlist) + ", "
+            if(uncommon_dist(insanitylevel)):
+                completeprompt += random.choice(custominputmidlist) + ", "
+        
+        
         # outfit builder
         if(subjectchooser in ["animal as human","human","fictional", "non fictional", "humanoid"]  and normal_dist(insanitylevel) and generateoutfit == True):
             completeprompt += ", wearing "
@@ -719,7 +757,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             addontolocation = [locationlist,buildinglist]
             completeprompt += random.choice(random.choice(addontolocation)) + ", "
         
-        if(subjectchooser not in ["landscape", "concept"] and humanspecial != 1 and insideshot == 0 and normal_dist(insanitylevel) and generatebackground == True):
+        if(subjectchooser not in ["landscape", "concept"] and humanspecial != 1 and insideshot == 0 and uncommon_dist(insanitylevel) and generatebackground == True):
             backgroundtypelist = ["landscape", "buildingbackground", "insidebuilding"]
             backgroundtype = random.choice(backgroundtypelist)
             if(backgroundtype == "landscape"):
@@ -793,6 +831,20 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             completeprompt += random.choice(qualitylist) + ", "
             if(uncommon_dist(insanitylevel)):
                 completeprompt += random.choice(qualitylist) + ", "
+
+        # custom style list
+        if(uncommon_dist(insanitylevel) and generatestyle == True):
+            completeprompt += random.choice(stylestiloralist) + ", "
+            if(uncommon_dist(insanitylevel)):
+                completeprompt += random.choice(stylestiloralist) + ", "
+
+
+        # custom suffix list
+        if(uncommon_dist(insanitylevel) and generatecustominputsuffix == True):
+            completeprompt += random.choice(custominputsuffixlist) + ", "
+            if(uncommon_dist(insanitylevel)):
+                completeprompt += random.choice(custominputsuffixlist) + ", "
+
 
 
         if artistmode in ["enhancing"]:
@@ -883,7 +935,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     #end of the while loop, now clean up the prompt
     
     # lol, this needs a rewrite :D
-    while "-color-" in completeprompt or "-material-" in completeprompt or "-animal-" in completeprompt or "-object-" in completeprompt or "-fictional-" in completeprompt or "-nonfictional-" in completeprompt or "-conceptsuffix-" in completeprompt or "-building-" in completeprompt or "-vehicle-" in completeprompt or "-outfit-" in completeprompt or "-location-" in completeprompt or "-conceptprefix-" in completeprompt or "-descriptor-" in completeprompt:
+    while "-color-" in completeprompt or "-material-" in completeprompt or "-animal-" in completeprompt or "-object-" in completeprompt or "-fictional-" in completeprompt or "-nonfictional-" in completeprompt or "-conceptsuffix-" in completeprompt or "-building-" in completeprompt or "-vehicle-" in completeprompt or "-outfit-" in completeprompt or "-location-" in completeprompt or "-conceptprefix-" in completeprompt or "-descriptor-" in completeprompt or "-food-" in completeprompt:
         while "-object-" in completeprompt:
             completeprompt = completeprompt.replace('-object-', random.choice(objectlist),1)
 
@@ -922,6 +974,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
         while "-descriptor-" in completeprompt:
             completeprompt = completeprompt.replace('-descriptor-', random.choice(descriptorlist),1)
+        
+        while "-food-" in completeprompt:
+            completeprompt = completeprompt.replace('-food-', random.choice(foodlist),1)
 
     
 

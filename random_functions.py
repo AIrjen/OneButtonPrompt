@@ -6,7 +6,7 @@ def normal_dist(insanitylevel):
     return (random.randint(1, 10)<insanitylevel or insanitylevel >= 10)
 
 def uncommon_dist(insanitylevel):
-    return (random.randint(1, 15)<insanitylevel or insanitylevel >= 10)
+    return (random.randint(1, 18)<insanitylevel or insanitylevel >= 10)
 
 def rare_dist(insanitylevel):
     roll = (random.randint(1, 30)<insanitylevel or insanitylevel >= 10)

@@ -18,21 +18,58 @@ def add_from_csv(completeprompt, csvfilename, addcomma, prefix, suffix):
                 return ", ".join([completeprompt,addtoprompt])
         return " ".join([completeprompt,addtoprompt])
 
-def csv_to_list(csvfilename, antilist=[], directory="./csvfiles/", lowerandstrip=0):
+def csv_to_list(csvfilename, antilist=[], directory="./csvfiles/", lowerandstrip=0, delimiter=";"):
+        userfilesdirectory = "./userfiles/"
+        userfileaddonname = csvfilename + "_addon.csv"
+        userfilereplacename = csvfilename + "_replace.csv"
         csvlist = []
         script_dir = os.path.dirname(os.path.abspath(__file__))
         full_path = os.path.join(script_dir, directory )
+        userfilesfolder = os.path.join(script_dir, userfilesdirectory )
+        # check if there is a replace file
+        if(directory=="./csvfiles/"):      
+                for filename in os.listdir(userfilesfolder):
+                        if(filename == userfilereplacename):
+                                # Just override the parameters, and let it run normally
+                                full_path = os.path.join(script_dir, userfilesdirectory )
+                                csvfilename = csvfilename + "_replace"
+                        
+
         # return empty list if we can't find the file. Build for antilist.csv
         if(os.path.isfile(full_path + csvfilename + ".csv")):
                 with open(full_path + csvfilename + ".csv", "r", newline="",encoding="utf8") as file:
-                        reader = csv.reader(file, delimiter=",")
+                        reader = csv.reader(file, delimiter=delimiter)
                         for row in reader:
                                 value = row[0]
                                 if(value.lower().strip() not in antilist):
                                         if(lowerandstrip == 1):
                                                 csvlist.append(row[0].lower().strip())        
                                         csvlist.append(row[0])
-        return csvlist
+        
+        # do the add ons!
+        if(directory=="./csvfiles/"):
+                if(os.path.isfile(userfilesfolder + csvfilename + "_addon" + ".csv")):
+                        with open(userfilesfolder + csvfilename + "_addon" + ".csv", "r", newline="",encoding="utf8") as file:
+                                reader = csv.reader(file, delimiter=",")
+                                for row in reader:
+                                        value = row[0]
+                                        if(value.lower().strip() not in antilist):
+                                                if(lowerandstrip == 1):
+                                                        csvlist.append(row[0].lower().strip())        
+                                                csvlist.append(row[0])
+
+
+        # remove duplicates, but check only for lowercase stuff
+        deduplicated_list = []
+        lowercase_elements = set()
+
+        for element in csvlist:
+                lowercase_element = element.lower()
+                if lowercase_element not in lowercase_elements:
+                        lowercase_elements.add(lowercase_element)
+                        deduplicated_list.append(element)
+        
+        return deduplicated_list
 
 def artist_category_csv_to_list(csvfilename,category):
         csvlist = []

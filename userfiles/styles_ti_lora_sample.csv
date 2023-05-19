@@ -1,0 +1,12 @@
+style-sylvamagic
+Style-NebMagic
+RFKTR_rootrex
+<lora:add_detail:1>
+<lora:COOLKIDS_MERGE_V2.5:1>
+<lora:diffusiondesign_SDN_LoRA_1.12:1>
+<lora:epiNoiseoffset_v2:1>
+fairytaleai <lora:FairyTaleV1s_SD1.5:1>
+<lora:lit:1>
+<lora:LowRA:0.6>
+pixelart <lora:Pixhell_15:1>
+ghibli style <lora:studioGhibliStyle_offset:1>

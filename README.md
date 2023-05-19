@@ -14,6 +14,15 @@ It is best used on all-purpose models, such as Stable Difussion 1.5 or those bas
 
 A simple user guide for first time use and settings is available [here](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/my_first_generation.md).
 
+# Features
+- __Full prompt generation__ with the click of a button.                  ==> [guide to my first generation](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/my_first_generation.md) 
+- Supports __TXT2IMG, IMG2IMG, ControlNET, inpainting and latent couple__.
+- __Workflow assist__, generate multiple prompts with One Button.
+- Create __infinite variations__ of a __chosen subject__.                     ==> [guide to override subject](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/override_subject_and_infinite_variations.md)
+- Fully __automated generation, classification and upscaling__.           ==> [guide to one_button_run_and_upscale](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/one_button_run_and_upscale.md)
+- Add __LoRA's__, customize lists and personal artists choices.           ==> [guide to custom files](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/custom_files.md)
+- __Compound__ multiple prompts together for unexpected results.
+
 ## How to use in automatic1111
 In TXT2IMG or IMG2IMG, select the script "One Button Prompt".
 
@@ -166,8 +175,8 @@ All with a single press of __One Button__.
 Some ideas I'd like to implement:
 - The In Control update
   - ~~Choose your own subject~~ Done
-  - Split up subjects more, and pick more detailed subjects, such as food, female, building, etc
-  - Support for LoRA and textual inversions
+  - ~~Split up subjects more, and pick more detailed subjects, such as food, female, building, etc~~ Done
+  - ~~Support for LoRA and textual inversions~~ Done
   - Trigger word support
 - ~~Bring upscale automation to front-end~~ Done
 - ~~Better workflow management in workflow assist tab~~ Done

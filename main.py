@@ -21,6 +21,8 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
     randomprompt = ""
     filename=""
     originalsize=size
+    originalmodel = model
+    originalimg2imgmodel = img2imgmodel
 
     if(onlyupscale==True):
         script_dir = os.path.dirname(os.path.abspath(__file__))  # Script directory
@@ -104,13 +106,21 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
 
 
             #Check if there is any random value we have to choose or not
-            if(model=="all"):
+            if(originalmodel=="all"):
                 model = random.choice(modellist)
                 #lets not do inpainting models
                 while "inpaint" in model:
                     model = random.choice(modellist)
-                    print("Going to run with model " + model)
+                print("Going to run with model " + model)
 
+
+            # set the model here
+            if(originalmodel!="currently selected model"):
+                option_payload = {
+                    "sd_model_checkpoint": model
+                    }
+                response = requests.post(url=f'{apiurl}/sdapi/v1/options', json=option_payload)
+            
             if(samplingmethod=="all"):
                 samplingmethod = random.choice(samplerlist)
                 print ("Going to run with sampling method " + samplingmethod)   
@@ -154,12 +164,19 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
 
 
             #Check if there is any random value we have to choose or not
-            if(img2imgmodel=="all"):
+            if(originalimg2imgmodel=="all"):
                 img2imgmodel = random.choice(modellist)
                 #lets not do inpainting models
                 while "inpaint" in model:
                     img2imgmodel = random.choice(modellist)
-                    print("Going to upscale with model " + img2imgmodel)
+                print("Going to upscale with model " + img2imgmodel)
+            
+            # set the model here
+            if(originalimg2imgmodel!="currently selected model"):
+                option_payload = {
+                    "sd_model_checkpoint": img2imgmodel
+                    }
+                response = requests.post(url=f'{apiurl}/sdapi/v1/options', json=option_payload)
 
             if(img2imgsamplingmethod=="all"):
                 img2imgsamplingmethod = random.choice(img2imgsamplerlist)

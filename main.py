@@ -21,6 +21,8 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
     randomprompt = ""
     filename=""
     originalsize=size
+    originalmodel = model
+    originalimg2imgmodel = img2imgmodel
 
     if(onlyupscale==True):
         script_dir = os.path.dirname(os.path.abspath(__file__))  # Script directory
@@ -104,7 +106,7 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
 
 
             #Check if there is any random value we have to choose or not
-            if(model=="all"):
+            if(originalmodel=="all"):
                 model = random.choice(modellist)
                 #lets not do inpainting models
                 while "inpaint" in model:
@@ -113,7 +115,7 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
 
 
             # set the model here
-            if(model!="currently selected model"):
+            if(originalmodel!="currently selected model"):
                 option_payload = {
                     "sd_model_checkpoint": model
                     }
@@ -162,7 +164,7 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
 
 
             #Check if there is any random value we have to choose or not
-            if(img2imgmodel=="all"):
+            if(originalimg2imgmodel=="all"):
                 img2imgmodel = random.choice(modellist)
                 #lets not do inpainting models
                 while "inpaint" in model:
@@ -170,7 +172,7 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
                 print("Going to upscale with model " + img2imgmodel)
             
             # set the model here
-            if(img2imgmodel!="currently selected model"):
+            if(originalimg2imgmodel!="currently selected model"):
                 option_payload = {
                     "sd_model_checkpoint": img2imgmodel
                     }

@@ -1,0 +1,9 @@
+background is -location-
+background is -building-
+inside a -building-
+background is -descriptor- -location-
+background is -descriptor- -building-
+inside a -descriptor- -building-
+plain background
+plain -color- background
+-color- and -color- background

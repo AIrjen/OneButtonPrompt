@@ -92,26 +92,35 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     custominputsuffixlist = csv_to_list("custom_input_suffix",antilist,"./userfiles/")
     generatecustominputsuffix = bool(custominputsuffixlist) # True of not empty
 
+    # special lists
+    backgroundtypelist = csv_to_list("backgroundtypes", antilist,"./csvfiles/special_lists/")
+    insideshotlist =  csv_to_list("insideshots", antilist,"./csvfiles/special_lists/")
+    photoadditionlist = csv_to_list("photoadditions", antilist,"./csvfiles/special_lists/")
 
-    generateoutfit = True
-    generatebodytype = True
-    generateaccesorie = True
-    generateartmovement = True
-    generatebackground = True
-    generatecamera = True
-    generatecolorscheme = True
-    generatedescriptors = True
-    generatedirection = True
-    generatefocus = True
-    generatehairstyle = True
-    generatelens = True
-    generatelighting = True
-    generatemood = True
-    generatepose = True
-    generatevomit = True
-    generatequality = True
-    generateshot = True
-    generatetimeperiod = True
+
+    generateoutfit = bool(outfitlist)
+    generatebodytype = bool(bodytypelist)
+    generateaccesorie = bool(accessorielist)
+    generateartmovement = bool(artmovementlist)
+    generatecamera = bool(cameralist)
+    generatecolorscheme = bool(colorschemelist)
+    generatedescriptors = bool(descriptorlist)
+    generatedirection = bool(directionlist)
+    generatefocus = bool(focuslist)
+    generatehairstyle = bool(hairstylelist)
+    generatelens = bool(lenslist)
+    generatelighting = bool(lightinglist)
+    generatemood = bool(moodlist)
+    generatepose = bool(poselist)
+    generatevomit = bool(vomitlist)
+    generatequality = bool(qualitylist)
+    generateshot = bool(shotsizelist)
+    generatetimeperiod = bool(timeperiodlist)
+
+    # specials:
+    generatebackground = bool(backgroundtypelist)
+    generateinsideshot = bool(insideshotlist)
+    generatephotoaddition = bool(photoadditionlist)
 
     # Smart subject logic
     if(givensubject !="" and smartsubject == True):
@@ -179,10 +188,11 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         # background
         foundinlist = any(word.lower() in [item.lower() for item in locationlist] for word in givensubjectlist)
         foundinlist2 = any(word.lower() in [item.lower() for item in buildinglist] for word in givensubjectlist)
-        keywordslist = ["location","background"]
+        keywordslist = ["location","background", "inside"]
         keywordsinstring = any(word.lower() in givensubject.lower() for word in keywordslist)
         if(foundinlist == True or foundinlist2 == True or keywordsinstring == True):
             generatebackground = False
+            generateinsideshot = False
 
         # accessorielist
         foundinlist = any(word.lower() in [item.lower() for item in accessorielist] for word in givensubjectlist)
@@ -295,9 +305,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
 
         # custom prefix list
-        if(uncommon_dist(insanitylevel) and generatecustominputprefix == True):
-            completeprompt += random.choice(custominputprefixlist) + ", "
-            if(uncommon_dist(insanitylevel)):
+        for i in range(2):
+            if(uncommon_dist(insanitylevel) and generatecustominputprefix == True):
                 completeprompt += random.choice(custominputprefixlist) + ", "
 
 
@@ -530,7 +539,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 if unique_dist(insanitylevel):
                     animaladdlist = ["baby", "were", "giant", "monster"]
                     animaladdedsomething = 1
-                    completeprompt += random.choice(animaladdlist) + " -animal-"
+                    completeprompt += random.choice(animaladdlist) + " -animal- "
                 if(animaladdedsomething != 1):
                     completeprompt += random.choice(animallist) + " "
 
@@ -751,28 +760,13 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             if(uncommon_dist(insanitylevel)):
                 completeprompt += random.choice(accessorielist) + ", "
 
-        if(legendary_dist(insanitylevel) and subjectchooser not in ["landscape", "concept"] and generatebackground == True):
+        if(legendary_dist(insanitylevel) and subjectchooser not in ["landscape", "concept"] and generateinsideshot == True):
             insideshot = 1
-            completeprompt += ", from inside of a "
-            addontolocation = [locationlist,buildinglist]
-            completeprompt += random.choice(random.choice(addontolocation)) + ", "
+            completeprompt += random.choice(insideshotlist) + ", "
         
         if(subjectchooser not in ["landscape", "concept"] and humanspecial != 1 and insideshot == 0 and uncommon_dist(insanitylevel) and generatebackground == True):
-            backgroundtypelist = ["landscape", "buildingbackground", "insidebuilding"]
-            backgroundtype = random.choice(backgroundtypelist)
-            if(backgroundtype == "landscape"):
-                completeprompt += "background is " + random.choice(locationlist) + ", "
-            elif(backgroundtype == "buildingbackground"):
-                completeprompt += ", background is "
-                if(uncommon_dist(insanitylevel)):
-                    completeprompt += random.choice(descriptorlist) + " "
-                completeprompt += random.choice(buildinglist) + ", "
-            elif(backgroundtype == "insidebuilding"):
-                completeprompt += ", inside a "
-                if(uncommon_dist(insanitylevel)):
-                    completeprompt += random.choice(descriptorlist) + " "
-                completeprompt += random.choice(buildinglist) + ", "
-
+            completeprompt += random.choice(backgroundtypelist) + ", "
+            
 
 
 
@@ -801,10 +795,11 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             completeprompt += random.choice(lightinglist) + ", "  
 
         # determine wether we have a photo or not
-        if("hoto" in completeprompt):
+        if("photo" in completeprompt.lower()):
             isphoto = 1
-            if(common_dist(insanitylevel) and not "film grain" in antilist):
-                completeprompt += ", film grain, "
+            
+        if(common_dist(insanitylevel) and isphoto == 1 and generatephotoaddition == True):
+            completeprompt += random.choice(photoadditionlist)
                 
         if(isphoto == 1 and generatecamera == True):
             completeprompt += random.choice(cameralist) + ", "  

@@ -1,5 +1,8 @@
 background is -location-
+background is [-location-|-location-]
 background is -building-
+background is [-building-|-building-]
+background is [-location-|-building-]
 inside a -building-
 background is -descriptor- -location-
 background is -descriptor- -building-
@@ -7,3 +10,5 @@ inside a -descriptor- -building-
 plain background
 plain -color- background
 -color- and -color- background
+-descriptor- background
+-culture- background

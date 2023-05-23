@@ -27,7 +27,7 @@ def csv_to_list(csvfilename, antilist=[], directory="./csvfiles/", lowerandstrip
         full_path = os.path.join(script_dir, directory )
         userfilesfolder = os.path.join(script_dir, userfilesdirectory )
         # check if there is a replace file
-        if(directory=="./csvfiles/"):      
+        if(directory=="./csvfiles/" or directory=="./csvfiles/special_lists/"):      
                 for filename in os.listdir(userfilesfolder):
                         if(filename == userfilereplacename):
                                 # Just override the parameters, and let it run normally
@@ -47,7 +47,7 @@ def csv_to_list(csvfilename, antilist=[], directory="./csvfiles/", lowerandstrip
                                         csvlist.append(row[0])
         
         # do the add ons!
-        if(directory=="./csvfiles/"):
+        if(directory=="./csvfiles/" or directory=="./csvfiles/special_lists/"):
                 if(os.path.isfile(userfilesfolder + csvfilename + "_addon" + ".csv")):
                         with open(userfilesfolder + csvfilename + "_addon" + ".csv", "r", newline="",encoding="utf8") as file:
                                 reader = csv.reader(file, delimiter=",")

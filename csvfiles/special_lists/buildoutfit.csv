@@ -1,0 +1,13 @@
+-descriptor- -outfit-
+-descriptor- -culture- -outfit-
+-descriptor- -culture- -material- -outfit-
+-descriptor- -culture- -material- -color- -outfit-
+-culture- -outfit-
+-material- -outfit-
+-color- -outfit-
+-material- -color- -outfit-
+-descriptor- -color- -outfit-
+-descriptor- -material- -outfit-
+-job- -outfit-
+[-outfit-|-outfit-]
+-descriptor- [-outfit-|-outfit-]

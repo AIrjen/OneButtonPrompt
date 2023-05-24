@@ -724,7 +724,8 @@ class Script(scripts.Script):
 
 
             else:
-                p.prompt = workprompt
+                preppedprompt = workprompt
+                p.prompt = preppedprompt
 
             #for j in range(batchsize):
        

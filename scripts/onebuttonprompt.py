@@ -308,17 +308,6 @@ class Script(scripts.Script):
                     ANDtoggle = gr.Dropdown(
                         ANDtogglemode, label="Prompt seperator mode", value="none")
             with gr.Row():
-                 gr.Markdown(
-                    """
-                    <font size="2">
-                    Other advanced options:
-                    </font> 
-                    """)
-            with gr.Row():
-                with gr.Column(scale=1):
-                    prompteachiteration = gr.Checkbox(
-                        label="Generate new prompt for each Batch Size", value=False)
-            with gr.Row():
                 gr.Markdown(
                     """
                     ### Prompt compounder
@@ -635,12 +624,12 @@ class Script(scripts.Script):
 
       
 
-        return [insanitylevel,subject, artist, imagetype, prefixprompt,suffixprompt,negativeprompt, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring, seperator, givensubject, smartsubject, giventypeofimage, prompteachiteration]
+        return [insanitylevel,subject, artist, imagetype, prefixprompt,suffixprompt,negativeprompt, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring, seperator, givensubject, smartsubject, giventypeofimage]
             
     
 
     
-    def run(self, p, insanitylevel, subject, artist, imagetype, prefixprompt,suffixprompt,negativeprompt, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring,seperator, givensubject, smartsubject, giventypeofimage,prompteachiteration):
+    def run(self, p, insanitylevel, subject, artist, imagetype, prefixprompt,suffixprompt,negativeprompt, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring,seperator, givensubject, smartsubject, giventypeofimage):
         
         images = []
         infotexts = []
@@ -675,57 +664,43 @@ class Script(scripts.Script):
         for i in range(batches):
             
             if(silentmode == False):
+                # prompt compounding
+                print("Starting generating the prompt")
+                preppedprompt = ""
                 
-                promptlist = []
-                negativepromptlist = []
-                # Either do this once, or for each iteration
-                if(prompteachiteration==True):
-                    amountofpromptstogen = batchsize
-                else:
-                    amountofpromptstogen = 1 
+                if(ANDtoggle == "automatic"):
+                    preppedprompt += prefixprompt + ", "
+                    if(artist != "none"):
+                        preppedprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype, True, antistring) 
+                    if(subject == "humanoid"):
+                        preppedprompt += ", " + promptcompounderlevel + " people"
+                    if(subject == "landscape"):
+                        preppedprompt += ", landscape"
+                    if(subject == "animal"):
+                        preppedprompt += ", " + promptcompounderlevel  + " animals"
+                    if(subject == "object"):
+                        preppedprompt += ", " + promptcompounderlevel  + " objects"
 
-                for i in range(amountofpromptstogen):
-                    # prompt compounding
-                    print("Starting generating the prompt")
-                    preppedprompt = ""
-                    
-                    if(ANDtoggle == "automatic"):
-                        preppedprompt += prefixprompt + ", "
-                        if(artist != "none"):
-                            preppedprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype, True, antistring) 
-                        if(subject == "humanoid"):
-                            preppedprompt += ", " + promptcompounderlevel + " people"
-                        if(subject == "landscape"):
-                            preppedprompt += ", landscape"
-                        if(subject == "animal"):
-                            preppedprompt += ", " + promptcompounderlevel  + " animals"
-                        if(subject == "object"):
-                            preppedprompt += ", " + promptcompounderlevel  + " objects"
+                if(ANDtoggle != "none" and ANDtoggle != "automatic"):
+                    preppedprompt += prefixprompt
+                
+                if(ANDtoggle != "none"):
+                    if(ANDtoggle!="prefix + prefix + prompt + suffix"):
+                        prefixprompt = ""
+                    if(seperator == "comma"):
+                        preppedprompt += " \n , "
+                    else:
+                        preppedprompt += " \n " + seperator + " "
+                      
+                #Here is where we build a "normal" prompt
+                preppedprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype, False, antistring, prefixprompt, suffixprompt,promptcompounderlevel, seperator,givensubject,smartsubject,giventypeofimage)
 
-                    if(ANDtoggle != "none" and ANDtoggle != "automatic"):
-                        preppedprompt += prefixprompt
-                    
-                    if(ANDtoggle != "none"):
-                        if(ANDtoggle!="prefix + prefix + prompt + suffix"):
-                            prefixprompt = ""
-                        if(seperator == "comma"):
-                            preppedprompt += " \n , "
-                        else:
-                            preppedprompt += " \n " + seperator + " "
-                        
-                    #Here is where we build a "normal" prompt
-                    preppedprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype, False, antistring, prefixprompt, suffixprompt,promptcompounderlevel, seperator,givensubject,smartsubject,giventypeofimage)
+                # set everything ready
+                p.prompt = preppedprompt  
+                p.negative_prompt = negativeprompt
 
-                    # set everything ready
-                    p.prompt = preppedprompt  
-                    p.negative_prompt = negativeprompt
-                    promptlist.append(p.prompt)
-                    negativepromptlist.append(p.negative_prompt)
-
-
-            else:
-                preppedprompt = workprompt
-                p.prompt = preppedprompt
+            if(silentmode == True):
+                p.prompt = workprompt
 
             #for j in range(batchsize):
        
@@ -735,17 +710,11 @@ class Script(scripts.Script):
             print(p.prompt)
 
             # finally figured out how to do multiple batch sizes
-            if(prompteachiteration==False):
-                promptlist = []
-                negativepromptlist = []
-                for i in range(batchsize):
-                    promptlist.append(p.prompt)
-                    negativepromptlist.append(p.negative_prompt)
+            promptlist = []
+            for i in range(batchsize):
+                promptlist.append(p.prompt)
 
-            p.prompt = preppedprompt
-            p.all_prompts = promptlist
-            p.negativeprompt = negativeprompt
-            p.all_negative_prompts = negativepromptlist
+            p.prompt = promptlist
             p.batch_size = batchsize
             processed = process_images(p)
             images += processed.images

@@ -23,6 +23,7 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
     originalsize=size
     originalmodel = model
     originalimg2imgmodel = img2imgmodel
+    insanitylevel = int(insanitylevel)
 
     if(onlyupscale==True):
         script_dir = os.path.dirname(os.path.abspath(__file__))  # Script directory

@@ -501,7 +501,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             completeprompt += random.choice(culturelist) + " "
 
         if(mainchooser == "object"):
-            objecttypelist = [objectlist, buildinglist, vehiclelist, foodlist]  # first select a random list, then randomly select from the corresponding list
+            objectwildcardlist = ["-object-", "-building-","-vehicle-","-food-"]  # using wildcards for replacements
             
             # if we have a given subject, we should skip making an actual subject
             if(givensubject == ""):
@@ -511,23 +511,23 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                     hybridorswap = random.choice(hybridorswaplist)
                     completeprompt += "["
 
-                chosenobjecttype = random.choice(objecttypelist)
+                chosenobjectwildcard = random.choice(objectwildcardlist)
 
-                completeprompt += random.choice(chosenobjecttype) + " "
+                completeprompt += chosenobjectwildcard + " "
 
                 if(hybridorswap == "hybrid"):
                     if(uncommon_dist(insanitylevel)):
                         completeprompt += "|" + random.choice(hybridlist) + "] "
                     else:
                         completeprompt += "|" 
-                        completeprompt += random.choice(chosenobjecttype) + " "
+                        completeprompt += random.choice(chosenobjectwildcard) + " "
                         completeprompt += "] "
                 if(hybridorswap == "swap"):
                     if(uncommon_dist(insanitylevel)):
                         completeprompt += ":" + random.choice(hybridlist) + ":" + str(random.randint(1,5)) +  "] "
                     else:
                         completeprompt += ":"
-                        completeprompt += random.choice(chosenobjecttype) + " "
+                        completeprompt += chosenobjectwildcard + " "
                         completeprompt += ":" + str(random.randint(1,5)) +  "] "
             else:
                 completeprompt += " " + givensubject + " "
@@ -899,97 +899,45 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
 
     #end of the while loop, now clean up the prompt
-    
-    # lol, this needs a rewrite :D
-    while "-color-" in completeprompt or "-material-" in completeprompt or "-animal-" in completeprompt or "-object-" in completeprompt or "-fictional-" in completeprompt or "-nonfictional-" in completeprompt or "-conceptsuffix-" in completeprompt or "-building-" in completeprompt or "-vehicle-" in completeprompt or "-outfit-" in completeprompt or "-location-" in completeprompt or "-conceptprefix-" in completeprompt or "-descriptor-" in completeprompt or "-food-" in completeprompt or "-haircolor-" in completeprompt or "-hairstyle-" in completeprompt or "-job-" in completeprompt or "-culture-" in completeprompt:
-        replacewildcard(completeprompt, insanitylevel, "-object-", objectlist,True)
-        #while "-object-" in completeprompt:
-        #    completeprompt = completeprompt.replace('-object-', random.choice(objectlist),1)
 
-        while "-location-" in completeprompt:
-            completeprompt = completeprompt.replace('-location-', random.choice(locationlist),1)
+    # first some manual stuff for outfit
 
-        while "-outfit-" in completeprompt:
-            # sometimes, its just nice to have descriptor and a normal "outfit"
-            if(unique_dist(insanitylevel)):
+    if(unique_dist(insanitylevel)): # sometimes, its just nice to have descriptor and a normal "outfit"
                  completeprompt = completeprompt.replace('-outfit-', 'outfit',1)
 
             # do the hybrid/swap thing in here instead
-            if(rare_dist(insanitylevel)):
-                    hybridorswaplist = ["hybrid", "swap"]
-                    hybridorswap = random.choice(hybridorswaplist)
-                    hybridorswapreplacementvalue = "[" + random.choice(outfitlist)
-                    
-                    if(hybridorswap == "hybrid"):
-                            hybridorswapreplacementvalue += "|" + random.choice(outfitlist) + "] "
-                    if(hybridorswap == "swap"):
-                        if(uncommon_dist(insanitylevel)):
-                            hybridorswapreplacementvalue += ":" + random.choice(outfitlist) + ":" + str(random.randint(1,20)) +  "] "
-                    
-                    completeprompt = completeprompt.replace('-outfit-', hybridorswapreplacementvalue,1)
-
-                       
-            completeprompt = completeprompt.replace('-outfit-', random.choice(outfitlist),1)
+            # if(rare_dist(insanitylevel)):
+            #        hybridorswaplist = ["hybrid", "swap"]
+            #        hybridorswap = random.choice(hybridorswaplist)
+            #        hybridorswapreplacementvalue = "[" + random.choice(outfitlist)
+            #        
+            #        if(hybridorswap == "hybrid"):
+            #                hybridorswapreplacementvalue += "|" + random.choice(outfitlist) + "] "
+            #        if(hybridorswap == "swap"):
+            #            if(uncommon_dist(insanitylevel)):
+            #                hybridorswapreplacementvalue += ":" + random.choice(outfitlist) + ":" + str(random.randint(1,20)) +  "] "
+            #        
+            #        completeprompt = completeprompt.replace('-outfit-', hybridorswapreplacementvalue,1)
+    
+    # lol, this needs a rewrite :D
+    while "-color-" in completeprompt or "-material-" in completeprompt or "-animal-" in completeprompt or "-object-" in completeprompt or "-fictional-" in completeprompt or "-nonfictional-" in completeprompt or "-conceptsuffix-" in completeprompt or "-building-" in completeprompt or "-vehicle-" in completeprompt or "-outfit-" in completeprompt or "-location-" in completeprompt or "-conceptprefix-" in completeprompt or "-descriptor-" in completeprompt or "-food-" in completeprompt or "-haircolor-" in completeprompt or "-hairstyle-" in completeprompt or "-job-" in completeprompt or "-culture-" in completeprompt:
+        allwildcardslistnohybrid = [ "-color-","-object-", "-animal-", "-fictional-","-nonfictional-","-building-","-vehicle-","-location-","-conceptprefix-","-food-","-haircolor-","-hairstyle-","-job-"]
+        allwildcardslistnohybridlists = [colorlist, objectlist, animallist, fictionallist, nonfictionallist, buildinglist, vehiclelist, locationlist,conceptprefixlist,foodlist,haircolorlist, hairstylelist,joblist]
+        allwildcardslistwithhybrid = ["-material-", "-descriptor-", "-outfit-", "-conceptsuffix-","-culture-"]
+        allwildcardslistwithhybridlists =[materiallist, descriptorlist,outfitlist,conceptsuffixlist,culturelist]
         
-        while "-building-" in completeprompt:
-            completeprompt = completeprompt.replace('-building-', random.choice(buildinglist),1)
+        #  keywordsinstring = any(word.lower() in givensubject.lower() for word in keywordslist)
+        for wildcard in allwildcardslistnohybrid:
+            attachedlist = allwildcardslistnohybridlists[allwildcardslistnohybrid.index(wildcard)]
+            completeprompt = replacewildcard(completeprompt, insanitylevel, wildcard, attachedlist,False)
 
-        while "-vehicle-" in completeprompt:
-            completeprompt = completeprompt.replace('-vehicle-', random.choice(vehiclelist),1)
         
-        while "-conceptsuffix-" in completeprompt:
-            completeprompt = completeprompt.replace('-conceptsuffix-', random.choice(conceptsuffixlist),1)
+        for wildcard in allwildcardslistwithhybrid:
+            attachedlist = allwildcardslistwithhybridlists[allwildcardslistwithhybrid.index(wildcard)]
+            completeprompt = replacewildcard(completeprompt, insanitylevel, wildcard, attachedlist,True)
+
+
         
-        while "-color-" in completeprompt:
-            completeprompt = completeprompt.replace('-color-', random.choice(colorlist),1)
-
-        while "-material-" in completeprompt:
-            completeprompt = completeprompt.replace('-material-', random.choice(materiallist),1)
-        
-        while "-fictional-" in completeprompt:
-            completeprompt = completeprompt.replace('-fictional-', random.choice(fictionallist),1)
-        
-        while "-nonfictional-" in completeprompt:
-            completeprompt = completeprompt.replace('-nonfictional-', random.choice(nonfictionallist),1)
-
-        while "-animal-" in completeprompt:
-            completeprompt = completeprompt.replace('-animal-', random.choice(animallist),1)
-        
-        while "-conceptprefix-" in completeprompt:
-            completeprompt = completeprompt.replace('-conceptprefix-', random.choice(conceptprefixlist),1)
-
-        while "-descriptor-" in completeprompt:
-            # lets also make it sometimes swap the descriptor. Cause its fun!
-            if(unique_dist(insanitylevel)):
-                    hybridorswaplist = ["hybrid", "swap"]
-                    hybridorswap = random.choice(hybridorswaplist)
-                    hybridorswapreplacementvalue = "[" + random.choice(descriptorlist)
-                    
-                    if(hybridorswap == "hybrid"):
-                            hybridorswapreplacementvalue += "|" + random.choice(descriptorlist) + "] "
-                    if(hybridorswap == "swap"):
-                        if(uncommon_dist(insanitylevel)):
-                            hybridorswapreplacementvalue += ":" + random.choice(descriptorlist) + ":" + str(random.randint(1,20)) +  "] "
-                    
-                    completeprompt = completeprompt.replace('-descriptor-', hybridorswapreplacementvalue,1)
-
-            completeprompt = completeprompt.replace('-descriptor-', random.choice(descriptorlist),1)
-        
-        while "-food-" in completeprompt:
-            completeprompt = completeprompt.replace('-food-', random.choice(foodlist),1)
-        
-        while "-haircolor-" in completeprompt:
-            completeprompt = completeprompt.replace('-haircolor-', random.choice(haircolorlist),1)
-
-        while "-hairstyle-" in completeprompt:
-            completeprompt = completeprompt.replace('-hairstyle-', random.choice(hairstylelist),1)
-
-        while "-job-" in completeprompt:
-            completeprompt = completeprompt.replace('-job-', random.choice(joblist),1)
-
-        while "-culture-" in completeprompt:
-            completeprompt = completeprompt.replace('-culture-', random.choice(culturelist),1)
-
     
 
     
@@ -1031,22 +979,27 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
     # function
 def replacewildcard(completeprompt, insanitylevel, wildcard,listname, activatehybridorswap):
-    
-    while wildcard in completeprompt:
-        if(unique_dist(insanitylevel) and activatehybridorswap == True):
-            hybridorswaplist = ["hybrid", "swap"]
-            hybridorswap = random.choice(hybridorswaplist)
-            hybridorswapreplacementvalue = "[" + random.choice(listname)
-            
-            if(hybridorswap == "hybrid"):
-                    hybridorswapreplacementvalue += "|" + random.choice(listname) + "] "
-            if(hybridorswap == "swap"):
-                if(uncommon_dist(insanitylevel)):
-                    hybridorswapreplacementvalue += ":" + random.choice(listname) + ":" + str(random.randint(1,20)) +  "] "
-            
-            completeprompt = completeprompt.replace('-descriptor-', hybridorswapreplacementvalue,1)
+    if(len(listname) == 0):
+        print("HELLO THERE")
+        print(wildcard)
+        print(listname)
+        completeprompt = completeprompt.replace(wildcard, "",1)
+    else:
 
+        while wildcard in completeprompt:
+            if(unique_dist(insanitylevel) and activatehybridorswap == True):
+                hybridorswaplist = ["hybrid", "swap"]
+                hybridorswap = random.choice(hybridorswaplist)
+                hybridorswapreplacementvalue = "[" + random.choice(listname)
+                
+                if(hybridorswap == "hybrid"):
+                        hybridorswapreplacementvalue += "|" + random.choice(listname) + "] "
+                if(hybridorswap == "swap"):
+                    if(uncommon_dist(insanitylevel)):
+                        hybridorswapreplacementvalue += ":" + random.choice(listname) + ":" + str(random.randint(1,20)) +  "] "
+                
+                completeprompt = completeprompt.replace(wildcard, hybridorswapreplacementvalue,1)
 
-        completeprompt = completeprompt.replace(wildcard, random.choice(listname),1)
+            completeprompt = completeprompt.replace(wildcard, random.choice(listname),1)
 
     return completeprompt

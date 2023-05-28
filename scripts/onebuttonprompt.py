@@ -669,6 +669,7 @@ class Script(scripts.Script):
                 preppedprompt = ""
                 
                 artistcopy = artist
+                prefixpromptcopy = prefixprompt
                 
                 if(ANDtoggle == "automatic"):
                     preppedprompt += prefixprompt + ", "
@@ -704,6 +705,7 @@ class Script(scripts.Script):
 
                 # set the artist mode back when done (for automatic mode)
                 artist = artistcopy
+                prefixprompt = prefixpromptcopy
                 
                 # set everything ready
                 p.prompt = preppedprompt  

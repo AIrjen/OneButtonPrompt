@@ -29,6 +29,10 @@ The [Dynamic Prompts extension](https://github.com/adieyal/sd-dynamic-prompts) m
 
 However, Dynamic Prompts can be combined with One Button Prompt. You can use the wildcards supported by Dynamic Prompts also in the prompt prefix, prompt suffix and subject override fields.
 
+It also supports the Dynamic Prompts syntax of {cat|dog} to switch during batch processing.
+
+Basically, you can run Dynamic Prompts on top of One Button Prompt.
+
 Meaning that if you have managed your own wildcards before, you can use them here as well. With the standard settings, these are __ __wildcardname__ __
 
 In this example, I have a bird.txt wildcard file in \extensions\sd-dynamic-prompts\wildcards\
@@ -60,3 +64,27 @@ here are some examples:
 > digital art, long shot of a cyberpunk European Starling with Bone implants, Stormy weather, F/14, hyperdetailed, ultra high res
 >
 > (art by Kelly Freas:0.8), digital art, 3/4 view of a cyberpunk Winter Wren with Rubber implants, Snowy, Neogothic Art, Nostalgic lighting, Depth of field 100mm, dark white color grading
+
+# Dynamic Prompts extension and basic usage
+
+Examples of using the {cat|dog} basic usage syntax working with One Button Prompt.
+
+In One Button Prompt, I set the following:
+__Subject Types__ = "animal"
+__Artists__ = "sculpture"
+__Overwrite type of image__ = "sculpture"
+
+__Overwrite subject__ = "{cat|dog}"
+
+Now run with multiple batches, to see it switch between cat and dog.
+
+![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/99a3ec3c-25f3-45f7-9ebf-acda00c95753)
+
+Here are some example outputs:
+
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/e6124544-bd70-4b51-b880-e66884512922.png" width="30%" height="30%">
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/e655c905-053c-4a73-931c-446bd3122836.png" width="30%" height="30%">
+
+> sculpture of a Classic cat, Hopeless, Digital Art, waning light, [art by Barbara Hepworth|(art by Georg Jensen:1.2)|art by Lee Bontecou]
+> 
+> (art by Sebastian Errazuriz:1.0), (art by Barbara Hepworth:0.9), sculpture of a Epic Regal dog, Foggy, Ultrarealistic, Geometric Abstract Art, rim light, Fish-eye Lens, Muted Colors

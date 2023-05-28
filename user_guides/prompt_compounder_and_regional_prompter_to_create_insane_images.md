@@ -170,3 +170,54 @@ Here are some examples it generated:
 > BREAK Technical illustration,  landscape of a Odious Seductive Temple  and Bed and breakfast, at Nighttime, Graphic novel, Bronzepunk, F/5, Monochromatic Acid colors filter,  
 > BREAK, eye-level shot of a Arcane "Reign of Catherine the Great", 50s Art, 80mm, Saturated, Bright design, <lora:epiNoiseoffset_v2:1>,  
 > BREAK, side view shot of a Award-Winning Wasp, Foggy, dtx, Zoom lens, Elegant, dark indigo and DayGlo green splash
+
+# Two shot method with selected artist
+Another trick, is to create a "two shot" with multiple different people. In this example, I am using a selected artists, namely Brandon Woelfel, which creates awesome photographs.
+
+Please note, that this doesn't always add two people in the shot, but at least it tries.
+
+I am running these in a 1024x512 resolution. You can also try using a model that supports better realistic photographs.
+
+For One Button Prompt settings, I set the following:
+
+__Subject Types__ to "humanoid", __Artist__ to "none", __type of image__ to "photograph"
+
+__prompt prefix__ to "art by brandon woelfel, two people"
+
+![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/207bec77-75f5-408c-b294-f5017647506d)
+
+Regional Prompter has the following settings:
+
+For Regional Prompter, __Divide Ratio__ to "1,1", __Split mode__ to "Horizontal", and then enable __"Use common prompt"__, and set the __Base Ratio to '0.7'__. 
+![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/5e6e1064-eb75-414f-91fb-1dec815427c2)
+
+
+
+For the Prompt Compounder settings:
+
+__Prompt Compounder__ to 2, we have 2 areas to be filled in. So we want 2 seperate prompts.
+
+We set the __Prompt seperator__ to "BREAK". The Regional Prompter wants each prompt to be seperated by the BREAK keyword, this is how we do it.
+
+Lastly, we set the __Prompt seperator mode__ to "prefix AND prompt + suffix". In this case, the prefix field is used as our "common prompt". So here we put in earlier "art by brandon woelfel, two people"
+
+![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/d913eea8-7eee-40fe-9c44-5271bab24f86)
+
+Here are some examples, running with these settings:
+
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/2703ca9e-88c2-40d3-b440-3738b244e5b8.png" width="30%" height="30%">
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/ad37eabd-4422-44e3-8a9f-393b221aebd9.png" width="30%" height="30%">
+
+> art by brandon woelfel, two people 
+> BREAK photograph, Sharp focus of a Irritated midweight Maria Sharapova, wearing Complementary [Helmet|Evening wear], Movie still, Evil, Fauvism, Kodak gold 200, 50mm, Agfacolor, layered textures, pixelart <lora:Pixhell_15:1>,  
+> BREAK,  photograph, shot from behind of a 1900'S Shaky Belle Époque Male Theurge, Cozy Rainbow hair, at Sunrise, Shameful, Gel lighting, Hasselblad, Zoom lens, Kodachrome
+>
+> art by brandon woelfel, two people 
+> BREAK photograph, ground level shot of a Inviting Man, Battle pose, Fruit-Flavored Handlebar mustache, Handlebar mustache, Goatee, at Sunset, Rough sketch, Post-Punk, Lens Flare, film camera, Depth of field 270mm, Cold Colors,  
+> BREAK,  photograph, 3/4 view of a Smart Bohemian Nymph, Directing a TV show, Flustered, animecore, Canon 5d mark 4, 800mm lens, Warm Colors
+
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/b06b3914-497d-4634-bcd3-91ebd14bf9f3.png" width="30%" height="30%">
+
+> art by brandon woelfel, 2 people 
+> BREAK photograph, aerial shot of a Hospitable flyweight Tudor Male Explorer, Cel shaded, Amusing, Canon R5, telephoto lens, in the style of 0mib  <lora:0mib3(gut auf 1):1>,  
+> BREAK,  photograph, overhead angle of a Rubbery Gaelic Neptune, wearing Opal deep yellow Mini dress, S-shape pose, Side swept hair, plain DayGlo orange background, Simple illustration, Grim, Mythpunk, natural lighting, Kodak portra 800, F/2.8, Ektachrome, photolab

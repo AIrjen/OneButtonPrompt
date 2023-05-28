@@ -21,7 +21,8 @@ A simple user guide for first time use and settings is available [here](https://
 - Create __infinite variations__ of a __chosen subject__.                     ==> [guide to override subject](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/override_subject_and_infinite_variations.md)
 - Fully __automated generation, classification and upscaling__.           ==> [guide to one_button_run_and_upscale](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/one_button_run_and_upscale.md)
 - Add __LoRA's__, customize lists and personal artists choices.           ==> [guide to custom files](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/custom_files.md)
-- __Compound__ multiple prompts together for unexpected results.
+- __Compound__ multiple prompts together for unexpected results.          ==> [guide to prompt compounder](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/prompt_compounder_and_regional_prompter_to_create_insane_images.md)
+- Use __wildcards__, or __combine with Dynamic Prompts__ extension                ==> [guide to using wildcards and Dynamic Prompts](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/wildcards_and_dynamic_prompts_extension.md)
 
 ## How to use in automatic1111
 In TXT2IMG or IMG2IMG, select the script "One Button Prompt".
@@ -120,36 +121,8 @@ I've added a Workflow assist tab in a recent update.
 This tab is designed to help with the workflow of adjusting and maintaining prompts without turning the extension off.
 "Workflow mode" turns off the generated script, and uses the Workflow prompt instead.
 
-This part is still being developed, to have a better UI.
-
 It also has the options to generate a few prompts with a click and send them to the workflow prompt. This way you can search or combine interesting ideas together.
 ![image](https://user-images.githubusercontent.com/130234949/233644374-22e2bf6e-da4c-46b7-a248-9c623adc0b99.png)
-
-# Advanced / prompt compounder
-On the advanced tab, there is the option to compound multiple generated prompts together. It is set to 1 for normal behavior, a single prompt. You can up this, for interesting results.
-![image](https://user-images.githubusercontent.com/130234949/233619883-17f58277-d536-4682-bb69-7c86d4a0b1bd.png)
-
-There is however, some tricks build into this, for use with the [Latent Couple](https://github.com/opparco/stable-diffusion-webui-two-shot) extension. Using setting the seperator to "automatic AND" and the Prompt compounder equal to the amount of latent spaces, you can combine interesting things together.
-
-Example here with 3 different landscapes combined together in a single image.
-![00066-4269117636](https://user-images.githubusercontent.com/130234949/233621427-495d3eae-b58e-4f2c-87de-35e51c455e68.png)
-
->art by Nathan Spoor, landscape
->
->AND art by Nathan Spoor, landscape, Unreal Engine, Lively France, Thunderstorm, Rough sketch, Reflected light
->
->AND art by Nathan Spoor, landscape, Spellbinding Straw caverns, at Golden hour, Mandala, octane engine
->
->AND art by Nathan Spoor, landscape, Refreshing Death Valley National Park and Frustrated Aircraft carrier, Bathed in shadows, Detailed illustration, Lustful
-
-If you want more control, use "current prompt + AND". An example would be "Art by brandon woelfel, 2 people" and setting the subject type to humanoids. This will automatically form the prompt for use with latent couple:
-
-![00040-2515550298](https://user-images.githubusercontent.com/130234949/233620894-55357483-64d4-4185-8c45-ae27f26d8eb1.png)
->art by brandon woelfel, 2 people 
->
-> AND art by brandon woelfel, 2 people, Studio shot of a Repugnant Woman, wearing Exhausted Mauve Boyfriend blazer and skinny jeans, Dark hair styled as Straight, Cat Ears, Modern Art, hair light, F/8, Mono Color
-> 
->AND art by brandon woelfel, 2 people, Abstract, selfie shot angle of a 1920's Nasty slight Michelle Yeoh surrounded by Grapefruits, Blonde hair styled as Short and messy, glowing Turquoise eyes, Anime screencap, Panfuturism, Magic the gathering, photolab, High quality
 
 # One Button Run and Upscale
 Using the API feature of WebUI, this allows you to:
@@ -182,6 +155,7 @@ Some ideas I'd like to implement:
 - ~~Better workflow management in workflow assist tab~~ Done
 - ~~Curated artist lists~~ Done
 - Ongoing: list refinements and new features in the prompt generation
+- Ongoing: Documentation and toturials
 
 If you have a good idea or suggestion, let me know, or build it yourself ;)
 

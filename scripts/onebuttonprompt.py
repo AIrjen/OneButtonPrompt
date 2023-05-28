@@ -668,6 +668,9 @@ class Script(scripts.Script):
                 print("Starting generating the prompt")
                 preppedprompt = ""
                 
+                artistcopy = artist
+                prefixpromptcopy = prefixprompt
+                
                 if(ANDtoggle == "automatic"):
                     preppedprompt += prefixprompt + ", "
                     if(artist != "none"):
@@ -680,6 +683,10 @@ class Script(scripts.Script):
                         preppedprompt += ", " + promptcompounderlevel  + " animals"
                     if(subject == "object"):
                         preppedprompt += ", " + promptcompounderlevel  + " objects"
+                    #sneaky! If we are running on automatic, we don't want "artists" to show up during the rest of the prompt, so set it to none, but only temporary!
+
+                    artist = "none"
+                
 
                 if(ANDtoggle != "none" and ANDtoggle != "automatic"):
                     preppedprompt += prefixprompt
@@ -691,10 +698,15 @@ class Script(scripts.Script):
                         preppedprompt += " \n , "
                     else:
                         preppedprompt += " \n " + seperator + " "
-                      
+
+
                 #Here is where we build a "normal" prompt
                 preppedprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype, False, antistring, prefixprompt, suffixprompt,promptcompounderlevel, seperator,givensubject,smartsubject,giventypeofimage)
 
+                # set the artist mode back when done (for automatic mode)
+                artist = artistcopy
+                prefixprompt = prefixpromptcopy
+                
                 # set everything ready
                 p.prompt = preppedprompt  
                 p.negative_prompt = negativeprompt

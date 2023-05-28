@@ -165,6 +165,12 @@ Currently, One Button Prompt supports the following wildcards.
 - -conceptsuffix-
 - -descriptor-
 - -food-
+- -haircolor-
+- -hairstyle-
+- -job-
+- -culture-
+- -accessory-
+- -humanoid-
 
 
 ## Bringing it all together, generating awesome cyborgs with One Button

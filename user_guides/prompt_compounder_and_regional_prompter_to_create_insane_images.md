@@ -1,5 +1,5 @@
 ![00172-216086968](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/e5bb6bc0-ba9a-4d4a-9e14-913860c74c26)
-Note: all images on this pages were generated with the [DiffusionBrushEverything model](https://civitai.com/models/46294/diffusion-brush-everything-sfw-nsfw-all-purpose-checkpoint-nuclear-diffusion-anime-hybrid)
+Note: all images on this pages were generated with the [DiffusionBrushEverything model](https://civitai.com/models/46294/diffusion-brush-everything-sfw-nsfw-all-purpose-checkpoint-nuclear-diffusion-anime-hybrid). I feel like this model is not getting enough appreciation.
 
 # Prompt Compounder
 The prompt compounder funcionality can be found on the Advanced Tab of the One Button Prompt script.
@@ -100,3 +100,73 @@ Now, we can start generating!
 > BREAK Redshift render,  landscape of a [Napa Valley|Argentina], Stormy weather, Screen print, waning light,  
 > BREAK, Painting,  landscape of a Passionate Lighthouse, Fall, Prehistoricore, F/5,  
 > BREAK, Gopro footage,  landscape of a Yellowstone National Park, at Overcast, Masterpiece, Metalcore, F/1.8, Kodachrome
+
+# Creating insanity with Regional Prompter
+Using the "Twod-2-1" preset, and setting One Buttom Prompt to generate all kinds of things, we can get really fantastical results.
+
+These examples are all generated at 1200x1200 (who needs hi. res fix anyway).
+
+For One Button Prompt main settings, I let it generate everything, I want to create some insanity:
+![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/920a8890-a2e1-416f-a808-641567ed4c95)
+
+
+For Regional Prompter, I load up the __"Twod-2-1"__ Preset, and then enable __"Use common prompt"__, and set the __Base Ratio to '0.4'__. 
+
+![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/c16927d3-1266-4546-94ff-f19499f8764b)
+
+For the Prompt Compounder settings:
+
+__Prompt Compounder__ to 3, we have 3 areas to be filled in. So we want 3 seperate prompts.
+
+We set the __Prompt seperator__ to "BREAK". The Regional Prompter wants each prompt to be seperated by the BREAK keyword, this is how we do it.
+
+Lastly, we set the __Prompt seperator mode__ to "automatic". This is where the magic happens. It will now generate the "common prompt" we enabled before, which consists of an artist and the type of image we would like to create. It will also disable any other artists generated in the normal prompts.
+![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/00f758d7-488a-4432-8746-c96e4bf34c6b)
+
+Here are some examples it generated:
+
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/f2aa9e5f-62cc-45d0-920b-ff777637e355.png" width="30%" height="30%">
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/48682cb0-7bb6-4a54-ba12-c960dc9443b2.png" width="30%" height="30%">
+
+> (art by Mary Blair:1.2) 
+> 
+> BREAK Studio shot of a Layered Hip-Hop mozzarella smooth, background is [supermarket|Water treatment plant], at Nighttime, FOV 90 degrees, Overdetailed art, Disgusting,  
+> BREAK, Oil painting, selfie shot angle of a Smart Unnatural chocolate cake Purple patterns, at Midday, tilt shift, Screen print, Health Goth Art, Kinemacolor, opulent, fairytaleai <lora:FairyTaleV1s_SD1.5:1>,  
+> BREAK, Cycles render, top-down view of a Fiery Space Age Purse Mohair frame, detailed with Crystal Terrible patterns, Annoyed background, Light, Colorless, sfumato, masterpiece
+>
+> art by Li Shuxing 
+> 
+> BREAK Redshift render, side view shot of a Friendly Mesmerizing Costa Rican Footbridge, Movie still, backlight, Fish-eye Lens, Plain white background, ghibli style  <lora:studioGhibliStyle_offset:1>,  
+> BREAK, Renderman, full shot of a Petrified Melancholy "The Base of Hope", horizon-centered, Suffering, spotlit,  
+> BREAK, Fashion shot of a Enchanting Ugandan Rocking chair, Beige and Rainbow background, Horror, soft light, Circular polarizer, rich color
+
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/7bba1a0b-26df-4e7f-8f69-0b1b5e440eed.png" width="30%" height="30%">
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/65f7e0b0-5eef-4982-b213-81103833f634.png" alt ="So, this happened" width="30%" height="30%">
+
+
+> art by Tintoretto, (art by Frank Weston Benson:0.9), (art by Horst P. Horst:0.9) 
+> 
+> BREAK Cycles render,  landscape of a Energetic The Crown of Thorns  and Grain elevator, Moon in the night, Light, cinematic lighting, Fujifilm Superia,  
+> BREAK, Octane render, extreme close-up shot of a Furious Giant sequoia tree, from inside of a Rusty Taj Mahal, at Nighttime, Aestheticism, Motion blur, Vivid Colors, octane engine,  
+> BREAK, Digital artwork, close-up shot of a Homey Mackerel, Winter, soft focus, Crowcore, Nostalgic lighting, F/2.8, Warm Colors, ghibli style  <lora:studioGhibliStyle_offset:1>
+
+> (art by Hiroshi Katsuragawa:1.3), (art by John Mckinstry:1.2), (art by Dave Coverly:1.0) 
+> 
+> BREAK Octane render, Landscape of a Geeky "The Eye of Hope", Winter, Relaxed, volumetric lighting, Dark hue, Lime green paint splotches, Swirling, vectorstyle <lora:vectorL:1>, in the style of 0mib  <lora:0mib3(gut auf 1):1>,  
+> BREAK, wall Graffiti, top-down view of a Invigorating Prehistoric Jennifer Aniston, Lumberjack, Sketch, Sad, excessivism, Direct light, Infrared, contest winner, <lora:epiNoiseoffset_v2:1>,  
+> BREAK, shin-hanga  of a Doubtful Techno Female Mage slayer, Psychotic Red hair, Masterpiece, Relaxed, Anime, 800mm lens, pixiv
+
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/f5883812-44db-4473-bd6c-bc84db112d28.png" width="30%" height="30%">
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/7ee19414-3e6e-42ab-afb5-1bfd221031ab.png" width="30%" height="30%">
+
+> (art by Bruce Pennington:1.2),art by Ron English 
+> 
+> BREAK modelshoot style shot of a Deafening "The Rwandan Genocide", Bathed in shadows, 800mm lens, extremely hyper aesthetic, highly detailed, <lora:epiNoiseoffset_v2:1>,  
+> BREAK, Airbrush painting, aerial shot of a Natural Wet "The Great Flood", from inside of a Overpass, Regret, Bimbocore,  
+> BREAK, Full length frame of a Smart large Daedra surrounded by Paper clipss, ðŸ™, Light hair styled as Pixie, at Sunrise, Side lighting, Spirals, National Geographic
+
+> (art by Jeremy Caniglia:1.0), (art by Nicholas Hughes:0.7) 
+> 
+> BREAK Technical illustration,  landscape of a Odious Seductive Temple  and Bed and breakfast, at Nighttime, Graphic novel, Bronzepunk, F/5, Monochromatic Acid colors filter,  
+> BREAK, eye-level shot of a Arcane "Reign of Catherine the Great", 50s Art, 80mm, Saturated, Bright design, <lora:epiNoiseoffset_v2:1>,  
+> BREAK, side view shot of a Award-Winning Wasp, Foggy, dtx, Zoom lens, Elegant, dark indigo and DayGlo green splash

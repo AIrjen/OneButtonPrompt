@@ -209,15 +209,25 @@ Here are some examples, running with these settings:
 <img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/ad37eabd-4422-44e3-8a9f-393b221aebd9.png" width="30%" height="30%">
 
 > art by brandon woelfel, two people 
+> 
 > BREAK photograph, Sharp focus of a Irritated midweight Maria Sharapova, wearing Complementary [Helmet|Evening wear], Movie still, Evil, Fauvism, Kodak gold 200, 50mm, Agfacolor, layered textures, pixelart <lora:Pixhell_15:1>,  
 > BREAK,  photograph, shot from behind of a 1900'S Shaky Belle Époque Male Theurge, Cozy Rainbow hair, at Sunrise, Shameful, Gel lighting, Hasselblad, Zoom lens, Kodachrome
 >
 > art by brandon woelfel, two people 
+> 
 > BREAK photograph, ground level shot of a Inviting Man, Battle pose, Fruit-Flavored Handlebar mustache, Handlebar mustache, Goatee, at Sunset, Rough sketch, Post-Punk, Lens Flare, film camera, Depth of field 270mm, Cold Colors,  
 > BREAK,  photograph, 3/4 view of a Smart Bohemian Nymph, Directing a TV show, Flustered, animecore, Canon 5d mark 4, 800mm lens, Warm Colors
 
 <img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/b06b3914-497d-4634-bcd3-91ebd14bf9f3.png" width="30%" height="30%">
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/08f903ee-7c8f-4e2b-8023-b53dd4c39601.png" width="30%" height="30%">
 
-> art by brandon woelfel, 2 people 
+> art by brandon woelfel, two people 
+> 
 > BREAK photograph, aerial shot of a Hospitable flyweight Tudor Male Explorer, Cel shaded, Amusing, Canon R5, telephoto lens, in the style of 0mib  <lora:0mib3(gut auf 1):1>,  
 > BREAK,  photograph, overhead angle of a Rubbery Gaelic Neptune, wearing Opal deep yellow Mini dress, S-shape pose, Side swept hair, plain DayGlo orange background, Simple illustration, Grim, Mythpunk, natural lighting, Kodak portra 800, F/2.8, Ektachrome, photolab
+
+> art by brandon woelfel, two people 
+> 
+> BREAK photograph, High exposure of a Ludicrous skinny Hong Konger girl, Spice merchant, Jumping, Brown hair styled as French twist, background is St. Patrick's Cathedral, at Dawn, Amusing, Mingei, Moonlight, dslr, Selective focus, Highres,  
+> BREAK,  photograph, selfie shot angle of a Shabby Chic Golden Age Female Biologist, Sketch, Evil, Sun Rays, Canon R5, F/8, Colorless hue
+

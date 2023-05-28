@@ -3,26 +3,26 @@ In the backend of the code, some of the things run on wildcards. These can be us
 
 Currently, One Button Prompt supports the following wildcards.
 
-    -color-
-    -material-
-    -animal-
-    -object-
-    -fictional-
-    -nonfictional-
-    -building-
-    -vehicle-
-    -outfit-
-    -location-
-    -conceptprefix-
-    -conceptsuffix-
-    -descriptor-
-    -food-
-    -haircolor-
-    -hairstyle-
-    -job-
-    -culture-
-    -accessory-
-    -humanoid-
+- -color-
+- -material-
+- -animal-
+- -object-
+- -fictional-
+- -nonfictional-
+- -building-
+- -vehicle-
+- -outfit-
+- -location-
+- -conceptprefix-
+- -conceptsuffix-
+- -descriptor-
+- -food-
+- -haircolor-
+- -hairstyle-
+- -job-
+- -culture-
+- -accessory-
+- -humanoid-
 
 # Dynamic Prompts extension and wildcards
 The [Dynamic Prompts extension](https://github.com/adieyal/sd-dynamic-prompts) might be considered the father of One Button Prompt. In that case [StylePile](https://github.com/some9000/StylePile) is its mother.

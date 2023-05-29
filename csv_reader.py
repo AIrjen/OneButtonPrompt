@@ -18,7 +18,7 @@ def add_from_csv(completeprompt, csvfilename, addcomma, prefix, suffix):
                 return ", ".join([completeprompt,addtoprompt])
         return " ".join([completeprompt,addtoprompt])
 
-def csv_to_list(csvfilename, antilist=[], directory="./csvfiles/", lowerandstrip=0, delimiter=";"):
+def csv_to_list(csvfilename, antilist=[], directory="./csvfiles/", lowerandstrip=0, delimiter=";", listoflistmode = False):
         userfilesdirectory = "./userfiles/"
         userfileaddonname = csvfilename + "_addon.csv"
         userfilereplacename = csvfilename + "_replace.csv"
@@ -39,35 +39,43 @@ def csv_to_list(csvfilename, antilist=[], directory="./csvfiles/", lowerandstrip
         if(os.path.isfile(full_path + csvfilename + ".csv")):
                 with open(full_path + csvfilename + ".csv", "r", newline="",encoding="utf8") as file:
                         reader = csv.reader(file, delimiter=delimiter)
-                        for row in reader:
-                                value = row[0]
-                                if(value.lower().strip() not in antilist):
-                                        if(lowerandstrip == 1):
-                                                csvlist.append(row[0].lower().strip())        
-                                        csvlist.append(row[0])
-        
-        # do the add ons!
-        if(directory=="./csvfiles/" or directory=="./csvfiles/special_lists/"):
-                if(os.path.isfile(userfilesfolder + csvfilename + "_addon" + ".csv")):
-                        with open(userfilesfolder + csvfilename + "_addon" + ".csv", "r", newline="",encoding="utf8") as file:
-                                reader = csv.reader(file, delimiter=",")
+                        if(listoflistmode==True):
+                                csvlist = list(reader)
+                        else:
                                 for row in reader:
                                         value = row[0]
                                         if(value.lower().strip() not in antilist):
                                                 if(lowerandstrip == 1):
                                                         csvlist.append(row[0].lower().strip())        
                                                 csvlist.append(row[0])
+                
+        # do the add ons!
+        if(directory=="./csvfiles/" or directory=="./csvfiles/special_lists/"):
+                if(os.path.isfile(userfilesfolder + csvfilename + "_addon" + ".csv")):
+                        with open(userfilesfolder + csvfilename + "_addon" + ".csv", "r", newline="",encoding="utf8") as file:
+                                reader = csv.reader(file, delimiter=",")
+                                if(listoflistmode==True):
+                                        csvlist.append(list(reader))
+                                else:
+                                        for row in reader:
+                                                value = row[0]
+                                                if(value.lower().strip() not in antilist):
+                                                        if(lowerandstrip == 1):
+                                                                csvlist.append(row[0].lower().strip())        
+                                                        csvlist.append(row[0])
 
 
         # remove duplicates, but check only for lowercase stuff
         deduplicated_list = []
         lowercase_elements = set()
-
-        for element in csvlist:
-                lowercase_element = element.lower()
-                if lowercase_element not in lowercase_elements:
-                        lowercase_elements.add(lowercase_element)
-                        deduplicated_list.append(element)
+        if(listoflistmode==False):
+                for element in csvlist:
+                        lowercase_element = element.lower()
+                        if lowercase_element not in lowercase_elements:
+                                lowercase_elements.add(lowercase_element)
+                                deduplicated_list.append(element)
+        else:
+                deduplicated_list = csvlist
         
         return deduplicated_list
 
@@ -81,5 +89,6 @@ def artist_category_csv_to_list(csvfilename,category):
                         if(row[category] == "1"):
                                 csvlist.append(row["Artist"])
         return csvlist
+
 
 

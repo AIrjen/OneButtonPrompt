@@ -211,9 +211,6 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     templatemode = False
     if(common_dist(insanitylevel)):
         templatemode = True
-        civitaitemplate = csv_to_list("civitai", antilist,"./csvfiles/templates/")
-
-        completeprompt = random.choice(civitaitemplate)
 
 
     # main stuff
@@ -410,15 +407,10 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
 
 
-
+    completeprompt = ""
     
     
-    # Start of building prompt
-    if(not templatemode):
-        completeprompt = ""
-
-
-    
+  
     
     promptstocompound = int(promptcompounderlevel)
     compoundcounter = 0
@@ -437,6 +429,24 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         completeprompt += prefixprompt
 
         completeprompt += ", "
+
+        if(templatemode==True):
+            templatelist = csv_to_list("templates", antilist,"./csvfiles/templates/",0,";",True)
+
+            templateprompts = [templateprompt[0] for templateprompt in templatelist]
+            templatewebsites = [templatewebsite[1] for templatewebsite in templatelist]
+            templatewebsitesources = [templatewebsitesource[2] for templatewebsitesource in templatelist]
+            templatesubjecttypes = [templatesubjecttype[3] for templatesubjecttype in templatelist]
+            templatesubjects= [templatesubject[4] for templatesubject in templatelist]
+            
+            # choose the template
+            chosentemplate = random.choice(templateprompts)
+            templateindex = templateprompts.index(chosentemplate)
+
+        if(givensubject==""):
+            completeprompt += chosentemplate.replace("-subject-",templatesubjects[templateindex] )
+        else:
+            completeprompt += chosentemplate.replace("-subject-",givensubject )
 
 
         # custom prefix list

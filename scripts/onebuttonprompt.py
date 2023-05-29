@@ -654,9 +654,9 @@ class Script(scripts.Script):
             print("Automatic and artist mode set to none, don't work together well. Ignoring this setting!")
             artist = "all"
 
-        if(ANDtoggle == "automatic" and (prefixprompt != "")):
-            print("Automatic doesnt work well if there is an prefix prompt filled in. Ignoring this prompt fields!")
-            prefixprompt = ""
+        #if(ANDtoggle == "automatic" and (prefixprompt != "")):
+        #    print("Automatic doesnt work well if there is an prefix prompt filled in. Ignoring this prompt fields!")
+        #    prefixprompt = ""
 
         
 

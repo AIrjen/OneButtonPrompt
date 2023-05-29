@@ -548,7 +548,10 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
 
             if(onlyartists == True):
-                completeprompt = completeprompt.strip(", ")
+                    
+                # clean it up
+                completeprompt = cleanup(completeprompt)
+
                 print("only generated these artists:" + completeprompt)
                 return completeprompt
 
@@ -1047,36 +1050,10 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             attachedlist = allwildcardslistwithhybridlists[allwildcardslistwithhybrid.index(wildcard)]
             completeprompt = replacewildcard(completeprompt, insanitylevel, wildcard, attachedlist,True)
 
-
-        
+      
     
-
-    
-    completeprompt = re.sub('\[ ', '[', completeprompt)
-    completeprompt = re.sub(' \]', ']', completeprompt)
-    completeprompt = re.sub(' \|', '|', completeprompt)
-    completeprompt = re.sub(' \"', '\"', completeprompt)
-    completeprompt = re.sub('\" ', '\"', completeprompt)
-    completeprompt = re.sub('\( ', '(', completeprompt)
-    completeprompt = re.sub(' \(', '(', completeprompt)
-    completeprompt = re.sub('\) ', ')', completeprompt)
-    completeprompt = re.sub(' \)', ')', completeprompt)
-
-    completeprompt = re.sub(' :', ':', completeprompt)
-
-    completeprompt = re.sub(',,', ', ', completeprompt)
-    completeprompt = re.sub(',,,', ', ', completeprompt)
-    completeprompt = re.sub(', ,', ',', completeprompt)
-    completeprompt = re.sub(' , ', ', ', completeprompt)
-    completeprompt = re.sub(',\(', ', (', completeprompt)
-
-    completeprompt = re.sub('a The', 'The', completeprompt)
-    completeprompt = re.sub(', ,', ',', completeprompt)
-
-
-    completeprompt = completeprompt.strip(", ")
-
-
+    # clean it up
+    completeprompt = cleanup(completeprompt)
 
     #just for me, some fun with posting fake dev messages (ala old sim games)
     if(random.randint(1, 50)==1):
@@ -1110,5 +1087,33 @@ def replacewildcard(completeprompt, insanitylevel, wildcard,listname, activatehy
                 completeprompt = completeprompt.replace(wildcard, hybridorswapreplacementvalue,1)
 
             completeprompt = completeprompt.replace(wildcard, random.choice(listname),1)
+
+    return completeprompt
+
+def cleanup(completeprompt):
+    # all cleanup steps moved here
+    completeprompt = re.sub('\[ ', '[', completeprompt)
+    completeprompt = re.sub(' \]', ']', completeprompt)
+    completeprompt = re.sub(' \|', '|', completeprompt)
+    completeprompt = re.sub(' \"', '\"', completeprompt)
+    completeprompt = re.sub('\" ', '\"', completeprompt)
+    completeprompt = re.sub('\( ', '(', completeprompt)
+    completeprompt = re.sub(' \(', '(', completeprompt)
+    completeprompt = re.sub('\) ', ')', completeprompt)
+    completeprompt = re.sub(' \)', ')', completeprompt)
+
+    completeprompt = re.sub(' :', ':', completeprompt)
+
+    completeprompt = re.sub(',,', ', ', completeprompt)
+    completeprompt = re.sub(',,,', ', ', completeprompt)
+    completeprompt = re.sub(', ,', ',', completeprompt)
+    completeprompt = re.sub(' , ', ', ', completeprompt)
+    completeprompt = re.sub(',\(', ', (', completeprompt)
+
+    completeprompt = re.sub('a The', 'The', completeprompt)
+    completeprompt = re.sub(', ,', ',', completeprompt)
+
+
+    completeprompt = completeprompt.strip(", ")
 
     return completeprompt

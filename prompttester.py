@@ -10,22 +10,22 @@ from build_dynamic_prompt import *
 
 
 
-def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", imagetype="all",silentmode=False, workprompt="", antistring="",prefixprompt="", suffixprompt="", negativeprompt="",promptcompounderlevel = "1", seperator="comma",givensubject="",smartsubject=True,giventypeofimage=""):
+def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", imagetype="all",onlyartists=False, workprompt="", antistring="",prefixprompt="", suffixprompt="", negativeprompt="",promptcompounderlevel = "1", seperator="comma",givensubject="",smartsubject=True,giventypeofimage=""):
     loops = int(amount)  # amount of images to generate
     steps = 0
    
     insanitylevel = int(insanitylevel)
     while steps < loops:
         # build prompt
-        if(silentmode==True and workprompt == ""):
-            print("Trying to use provided workflow prompt, but is empty. Generating a random prompt instead.")
     
-        result = build_dynamic_prompt(insanitylevel,subject,artist,imagetype, False,antistring,prefixprompt,suffixprompt,promptcompounderlevel, seperator,givensubject,smartsubject,giventypeofimage)
+        result = build_dynamic_prompt(insanitylevel,subject,artist,imagetype, onlyartists,antistring,prefixprompt,suffixprompt,promptcompounderlevel, seperator,givensubject,smartsubject,giventypeofimage)
 
         print("")
         print("loop " + str(steps))
         print("")
-   
+        if(onlyartists == True):
+            print(result)
+            print("")
 
             
 
@@ -35,4 +35,4 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
     print("")
     print("All done!")
 
-generateprompts(100,10)
+generateprompts(10,7,"all","all","all",True,"","","")

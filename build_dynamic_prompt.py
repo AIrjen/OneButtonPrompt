@@ -209,7 +209,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
     # determine wether we should go for a template or not
     templatemode = False
-    if(common_dist(insanitylevel)):
+    if(rare_dist(insanitylevel) or imagetype == "only templates"):
         templatemode = True
 
 
@@ -431,22 +431,33 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         completeprompt += ", "
 
         if(templatemode==True):
-            templatelist = csv_to_list("templates", antilist,"./csvfiles/templates/",0,";",True)
+            templatelist = csv_to_list("templates", antilist,"./csvfiles/templates/",1,";",True)
 
-            templateprompts = [templateprompt[0] for templateprompt in templatelist]
-            templatewebsites = [templatewebsite[1] for templatewebsite in templatelist]
-            templatewebsitesources = [templatewebsitesource[2] for templatewebsitesource in templatelist]
-            templatesubjecttypes = [templatesubjecttype[3] for templatesubjecttype in templatelist]
+            
+            # templateenvironments = [templateenvironment[1] for templateenvironment in templatelist]
+            # templateenvironmentsources = [templateenvironmentsource[2] for templateenvironmentsource in templatelist]
+            # templatesubjecttypes = [templatesubjecttype[3] for templatesubjecttype in templatelist]
+
+            targettemplateenvironment = "all"
+            templateenvironmentsources = "all"
+
+            # takes the prompt based on filters:
+            # targettemplateenvironment: either civitai model or website
+            # templateenvironmentsources: either
+            templateprompts = [templateprompt[0] for templateprompt in templatelist if( (templateprompt[1] == targettemplateenvironment or targettemplateenvironment =="all") and (templateprompt[2] == templateenvironmentsources or templateenvironmentsources == "all") and (templateprompt[3] == forcesubject or forcesubject == "all") ) ]
+
             templatesubjects= [templatesubject[4] for templatesubject in templatelist]
             
             # choose the template
             chosentemplate = random.choice(templateprompts)
             templateindex = templateprompts.index(chosentemplate)
 
-        if(givensubject==""):
-            completeprompt += chosentemplate.replace("-subject-",templatesubjects[templateindex] )
-        else:
-            completeprompt += chosentemplate.replace("-subject-",givensubject )
+
+            # if there is a subject override, then replace the subject with that
+            if(givensubject==""):
+                completeprompt += chosentemplate.replace("-subject-",templatesubjects[templateindex] )
+            else:
+                completeprompt += chosentemplate.replace("-subject-",givensubject )
 
 
         # custom prefix list

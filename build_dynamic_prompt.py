@@ -446,7 +446,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             # templateenvironmentsources: either
             templateprompts = [templateprompt[0] for templateprompt in templatelist if( (templateprompt[1] == targettemplateenvironment or targettemplateenvironment =="all") and (templateprompt[2] == templateenvironmentsources or templateenvironmentsources == "all") and (templateprompt[3] == forcesubject or forcesubject == "all") ) ]
 
-            templatesubjects= [templatesubject[4] for templatesubject in templatelist]
+            templatesubjects= [templateprompt[4] for templateprompt in templatelist if( (templateprompt[1] == targettemplateenvironment or targettemplateenvironment =="all") and (templateprompt[2] == templateenvironmentsources or templateenvironmentsources == "all") and (templateprompt[3] == forcesubject or forcesubject == "all") )]
             
             # choose the template
             chosentemplate = random.choice(templateprompts)

@@ -70,6 +70,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     genderdescriptionlist = csv_to_list("genderdescription", antilist)
     minilocationlist = csv_to_list("minilocations", antilist)
     minioutfitlist = csv_to_list("minioutfits", antilist)
+    seasonlist = csv_to_list("seasons", antilist)
 
     humanlist = fictionallist + nonfictionallist + humanoidlist
     objecttotallist = objectlist + buildinglist + vehiclelist + foodlist
@@ -1074,7 +1075,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     # first some manual stuff for outfit
 
     if(unique_dist(insanitylevel)): # sometimes, its just nice to have descriptor and a normal "outfit". We use mini outfits for this!
-                 completeprompt = completeprompt.replace('-outfit-', random.choice(minioutfitlist),1)
+                 completeprompt = completeprompt.replace("-outfit-", "-minioutfit-",1)
 
             # do the hybrid/swap thing in here instead
             # if(rare_dist(insanitylevel)):
@@ -1091,9 +1092,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             #        completeprompt = completeprompt.replace('-outfit-', hybridorswapreplacementvalue,1)
     
     # lol, this needs a rewrite :D
-    while "-color-" in completeprompt or "-material-" in completeprompt or "-animal-" in completeprompt or "-object-" in completeprompt or "-fictional-" in completeprompt or "-nonfictional-" in completeprompt or "-conceptsuffix-" in completeprompt or "-building-" in completeprompt or "-vehicle-" in completeprompt or "-outfit-" in completeprompt or "-location-" in completeprompt or "-conceptprefix-" in completeprompt or "-descriptor-" in completeprompt or "-food-" in completeprompt or "-haircolor-" in completeprompt or "-hairstyle-" in completeprompt or "-job-" in completeprompt or "-culture-" in completeprompt or "-accessory-" in completeprompt or "-humanoid-" in completeprompt or "manwoman" in completeprompt or "-human-" in completeprompt or "-colorscheme-" in completeprompt or "-mood-" in completeprompt or "-genderdescription-" in completeprompt or "-artmovement-" in completeprompt or "-malefemale-" in completeprompt or "-objecttotal-" in completeprompt or "-bodytype-" in completeprompt or "-minilocation-" in completeprompt or "-minilocationaddition-" in completeprompt or "-pose-" in completeprompt:
-        allwildcardslistnohybrid = [ "-color-","-object-", "-animal-", "-fictional-","-nonfictional-","-building-","-vehicle-","-location-","-conceptprefix-","-food-","-haircolor-","-hairstyle-","-job-", "-accessory-", "-humanoid-", "-manwoman-", "-human-", "-colorscheme-", "-mood-", "-genderdescription-", "-artmovement-", "-malefemale-", "-bodytype-", "-minilocation-", "-minilocationaddition-", "-pose-" ]
-        allwildcardslistnohybridlists = [colorlist, objectlist, animallist, fictionallist, nonfictionallist, buildinglist, vehiclelist, locationlist,conceptprefixlist,foodlist,haircolorlist, hairstylelist,joblist, accessorielist, humanoidlist, manwomanlist, humanlist, colorschemelist, moodlist, genderdescriptionlist, artmovementlist, malefemalelist, bodytypelist, minilocationlist, minilocationadditionslist, poselist]
+    while "-color-" in completeprompt or "-material-" in completeprompt or "-animal-" in completeprompt or "-object-" in completeprompt or "-fictional-" in completeprompt or "-nonfictional-" in completeprompt or "-conceptsuffix-" in completeprompt or "-building-" in completeprompt or "-vehicle-" in completeprompt or "-outfit-" in completeprompt or "-location-" in completeprompt or "-conceptprefix-" in completeprompt or "-descriptor-" in completeprompt or "-food-" in completeprompt or "-haircolor-" in completeprompt or "-hairstyle-" in completeprompt or "-job-" in completeprompt or "-culture-" in completeprompt or "-accessory-" in completeprompt or "-humanoid-" in completeprompt or "manwoman" in completeprompt or "-human-" in completeprompt or "-colorscheme-" in completeprompt or "-mood-" in completeprompt or "-genderdescription-" in completeprompt or "-artmovement-" in completeprompt or "-malefemale-" in completeprompt or "-objecttotal-" in completeprompt or "-bodytype-" in completeprompt or "-minilocation-" in completeprompt or "-minilocationaddition-" in completeprompt or "-pose-" in completeprompt or "-season-" in completeprompt or "-minioutfit-" in completeprompt:
+        allwildcardslistnohybrid = [ "-color-","-object-", "-animal-", "-fictional-","-nonfictional-","-building-","-vehicle-","-location-","-conceptprefix-","-food-","-haircolor-","-hairstyle-","-job-", "-accessory-", "-humanoid-", "-manwoman-", "-human-", "-colorscheme-", "-mood-", "-genderdescription-", "-artmovement-", "-malefemale-", "-bodytype-", "-minilocation-", "-minilocationaddition-", "-pose-", "-season-", "-minioutfit-" ]
+        allwildcardslistnohybridlists = [colorlist, objectlist, animallist, fictionallist, nonfictionallist, buildinglist, vehiclelist, locationlist,conceptprefixlist,foodlist,haircolorlist, hairstylelist,joblist, accessorielist, humanoidlist, manwomanlist, humanlist, colorschemelist, moodlist, genderdescriptionlist, artmovementlist, malefemalelist, bodytypelist, minilocationlist, minilocationadditionslist, poselist, seasonlist, minioutfitlist]
         allwildcardslistwithhybrid = ["-material-", "-descriptor-", "-outfit-", "-conceptsuffix-","-culture-", "-objecttotal-"]
         allwildcardslistwithhybridlists =[materiallist, descriptorlist,outfitlist,conceptsuffixlist,culturelist, objecttotallist]
         

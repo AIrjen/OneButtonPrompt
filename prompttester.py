@@ -35,4 +35,4 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
     print("")
     print("All done!")
 
-generateprompts(10,7,"object","all","only templates",False,"","","PREFIXPROMPT" ,"SUFFIXPROMPT","",1,"","")
+generateprompts(10,7,"humanoid","all","all",False,"","","PREFIXPROMPT" ,"SUFFIXPROMPT","",1,"","")

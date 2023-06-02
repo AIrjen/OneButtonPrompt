@@ -805,9 +805,13 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                         if(hybridorswap == "swap"):
                             completeprompt += ":" + random.choice(hybridhumanlist) + ":" + str(random.randint(1,5)) +  "] "
                         hybridorswap = ""
+
                 else:
                     completeprompt += " " + givensubject + " "     
-
+            
+             # sometimes add a suffix for more fun!
+            if( (mainchooser == "humanoid" or mainchooser == "animal" or mainchooser == "object") and  unique_dist(insanitylevel)):
+                completeprompt += " of -conceptsuffix- "
             
             if(subjectchooser == "landscape"):
                 

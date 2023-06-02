@@ -71,6 +71,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     minilocationlist = csv_to_list("minilocations", antilist)
     minioutfitlist = csv_to_list("minioutfits", antilist)
     seasonlist = csv_to_list("seasons", antilist)
+    elaborateoutfitlist = csv_to_list("elaborateoutfits", antilist)
+    minivomitlist = csv_to_list("minivomit", antilist)
+    imagetypequalitylist = csv_to_list("imagetypequality", antilist)
 
     humanlist = fictionallist + nonfictionallist + humanoidlist
     objecttotallist = objectlist + buildinglist + vehiclelist + foodlist
@@ -257,8 +260,10 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     generateanimaladdition = bool(animaladditionlist) and not templatemode
     generateaccessories = bool(buildaccessorielist) and not templatemode
     generategreatwork = bool(greatworklist) and not templatemode
-
+    
     generateminilocationaddition = bool(minilocationadditionslist) and not templatemode
+    generateminivomit = bool(minivomitlist) and not templatemode
+    generateimagetypequality = bool(imagetypequalitylist) and not templatemode
 
 
     # Smart subject logic
@@ -607,6 +612,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
         if(giventypeofimage=="" and generatetype == True):
             if(imagetype != "all" and imagetype != "all - force multiple" and imagetype != "only other types"):
+                 
                     completeprompt += " " + imagetype + ", "
             elif(imagetype == "all - force multiple" or unique_dist(insanitylevel)):
                 amountofimagetypes = random.randint(2,3)
@@ -617,13 +623,17 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             if(imagetype == "all" and normal_dist(insanitylevel) and amountofimagetypes <= 1):
                 amountofimagetypes = 1
             
+            
+
             for i in range(amountofimagetypes):
             # one in 6 images is a complex/other type
+                if(rare_dist(insanitylevel) and generateimagetypequality):
+                    completeprompt += random.choice(imagetypequalitylist) + " "
                 if(random.randint(0,5) < 5):
-                    completeprompt += ", " + random.choice(imagetypelist) + " "
+                    completeprompt += " " + random.choice(imagetypelist) + ", "
                 else:
                     othertype = 1
-                    completeprompt += ", " + random.choice(othertypelist) + " "
+                    completeprompt += " " + random.choice(othertypelist) + ", "
             
             if(othertype==1):
                 completeprompt += " of a "
@@ -643,6 +653,12 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             generateartmovement = False
             completeprompt += " -artmovement-, "
         
+        if(rare_dist(insanitylevel) and generateminivomit == True):
+            completeprompt += " -minivomit-, "
+        
+        if(unique_dist(insanitylevel) and generateminivomit == True):
+            completeprompt += " -minivomit-, "
+
         # start shot size
 
         if(mainchooser in ["object", "animal", "humanoid", "concept"] and othertype == 0 and "portrait" not in completeprompt and generateshot == True and uncommon_dist(insanitylevel)):
@@ -882,9 +898,12 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             if(uncommon_dist(insanitylevel)):
                 completeprompt += random.choice(custominputmidlist) + ", "
         
+        # add in some more mini vomits
+        if(unique_dist(insanitylevel) and generateminivomit == True):
+            completeprompt += " -minivomit-, "
         
         # outfit builder
-        if(subjectchooser in ["animal as human","human","fictional", "non fictional", "humanoid"]  and normal_dist(insanitylevel) and generateoutfit == True):
+        if(subjectchooser in ["animal as human","human","fictional", "non fictional", "humanoid"]  and normal_dist(insanitylevel) and generateoutfit == True and humanspecial != 1):
             completeprompt += ", wearing " + random.choice(buildoutfitlist) + ", "
         
         if(subjectchooser in ["animal as human","human","fictional", "non fictional", "humanoid"]  and uncommon_dist(insanitylevel) and humanspecial != 1 and generatepose == True):
@@ -929,6 +948,10 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         if(normal_dist(insanitylevel) and generatemood == True):
             completeprompt += random.choice(moodlist) + ", " 
 
+        # add in some more mini vomits
+        if(unique_dist(insanitylevel) and generateminivomit == True):
+            completeprompt += " -minivomit-, "
+       
         if(normal_dist(insanitylevel) and generateartmovement == True):
             completeprompt += random.choice(artmovementlist) + ", "  
         
@@ -1092,9 +1115,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             #        completeprompt = completeprompt.replace('-outfit-', hybridorswapreplacementvalue,1)
     
     # lol, this needs a rewrite :D
-    while "-color-" in completeprompt or "-material-" in completeprompt or "-animal-" in completeprompt or "-object-" in completeprompt or "-fictional-" in completeprompt or "-nonfictional-" in completeprompt or "-conceptsuffix-" in completeprompt or "-building-" in completeprompt or "-vehicle-" in completeprompt or "-outfit-" in completeprompt or "-location-" in completeprompt or "-conceptprefix-" in completeprompt or "-descriptor-" in completeprompt or "-food-" in completeprompt or "-haircolor-" in completeprompt or "-hairstyle-" in completeprompt or "-job-" in completeprompt or "-culture-" in completeprompt or "-accessory-" in completeprompt or "-humanoid-" in completeprompt or "manwoman" in completeprompt or "-human-" in completeprompt or "-colorscheme-" in completeprompt or "-mood-" in completeprompt or "-genderdescription-" in completeprompt or "-artmovement-" in completeprompt or "-malefemale-" in completeprompt or "-objecttotal-" in completeprompt or "-bodytype-" in completeprompt or "-minilocation-" in completeprompt or "-minilocationaddition-" in completeprompt or "-pose-" in completeprompt or "-season-" in completeprompt or "-minioutfit-" in completeprompt:
-        allwildcardslistnohybrid = [ "-color-","-object-", "-animal-", "-fictional-","-nonfictional-","-building-","-vehicle-","-location-","-conceptprefix-","-food-","-haircolor-","-hairstyle-","-job-", "-accessory-", "-humanoid-", "-manwoman-", "-human-", "-colorscheme-", "-mood-", "-genderdescription-", "-artmovement-", "-malefemale-", "-bodytype-", "-minilocation-", "-minilocationaddition-", "-pose-", "-season-", "-minioutfit-" ]
-        allwildcardslistnohybridlists = [colorlist, objectlist, animallist, fictionallist, nonfictionallist, buildinglist, vehiclelist, locationlist,conceptprefixlist,foodlist,haircolorlist, hairstylelist,joblist, accessorielist, humanoidlist, manwomanlist, humanlist, colorschemelist, moodlist, genderdescriptionlist, artmovementlist, malefemalelist, bodytypelist, minilocationlist, minilocationadditionslist, poselist, seasonlist, minioutfitlist]
+    while "-color-" in completeprompt or "-material-" in completeprompt or "-animal-" in completeprompt or "-object-" in completeprompt or "-fictional-" in completeprompt or "-nonfictional-" in completeprompt or "-conceptsuffix-" in completeprompt or "-building-" in completeprompt or "-vehicle-" in completeprompt or "-outfit-" in completeprompt or "-location-" in completeprompt or "-conceptprefix-" in completeprompt or "-descriptor-" in completeprompt or "-food-" in completeprompt or "-haircolor-" in completeprompt or "-hairstyle-" in completeprompt or "-job-" in completeprompt or "-culture-" in completeprompt or "-accessory-" in completeprompt or "-humanoid-" in completeprompt or "manwoman" in completeprompt or "-human-" in completeprompt or "-colorscheme-" in completeprompt or "-mood-" in completeprompt or "-genderdescription-" in completeprompt or "-artmovement-" in completeprompt or "-malefemale-" in completeprompt or "-objecttotal-" in completeprompt or "-bodytype-" in completeprompt or "-minilocation-" in completeprompt or "-minilocationaddition-" in completeprompt or "-pose-" in completeprompt or "-season-" in completeprompt or "-minioutfit-" in completeprompt or "-elaborateoutfit-" in completeprompt or "-minivomit-" in completeprompt or "-vomit-" in completeprompt:
+        allwildcardslistnohybrid = [ "-color-","-object-", "-animal-", "-fictional-","-nonfictional-","-building-","-vehicle-","-location-","-conceptprefix-","-food-","-haircolor-","-hairstyle-","-job-", "-accessory-", "-humanoid-", "-manwoman-", "-human-", "-colorscheme-", "-mood-", "-genderdescription-", "-artmovement-", "-malefemale-", "-bodytype-", "-minilocation-", "-minilocationaddition-", "-pose-", "-season-", "-minioutfit-", "-elaborateoutfit-", "-minivomit-", "-vomit-" ]
+        allwildcardslistnohybridlists = [colorlist, objectlist, animallist, fictionallist, nonfictionallist, buildinglist, vehiclelist, locationlist,conceptprefixlist,foodlist,haircolorlist, hairstylelist,joblist, accessorielist, humanoidlist, manwomanlist, humanlist, colorschemelist, moodlist, genderdescriptionlist, artmovementlist, malefemalelist, bodytypelist, minilocationlist, minilocationadditionslist, poselist, seasonlist, minioutfitlist, elaborateoutfitlist, minivomitlist, vomitlist]
         allwildcardslistwithhybrid = ["-material-", "-descriptor-", "-outfit-", "-conceptsuffix-","-culture-", "-objecttotal-"]
         allwildcardslistwithhybridlists =[materiallist, descriptorlist,outfitlist,conceptsuffixlist,culturelist, objecttotallist]
         

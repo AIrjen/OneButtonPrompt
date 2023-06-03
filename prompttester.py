@@ -26,8 +26,19 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
         if(onlyartists == True):
             print(result)
             print("")
-
+        
+        if(result.count("-")>1):
+            print("Is there a mistake in wildcards?")
+            print("")
+            print(result)
+            break
             
+        if(givensubject != "" and givensubject not in result):
+            print("No givensubject, there must be an issue:")
+            print("")
+            print(result)
+            break
+        
 
         steps += 1
     
@@ -35,4 +46,4 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
     print("")
     print("All done!")
 
-generateprompts(10,5,"humanoid","all","all",False,"","","PREFIXPROMPT" ,"SUFFIXPROMPT","",1,"","-rpgclass-")
+generateprompts(10,5,"humanoid","all","all",False,"","","PREFIXPROMPT" ,"SUFFIXPROMPT","",1,"","HELLO")

@@ -9,5 +9,5 @@
 -descriptor- -color- -outfit-
 -descriptor- -material- -outfit-
 -job- -outfit-
-[-outfit-|-outfit-]
--descriptor- [-outfit-|-outfit-]
+-rpgclass- -minioutfit-
+-descriptor- -rpgclass- -minioutfit-

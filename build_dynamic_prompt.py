@@ -690,7 +690,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 completeprompt += random.choice(culturelist) + " "
 
             if(mainchooser == "object"):
-                # objectwildcardlist = ["-object-", "-building-","-vehicle-","-food-"]  # using wildcards for replacements
+                objectwildcardlist = ["-object-", "-building-","-vehicle-","-food-"]  # using wildcards for replacements
                 
                 # if we have a given subject, we should skip making an actual subject
                 if(givensubject == ""):

@@ -9,7 +9,7 @@ def uncommon_dist(insanitylevel):
     return (random.randint(1, 18)<insanitylevel or insanitylevel >= 10)
 
 def rare_dist(insanitylevel):
-    roll = (random.randint(1, 30)<insanitylevel or insanitylevel >= 11)
+    roll = (random.randint(1, 30)<insanitylevel or insanitylevel >= 10)
     if(roll):
         print("adding something rare to the prompt")
     return roll

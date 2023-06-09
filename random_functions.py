@@ -26,6 +26,12 @@ def unique_dist(insanitylevel):
             print("Critical hit! Something unique has been added to the prompt")
         return roll
 
+def extraordinary_dist(insanitylevel):
+        roll = (random.randint(1, 200)<insanitylevel)
+        if(roll):
+            print("Extraordinary! Something special has been added to the prompt")
+        return roll
+
 def novel_dist(insanitylevel):
         roll = (random.randint(1, 500)<insanitylevel)
         if(roll):

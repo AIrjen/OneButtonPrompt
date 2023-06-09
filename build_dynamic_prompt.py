@@ -75,6 +75,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     minivomitlist = csv_to_list("minivomit", antilist)
     imagetypequalitylist = csv_to_list("imagetypequality", antilist)
     rpgclasslist = csv_to_list("rpgclasses", antilist)
+    brandlist = csv_to_list("brands", antilist)
 
     humanlist = fictionallist + nonfictionallist + humanoidlist
     objecttotallist = objectlist + buildinglist + vehiclelist + foodlist
@@ -116,6 +117,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     animaladditionlist = csv_to_list("animaladditions", antilist,"./csvfiles/special_lists/")
     buildaccessorielist = csv_to_list("buildaccessorie", antilist,"./csvfiles/special_lists/")
     minilocationadditionslist = csv_to_list("minilocationadditions", antilist,"./csvfiles/special_lists/")
+    overalladditionlist = csv_to_list("overalladditions", antilist,"./csvfiles/special_lists/")
 
 
 
@@ -267,6 +269,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     generateminilocationaddition = bool(minilocationadditionslist) and not templatemode
     generateminivomit = bool(minivomitlist) and not templatemode
     generateimagetypequality = bool(imagetypequalitylist) and not templatemode
+    generateoveralladdition = bool(overalladditionlist) and not templatemode
 
 
     # Smart subject logic
@@ -864,6 +867,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 else:
                     completeprompt += " " + givensubject + " " 
 
+        
+
         # object additions
         for i in range(2):
             if(mainchooser == "object" and uncommon_dist(insanitylevel) and generateobjectaddition == True):
@@ -876,6 +881,14 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             completeprompt += random.choice(humanadditionlist) + " "
             
         completeprompt += ", "
+
+        # unique additions for all types:
+        if(extraordinary_dist(insanitylevel) and generateoveralladdition == True):
+            completeprompt += random.choice(overalladditionlist) + ", "
+
+
+
+
 
         # SD understands emoji's. Can be used to manipulate facial expressions.
         # emoji, legendary
@@ -1122,9 +1135,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             #        completeprompt = completeprompt.replace('-outfit-', hybridorswapreplacementvalue,1)
     
     # lol, this needs a rewrite :D
-    while "-color-" in completeprompt or "-material-" in completeprompt or "-animal-" in completeprompt or "-object-" in completeprompt or "-fictional-" in completeprompt or "-nonfictional-" in completeprompt or "-conceptsuffix-" in completeprompt or "-building-" in completeprompt or "-vehicle-" in completeprompt or "-outfit-" in completeprompt or "-location-" in completeprompt or "-conceptprefix-" in completeprompt or "-descriptor-" in completeprompt or "-food-" in completeprompt or "-haircolor-" in completeprompt or "-hairstyle-" in completeprompt or "-job-" in completeprompt or "-culture-" in completeprompt or "-accessory-" in completeprompt or "-humanoid-" in completeprompt or "manwoman" in completeprompt or "-human-" in completeprompt or "-colorscheme-" in completeprompt or "-mood-" in completeprompt or "-genderdescription-" in completeprompt or "-artmovement-" in completeprompt or "-malefemale-" in completeprompt or "-objecttotal-" in completeprompt or "-bodytype-" in completeprompt or "-minilocation-" in completeprompt or "-minilocationaddition-" in completeprompt or "-pose-" in completeprompt or "-season-" in completeprompt or "-minioutfit-" in completeprompt or "-elaborateoutfit-" in completeprompt or "-minivomit-" in completeprompt or "-vomit-" in completeprompt or "-rpgclass-" in completeprompt or "-subjectfromfile-" in completeprompt:
-        allwildcardslistnohybrid = [ "-color-","-object-", "-animal-", "-fictional-","-nonfictional-","-building-","-vehicle-","-location-","-conceptprefix-","-food-","-haircolor-","-hairstyle-","-job-", "-accessory-", "-humanoid-", "-manwoman-", "-human-", "-colorscheme-", "-mood-", "-genderdescription-", "-artmovement-", "-malefemale-", "-bodytype-", "-minilocation-", "-minilocationaddition-", "-pose-", "-season-", "-minioutfit-", "-elaborateoutfit-", "-minivomit-", "-vomit-", "-rpgclass-", "-subjectfromfile-"]
-        allwildcardslistnohybridlists = [colorlist, objectlist, animallist, fictionallist, nonfictionallist, buildinglist, vehiclelist, locationlist,conceptprefixlist,foodlist,haircolorlist, hairstylelist,joblist, accessorielist, humanoidlist, manwomanlist, humanlist, colorschemelist, moodlist, genderdescriptionlist, artmovementlist, malefemalelist, bodytypelist, minilocationlist, minilocationadditionslist, poselist, seasonlist, minioutfitlist, elaborateoutfitlist, minivomitlist, vomitlist, rpgclasslist, customsubjectslist]
+    while "-color-" in completeprompt or "-material-" in completeprompt or "-animal-" in completeprompt or "-object-" in completeprompt or "-fictional-" in completeprompt or "-nonfictional-" in completeprompt or "-conceptsuffix-" in completeprompt or "-building-" in completeprompt or "-vehicle-" in completeprompt or "-outfit-" in completeprompt or "-location-" in completeprompt or "-conceptprefix-" in completeprompt or "-descriptor-" in completeprompt or "-food-" in completeprompt or "-haircolor-" in completeprompt or "-hairstyle-" in completeprompt or "-job-" in completeprompt or "-culture-" in completeprompt or "-accessory-" in completeprompt or "-humanoid-" in completeprompt or "-manwoman-" in completeprompt or "-human-" in completeprompt or "-colorscheme-" in completeprompt or "-mood-" in completeprompt or "-genderdescription-" in completeprompt or "-artmovement-" in completeprompt or "-malefemale-" in completeprompt or "-objecttotal-" in completeprompt or "-bodytype-" in completeprompt or "-minilocation-" in completeprompt or "-minilocationaddition-" in completeprompt or "-pose-" in completeprompt or "-season-" in completeprompt or "-minioutfit-" in completeprompt or "-elaborateoutfit-" in completeprompt or "-minivomit-" in completeprompt or "-vomit-" in completeprompt or "-rpgclass-" in completeprompt or "-subjectfromfile-" in completeprompt or "-brand-" in completeprompt:
+        allwildcardslistnohybrid = [ "-color-","-object-", "-animal-", "-fictional-","-nonfictional-","-building-","-vehicle-","-location-","-conceptprefix-","-food-","-haircolor-","-hairstyle-","-job-", "-accessory-", "-humanoid-", "-manwoman-", "-human-", "-colorscheme-", "-mood-", "-genderdescription-", "-artmovement-", "-malefemale-", "-bodytype-", "-minilocation-", "-minilocationaddition-", "-pose-", "-season-", "-minioutfit-", "-elaborateoutfit-", "-minivomit-", "-vomit-", "-rpgclass-", "-subjectfromfile-", "-brand-"]
+        allwildcardslistnohybridlists = [colorlist, objectlist, animallist, fictionallist, nonfictionallist, buildinglist, vehiclelist, locationlist,conceptprefixlist,foodlist,haircolorlist, hairstylelist,joblist, accessorielist, humanoidlist, manwomanlist, humanlist, colorschemelist, moodlist, genderdescriptionlist, artmovementlist, malefemalelist, bodytypelist, minilocationlist, minilocationadditionslist, poselist, seasonlist, minioutfitlist, elaborateoutfitlist, minivomitlist, vomitlist, rpgclasslist, customsubjectslist, brandlist]
         allwildcardslistwithhybrid = ["-material-", "-descriptor-", "-outfit-", "-conceptsuffix-","-culture-", "-objecttotal-"]
         allwildcardslistwithhybridlists =[materiallist, descriptorlist,outfitlist,conceptsuffixlist,culturelist, objecttotallist]
         

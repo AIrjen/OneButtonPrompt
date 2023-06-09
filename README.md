@@ -23,6 +23,7 @@ A simple user guide for first time use and settings is available [here](https://
 - Add __LoRA's__, customize lists and personal artists choices.           ==> [guide to custom files](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/custom_files.md)
 - __Compound__ multiple prompts together for unexpected results.          ==> [guide to prompt compounder](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/prompt_compounder_and_regional_prompter_to_create_insane_images.md)
 - Use __wildcards__, or __combine with Dynamic Prompts__ extension                ==> [guide to using wildcards and Dynamic Prompts](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/wildcards_and_dynamic_prompts_extension.md)
+- Has a set of __template prompts__ from various sources, __fully wildcarded__ and usable with Subject Override
 
 ## How to use in automatic1111
 In TXT2IMG or IMG2IMG, select the script "One Button Prompt".

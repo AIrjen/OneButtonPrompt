@@ -78,3 +78,6 @@ Example values:
 > purple
 > 
 > cat
+
+## loading subject from a file with a special wildcard
+In the user_files folder, you can place a file called custom_subjects.csv . If you use this -subjectfromfile- wildcard, it will select a random value from this file. Suggested use is on the Overwrite Subject field.

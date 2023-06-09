@@ -29,5 +29,8 @@ film grain
 purple
 cat
 
+- custom_subjects.csv
+Values to be attached to -subjectfromfile- wildcard. This wildcard can be used in the subject override field, and it will pick the subjects randomly from this file.
+
 
 Happy prompting!

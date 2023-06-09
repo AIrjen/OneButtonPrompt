@@ -23,6 +23,29 @@ Currently, One Button Prompt supports the following wildcards.
 - -culture-
 - -accessory-
 - -humanoid-
+- -manwoman-
+- -human-
+- -colorscheme-
+- -mood-
+- -genderdescription-
+- -artmovement-
+- -malefemale-
+- -objecttotal-
+- -bodytype-
+- -minilocation-
+- -minilocationaddition-
+- -season-
+- -minioutfit-
+- -elaborateoutfit-
+- -minivomit-
+- -vomit-
+- -rpgclass-
+- -brand-
+
+# special wildcard, loading subject from a file
+- -subjectfromfile-
+
+In the user_files folder, you can place a file called custom_subjects.csv . If you use this -subjectfromfile- wildcard, it will select a random value from this file. Suggested use is on the Overwrite Subject field.
 
 # Dynamic Prompts extension and wildcards
 The [Dynamic Prompts extension](https://github.com/adieyal/sd-dynamic-prompts) might be considered the father of One Button Prompt. In that case [StylePile](https://github.com/some9000/StylePile) is its mother.

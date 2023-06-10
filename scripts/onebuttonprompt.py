@@ -218,6 +218,10 @@ class Script(scripts.Script):
                         
                         8. only other types --> Will pick only from the more unique types, such as stained glass window or a funko pop
 
+                        9. only templates --> Will only choose from a set of wildcarded prompt templates. Templates have been gathered from various sources, such as CivitAI, prompthero, promptbook, etc.
+
+                        only templates is perfect for beginners, who want to see some good results fast.
+
                         ### Overwrite subject
 
                         When you fill in the Overwrite subject field, that subject will be used to build the dynamic prompt around. It is best, if you set the subject type to match the subject. For example, set it to humanoid if you place a person in the override subject field.

@@ -226,6 +226,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     templatemode = False
     if(random.randint(1, 75) == 1 or imagetype == "only templates"):
         templatemode = True
+        print("Running with a randomized template instead of a randomized prompt")
 
 
     # main stuff

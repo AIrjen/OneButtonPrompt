@@ -25,8 +25,8 @@ def call_img2img(imagelocation,originalimage, originalpnginfo ="", apiurl="http:
     # need to convert the values to the correct index number for Ultimate SD Upscaler
     redrawmodelist =["Linear","Chess","None"]
     seamsfixmodelist = ["None","Band pass","Half tile offset pass","Half tile offset pass + intersections"]
-    usduredrawint = redrawmodelist.index(usduredraw)
-    seamsfixmodeint = seamsfixmodelist.index(usduSeamsfix)
+    usduredrawint = int(redrawmodelist.index(usduredraw))
+    seamsfixmodeint = int(seamsfixmodelist.index(usduSeamsfix))
     
 
 
@@ -159,7 +159,7 @@ def call_img2img(imagelocation,originalimage, originalpnginfo ="", apiurl="http:
     if(upscalescript=="Ultimate SD upscale"):
         upscaler_index = [x.name.lower() for x in shared.sd_upscalers].index(upscaler.lower())
         payload.update({"script_name": upscalescript})
-        payload.update({"script_args": ["",int(usdutilewidth),int(usdutileheight),int(usdumaskblur),int(padding), int(usduswidth), usdusdenoise,int(usduspadding),
+        payload.update({"script_args": ["",int(usdutilewidth),int(usdutileheight),int(usdumaskblur),int(padding), int(usduswidth), float(usdusdenoise),int(usduspadding),
                                         upscaler_index,True,usduredrawint,False,int(usdusmaskblur),
                                         seamsfixmodeint,2,"","",float(scale)]})
     

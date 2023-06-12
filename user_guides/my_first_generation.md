@@ -1,15 +1,16 @@
 # My first generation
-Here are some example methods and tips on how to receive some good results.
+Here are some example methods and tips on how to receive some initial good results.
 
 Maybe it can give you some ideas and inspiration on how to use this tool. You can just leave everything on "all", which is the most fun!
 
-It works best with models that are more general and multi purpose. Such as [deliberate](https://civitai.com/models/4823/deliberate) and [dreamlike diffusion](https://civitai.com/models/1274/dreamlike-diffusion-10). However, feel free to use it on your personal favorite models.
+It works best with models that are more general and multi purpose. Such as [deliberate](https://civitai.com/models/4823/deliberate) and [dreamlike diffusion](https://civitai.com/models/1274/dreamlike-diffusion-10). However, feel free to use it on your personal favorite models. If you want to generate images in a certain set style, of in the style of a certain model? That is possible as well, and explained in this page.
 
 For models which are more trained on specific subjects, match the subject to the model to get the best results.
 
 ## Portraits
 
-In this example, I am using the deliberate model.
+In this example, I am using the [deliberate](https://civitai.com/models/4823/deliberate) model. It is a very flexible model, and art styles have a good impact on the end results.
+
 I've set the Sampling method to "DPM++ SDE Karras", Sampling steps to "25" and lowered the CFG Scale to "6"
 You can increase the batch count, to keep creating new images.
 
@@ -20,11 +21,11 @@ Then I scroll down and activate the One Button prompt script.
 
 I set the complexity of the prompt to 5, which is a nice middle ground for prompts.
 
-As a "Subject Type" I select "humanoid", this will ensure I will get a human, or humanoid like result from the prompt.
+As a __"Subject Type"__ I select __"humanoid"__, this will ensure I will get a human, or human-like result from the prompt.
 
-For "Artists" I select "popular". This is a list of popular artists from images from CivitAI. Such as LOIS, Artgerm, alphonse mucha and many others. You can also try and switch "artists" to "Portrait" or "Character"
+For __"Artists"__ I select __"popular"__. This is a list of popular artists from images from CivitAI. Such as LOIS, Artgerm, alphonse mucha and many others. You can also try and switch "artists" to __"Portrait"__ or __"Character"__
 
-As "Type of image" I select "portrait", so that it will always default to a portrait image. You can also try to switch "Type of image" to "digital art" to get more full body shots.
+As __"Type of image"__ I select __"portrait"__, so that it will always default to a portrait image. You can also try to switch "Type of image" to __"digital art"__ to get more full body shots.
 
 ![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/28e79a02-aba5-4a71-983b-d5edc9744cdc)
 
@@ -54,12 +55,12 @@ You can increase the batch count, to keep creating new images.
 
 I set the complexity of the prompt to 5, which is a nice middle ground for prompts. For photo's you might want to go a bit lower.
 
-As a "Subject Type" I select "humanoid", as the Realistic Vision model likes to generate humans.
+As a __"Subject Type"__ I select __"humanoid"__, as the Realistic Vision model likes to generate humans.
 
-For "Artists" I select "photograph". This is a list of photography artists. However "fashion" is also a good option here. I can also recommend "none", so no artist is generated at all
+For __"Artists"__ I select __"photograph"__. This is a list of photography artists. However __"fashion"__ is also a good option here. I can also recommend __"none"__, so no artist is generated at all
 When using Photograph artists, there is a very high chance of getting a portrait image.
 
-As "Type of image" I select "photograph", so that it will always default to a portrait image.
+As __"Type of image"__ I select __"portrait"__, so that it will always default to a portrait image.
 
 ![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/928ba5ee-800c-4937-a641-595d6357af1c)
 
@@ -85,11 +86,11 @@ For this example, I am using the [ReV Animated](https://civitai.com/models/7371/
 I've set the Sampling method to "DPM++ SDE Karras", Sampling steps to "25" and kept the CFG Scale to "7"
 You can increase the batch count, to keep creating new images.
 
-As a "Subject Type" I select "humanoid". This model likes to generate humans as well.
+As a __"Subject Type"__ I select __"humanoid"__. This model likes to generate humans as well.
 
-For "Artists" I select "none". I don't want any interference from an artist, because we want to activate the anime-2.5D style.
+For __"Artists"__ I select __"none"__. I don't want any interference from an artist, because we want to activate the anime-2.5D style.
 
-As "Type of image" I select "all", we do want to get some surprises.
+As __"Type of image"__ I select __"all"__, we do want to get some surprises.
 
 In the description for this model, it is stated to activate the anime-2.5D type pictures, we should add ((best quality)), ((masterpiece)), (detailed) in the beginning of the prompt.
 
@@ -113,42 +114,49 @@ Examples:
 
 > ((best quality)), ((masterpiece)), (detailed), Exceptional slender Salvadoran Male Musician, Award-Winning Gray hair, plain background, Qajar Art, Low shutter
 
-## Sci-fi Animals (adding trigger words and prompt prefix)
-In this example, I am using the [dreamlike diffusion](https://civitai.com/models/1274/dreamlike-diffusion-10) model.
+## Using specific artists and styles, graffiti wall art
+For this example, I am using the [deliberate](https://civitai.com/models/4823/deliberate) model.
+
+Lets say I want to generate some wall grafiti in the style of Loish. Can we do this? Yes we can!
+
+First, lets set up our basic things again.
 
 I've set the Sampling method to "DPM++ SDE Karras", Sampling steps to "25" and kept the CFG Scale to "7"
-I've set the Width to 768 to create some widescreen images.
-
 You can increase the batch count, to keep creating new images.
 
-I set the complexity of the prompt to 7, since we can go a little crazy here, but not too much.
+As a __"Subject Type"__ I select __"animal"__. I want to generate some animals in the art.
 
-As a "Subject Type" I select "animal", we want to create some cool animals.
+For __"Artists"__ I select __"none"__. I don't want any interference from adding an artist. We put our own artist in.
 
-For "Artists" I select "sci-fi". This is a list of sci-fi artists. However "fantasy" is also a good option here.
+As __"Type of image"__ it doesn't matter, we will override this.
 
-As "Type of image" I select "concept art", because we want some cool concept art to show up.
+For __"Overwrite type of image"__ I added __"wall graffiti, doodle art"__. This will make sure this is always chosen as the image type, instead of photograph or painting for example.
 
-As an addition, I am also filling in the prompt prefix field with "dreamlikeart, sci-fi animal"
+Next, I add __"art by Loish"__ in the __prompt suffix field__. This artist will now always be placed at the back of the generated prompt.
 
-"dreamlikeart" is the triggerword of the dreamlike diffusion model, so we want to add that as the start
+This way we can start exploring styles and artists. If we find something interesting during generation, we can set stuff in these fields to get more control.
 
-Adding "sci-fi animal" at the start, makes sure it understand it needs to create a sci-fi animal, regardless of what else the prompts generates. You can play around with these settings, also depending on the model you are using and the results you want.
+![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/d7fd8819-bdec-47f7-b3eb-676514c3336c)
 
-![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/7e4185d4-f93e-493b-b515-676783aa4162)
+Example:
 
-Examples:
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/19f2ddeb-473e-4c32-a09e-913fa9477911.png"  width="30%" height="30%">
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/f9f0a954-30ef-421d-97e6-8022c2fd6cff.png"  width="30%" height="30%">
 
-<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/52714307-a2f6-4a22-a011-a1752f2e8523.png" alt="click!" width="30%" height="30%">
-<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/375c0995-cade-46c8-8a92-d093aa6cb2d6.png" alt="click!" width="30%" height="30%">
+> wall graffiti, doodle art of a Celestial Extraordinary Exotic Shorthair cat, Titan, Anime screencap, Embarrassing, 80mm, art by Loish
 
-> dreamlikeart, sci-fi animal, (art by Kilian Eng:1.1), concept art, Street level shot of a Floating were badger, from inside of The Tablets of Stone, Foggy, Movie still, Seapunk Art, Low shutter, Lomography, opulent
+> wall graffiti, doodle art of a Misshapen Cyclops, Hazy conditions, Ultra Detailed, Peaceful, Agfacolor, art by Loish
 
-> dreamlikeart, sci-fi animal, concept art, ground level shot of a Glam monster Chicken, Realistic, in the style of Bust of Nefertiti, (art by Brian Sum:1.3)
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/afecb619-8774-402d-be1f-82025652b369.png"  width="30%" height="30%">
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/d77fd449-8f2d-4ec2-9101-d4b47bbcbb72.png"  width="30%" height="30%">
 
-<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/6e23079a-1981-4707-8058-ff8acd474666.png" alt="click!" width="30%" height="30%">
-<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/15a11263-a9db-42c2-a8da-cae63479c802.png" alt="click!" width="30%" height="30%">
+> wall graffiti, doodle art of a Dreadful Lobster, background is Unforgettable The Burning Bush, 800mm lens, CMYK Colors, art by Loish
 
-> dreamlikeart, sci-fi animal, concept art, aerial shot of a Happy Stegosaurus, Triathlon, wearing 1920's dark pastel Denim shorts, Adventure pose, moody lighting, Fish-eye Lens, Cinestill, National Geographic, dripping Mustard, photolab, (art by Ed Emshwiller:1.3),art by Andy Fairhurst
+> wall graffiti, doodle art of a Tedious Sheep, at Overcast, masterpiece, F/8, Grayscale, art by Loish
 
-> dreamlikeart, sci-fi animal, concept art, full shot of a Lovely Scorpion, background is Mountain, Spring, Rough sketch, key light, 50mm, Film grain, Dota style, inticrate details
+## What to do next?
+Thanks for reading so far, want more?
+
+Next up is reading [guide to override subject](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/override_subject_and_infinite_variations.md)
+
+This will show you how to generate a set subject, and then One Button Prompt will generate the rest of the prompt around it. This is a very popular feature of One Button Prompt.

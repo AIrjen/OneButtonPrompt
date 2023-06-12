@@ -132,7 +132,7 @@ As __"Type of image"__ it doesn't matter, we will override this.
 
 For __"Overwrite type of image"__ I added __"wall graffiti, doodle art"__. This will make sure this is always chosen as the image type, instead of photograph or painting for example.
 
-Next, I add __"art by Loish"__ in the __prompt suffix field__. This artist will now always be placed at the back of the generated prompt.
+Next, I add __"art by Loish"__ in the __prompt suffix field__. This artist will now always be placed at the back of the generated prompt. You could add this to the prompt prefix field as well, to get a stronger effect. You can also write it as such __"(art by Loish:1.3)"__ to have a stronger effect as well.
 
 This way we can start exploring styles and artists. If we find something interesting during generation, we can set stuff in these fields to get more control.
 

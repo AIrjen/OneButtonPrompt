@@ -79,11 +79,45 @@ Examples:
 
 > art by Geof Kern, (art by Guo Pei:0.8), photograph, 3/4 view of a Reiwa Era Kehlani, Writing, Dark hair styled as Wavy, Necklace, Soul patch, Sunny, Dada Art, volumetric lighting, film grain, dslr, F/1.8, Plain white background
 
+## Adding trigger words for certain models
+For this example, I am using the [ReV Animated](https://civitai.com/models/7371/rev-animated) model.
+
+I've set the Sampling method to "DPM++ SDE Karras", Sampling steps to "25" and kept the CFG Scale to "7"
+You can increase the batch count, to keep creating new images.
+
+As a "Subject Type" I select "humanoid". This model likes to generate humans as well.
+
+For "Artists" I select "none". I don't want any interference from an artist, because we want to activate the anime-2.5D style.
+
+As "Type of image" I select "all", we do want to get some surprises.
+
+In the description for this model, it is stated to activate the anime-2.5D type pictures, we should add ((best quality)), ((masterpiece)), (detailed) in the beginning of the prompt.
+
+This we place in the prompt prefix field. This field will always be added the the beginning to the generated prompt. Exactly what we want.
+
+![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/74b5b758-83fe-46cf-9759-a5a725431445)
+
+Examples:
+
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/660e5184-9ac0-4cfd-bd80-f6c959023af8.png" alt="Nice BB-8" width="30%" height="30%">
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/2ea33957-4886-418d-bfec-a4a660cca84f.png" width="30%" height="30%">
+
+> ((best quality)), ((masterpiece)), (detailed), Cartelcore, surreal, elegant, Narrative Australian BB-8 of Thoughts, ðŸ¥±, concept art, wearing Universal Shirt dress, DayGlo green trees, at Sunrise, horizon-centered, Cel shaded, Sepia filter
+
+> ((best quality)), ((masterpiece)), (detailed), Sharp focus of a Smart hefty Mother, Planning events, wearing robe designed by The Hunger Games, Toe ring, Circlet, Cigarette, background is Chichen Itza, at Twilight, Dragonpunk, Rembrandt lighting
+
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/b6c25a09-5bf3-45ac-a205-aeeb88ce892f.png"  width="30%" height="30%">
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/35bcc983-1a4b-4f0d-8d40-7a773d276e57.png"  width="30%" height="30%">
+
+> ((best quality)), ((masterpiece)), (detailed), Cluttered muscular American Quetzalcoatl, Wrestling, Dark hair styled as Bantu knots, Dark, auto-destructive art, Fish-eye Lens, surreal design, High quality
+
+> ((best quality)), ((masterpiece)), (detailed), Exceptional slender Salvadoran Male Musician, Award-Winning Gray hair, plain background, Qajar Art, Low shutter
+
 ## Sci-fi Animals (adding trigger words and prompt prefix)
 In this example, I am using the [dreamlike diffusion](https://civitai.com/models/1274/dreamlike-diffusion-10) model.
 
 I've set the Sampling method to "DPM++ SDE Karras", Sampling steps to "25" and kept the CFG Scale to "7"
-I've set the Widht to 768 to create some widescreen images.
+I've set the Width to 768 to create some widescreen images.
 
 You can increase the batch count, to keep creating new images.
 

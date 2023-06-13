@@ -27,13 +27,13 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
             print(result)
             print("")
         
-        if(result.count("-")>1):
+        if(result.count("-")>1 and imagetype == "only templates"):
             print("Is there a mistake in wildcards?")
             print("")
             print(result)
             break
             
-        if(givensubject != "" and givensubject not in result):
+        if(givensubject != "" and givensubject not in result and imagetype == "only templates"):
             print("No givensubject, there must be an issue:")
             print("")
             print(result)
@@ -46,4 +46,4 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
     print("")
     print("All done!")
 
-generateprompts(10,5,"all","all","all",False,"","","PREFIXPROMPT" ,"SUFFIXPROMPT","",1,"","HELLO")
+generateprompts(10,5,"all","all","all",False,"","","PREFIXPROMPT" ,"SUFFIXPROMPT","",1,"","-objecttotal-")

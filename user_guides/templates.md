@@ -28,6 +28,23 @@ This means that most of the base prompt remains the same, however, some of the p
 
 Here are some examples of this specific prompt template:
 
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/613e44a1-593e-4b14-8989-98c62ab62fa5.png" width="30%" height="30%">
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/b370fbd2-54dc-4802-8eb9-b9f535268a7d.png" width="30%" height="30%">
+
+
+> a Luigi, wearing a Chain, Clementine in her hands, school, pond, (soothing tones:1.25), (hdr:1.25), (artstation:1.2), dramatic, (intricate details:1.14), (hyperrealistic 3d render:1.16), (filmic:0.55), (rutkowski:1.1), (faded:1.3)
+
+> a Katniss Everdeen, wearing a Earbuds, alcohol in her hands, school, jungle, (soothing tones:1.25), (hdr:1.25), (artstation:1.2), dramatic, (intricate details:1.14), (hyperrealistic 3d render:1.16), (filmic:0.55), (rutkowski:1.1), (faded:1.3)
+
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/55399398-6dc1-4786-8c43-8a6da99837ec.png" width="30%" height="30%">
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/213a89b4-abb9-40f9-8527-ded7c374ab41.png" width="30%" height="30%">
+
+> a Priyanka Chopra, wearing a Cat Ears, Charcuterie in her hands, school, trees, (soothing tones:1.25), (hdr:1.25), (artstation:1.2), dramatic, (intricate details:1.14), (hyperrealistic 3d render:1.16), (filmic:0.55), (rutkowski:1.1), (faded:1.3)
+
+> a Mr. Spock, wearing a Umbrella, smoked in her hands, school, flower field, (soothing tones:1.25), (hdr:1.25), (artstation:1.2), dramatic, (intricate details:1.14), (hyperrealistic 3d render:1.16), (filmic:0.55), (rutkowski:1.1), (faded:1.3)
+
+As you can see, it still feels very One Button Prompty, while still being true to much of the original prompt.
+
 ## Running with "only templates"
 The prompt templates with show up once in a while during normal use of One Button Prompt. This can be set under __"type of image"__ . Set this to __"only templates"__. This will force One Button Prompt to only work bsaed of prompt templates instead of its normal randomized generation.
 
@@ -58,7 +75,40 @@ You can place a __"templates_addon.csv"__ or a __"templates_replace.csv"__ file 
 
 Refer to __\csvfiles\templates\templates.csv__ for how the prompt templates are build up.
 
+### structure
+
 The structure is as following:
 
 _prompt;source;sourcecategory;subjecttype;subjectwildcard_
+
+__prompt__: The prompt including -wildcards-. You can use comma's normally. Try to determine the main subject of the prompt, and add the -subject- wildcard. This is needed to work with override subject.
+
+__source__: Used during testing, no actual logic used here. I used either the website or model I got the prompt template from, such as civitai or promptbook.
+
+__sourcecategory__: Used during testing, no actual logic used here. Currently only has the values official and gallery.
+
+__subjecttype__: Determines the main category, these are "object", "animal", "humanoid", "landscape" and "concept"
+
+__subjectwildcard__: The wildcard to replace the subject with. For example, use the -human- wildcard to replace the -subject- wildcard from the prompt with this wildcard.
+
+Please note, that if there is a empty row, or one of the values is missing, it will probably not work.
+
+Here are some random examples from the current __templates.csv__:
+
+> -subject- in -location- with typical -brand- -minioutfit- and highly detailed face;openart;gallery;humanoid;-human-
+
+> a -descriptor- -subject-, closeup, at night, dark theme, darken, cinematic;civitai;gallery;animal;-animal-
+
+> Super -descriptor- -subject-, holding a -objecttotal-, light rain, -minilocation-, by POPMART blind box, -colorscheme-, mockup, blind box toy, fineluster, clean background, 3D render, oc render, best quality, 4k, ultradetailed;lexica;gallery;humanoid;-human-
+
+> 8k portrait of -subject- in a -color- -descriptor- -outfit- is standing in the -minilocationaddition- around the people at midnight ,(perfect face), -descriptor- jawline, (-descriptor- -color- eyes), -descriptor- lips, (-haircolor- -hairstyle- hairstyle), (perfect hands),(-mood-:1.3),looking at camera,(-descriptor- face:1.4),upperbody,grab a flowers, (highly detailed:1.5), digital painting, a photorealistic painting, photorealism;dreamshaper;gallery;humanoid;-human-
+
+> -descriptor- -subject- -culture- -artmovement- style. at an -location-;lexica;gallery;animal;-animal-
+
+## Contributing
+
+If you would like your prompt templates to be added to One Button Prompt, you can:
+
+- Send a message with the templates in the GitHub discussions, or find me on reddit \u\AIrjen
+- Be a pro, and create a Pull request
 

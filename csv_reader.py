@@ -27,7 +27,7 @@ def csv_to_list(csvfilename, antilist=[], directory="./csvfiles/", lowerandstrip
         full_path = os.path.join(script_dir, directory )
         userfilesfolder = os.path.join(script_dir, userfilesdirectory )
         # check if there is a replace file
-        if(directory=="./csvfiles/" or directory=="./csvfiles/special_lists/"):      
+        if(directory=="./csvfiles/" or directory=="./csvfiles/special_lists/" or directory=="./csvfiles/templates/"):      
                 for filename in os.listdir(userfilesfolder):
                         if(filename == userfilereplacename):
                                 # Just override the parameters, and let it run normally

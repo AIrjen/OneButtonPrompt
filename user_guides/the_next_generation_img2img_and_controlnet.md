@@ -3,6 +3,10 @@
 Since One Button Prompt does nothing more than generate a prompt, means we can combine it with most other tools and extensions available. In this document, I'd like to show you some possibilities of using it with IMG2IMG functionality and ControlNET.
 Hopefully this will lead to additional inspiration and new ways to approach these tools.
 
+In these examples, I am all using the [deliberate](https://civitai.com/models/4823/deliberate) model.
+
+I've set the Sampling method to "DPM++ SDE Karras", Sampling steps to "30" and used the standard CFG Scale "7",
+
 ## Generating skulls with IMG2IMG
 
 In this example, I'm using a picture of a skull found on the internet. I'm using this one, since it has loads of background noise, which can create interesting stuff.
@@ -38,3 +42,44 @@ Example output images:
 > art by Gail Simone, portrait,close up of a Visually Stimulating Visually Stimulating skull, Sharp details, [garden|jungle], at Sunrise, telephoto lens
 
 > art by Kim Keever, portrait,close up of a Enthralling Tang Dynasty skull, Happy
+
+## Generating Stormtrooper helmet based images with ControlNET
+In this case, we are going back to using TXT2IMG. Please note, that most of these images came out amazing.
+
+I've configured ControlNET to use this Stormtrooper helmet:
+
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/03308730-a63e-4498-83e5-a35a0b7f8f16.png" width="30%" height="30%">
+
+I've set it to use the __"Depth"__ ControlNET model. In this case I'm using __"depth_midas"__, this is what it defaulted to.
+
+I've set __"Ending Control Step"__ to __0,75__, meaning that ControlNET will stop doing it's thing 75% through all steps.
+
+I'm using the setting __"My prompt is more important"__
+
+![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/6a2ea3f4-c398-4be3-b3f4-4b58a58b9505)
+
+I've set up One Button Prompt to the following settings:
+
+As a __"Subject Type"__ I select __"object"__, however, you could try __all__ to get even wierder results.
+
+For __"Artists"__ I select __"all"__. I want to get surprised, so I leave this to all.
+
+As __"Type of image"__ I select __"all"__, more surprises in store for us.
+
+![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/2b769bd4-e8fa-4346-9751-4298f6161518)
+
+Example images:
+
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/41155745-41d9-4e43-b11a-3c3cc8b121d7.png" width="30%" height="30%">
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/e9e1e341-256a-4b1e-8768-8bdd05afe7bf.png" width="30%" height="30%">
+
+> art by Kazuo Oga, Golden ratio, Obscene hypercar, concept art, from inside of a Elite Dalaran, Summer, Grim, Auroracore, Sun Rays, Kodak Ektar
+
+> Cycles render, Messy Ecuadorian Volkswagen of Guilt, concept art, Funk Art, bloom, art by Shepard Fairey
+
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/17441442-5a89-46dd-95e2-a8f22f1baa79.png" width="30%" height="30%">
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/2aafbd76-93f8-49a6-8161-f418675a5428.png" width="30%" height="30%">
+
+> art by Alejandro Burdisio, (art by Alex Schomburg:1.0), voxel art, Alluring Entrancing Castle of Haste, smooth, Folded street, Lens Flare
+
+> art by Vanessa Bell, (art by Jhonen Vasquez:1.0), grand Octane render, Unpredictable Taiwanese Snow plow, intricate details, Smug, Reflected light, matte, Bright design

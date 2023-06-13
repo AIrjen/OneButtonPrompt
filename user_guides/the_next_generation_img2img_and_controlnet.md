@@ -44,7 +44,7 @@ Example output images:
 > art by Kim Keever, portrait,close up of a Enthralling Tang Dynasty skull, Happy
 
 ## Generating Stormtrooper helmet based images with ControlNET
-In this case, we are going back to using TXT2IMG. Please note, that most of these images came out amazing.
+In this case, we are going back to using TXT2IMG. Please note, that most of these images came out amazing. You can use this trick to win almost anything on \r\sdbattles\
 
 I've configured ControlNET to use this Stormtrooper helmet:
 

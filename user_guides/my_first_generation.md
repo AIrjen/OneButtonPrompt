@@ -160,3 +160,5 @@ Thanks for reading so far, want more?
 Next up is reading [guide to override subject](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/override_subject_and_infinite_variations.md)
 
 This will show you how to generate a set subject, and then One Button Prompt will generate the rest of the prompt around it. This is a very popular feature of One Button Prompt.
+
+You can also go to [guide to IMG2IMG and ControlNET](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/the_next_generation_img2img_and_controlnet.md) to see how it combines with those features.

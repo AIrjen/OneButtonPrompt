@@ -83,3 +83,47 @@ Example images:
 > art by Alejandro Burdisio, (art by Alex Schomburg:1.0), voxel art, Alluring Entrancing Castle of Haste, smooth, Folded street, Lens Flare
 
 > art by Vanessa Bell, (art by Jhonen Vasquez:1.0), grand Octane render, Unpredictable Taiwanese Snow plow, intricate details, Smug, Reflected light, matte, Bright design
+
+## Reverse inpainting of Pedro Pascal
+
+One Button prompt can also usefull in inpainting tasks. In this example, I'm going to do what I like to call a "reverse inpaint". This time on the face of Pedro Pascal. Note that this trick will also work on your own face.
+
+First I load up the foto of Pedro Pascal in the Inpaint tab, and then I paint over his face. It doesn't have to be perfect.
+
+Make sure to turn on __"Inpaint not masked"__ so that we replace everything but his face.
+
+I've set __padding__ to __"64"__ and __mask blur__ to __"8"__. __Denoising strength__ is set to __"0.7"__.
+
+![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/6aa6519d-9c6f-4585-9759-4eb77a9ed757)
+
+I then load up an inpainting model. Because we are using a photo, I am using the realisticVision inpainting model for this example.
+
+For One Button Prompt, I set the following settings:
+
+As a __"Subject Type"__ I select __"humanoid"__
+
+For __"Artists"__ I select __"portrait"__. This way we get artists to create portraits, which is what we want in this case.
+
+As __"Type of image"__ I select __"all"__, more surprises in store for us. We could use __Portrait__ here as well.
+
+
+Example results:
+
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/3a1bda43-cb16-4aa4-9b43-728de8cec095.png" width="30%" height="30%">
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/f5d09f3f-184f-42d8-b552-62e5a1bb8cfb.png" width="30%" height="30%">
+
+> Delicate diane lane, Exploring new places, Platinum hair styled as long straight, Glittering Persian cat face paint, Smooth No makeup, Foggy, split diopter, Ultra Detailed, Embarrassing, L USM, Golden ratio, inticrate details, hyperdetailed
+
+> art by Roy Lichtenstein, Redshift render, Fallacious, Vengeful Noble well-endowed Male Actor, Heavenly Blonde hair, Thunderstorm, Lonely, MinecraftCore
+
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/9656b7bf-d2da-41b1-ae7e-683930d588fe.png" width="30%" height="30%">
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/1b616147-6a3b-40b2-bcbd-d5c17796d654.png" width="30%" height="30%">
+
+
+> art by Rebeca Saray, Infected Inventive Dragonkin, ðŸ™, wearing Striped Satin Pleated skirt and tucked-in blouse, Tang Dynasty Earrings, plain Gold background, horizon-centered, Neo-Fauvism, Direct light, masterpiece
+
+> Jagged stocky Indonesian Father, Exploring new places, Layered cut hair, Pixiecore, 800mm lens, Warm Colors, 8K
+
+### Thank you
+
+Hope to have give you some inspiration on where you could use One Button Prompt as well, in unexpected ways. Your creativity is what unlocks it's power.

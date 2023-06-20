@@ -1127,19 +1127,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     if(unique_dist(insanitylevel)): # sometimes, its just nice to have descriptor and a normal "outfit". We use mini outfits for this!
                  completeprompt = completeprompt.replace("-outfit-", "-minioutfit-",1)
 
-            # do the hybrid/swap thing in here instead
-            # if(rare_dist(insanitylevel)):
-            #        hybridorswaplist = ["hybrid", "swap"]
-            #        hybridorswap = random.choice(hybridorswaplist)
-            #        hybridorswapreplacementvalue = "[" + random.choice(outfitlist)
-            #        
-            #        if(hybridorswap == "hybrid"):
-            #                hybridorswapreplacementvalue += "|" + random.choice(outfitlist) + "] "
-            #        if(hybridorswap == "swap"):
-            #            if(uncommon_dist(insanitylevel)):
-            #                hybridorswapreplacementvalue += ":" + random.choice(outfitlist) + ":" + str(random.randint(1,20)) +  "] "
-            #        
-            #        completeprompt = completeprompt.replace('-outfit-', hybridorswapreplacementvalue,1)
+
     
     # lol, this needs a rewrite :D
     while "-color-" in completeprompt or "-material-" in completeprompt or "-animal-" in completeprompt or "-object-" in completeprompt or "-fictional-" in completeprompt or "-nonfictional-" in completeprompt or "-conceptsuffix-" in completeprompt or "-building-" in completeprompt or "-vehicle-" in completeprompt or "-outfit-" in completeprompt or "-location-" in completeprompt or "-conceptprefix-" in completeprompt or "-descriptor-" in completeprompt or "-food-" in completeprompt or "-haircolor-" in completeprompt or "-hairstyle-" in completeprompt or "-job-" in completeprompt or "-culture-" in completeprompt or "-accessory-" in completeprompt or "-humanoid-" in completeprompt or "-manwoman-" in completeprompt or "-human-" in completeprompt or "-colorscheme-" in completeprompt or "-mood-" in completeprompt or "-genderdescription-" in completeprompt or "-artmovement-" in completeprompt or "-malefemale-" in completeprompt or "-objecttotal-" in completeprompt or "-bodytype-" in completeprompt or "-minilocation-" in completeprompt or "-minilocationaddition-" in completeprompt or "-pose-" in completeprompt or "-season-" in completeprompt or "-minioutfit-" in completeprompt or "-elaborateoutfit-" in completeprompt or "-minivomit-" in completeprompt or "-vomit-" in completeprompt or "-rpgclass-" in completeprompt or "-subjectfromfile-" in completeprompt or "-brand-" in completeprompt or "-space-" in completeprompt:
@@ -1198,6 +1186,18 @@ def replacewildcard(completeprompt, insanitylevel, wildcard,listname, activatehy
     return completeprompt
 
 def cleanup(completeprompt):
+
+    # first, move LoRA's to the back dynamically
+
+    # Find all occurrences of text between < and > using regex
+    matches = re.findall(r"<[^>]+>", completeprompt)
+
+    # Remove the extracted matches from completeprompt
+    completeprompt = re.sub(r"<[^>]+>", "", completeprompt)
+
+    # Move the extracted matches to the end of completeprompt
+    completeprompt += " " + " ".join(matches)   
+
     # all cleanup steps moved here
     completeprompt = re.sub('\[ ', '[', completeprompt)
     completeprompt = re.sub('\[,', '[', completeprompt) 
@@ -1217,9 +1217,11 @@ def cleanup(completeprompt):
     completeprompt = re.sub(',,,', ', ', completeprompt)
     completeprompt = re.sub(', ,', ',', completeprompt)
     completeprompt = re.sub(' , ', ', ', completeprompt)
+    completeprompt = re.sub(' ,', ',', completeprompt)
     completeprompt = re.sub(',\(', ', (', completeprompt)
 
-    completeprompt = re.sub('  ', ' ', completeprompt)
+    while "  " in completeprompt:
+        completeprompt = re.sub('  ', ' ', completeprompt)
     completeprompt = re.sub('a The', 'The', completeprompt)
     completeprompt = re.sub(', ,', ',', completeprompt)
     completeprompt = re.sub(',,', ',', completeprompt)
@@ -1227,6 +1229,8 @@ def cleanup(completeprompt):
     completeprompt = re.sub(', of a', ' of a', completeprompt)
     completeprompt = re.sub('of a,', 'of a', completeprompt)
     completeprompt = re.sub('of a of a', 'of a', completeprompt)
+
+    
 
 
     completeprompt = completeprompt.strip(", ")

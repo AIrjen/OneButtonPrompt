@@ -25,7 +25,8 @@ def get_samplers():
 
 def get_upscalers_for_img2img():
     upscalerlistfromwWebUI = [x.name for x in shared.sd_upscalers]
-    upscalerlistfromwWebUI.remove("None")
+    if("None" in upscalerlistfromwWebUI):
+        upscalerlistfromwWebUI.remove("None")
     return upscalerlistfromwWebUI
 
 def get_samplers_for_img2img():

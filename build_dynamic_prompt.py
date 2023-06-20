@@ -76,9 +76,10 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     imagetypequalitylist = csv_to_list("imagetypequality", antilist)
     rpgclasslist = csv_to_list("rpgclasses", antilist)
     brandlist = csv_to_list("brands", antilist)
+    spacelist = csv_to_list("space", antilist)
 
     humanlist = fictionallist + nonfictionallist + humanoidlist
-    objecttotallist = objectlist + buildinglist + vehiclelist + foodlist
+    objecttotallist = objectlist + buildinglist + vehiclelist + foodlist + spacelist
 
     # build artists list
     # create artist list to use in the code, maybe based on category  or personal lists
@@ -136,7 +137,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     generateobject = bool(objectlist)
     generatefood = bool(foodlist)
     generatebuilding = bool(buildinglist)
-    generateobject = generatevehicle + generateobject + generatefood + generatebuilding
+    generatespace = bool(spacelist)
+    generateobject = generatevehicle + generateobject + generatefood + generatebuilding + generatespace
     
 
     if(generatevehicle):
@@ -151,6 +153,10 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     if(generatefood):
         objectwildcardlist.append("-food-")
         hybridlist.append("-food-")
+    
+    if(generatespace):
+        objectwildcardlist.append("-space-")
+        hybridlist.append("-space-")
 
     if(generatebuilding):
         objectwildcardlist.append("-building-")
@@ -696,7 +702,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 completeprompt += random.choice(culturelist) + " "
 
             if(mainchooser == "object"):
-                objectwildcardlist = ["-object-", "-building-","-vehicle-","-food-"]  # using wildcards for replacements
+                objectwildcardlist = ["-object-", "-building-","-vehicle-","-food-", "-space-"]  # using wildcards for replacements
                 
                 # if we have a given subject, we should skip making an actual subject
                 if(givensubject == ""):
@@ -715,7 +721,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                             completeprompt += "|" + random.choice(objectwildcardlist) + "] "
                         else:
                             completeprompt += "|" 
-                            completeprompt += random.choice(chosenobjectwildcard) + " "
+                            completeprompt += chosenobjectwildcard + " "
                             completeprompt += "] "
                     if(hybridorswap == "swap"):
                         if(uncommon_dist(insanitylevel)):
@@ -1121,24 +1127,12 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     if(unique_dist(insanitylevel)): # sometimes, its just nice to have descriptor and a normal "outfit". We use mini outfits for this!
                  completeprompt = completeprompt.replace("-outfit-", "-minioutfit-",1)
 
-            # do the hybrid/swap thing in here instead
-            # if(rare_dist(insanitylevel)):
-            #        hybridorswaplist = ["hybrid", "swap"]
-            #        hybridorswap = random.choice(hybridorswaplist)
-            #        hybridorswapreplacementvalue = "[" + random.choice(outfitlist)
-            #        
-            #        if(hybridorswap == "hybrid"):
-            #                hybridorswapreplacementvalue += "|" + random.choice(outfitlist) + "] "
-            #        if(hybridorswap == "swap"):
-            #            if(uncommon_dist(insanitylevel)):
-            #                hybridorswapreplacementvalue += ":" + random.choice(outfitlist) + ":" + str(random.randint(1,20)) +  "] "
-            #        
-            #        completeprompt = completeprompt.replace('-outfit-', hybridorswapreplacementvalue,1)
+
     
     # lol, this needs a rewrite :D
-    while "-color-" in completeprompt or "-material-" in completeprompt or "-animal-" in completeprompt or "-object-" in completeprompt or "-fictional-" in completeprompt or "-nonfictional-" in completeprompt or "-conceptsuffix-" in completeprompt or "-building-" in completeprompt or "-vehicle-" in completeprompt or "-outfit-" in completeprompt or "-location-" in completeprompt or "-conceptprefix-" in completeprompt or "-descriptor-" in completeprompt or "-food-" in completeprompt or "-haircolor-" in completeprompt or "-hairstyle-" in completeprompt or "-job-" in completeprompt or "-culture-" in completeprompt or "-accessory-" in completeprompt or "-humanoid-" in completeprompt or "-manwoman-" in completeprompt or "-human-" in completeprompt or "-colorscheme-" in completeprompt or "-mood-" in completeprompt or "-genderdescription-" in completeprompt or "-artmovement-" in completeprompt or "-malefemale-" in completeprompt or "-objecttotal-" in completeprompt or "-bodytype-" in completeprompt or "-minilocation-" in completeprompt or "-minilocationaddition-" in completeprompt or "-pose-" in completeprompt or "-season-" in completeprompt or "-minioutfit-" in completeprompt or "-elaborateoutfit-" in completeprompt or "-minivomit-" in completeprompt or "-vomit-" in completeprompt or "-rpgclass-" in completeprompt or "-subjectfromfile-" in completeprompt or "-brand-" in completeprompt:
-        allwildcardslistnohybrid = [ "-color-","-object-", "-animal-", "-fictional-","-nonfictional-","-building-","-vehicle-","-location-","-conceptprefix-","-food-","-haircolor-","-hairstyle-","-job-", "-accessory-", "-humanoid-", "-manwoman-", "-human-", "-colorscheme-", "-mood-", "-genderdescription-", "-artmovement-", "-malefemale-", "-bodytype-", "-minilocation-", "-minilocationaddition-", "-pose-", "-season-", "-minioutfit-", "-elaborateoutfit-", "-minivomit-", "-vomit-", "-rpgclass-", "-subjectfromfile-", "-brand-"]
-        allwildcardslistnohybridlists = [colorlist, objectlist, animallist, fictionallist, nonfictionallist, buildinglist, vehiclelist, locationlist,conceptprefixlist,foodlist,haircolorlist, hairstylelist,joblist, accessorielist, humanoidlist, manwomanlist, humanlist, colorschemelist, moodlist, genderdescriptionlist, artmovementlist, malefemalelist, bodytypelist, minilocationlist, minilocationadditionslist, poselist, seasonlist, minioutfitlist, elaborateoutfitlist, minivomitlist, vomitlist, rpgclasslist, customsubjectslist, brandlist]
+    while "-color-" in completeprompt or "-material-" in completeprompt or "-animal-" in completeprompt or "-object-" in completeprompt or "-fictional-" in completeprompt or "-nonfictional-" in completeprompt or "-conceptsuffix-" in completeprompt or "-building-" in completeprompt or "-vehicle-" in completeprompt or "-outfit-" in completeprompt or "-location-" in completeprompt or "-conceptprefix-" in completeprompt or "-descriptor-" in completeprompt or "-food-" in completeprompt or "-haircolor-" in completeprompt or "-hairstyle-" in completeprompt or "-job-" in completeprompt or "-culture-" in completeprompt or "-accessory-" in completeprompt or "-humanoid-" in completeprompt or "-manwoman-" in completeprompt or "-human-" in completeprompt or "-colorscheme-" in completeprompt or "-mood-" in completeprompt or "-genderdescription-" in completeprompt or "-artmovement-" in completeprompt or "-malefemale-" in completeprompt or "-objecttotal-" in completeprompt or "-bodytype-" in completeprompt or "-minilocation-" in completeprompt or "-minilocationaddition-" in completeprompt or "-pose-" in completeprompt or "-season-" in completeprompt or "-minioutfit-" in completeprompt or "-elaborateoutfit-" in completeprompt or "-minivomit-" in completeprompt or "-vomit-" in completeprompt or "-rpgclass-" in completeprompt or "-subjectfromfile-" in completeprompt or "-brand-" in completeprompt or "-space-" in completeprompt:
+        allwildcardslistnohybrid = [ "-color-","-object-", "-animal-", "-fictional-","-nonfictional-","-building-","-vehicle-","-location-","-conceptprefix-","-food-","-haircolor-","-hairstyle-","-job-", "-accessory-", "-humanoid-", "-manwoman-", "-human-", "-colorscheme-", "-mood-", "-genderdescription-", "-artmovement-", "-malefemale-", "-bodytype-", "-minilocation-", "-minilocationaddition-", "-pose-", "-season-", "-minioutfit-", "-elaborateoutfit-", "-minivomit-", "-vomit-", "-rpgclass-", "-subjectfromfile-", "-brand-", "-space-"]
+        allwildcardslistnohybridlists = [colorlist, objectlist, animallist, fictionallist, nonfictionallist, buildinglist, vehiclelist, locationlist,conceptprefixlist,foodlist,haircolorlist, hairstylelist,joblist, accessorielist, humanoidlist, manwomanlist, humanlist, colorschemelist, moodlist, genderdescriptionlist, artmovementlist, malefemalelist, bodytypelist, minilocationlist, minilocationadditionslist, poselist, seasonlist, minioutfitlist, elaborateoutfitlist, minivomitlist, vomitlist, rpgclasslist, customsubjectslist, brandlist, spacelist]
         allwildcardslistwithhybrid = ["-material-", "-descriptor-", "-outfit-", "-conceptsuffix-","-culture-", "-objecttotal-"]
         allwildcardslistwithhybridlists = [materiallist, descriptorlist,outfitlist,conceptsuffixlist,culturelist, objecttotallist]
         
@@ -1192,6 +1186,18 @@ def replacewildcard(completeprompt, insanitylevel, wildcard,listname, activatehy
     return completeprompt
 
 def cleanup(completeprompt):
+
+    # first, move LoRA's to the back dynamically
+
+    # Find all occurrences of text between < and > using regex
+    matches = re.findall(r"<[^>]+>", completeprompt)
+
+    # Remove the extracted matches from completeprompt
+    completeprompt = re.sub(r"<[^>]+>", "", completeprompt)
+
+    # Move the extracted matches to the end of completeprompt
+    completeprompt += " " + " ".join(matches)   
+
     # all cleanup steps moved here
     completeprompt = re.sub('\[ ', '[', completeprompt)
     completeprompt = re.sub('\[,', '[', completeprompt) 
@@ -1211,9 +1217,11 @@ def cleanup(completeprompt):
     completeprompt = re.sub(',,,', ', ', completeprompt)
     completeprompt = re.sub(', ,', ',', completeprompt)
     completeprompt = re.sub(' , ', ', ', completeprompt)
+    completeprompt = re.sub(' ,', ',', completeprompt)
     completeprompt = re.sub(',\(', ', (', completeprompt)
 
-    completeprompt = re.sub('  ', ' ', completeprompt)
+    while "  " in completeprompt:
+        completeprompt = re.sub('  ', ' ', completeprompt)
     completeprompt = re.sub('a The', 'The', completeprompt)
     completeprompt = re.sub(', ,', ',', completeprompt)
     completeprompt = re.sub(',,', ',', completeprompt)
@@ -1221,6 +1229,8 @@ def cleanup(completeprompt):
     completeprompt = re.sub(', of a', ' of a', completeprompt)
     completeprompt = re.sub('of a,', 'of a', completeprompt)
     completeprompt = re.sub('of a of a', 'of a', completeprompt)
+
+    
 
 
     completeprompt = completeprompt.strip(", ")

@@ -46,4 +46,4 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
     print("")
     print("All done!")
 
-generateprompts(10,5,"all","all","all",False,"","","PREFIXPROMPT" ,"SUFFIXPROMPT","",1,"","-objecttotal-")
+generateprompts(10,5,"object","all","all",False,"","","PREFIXPROMPT" ,"SUFFIXPROMPT","",1,"","HELLO, <lora:add_detail:1>, <lora:bla:1>")

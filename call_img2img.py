@@ -6,6 +6,7 @@ import uuid
 from PIL import Image, PngImagePlugin
 from modules import shared
 from model_lists import *
+import time
 
 
 def call_img2img(imagelocation,originalimage, originalpnginfo ="", apiurl="http://127.0.0.1:7860",filename="", prompt = "", negativeprompt = "", img2imgsamplingsteps = "20", img2imgcfg = "7", img2imgsamplingmethod = "DPM++ SDE Karras", img2imgupscaler = "R-ESRGAN 4x+", img2imgmodel = "currently selected model", denoising_strength = "0.3", scale = "2", padding = "64",upscalescript="SD upscale",usdutilewidth = "512", usdutileheight = "0", usdumaskblur = "8", usduredraw ="Linear", usduSeamsfix = "None", usdusdenoise = "0.35", usduswidth = "64", usduspadding ="32", usdusmaskblur = "8",controlnetenabled=False, controlnetmodel="",controlnetblockymode=False):
@@ -171,13 +172,25 @@ def call_img2img(imagelocation,originalimage, originalpnginfo ="", apiurl="http:
     # target_size_type = 2
     # custom_scale = 2
 
+    r = []
+    # If we don't get an image back, we want to retry a few times. Max 3 times
+    for i in range(4):
+        response = requests.post(url=f'{url}/sdapi/v1/img2img', json=payload)
 
 
-    response = requests.post(url=f'{url}/sdapi/v1/img2img', json=payload)
+        r = response.json()
+        if('images' in r):
+            break # this means if we have the images object, then we "break" out of the for loop.
+        else:
+            if(i == 3):
+                print("If this keeps happening: Is WebUI started with --api enabled?")
+                print("")
+                raise ValueError("API has not been responding after several retries. Stopped processing.")
+            print("")
+            print("We haven't received an image from the API. Maybe something went wrong. Will retry after waiting a bit.")
+                
 
-
-    r = response.json()
-
+            time.sleep(10 * (i+1) ) # incremental waiting time
 
     for i in r['images']:
         image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))

@@ -4,6 +4,7 @@ import io
 import base64
 import uuid
 from PIL import Image, PngImagePlugin
+import time
 
 
 
@@ -46,8 +47,25 @@ def call_extras(imagelocation,originalimage, originalpnginfo ="", apiurl="http:/
         "models": "None" # the remove backgrounds plugin is  automatically turned on, need to turn it off
     }
 
+    response = []
+        
+    # If we don't get an image back, we want to retry a few times. Max 3 times
+    for i in range(4):
+        response = requests.post(url=f'{url}/sdapi/v1/extra-single-image', json=payload)
 
-    response = requests.post(url=f'{url}/sdapi/v1/extra-single-image', json=payload)
+        r = response.json()
+        if("image" in r):
+            break # this means if we have the images object, then we "break" out of the for loop.
+        else:
+            if(i == 3):
+                print("If this keeps happening: Is WebUI started with --api enabled?")
+                print("")
+                raise ValueError("API has not been responding after several retries. Stopped processing.")
+            print("")
+            print("We haven't received an image from the API. Maybe something went wrong. Will retry after waiting a bit.")
+            
+
+            time.sleep(10 * (i+1) ) # incremental waiting time
 
     image = Image.open(io.BytesIO(base64.b64decode(response.json().get("image"))))
 

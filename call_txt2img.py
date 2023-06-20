@@ -6,6 +6,7 @@ import uuid
 import sys, os
 from PIL import Image, PngImagePlugin
 from model_lists import *
+import time
 
 def call_txt2img(passingprompt,ratio,upscale,debugmode,filename="",model = "currently selected model",samplingsteps = "40",cfg= "7",hiressteps ="0",denoisestrength="0.6",samplingmethod="DPM++ SDE Karras", upscaler="R-ESRGAN 4x+",hiresscale="2",apiurl="http://127.0.0.1:7860", qualitygate=False,quality="7.6",runs="5",negativeprompt=""):
 
@@ -130,10 +131,28 @@ def call_txt2img(passingprompt,ratio,upscale,debugmode,filename="",model = "curr
         filenamefull = filename + addrun
         outputTXT2IMGFull = '{}{}{}'.format(outputTXT2IMGfolder,filenamefull,outputTXT2IMGpng)
 
+        r = []
+        
+        # If we don't get an image back, we want to retry a few times. Max 3 times
+        for i in range(4):
+            response = requests.post(url=f'{url}/sdapi/v1/txt2img', json=payload)
 
-        response = requests.post(url=f'{url}/sdapi/v1/txt2img', json=payload)
+            r = response.json()
+            if('images' in r):
+                break # this means if we have the images object, then we "break" out of the for loop.
+            else:
+                if(i == 3):
+                    print("If this keeps happening: Is WebUI started with --api enabled?")
+                    print("")
+                    raise ValueError("API has not been responding after several retries. Stopped processing.")
+                print("")
+                print("We haven't received an image from the API. Maybe something went wrong. Will retry after waiting a bit.")
+                
 
-        r = response.json()
+                time.sleep(10 * (i+1) ) # incremental waiting time
+
+
+
 
         for i in r['images']:
             image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))

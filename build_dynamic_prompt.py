@@ -82,13 +82,14 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     objecttotallist = objectlist + buildinglist + vehiclelist + foodlist + spacelist
 
     # build artists list
+    artistlist = []
     # create artist list to use in the code, maybe based on category  or personal lists
     if(artists != "all" and artists != "none" and artists.startswith("personal_artists") == False and artists.startswith("personal artists") == False):
         artistlist = artist_category_csv_to_list("artists_and_category",artists)
     elif(artists.startswith("personal_artists") == True or artists.startswith("personal artists") == True):
         artists = artists.replace(" ","_",-1) # add underscores back in
         artistlist = csv_to_list(artists,antilist,"./userfiles/")
-    else:
+    elif(artists != "none"):
         artistlist = csv_to_list("artists",antilist)
 
 
@@ -228,55 +229,100 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     if(generateconcept):
         mainchooserlist.append("concept")
 
-    # determine wether we should go for a template or not. Not hooked up to insanitylevel
+    # determine wether we have a special mode or not
+    # special modes can be:
+    # template mode  --> based on preconfigured prompt templates
+    # art blaster --> artists, artmovements and vomit only
+
+    specialmode = False
     templatemode = False
-    if(random.randint(1, 75) == 1 or imagetype == "only templates"):
+    artblastermode = False
+    qualityvomitmode = False
+    moodcolormode = False
+    photofantasymode = False
+    massivemadnessmode = False
+    onlysubjectmode = False
+    # determine wether we should go for a template or not. Not hooked up to insanitylevel
+    if((random.randint(1, 75) == 1 and not specialmode) or imagetype == "only templates mode"):
+        specialmode = True
         templatemode = True
         print("Running with a randomized template instead of a randomized prompt")
 
+    if((random.randint(1, 75) == 1 and not specialmode) or imagetype == "art blaster mode"):
+        specialmode = True
+        artblastermode = True
+        print("Running in art blaster mode")
+
+    if((random.randint(1, 75) == 1 and not specialmode) or imagetype == "quality vomit mode"):
+        specialmode = True
+        qualityvomitmode = True
+        print("Running in quality vomit mode")
+
+    if((random.randint(1, 75) == 1 and not specialmode) or imagetype == "mood color mode"):
+        specialmode = True
+        moodcolormode = True
+        print("Running in mood color mode")
+
+    if((random.randint(1, 75) == 1 and not specialmode) or imagetype == "photo fantasy mode"):
+        specialmode = True
+        photofantasymode = True
+        print("Running in photo fantasy mode")
+
+    if((random.randint(1, 75) == 1 and not specialmode) or imagetype == "massive madness mode"):
+        specialmode = True
+        massivemadnessmode = True
+        print("Running in massive madness mode")
+        print("Are you ready for this?")
+
+    if((random.randint(1, 75) == 1 and not specialmode) or imagetype == "subject only mode"):
+        specialmode = True
+        onlysubjectmode = True
+        print("Running in only subject mode")
+
 
     # main stuff
-    generatetype = not templatemode
+    generatetype = not specialmode
     generatesubject = not templatemode
 
     # normals
-    generateartist = bool(artistlist) and not templatemode
+    generateartist = bool(artistlist) and not specialmode
     generateoutfit = bool(outfitlist) and not templatemode
     generatebodytype = bool(bodytypelist) and not templatemode
-    generateaccessorie = bool(accessorielist) and not templatemode
-    generateartmovement = bool(artmovementlist) and not templatemode
-    generatecamera = bool(cameralist) and not templatemode
-    generatecolorscheme = bool(colorschemelist) and not templatemode
+    generateaccessorie = bool(accessorielist) and not specialmode
+    generateartmovement = bool(artmovementlist) and not specialmode
+    generatecamera = bool(cameralist) and not specialmode
+    generatecolorscheme = bool(colorschemelist) and not specialmode
     generatedescriptors = bool(descriptorlist) and not templatemode
-    generatedirection = bool(directionlist) and not templatemode
-    generatefocus = bool(focuslist) and not templatemode
+    generatedirection = bool(directionlist) and not specialmode
+    generatefocus = bool(focuslist) and not specialmode
     generatehairstyle = bool(hairstylelist) and not templatemode
-    generatelens = bool(lenslist) and not templatemode
-    generatelighting = bool(lightinglist) and not templatemode
-    generatemood = bool(moodlist) and not templatemode
+    generatelens = bool(lenslist) and not specialmode
+    generatelighting = bool(lightinglist) and not specialmode
+    generatemood = bool(moodlist) and not specialmode
     generatepose = bool(poselist) and not templatemode
-    generatevomit = bool(vomitlist) and not templatemode
-    generatequality = bool(qualitylist) and not templatemode
-    generateshot = bool(shotsizelist) and not templatemode
-    generatetimeperiod = bool(timeperiodlist) and not templatemode
+    generatevomit = bool(vomitlist) and not specialmode
+    generatequality = bool(qualitylist) and not specialmode
+    generateshot = bool(shotsizelist) and not specialmode
+    generatetimeperiod = bool(timeperiodlist) and not specialmode
     generateemoji = bool(emojilist) and not templatemode
 
     # specials:
-    generatebackground = bool(backgroundtypelist) and not templatemode
-    generateinsideshot = bool(insideshotlist) and not templatemode
-    generatephotoaddition = bool(photoadditionlist) and not templatemode
+    generatebackground = bool(backgroundtypelist) and not specialmode
+    generateinsideshot = bool(insideshotlist) and not specialmode
+    generatephotoaddition = bool(photoadditionlist) and not specialmode
     generatehairstyle = bool(buildhairlist) and not templatemode
     generateoutfit = bool(buildoutfitlist) and not templatemode
     generateobjectaddition = bool(objectadditionslist) and not templatemode
     generatehumanaddition = bool(humanadditionlist) and not templatemode
     generateanimaladdition = bool(animaladditionlist) and not templatemode
     generateaccessories = bool(buildaccessorielist) and not templatemode
-    generategreatwork = bool(greatworklist) and not templatemode
+    generategreatwork = bool(greatworklist) and not specialmode
     
-    generateminilocationaddition = bool(minilocationadditionslist) and not templatemode
-    generateminivomit = bool(minivomitlist) and not templatemode
-    generateimagetypequality = bool(imagetypequalitylist) and not templatemode
-    generateoveralladdition = bool(overalladditionlist) and not templatemode
+    generateminilocationaddition = bool(minilocationadditionslist) and not specialmode
+    generateminivomit = bool(minivomitlist) and not specialmode
+    generateimagetypequality = bool(imagetypequalitylist) and not specialmode
+    generateoveralladdition = bool(overalladditionlist) and not specialmode
+    generateimagetype = bool(imagetypelist) and not specialmode
 
 
     # Smart subject logic
@@ -526,9 +572,114 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             subjectchooser = random.choice(eventsubjectchooserlist)
 
 
-        #hybridlist = ["-animal-", "-object-", "-fictional-", "-nonfictional-", "-building-", "-vehicle-","-food-"]
-        #hybridhumanlist = ["-fictional-", "-nonfictional-"]
         
+        # special modes        
+
+        # start art blaster here
+        if(artblastermode==True):
+            step = 0
+            end = random.randint(1, insanitylevel) + 1
+            while step < end:
+                if(uncommon_dist(insanitylevel) and bool(artistlist)):
+                    completeprompt += "-artist-, "
+                if(uncommon_dist(insanitylevel) and bool(artmovementlist)):
+                    completeprompt += "-artmovement-, "
+                if(unique_dist(insanitylevel) and bool(vomitlist)):
+                    completeprompt += "-vomit-, "
+                if(unique_dist(insanitylevel) and bool(imagetypelist)):
+                    completeprompt += "-imagetype-, "
+                if(unique_dist(insanitylevel) and bool(colorschemelist)):
+                    completeprompt += "-colorscheme-, "
+                step = step + 1 
+
+        # start quality vomit here
+        if(qualityvomitmode==True):
+            step = 0
+            end = random.randint(1, insanitylevel) + 1
+            while step < end:
+                if(uncommon_dist(insanitylevel) and bool(vomitlist)):
+                    completeprompt += "-vomit-, "
+                if(uncommon_dist(insanitylevel) and bool(qualitylist)):
+                    completeprompt += "-quality-, "
+                if(unique_dist(insanitylevel) and bool(minivomitlist)):
+                    completeprompt += "-minivomit-, "
+                if(unique_dist(insanitylevel) and bool(artmovementlist)):
+                    completeprompt += "-artmovement-, "
+                if(unique_dist(insanitylevel) and bool(colorschemelist)):
+                    completeprompt += "-colorscheme-, "
+                step = step + 1
+
+        # start mood color here
+        if(moodcolormode == True):
+            step = 0
+            end = random.randint(1, insanitylevel) + 1
+            while step < end:
+                if(uncommon_dist(insanitylevel) and bool(moodlist)):
+                    completeprompt += "-mood-, "
+                if(uncommon_dist(insanitylevel) and bool(colorschemelist)):
+                    completeprompt += "-colorscheme-, "
+                if(rare_dist(insanitylevel) and bool(vomitlist)):
+                    completeprompt += "-vomit-, "
+                if(unique_dist(insanitylevel) and bool(artmovementlist)):
+                    completeprompt += "-artmovement-, "
+                if(unique_dist(insanitylevel) and bool(lightinglist)):
+                    completeprompt += "-lighting-, "
+                step = step + 1 
+
+        # start photo fantasy here
+        if(photofantasymode == True):
+            step = 0
+            end = random.randint(1, insanitylevel) + 1
+            while step < end:
+                if(uncommon_dist(insanitylevel) and bool(lightinglist)):
+                    completeprompt += "-lighting-, "
+                if(uncommon_dist(insanitylevel) and bool(cameralist)):
+                    completeprompt += "-camera-, "
+                if(rare_dist(insanitylevel) and bool(lenslist)):
+                    completeprompt += "-lens-, "
+                if(unique_dist(insanitylevel) and bool(moodlist)):
+                    completeprompt += "-mood-, "
+                if(unique_dist(insanitylevel) and bool(colorschemelist)):
+                    completeprompt += "-colorscheme-, "
+                step = step + 1 
+
+        # start massive madness here
+        if(massivemadnessmode == True):
+            step = 0
+            end = random.randint(1, insanitylevel) + 1
+            while step < end:
+                if(rare_dist(insanitylevel) and bool(artistlist)):
+                    completeprompt += "-artist-, "
+                if(rare_dist(insanitylevel) and bool(descriptorlist)):
+                    completeprompt += "-descriptor-, "
+                if(rare_dist(insanitylevel) and bool(moodlist)):
+                    completeprompt += "-mood-, "
+                if(rare_dist(insanitylevel) and bool(colorschemelist)):
+                    completeprompt += "-colorscheme-, "
+                if(rare_dist(insanitylevel) and bool(vomitlist)):
+                    completeprompt += "-vomit-, "
+                if(rare_dist(insanitylevel) and bool(artmovementlist)):
+                    completeprompt += "-artmovement-, "
+                if(rare_dist(insanitylevel) and bool(lightinglist)):
+                    completeprompt += "-lighting-, "
+                if(rare_dist(insanitylevel) and bool(minilocationadditionslist)):
+                    completeprompt += "-minilocationaddition-, "
+                if(rare_dist(insanitylevel) and bool(materiallist)):
+                    completeprompt += "-material-, "
+                if(rare_dist(insanitylevel) and bool(conceptsuffixlist)):
+                    completeprompt += "-conceptsuffix-, "
+                if(rare_dist(insanitylevel) and bool(qualitylist)):
+                    completeprompt += "-quality-, "
+                if(rare_dist(insanitylevel) and bool(cameralist)):
+                    completeprompt += "-camera-, "
+                if(rare_dist(insanitylevel) and bool(lenslist)):
+                    completeprompt += "-lens-, "
+                if(rare_dist(insanitylevel) and bool(imagetypelist)):
+                    completeprompt += "-imagetype-, "
+                step = step + 1 
+            completeprompt += " ("
+
+
 
         # start artist part
 
@@ -578,7 +729,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                     completeprompt += " ("
 
                 #completeprompt = add_from_csv(completeprompt, "artists", 0, "art by ","")
-                completeprompt += "art by " + random.choice(artistlist)
+                completeprompt += "-artist-"
                 
                 if isweighted == 1:
                     completeprompt += ":" + str(1 + (random.randint(-3,3)/10)) + ")"       
@@ -643,10 +794,10 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 if(rare_dist(insanitylevel) and generateimagetypequality):
                     completeprompt += random.choice(imagetypequalitylist) + " "
                 if(random.randint(0,5) < 5):
-                    completeprompt += " " + random.choice(imagetypelist) + ", "
+                    completeprompt += " -imagetype-, "
                 else:
                     othertype = 1
-                    completeprompt += " " + random.choice(othertypelist) + ", "
+                    completeprompt += " -othertype-, "
             
             if(othertype==1):
                 completeprompt += " of a "
@@ -983,7 +1134,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             completeprompt += random.choice(artmovementlist) + ", "  
         
         if(normal_dist(insanitylevel) and generatelighting == True):
-            completeprompt += random.choice(lightinglist) + ", "  
+            completeprompt += "-lighting-, "  
 
         # determine wether we have a photo or not
         if("photo" in completeprompt.lower()):
@@ -997,7 +1148,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
         if(normal_dist(insanitylevel) or isphoto == 1):
             if(generatelens == True):
-                completeprompt += random.choice(lenslist) + ", "
+                completeprompt += "-lens-, "
 
         if(normal_dist(insanitylevel) and generatecolorscheme == True):
             completeprompt += random.choice(colorschemelist) + ", "
@@ -1014,10 +1165,113 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
         # everyone loves the adding quality. The better models don't need this, but lets add it anyway
         if(uncommon_dist(insanitylevel) and generatequality == True):
-            completeprompt += random.choice(qualitylist) + ", "
+            completeprompt += "-quality-, "
             if(uncommon_dist(insanitylevel)):
-                completeprompt += random.choice(qualitylist) + ", "
+                completeprompt += "-quality-, "
 
+        
+        
+        # start second part of art blaster here
+        if(artblastermode==True):
+            step = 0
+            end = random.randint(1, insanitylevel) + 1
+            while step < end:
+                if(uncommon_dist(insanitylevel) and bool(artistlist)):
+                    completeprompt += "-artist-, "
+                if(uncommon_dist(insanitylevel) and bool(artmovementlist)):
+                    completeprompt += "-artmovement-, "
+                if(unique_dist(insanitylevel) and bool(vomitlist)):
+                    completeprompt += "-vomit-, "
+                if(unique_dist(insanitylevel) and bool(imagetypelist)):
+                    completeprompt += "-imagetype-, "
+                if(unique_dist(insanitylevel) and bool(colorschemelist)):
+                    completeprompt += "-colorscheme-, "
+                step = step + 1 
+        
+        # start second part of quality vomit here
+        if(qualityvomitmode==True):
+            step = 0
+            end = random.randint(1, insanitylevel) + 1
+            while step < end:
+                if(uncommon_dist(insanitylevel) and bool(vomitlist)):
+                    completeprompt += "-vomit-, "
+                if(uncommon_dist(insanitylevel) and bool(qualitylist)):
+                    completeprompt += "-quality-, "
+                if(unique_dist(insanitylevel) and bool(minivomitlist)):
+                    completeprompt += "-minivomit-, "
+                if(unique_dist(insanitylevel) and bool(artmovementlist)) :
+                    completeprompt += "-artmovement-, "
+                if(unique_dist(insanitylevel) and bool(colorschemelist)):
+                    completeprompt += "-colorscheme-, "
+                step = step + 1 
+        
+        # start second part of mood color here
+        if(moodcolormode == True):
+            step = 0
+            end = random.randint(1, insanitylevel) + 1
+            while step < end:
+                if(uncommon_dist(insanitylevel) and bool(moodlist)):
+                    completeprompt += "-mood-, "
+                if(uncommon_dist(insanitylevel) and bool(colorschemelist)):
+                    completeprompt += "-colorscheme-, "
+                if(rare_dist(insanitylevel) and bool(vomitlist)):
+                    completeprompt += "-vomit-, "
+                if(unique_dist(insanitylevel) and bool(artmovementlist)):
+                    completeprompt += "-artmovement-, "
+                if(unique_dist(insanitylevel) and bool(lightinglist)):
+                    completeprompt += "-lighting-, "
+                step = step + 1 
+
+        
+        # start second part of photo fantasy here
+        if(photofantasymode == True):
+            step = 0
+            end = random.randint(1, insanitylevel) + 1
+            while step < end:
+                if(uncommon_dist(insanitylevel) and bool(lightinglist)):
+                    completeprompt += "-lighting-, "
+                if(uncommon_dist(insanitylevel) and bool(cameralist)):
+                    completeprompt += "-camera-, "
+                if(rare_dist(insanitylevel) and bool(lenslist)):
+                    completeprompt += "-lens-, "
+                if(unique_dist(insanitylevel) and bool(moodlist)):
+                    completeprompt += "-mood-, "
+                if(unique_dist(insanitylevel) and bool(colorschemelist)):
+                    completeprompt += "-colorscheme-, "
+                step = step + 1 
+        
+        # start second part of massive madness here
+        if(massivemadnessmode == True):
+            completeprompt += ":1.3), "
+            step = 0
+            end = random.randint(1, insanitylevel) + 1
+            while step < end:
+                if(rare_dist(insanitylevel) and bool(artistlist)):
+                    completeprompt += "-artist-, "
+                if(rare_dist(insanitylevel) and bool(descriptorlist)):
+                    completeprompt += "-descriptor-, "
+                if(rare_dist(insanitylevel) and bool(moodlist)):
+                    completeprompt += "-mood-, "
+                if(rare_dist(insanitylevel) and bool(colorschemelist)):
+                    completeprompt += "-colorscheme-, "
+                if(rare_dist(insanitylevel) and bool(vomitlist)):
+                    completeprompt += "-vomit-, "
+                if(rare_dist(insanitylevel) and bool(artmovementlist)):
+                    completeprompt += "-artmovement-, "
+                if(rare_dist(insanitylevel) and bool(lightinglist)):
+                    completeprompt += "-lighting-, "
+                if(rare_dist(insanitylevel) and bool(minilocationadditionslist)):
+                    completeprompt += "-minilocationaddition-, "
+                if(rare_dist(insanitylevel) and bool(materiallist)):
+                    completeprompt += "-material-, "
+                if(rare_dist(insanitylevel) and bool(conceptsuffixlist)):
+                    completeprompt += "-conceptsuffix-, "
+                if(rare_dist(insanitylevel) and bool(qualitylist)):
+                    completeprompt += "-quality-, "
+                if(rare_dist(insanitylevel) and bool(cameralist)):
+                    completeprompt += "-camera-, "
+                step = step + 1 
+        
         # custom style list
         if(uncommon_dist(insanitylevel) and generatestyle == True):
             completeprompt += random.choice(stylestiloralist) + ", "
@@ -1073,7 +1327,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                     completeprompt += " ("
 
                 #completeprompt = add_from_csv(completeprompt, "artists", 0, "art by ","")
-                completeprompt += "art by " + random.choice(artistlist)
+                completeprompt += "-artist-"
                 
                 if isweighted == 1:
                     completeprompt += ":" + str(1 + (random.randint(-3,3)/10)) + ")"       
@@ -1127,12 +1381,14 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     if(unique_dist(insanitylevel)): # sometimes, its just nice to have descriptor and a normal "outfit". We use mini outfits for this!
                  completeprompt = completeprompt.replace("-outfit-", "-minioutfit-",1)
 
+    completeprompt = completeprompt.replace("-artist-", "art by -artist-")
 
     
     # lol, this needs a rewrite :D
-    while "-color-" in completeprompt or "-material-" in completeprompt or "-animal-" in completeprompt or "-object-" in completeprompt or "-fictional-" in completeprompt or "-nonfictional-" in completeprompt or "-conceptsuffix-" in completeprompt or "-building-" in completeprompt or "-vehicle-" in completeprompt or "-outfit-" in completeprompt or "-location-" in completeprompt or "-conceptprefix-" in completeprompt or "-descriptor-" in completeprompt or "-food-" in completeprompt or "-haircolor-" in completeprompt or "-hairstyle-" in completeprompt or "-job-" in completeprompt or "-culture-" in completeprompt or "-accessory-" in completeprompt or "-humanoid-" in completeprompt or "-manwoman-" in completeprompt or "-human-" in completeprompt or "-colorscheme-" in completeprompt or "-mood-" in completeprompt or "-genderdescription-" in completeprompt or "-artmovement-" in completeprompt or "-malefemale-" in completeprompt or "-objecttotal-" in completeprompt or "-bodytype-" in completeprompt or "-minilocation-" in completeprompt or "-minilocationaddition-" in completeprompt or "-pose-" in completeprompt or "-season-" in completeprompt or "-minioutfit-" in completeprompt or "-elaborateoutfit-" in completeprompt or "-minivomit-" in completeprompt or "-vomit-" in completeprompt or "-rpgclass-" in completeprompt or "-subjectfromfile-" in completeprompt or "-brand-" in completeprompt or "-space-" in completeprompt:
-        allwildcardslistnohybrid = [ "-color-","-object-", "-animal-", "-fictional-","-nonfictional-","-building-","-vehicle-","-location-","-conceptprefix-","-food-","-haircolor-","-hairstyle-","-job-", "-accessory-", "-humanoid-", "-manwoman-", "-human-", "-colorscheme-", "-mood-", "-genderdescription-", "-artmovement-", "-malefemale-", "-bodytype-", "-minilocation-", "-minilocationaddition-", "-pose-", "-season-", "-minioutfit-", "-elaborateoutfit-", "-minivomit-", "-vomit-", "-rpgclass-", "-subjectfromfile-", "-brand-", "-space-"]
-        allwildcardslistnohybridlists = [colorlist, objectlist, animallist, fictionallist, nonfictionallist, buildinglist, vehiclelist, locationlist,conceptprefixlist,foodlist,haircolorlist, hairstylelist,joblist, accessorielist, humanoidlist, manwomanlist, humanlist, colorschemelist, moodlist, genderdescriptionlist, artmovementlist, malefemalelist, bodytypelist, minilocationlist, minilocationadditionslist, poselist, seasonlist, minioutfitlist, elaborateoutfitlist, minivomitlist, vomitlist, rpgclasslist, customsubjectslist, brandlist, spacelist]
+    while "-color-" in completeprompt or "-material-" in completeprompt or "-animal-" in completeprompt or "-object-" in completeprompt or "-fictional-" in completeprompt or "-nonfictional-" in completeprompt or "-conceptsuffix-" in completeprompt or "-building-" in completeprompt or "-vehicle-" in completeprompt or "-outfit-" in completeprompt or "-location-" in completeprompt or "-conceptprefix-" in completeprompt or "-descriptor-" in completeprompt or "-food-" in completeprompt or "-haircolor-" in completeprompt or "-hairstyle-" in completeprompt or "-job-" in completeprompt or "-culture-" in completeprompt or "-accessory-" in completeprompt or "-humanoid-" in completeprompt or "-manwoman-" in completeprompt or "-human-" in completeprompt or "-colorscheme-" in completeprompt or "-mood-" in completeprompt or "-genderdescription-" in completeprompt or "-artmovement-" in completeprompt or "-malefemale-" in completeprompt or "-objecttotal-" in completeprompt or "-bodytype-" in completeprompt or "-minilocation-" in completeprompt or "-minilocationaddition-" in completeprompt or "-pose-" in completeprompt or "-season-" in completeprompt or "-minioutfit-" in completeprompt or "-elaborateoutfit-" in completeprompt or "-minivomit-" in completeprompt or "-vomit-" in completeprompt or "-rpgclass-" in completeprompt or "-subjectfromfile-" in completeprompt or "-brand-" in completeprompt or "-space-" in completeprompt or "-artist-" in completeprompt or "-imagetype-" in completeprompt or "-othertype-" in completeprompt or "-quality-" in completeprompt or "-lighting-" in completeprompt or "-camera-" in completeprompt or "-lens-" in completeprompt:
+        allwildcardslistnohybrid = [ "-color-","-object-", "-animal-", "-fictional-","-nonfictional-","-building-","-vehicle-","-location-","-conceptprefix-","-food-","-haircolor-","-hairstyle-","-job-", "-accessory-", "-humanoid-", "-manwoman-", "-human-", "-colorscheme-", "-mood-", "-genderdescription-", "-artmovement-", "-malefemale-", "-bodytype-", "-minilocation-", "-minilocationaddition-", "-pose-", "-season-", "-minioutfit-", "-elaborateoutfit-", "-minivomit-", "-vomit-", "-rpgclass-", "-subjectfromfile-", "-brand-", "-space-", "-artist-", "-imagetype-", "-othertype-", "-quality-", "-lighting-", "-camera-", "-lens-"]
+        allwildcardslistnohybridlists = [colorlist, objectlist, animallist, fictionallist, nonfictionallist, buildinglist, vehiclelist, locationlist,conceptprefixlist,foodlist,haircolorlist, hairstylelist,joblist, accessorielist, humanoidlist, manwomanlist, humanlist, colorschemelist, moodlist, genderdescriptionlist, artmovementlist, malefemalelist, bodytypelist, minilocationlist, minilocationadditionslist, poselist, seasonlist, minioutfitlist, elaborateoutfitlist, minivomitlist, vomitlist, rpgclasslist, customsubjectslist, brandlist, spacelist, artistlist, imagetypelist, othertypelist, qualitylist, lightinglist, cameralist, lenslist]
+        
         allwildcardslistwithhybrid = ["-material-", "-descriptor-", "-outfit-", "-conceptsuffix-","-culture-", "-objecttotal-"]
         allwildcardslistwithhybridlists = [materiallist, descriptorlist,outfitlist,conceptsuffixlist,culturelist, objecttotallist]
         
@@ -1145,6 +1401,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         for wildcard in allwildcardslistwithhybrid:
             attachedlist = allwildcardslistwithhybridlists[allwildcardslistwithhybrid.index(wildcard)]
             completeprompt = replacewildcard(completeprompt, insanitylevel, wildcard, attachedlist,True)
+
 
       
     
@@ -1212,6 +1469,7 @@ def cleanup(completeprompt):
 
     completeprompt = re.sub(' :', ':', completeprompt)
     completeprompt = re.sub(',::', '::', completeprompt)
+    completeprompt = re.sub(',:', ':', completeprompt)
 
     completeprompt = re.sub(',,', ', ', completeprompt)
     completeprompt = re.sub(',,,', ', ', completeprompt)

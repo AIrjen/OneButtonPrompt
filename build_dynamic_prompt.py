@@ -120,8 +120,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     buildaccessorielist = csv_to_list("buildaccessorie", antilist,"./csvfiles/special_lists/")
     minilocationadditionslist = csv_to_list("minilocationadditions", antilist,"./csvfiles/special_lists/")
     overalladditionlist = csv_to_list("overalladditions", antilist,"./csvfiles/special_lists/")
-
-
+    imagetypemodelist = csv_to_list("imagetypemodes", antilist,"./csvfiles/special_lists/")
 
     
     # subjects
@@ -230,51 +229,57 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         mainchooserlist.append("concept")
 
     # determine wether we have a special mode or not
-    # special modes can be:
-    # template mode  --> based on preconfigured prompt templates
-    # art blaster --> artists, artmovements and vomit only
+    if(random.randint(1,20) == 1 and imagetype == "all"):
+        imagetype = random.choice(imagetypemodelist)  # override imagetype with a random "mode" value
+
 
     specialmode = False
     templatemode = False
     artblastermode = False
     qualityvomitmode = False
-    moodcolormode = False
+    uniqueartmode = False
+    colorcannonmode = False
     photofantasymode = False
     massivemadnessmode = False
     onlysubjectmode = False
     # determine wether we should go for a template or not. Not hooked up to insanitylevel
-    if((random.randint(1, 75) == 1 and not specialmode) or imagetype == "only templates mode"):
+    if((not specialmode) or imagetype == "only templates mode"):
         specialmode = True
         templatemode = True
         print("Running with a randomized template instead of a randomized prompt")
 
-    if((random.randint(1, 75) == 1 and not specialmode) or imagetype == "art blaster mode"):
+    if((not specialmode) or imagetype == "art blaster mode"):
         specialmode = True
         artblastermode = True
         print("Running in art blaster mode")
 
-    if((random.randint(1, 75) == 1 and not specialmode) or imagetype == "quality vomit mode"):
+    if((not specialmode) or imagetype == "unique art mode"):
+        specialmode = True
+        uniqueartmode = True
+        print("Running in unique art mode")
+
+    if((not specialmode) or imagetype == "quality vomit mode"):
         specialmode = True
         qualityvomitmode = True
         print("Running in quality vomit mode")
 
-    if((random.randint(1, 75) == 1 and not specialmode) or imagetype == "mood color mode"):
+    if((not specialmode) or imagetype == "color cannon mode"):
         specialmode = True
-        moodcolormode = True
-        print("Running in mood color mode")
+        colorcannonmode = True
+        print("Running in color cannon mode")
 
-    if((random.randint(1, 75) == 1 and not specialmode) or imagetype == "photo fantasy mode"):
+    if((not specialmode) or imagetype == "photo fantasy mode"):
         specialmode = True
         photofantasymode = True
         print("Running in photo fantasy mode")
 
-    if((random.randint(1, 75) == 1 and not specialmode) or imagetype == "massive madness mode"):
+    if((not specialmode) or imagetype == "massive madness mode"):
         specialmode = True
         massivemadnessmode = True
         print("Running in massive madness mode")
         print("Are you ready for this?")
 
-    if((random.randint(1, 75) == 1 and not specialmode) or imagetype == "subject only mode"):
+    if((not specialmode) or imagetype == "subject only mode"):
         specialmode = True
         onlysubjectmode = True
         print("Running in only subject mode")
@@ -592,6 +597,28 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                     completeprompt += "-colorscheme-, "
                 step = step + 1 
 
+        # start unique art here
+        if(uniqueartmode==True):
+            step = 0
+            end = random.randint(1, insanitylevel) + 1
+            while step < end:
+                if(uncommon_dist(insanitylevel) and bool(othertypelist)):
+                    completeprompt += "-othertype-, "
+                if(uncommon_dist(insanitylevel) and bool(artmovementlist)):
+                    completeprompt += "-artmovement-, "
+                if(uncommon_dist(insanitylevel) and bool(colorschemelist)):
+                    completeprompt += "-colorscheme-, "
+                if(rare_dist(insanitylevel) and bool(vomitlist)):
+                    completeprompt += "-vomit-, "
+                if(rare_dist(insanitylevel) and bool(lightinglist)):
+                    completeprompt += "-lighting-, "
+                if(unique_dist(insanitylevel) and bool(imagetypelist)):
+                    completeprompt += "-imagetype-, "
+                if(unique_dist(insanitylevel) and bool(qualitylist)):
+                    completeprompt += "-quality-, "
+                
+                step = step + 1 
+
         # start quality vomit here
         if(qualityvomitmode==True):
             step = 0
@@ -610,7 +637,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 step = step + 1
 
         # start mood color here
-        if(moodcolormode == True):
+        if(colorcannonmode == True):
             step = 0
             end = random.randint(1, insanitylevel) + 1
             while step < end:
@@ -630,6 +657,10 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         if(photofantasymode == True):
             step = 0
             end = random.randint(1, insanitylevel) + 1
+            if(common_dist(insanitylevel)):
+                if(uncommon_dist(insanitylevel)):
+                    completeprompt += "-imagetypequality- "
+                completeprompt += " photograph, "
             while step < end:
                 if(uncommon_dist(insanitylevel) and bool(lightinglist)):
                     completeprompt += "-lighting-, "
@@ -792,7 +823,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             for i in range(amountofimagetypes):
             # one in 6 images is a complex/other type
                 if(rare_dist(insanitylevel) and generateimagetypequality):
-                    completeprompt += random.choice(imagetypequalitylist) + " "
+                    completeprompt += "-imagetypequality- "
                 if(random.randint(0,5) < 5):
                     completeprompt += " -imagetype-, "
                 else:
@@ -1188,6 +1219,27 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                     completeprompt += "-colorscheme-, "
                 step = step + 1 
         
+         # start second part of unique art here
+        if(uniqueartmode==True):
+            step = 0
+            end = random.randint(1, insanitylevel) + 1
+            while step < end:
+                if(uncommon_dist(insanitylevel) and bool(artmovementlist)):
+                    completeprompt += "-artmovement-, "
+                if(uncommon_dist(insanitylevel) and bool(colorschemelist)):
+                    completeprompt += "-colorscheme-, "
+                if(rare_dist(insanitylevel) and bool(vomitlist)):
+                    completeprompt += "-vomit-, "
+                if(rare_dist(insanitylevel) and bool(lightinglist)):
+                    completeprompt += "-lighting-, "
+                if(unique_dist(insanitylevel) and bool(qualitylist)):
+                    completeprompt += "-quality-, "
+                if(unique_dist(insanitylevel) and bool(artistlist)):
+                    completeprompt += "-artist-, "
+                
+                step = step + 1 
+        
+        
         # start second part of quality vomit here
         if(qualityvomitmode==True):
             step = 0
@@ -1206,7 +1258,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 step = step + 1 
         
         # start second part of mood color here
-        if(moodcolormode == True):
+        if(colorcannonmode == True):
             step = 0
             end = random.randint(1, insanitylevel) + 1
             while step < end:
@@ -1385,9 +1437,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
     
     # lol, this needs a rewrite :D
-    while "-color-" in completeprompt or "-material-" in completeprompt or "-animal-" in completeprompt or "-object-" in completeprompt or "-fictional-" in completeprompt or "-nonfictional-" in completeprompt or "-conceptsuffix-" in completeprompt or "-building-" in completeprompt or "-vehicle-" in completeprompt or "-outfit-" in completeprompt or "-location-" in completeprompt or "-conceptprefix-" in completeprompt or "-descriptor-" in completeprompt or "-food-" in completeprompt or "-haircolor-" in completeprompt or "-hairstyle-" in completeprompt or "-job-" in completeprompt or "-culture-" in completeprompt or "-accessory-" in completeprompt or "-humanoid-" in completeprompt or "-manwoman-" in completeprompt or "-human-" in completeprompt or "-colorscheme-" in completeprompt or "-mood-" in completeprompt or "-genderdescription-" in completeprompt or "-artmovement-" in completeprompt or "-malefemale-" in completeprompt or "-objecttotal-" in completeprompt or "-bodytype-" in completeprompt or "-minilocation-" in completeprompt or "-minilocationaddition-" in completeprompt or "-pose-" in completeprompt or "-season-" in completeprompt or "-minioutfit-" in completeprompt or "-elaborateoutfit-" in completeprompt or "-minivomit-" in completeprompt or "-vomit-" in completeprompt or "-rpgclass-" in completeprompt or "-subjectfromfile-" in completeprompt or "-brand-" in completeprompt or "-space-" in completeprompt or "-artist-" in completeprompt or "-imagetype-" in completeprompt or "-othertype-" in completeprompt or "-quality-" in completeprompt or "-lighting-" in completeprompt or "-camera-" in completeprompt or "-lens-" in completeprompt:
-        allwildcardslistnohybrid = [ "-color-","-object-", "-animal-", "-fictional-","-nonfictional-","-building-","-vehicle-","-location-","-conceptprefix-","-food-","-haircolor-","-hairstyle-","-job-", "-accessory-", "-humanoid-", "-manwoman-", "-human-", "-colorscheme-", "-mood-", "-genderdescription-", "-artmovement-", "-malefemale-", "-bodytype-", "-minilocation-", "-minilocationaddition-", "-pose-", "-season-", "-minioutfit-", "-elaborateoutfit-", "-minivomit-", "-vomit-", "-rpgclass-", "-subjectfromfile-", "-brand-", "-space-", "-artist-", "-imagetype-", "-othertype-", "-quality-", "-lighting-", "-camera-", "-lens-"]
-        allwildcardslistnohybridlists = [colorlist, objectlist, animallist, fictionallist, nonfictionallist, buildinglist, vehiclelist, locationlist,conceptprefixlist,foodlist,haircolorlist, hairstylelist,joblist, accessorielist, humanoidlist, manwomanlist, humanlist, colorschemelist, moodlist, genderdescriptionlist, artmovementlist, malefemalelist, bodytypelist, minilocationlist, minilocationadditionslist, poselist, seasonlist, minioutfitlist, elaborateoutfitlist, minivomitlist, vomitlist, rpgclasslist, customsubjectslist, brandlist, spacelist, artistlist, imagetypelist, othertypelist, qualitylist, lightinglist, cameralist, lenslist]
+    while "-color-" in completeprompt or "-material-" in completeprompt or "-animal-" in completeprompt or "-object-" in completeprompt or "-fictional-" in completeprompt or "-nonfictional-" in completeprompt or "-conceptsuffix-" in completeprompt or "-building-" in completeprompt or "-vehicle-" in completeprompt or "-outfit-" in completeprompt or "-location-" in completeprompt or "-conceptprefix-" in completeprompt or "-descriptor-" in completeprompt or "-food-" in completeprompt or "-haircolor-" in completeprompt or "-hairstyle-" in completeprompt or "-job-" in completeprompt or "-culture-" in completeprompt or "-accessory-" in completeprompt or "-humanoid-" in completeprompt or "-manwoman-" in completeprompt or "-human-" in completeprompt or "-colorscheme-" in completeprompt or "-mood-" in completeprompt or "-genderdescription-" in completeprompt or "-artmovement-" in completeprompt or "-malefemale-" in completeprompt or "-objecttotal-" in completeprompt or "-bodytype-" in completeprompt or "-minilocation-" in completeprompt or "-minilocationaddition-" in completeprompt or "-pose-" in completeprompt or "-season-" in completeprompt or "-minioutfit-" in completeprompt or "-elaborateoutfit-" in completeprompt or "-minivomit-" in completeprompt or "-vomit-" in completeprompt or "-rpgclass-" in completeprompt or "-subjectfromfile-" in completeprompt or "-brand-" in completeprompt or "-space-" in completeprompt or "-artist-" in completeprompt or "-imagetype-" in completeprompt or "-othertype-" in completeprompt or "-quality-" in completeprompt or "-lighting-" in completeprompt or "-camera-" in completeprompt or "-lens-" in completeprompt or "-imagetypequality-" in completeprompt:
+        allwildcardslistnohybrid = [ "-color-","-object-", "-animal-", "-fictional-","-nonfictional-","-building-","-vehicle-","-location-","-conceptprefix-","-food-","-haircolor-","-hairstyle-","-job-", "-accessory-", "-humanoid-", "-manwoman-", "-human-", "-colorscheme-", "-mood-", "-genderdescription-", "-artmovement-", "-malefemale-", "-bodytype-", "-minilocation-", "-minilocationaddition-", "-pose-", "-season-", "-minioutfit-", "-elaborateoutfit-", "-minivomit-", "-vomit-", "-rpgclass-", "-subjectfromfile-", "-brand-", "-space-", "-artist-", "-imagetype-", "-othertype-", "-quality-", "-lighting-", "-camera-", "-lens-","-imagetypequality-"]
+        allwildcardslistnohybridlists = [colorlist, objectlist, animallist, fictionallist, nonfictionallist, buildinglist, vehiclelist, locationlist,conceptprefixlist,foodlist,haircolorlist, hairstylelist,joblist, accessorielist, humanoidlist, manwomanlist, humanlist, colorschemelist, moodlist, genderdescriptionlist, artmovementlist, malefemalelist, bodytypelist, minilocationlist, minilocationadditionslist, poselist, seasonlist, minioutfitlist, elaborateoutfitlist, minivomitlist, vomitlist, rpgclasslist, customsubjectslist, brandlist, spacelist, artistlist, imagetypelist, othertypelist, qualitylist, lightinglist, cameralist, lenslist, imagetypequalitylist]
         
         allwildcardslistwithhybrid = ["-material-", "-descriptor-", "-outfit-", "-conceptsuffix-","-culture-", "-objecttotal-"]
         allwildcardslistwithhybridlists = [materiallist, descriptorlist,outfitlist,conceptsuffixlist,culturelist, objecttotallist]

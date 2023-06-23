@@ -10,7 +10,7 @@ from build_dynamic_prompt import *
 
 
 
-def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", imagetype="all",onlyartists=False, workprompt="", antistring="",prefixprompt="", suffixprompt="", negativeprompt="",promptcompounderlevel = "1", seperator="comma",givensubject="",smartsubject=True,giventypeofimage=""):
+def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", imagetype="all",onlyartists=False, workprompt="", antistring="",prefixprompt="", suffixprompt="", negativeprompt="",promptcompounderlevel = "1", seperator="comma",givensubject="",smartsubject=True,giventypeofimage="",imagemodechance=20):
     loops = int(amount)  # amount of images to generate
     steps = 0
    
@@ -18,7 +18,7 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
     while steps < loops:
         # build prompt
     
-        result = build_dynamic_prompt(insanitylevel,subject,artist,imagetype, onlyartists,antistring,prefixprompt,suffixprompt,promptcompounderlevel, seperator,givensubject,smartsubject,giventypeofimage)
+        result = build_dynamic_prompt(insanitylevel,subject,artist,imagetype, onlyartists,antistring,prefixprompt,suffixprompt,promptcompounderlevel, seperator,givensubject,smartsubject,giventypeofimage,imagemodechance)
 
         print("")
         print("loop " + str(steps))
@@ -46,4 +46,4 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
     print("")
     print("All done!")
 
-generateprompts(10,5,"all","none","photo fantasy mode",False,"","","PREFIXPROMPT" ,"SUFFIXPROMPT","",1,"","")
+generateprompts(10,9,"all","none","all",False,"","","PREFIXPROMPT" ,"SUFFIXPROMPT","",1,"","",True,"",1)

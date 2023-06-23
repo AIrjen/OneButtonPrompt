@@ -10,7 +10,7 @@ from random_functions import *
 # insanity level controls randomness of propmt 0-10
 # forcesubject van be used to force a certain type of subject
 # Set artistmode to none, to exclude artists 
-def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", givensubject="",smartsubject = True,giventypeofimage=""):
+def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", givensubject="",smartsubject = True,giventypeofimage="", imagemodechance = 20):
 
     
     # first build up a complete anti list. Those values are removing during list building
@@ -229,7 +229,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         mainchooserlist.append("concept")
 
     # determine wether we have a special mode or not
-    if(random.randint(1,20) == 1 and imagetype == "all"):
+    if(random.randint(1,int(imagemodechance)) == 1 and imagetype == "all" and giventypeofimage == ""):
         imagetype = random.choice(imagetypemodelist)  # override imagetype with a random "mode" value
 
 
@@ -243,43 +243,43 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     massivemadnessmode = False
     onlysubjectmode = False
     # determine wether we should go for a template or not. Not hooked up to insanitylevel
-    if((not specialmode) or imagetype == "only templates mode"):
+    if(imagetype == "only templates mode"):
         specialmode = True
         templatemode = True
         print("Running with a randomized template instead of a randomized prompt")
 
-    if((not specialmode) or imagetype == "art blaster mode"):
+    if(imagetype == "art blaster mode"):
         specialmode = True
         artblastermode = True
         print("Running in art blaster mode")
 
-    if((not specialmode) or imagetype == "unique art mode"):
+    if(imagetype == "unique art mode"):
         specialmode = True
         uniqueartmode = True
         print("Running in unique art mode")
 
-    if((not specialmode) or imagetype == "quality vomit mode"):
+    if(imagetype == "quality vomit mode"):
         specialmode = True
         qualityvomitmode = True
         print("Running in quality vomit mode")
 
-    if((not specialmode) or imagetype == "color cannon mode"):
+    if(imagetype == "color cannon mode"):
         specialmode = True
         colorcannonmode = True
         print("Running in color cannon mode")
 
-    if((not specialmode) or imagetype == "photo fantasy mode"):
+    if(imagetype == "photo fantasy mode"):
         specialmode = True
         photofantasymode = True
         print("Running in photo fantasy mode")
 
-    if((not specialmode) or imagetype == "massive madness mode"):
+    if(imagetype == "massive madness mode"):
         specialmode = True
         massivemadnessmode = True
         print("Running in massive madness mode")
         print("Are you ready for this?")
 
-    if((not specialmode) or imagetype == "subject only mode"):
+    if(imagetype == "subject only mode"):
         specialmode = True
         onlysubjectmode = True
         print("Running in only subject mode")

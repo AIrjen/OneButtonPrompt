@@ -24,11 +24,12 @@ A simple user guide for first time use and settings is available [here](https://
 - __Compound__ multiple prompts together for unexpected results.          ==> [guide to prompt compounder](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/prompt_compounder_and_regional_prompter_to_create_insane_images.md)
 - Use __wildcards__, or __combine with Dynamic Prompts__ extension                ==> [guide to using wildcards and Dynamic Prompts](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/wildcards_and_dynamic_prompts_extension.md)
 - Has a set of __template prompts__ from various sources, __fully wildcarded__ and usable with Subject Override ==> [guide to prompt templates](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/templates.md)
+- Has multiple __prompt generation modes__ to choose from ==> [guide to prompt generation modes](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/prompt_generation_modes.md)
 
 ## How to use in automatic1111
 In TXT2IMG or IMG2IMG, select the script "One Button Prompt".
 
-<img src="https://user-images.githubusercontent.com/130234949/230793053-3b1d1b1b-b3c1-4071-a135-35f56dba0f01.png" alt="so easy" width="50%" height="50%">
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/b4b7a81b-094f-4bb8-bf9d-6ef45bbfa14d.png" width="50%" height="50%">
 
 Leave the prompts empty:
 
@@ -46,6 +47,8 @@ Enjoy creating awesome pictures:
 Please be aware, that not each picture will be awesome due to the randomness of the prompt, artist and model used.
 You might get an epic landscape, or a photo of an Aggregavated Trout. In my experience, about 1 in 5 is good. Everyone of them is interesting.
 
+Don't get overwhelmed by the options, they will become more clear once you use it more.
+
 Some more examples below. And check the first time user guide [here](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/my_first_generation.md).
 
 ### Some details
@@ -53,7 +56,7 @@ It will generate between 0 and 3 artists, and add those the prompt.
 
 It can generate the following subjects, while building a prompt:
 
-1. object - Can be a random object, a building or a vehicle.  
+1. object - Can be a random object, a building ,a vehicle, some food or objects from space.  
 
 2. animal - A random (fictional) animal. Has a chance to have human characteristics, such as clothing added.  
 
@@ -99,6 +102,8 @@ You can turn it off. Add your own artists to the prompt, and they will be added 
 
 Type of image can be used to force a certian direction. For example when using Realistic Vision, it might be a good idea to set it to photograph. For an anime model, you might want to use "Anime key visual"
 
+Special image type modes have chance to trigger. Those follow different rules of prompt generation.
+
 When you fill in the Overwrite subject field, that subject will be used to build the dynamic prompt around. It is best, if you set the subject type to match the subject. For example, set it to humanoid if you place a person in the override subject field.
                         
 This way, you can create unlimited variants of a subject.
@@ -112,7 +117,7 @@ Add a prompt prefix, suffix and the negative prompt in the respective fields. Th
 
 These can be used to add textual inversion and LoRA's. They can also be used to add your models trigger words.
 
-![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/b9131785-b89b-4dfd-9dad-33a64706c984)
+![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/bc501393-4080-4dc9-9883-50dddcba793f)
 
 
 

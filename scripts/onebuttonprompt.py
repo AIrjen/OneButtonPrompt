@@ -16,7 +16,7 @@ from model_lists import *
 
 subjects = ["all","object","animal","humanoid", "landscape", "concept"]
 artists = ["all", "none", "popular", "greg mode", "3D",	"abstract",	"angular", "anime"	,"architecture",	"art nouveau",	"art deco",	"baroque",	"bauhaus", 	"cartoon",	"character",	"children's illustration", 	"cityscape", 	"clean",	"cloudscape",	"collage",	"colorful",	"comics",	"cubism",	"dark",	"detailed", 	"digital",	"expressionism",	"fantasy",	"fashion",	"fauvism",	"figurativism",	"gore",	"graffiti",	"graphic design",	"high contrast",	"horror",	"impressionism",	"installation",	"landscape",	"light",	"line drawing",	"low contrast",	"luminism",	"magical realism",	"manga",	"melanin",	"messy",	"monochromatic",	"nature",	"nudity",	"photography",	"pop art",	"portrait",	"primitivism",	"psychedelic",	"realism",	"renaissance",	"romanticism",	"scene",	"sci-fi",	"sculpture",	"seascape",	"space",	"stained glass",	"still life",	"storybook realism",	"street art",	"streetscape",	"surrealism",	"symbolism",	"textile",	"ukiyo-e",	"vibrant",	"watercolor",	"whimsical"]
-imagetypes = ["all", "all - force multiple",  "photograph", "octane render","digital art","concept art", "painting", "portrait", "anime key visual", "only other types", "only templates"]
+imagetypes = ["all", "all - force multiple",  "photograph", "octane render","digital art","concept art", "painting", "portrait", "anime key visual", "only other types", "only templates mode", "art blaster mode", "quality vomit mode", "color cannon mode", "unique art mode", "massive madness mode", "photo fantasy mode", "subject only mode"]
 promptmode = ["at the back", "in the front"]
 promptcompounder = ["1", "2", "3", "4", "5"]
 ANDtogglemode = ["none", "automatic", "prefix AND prompt + suffix", "prefix + prefix + prompt + suffix"]
@@ -76,12 +76,12 @@ class Script(scripts.Script):
 
         
     def ui(self, is_img2img):
-        def gen_prompt(insanitylevel, subject, artist, imagetype, antistring, prefixprompt, suffixprompt, promptcompounderlevel, seperator,givensubject,smartsubject,giventypeofimage):
+        def gen_prompt(insanitylevel, subject, artist, imagetype, antistring, prefixprompt, suffixprompt, promptcompounderlevel, seperator,givensubject,smartsubject,giventypeofimage, imagemodechance):
 
             promptlist = []
 
             for i in range(5):
-                promptlist.append(build_dynamic_prompt(insanitylevel,subject,artist, imagetype, False, antistring,prefixprompt,suffixprompt,promptcompounderlevel,seperator,givensubject,smartsubject, giventypeofimage))
+                promptlist.append(build_dynamic_prompt(insanitylevel,subject,artist, imagetype, False, antistring,prefixprompt,suffixprompt,promptcompounderlevel,seperator,givensubject,smartsubject, giventypeofimage, imagemodechance))
 
             return promptlist
         
@@ -115,9 +115,13 @@ class Script(scripts.Script):
                 with gr.Column(scale=1, variant="compact"):
                     artist = gr.Dropdown(
                                     artists, label="Artists", value="all")
+            with gr.Row():
                 with gr.Column(scale=2, variant="compact"):
                     imagetype = gr.Dropdown(
                                     imagetypes, label="type of image", value="all")
+                with gr.Column(scale=2, variant="compact"):
+                    imagemodechance = gr.Slider(
+                                    1, 100, value="20", step=1, label="One in X chance to use special image type mode")
             with gr.Row():
                  gr.Markdown("""
                             <font size="2">
@@ -218,10 +222,34 @@ class Script(scripts.Script):
                         
                         8. only other types --> Will pick only from the more unique types, such as stained glass window or a funko pop
 
-                        9. only templates --> Will only choose from a set of wildcarded prompt templates. Templates have been gathered from various sources, such as CivitAI, prompthero, promptbook, etc.
+                        All modes below are considered a special image type mode.
 
-                        only templates is perfect for beginners, who want to see some good results fast.
+                        9. only templates mode --> Will only choose from a set of wildcarded prompt templates. Templates have been gathered from various sources, such as CivitAI, prompthero, promptbook, etc.
 
+                        only templates mode is perfect for beginners, who want to see some good results fast.
+
+                        10. art blaster mode --> Special generation mode that focusses on art movements, stylings and artists.
+
+                        11. quality vomit mode --> Special generation mode that focusses on qualifiers and stylings.
+
+                        12. color cannon mode --> Special generation mode that focusses on color scheme's and moods.
+
+                        13. unique art mode --> Special generation mode that focusses on other image types, art movements, stylings and lighting.
+
+                        14. massive madness mode --> Special generation mode, creates prompt soup. Almost pure randomness.
+
+                        15. photo fantasy mode --> Special generation mode that focusses on photographs, cameras, lenses and lighting.
+
+                        16. subject only mode --> Will only generate a subject, with no additional frills.
+
+                        ### One in X chance to use special image type mode
+
+                        <font size="2">
+                        This controls how often it will pick a special generation mode. It is a 1 in X chance. So lower means more often. This will only be applied of "type of image" is set to "all" and there is no Overwrite type of image set.
+
+                        When set to 1, it will always pick a random special generation mode. When set to 20, it is a 1 in 20 chance this will happen.
+                        </font>
+                        
                         ### Overwrite subject
 
                         When you fill in the Overwrite subject field, that subject will be used to build the dynamic prompt around. It is best, if you set the subject type to match the subject. For example, set it to humanoid if you place a person in the override subject field.
@@ -514,7 +542,7 @@ class Script(scripts.Script):
                             extrasupscaler2codeformerweight = gr.Slider(0, 1, value="0.1", step=0.05, label="CodeFormer weight", visible = False)
                     
 
-        genprom.click(gen_prompt, inputs=[insanitylevel,subject, artist, imagetype, antistring,prefixprompt, suffixprompt,promptcompounderlevel, seperator, givensubject,smartsubject,giventypeofimage], outputs=[prompt1, prompt2, prompt3,prompt4,prompt5])
+        genprom.click(gen_prompt, inputs=[insanitylevel,subject, artist, imagetype, antistring,prefixprompt, suffixprompt,promptcompounderlevel, seperator, givensubject,smartsubject,giventypeofimage,imagemodechance], outputs=[prompt1, prompt2, prompt3,prompt4,prompt5])
 
         prompt1toworkflow.click(prompttoworkflowprompt, inputs=prompt1, outputs=workprompt)
         prompt2toworkflow.click(prompttoworkflowprompt, inputs=prompt2, outputs=workprompt)
@@ -522,7 +550,7 @@ class Script(scripts.Script):
         prompt4toworkflow.click(prompttoworkflowprompt, inputs=prompt4, outputs=workprompt)
         prompt5toworkflow.click(prompttoworkflowprompt, inputs=prompt5, outputs=workprompt)
 
-        startmain.click(generateimages, inputs=[amountofimages,size,model,samplingsteps,cfg,hiresfix,hiressteps,denoisestrength,samplingmethod, upscaler,hiresscale, apiurl, qualitygate, quality, runs,insanitylevel,subject, artist, imagetype, silentmode, workprompt, antistring, prefixprompt, suffixprompt,negativeprompt,promptcompounderlevel, seperator, img2imgbatch, img2imgsamplingsteps, img2imgcfg, img2imgsamplingmethod, img2imgupscaler, img2imgmodel,img2imgactivate, img2imgscale, img2imgpadding,img2imgdenoisestrength,ultimatesdupscale,usdutilewidth, usdutileheight, usdumaskblur, usduredraw, usduSeamsfix, usdusdenoise, usduswidth, usduspadding, usdusmaskblur, controlnetenabled, controlnetmodel,img2imgdenoisestrengthmod,enableextraupscale,controlnetblockymode,extrasupscaler1,extrasupscaler2,extrasupscaler2visiblity,extrasupscaler2gfpgan,extrasupscaler2codeformer,extrasupscaler2codeformerweight,extrasresize,onlyupscale,givensubject,smartsubject,giventypeofimage])
+        startmain.click(generateimages, inputs=[amountofimages,size,model,samplingsteps,cfg,hiresfix,hiressteps,denoisestrength,samplingmethod, upscaler,hiresscale, apiurl, qualitygate, quality, runs,insanitylevel,subject, artist, imagetype, silentmode, workprompt, antistring, prefixprompt, suffixprompt,negativeprompt,promptcompounderlevel, seperator, img2imgbatch, img2imgsamplingsteps, img2imgcfg, img2imgsamplingmethod, img2imgupscaler, img2imgmodel,img2imgactivate, img2imgscale, img2imgpadding,img2imgdenoisestrength,ultimatesdupscale,usdutilewidth, usdutileheight, usdumaskblur, usduredraw, usduSeamsfix, usdusdenoise, usduswidth, usduspadding, usdusmaskblur, controlnetenabled, controlnetmodel,img2imgdenoisestrengthmod,enableextraupscale,controlnetblockymode,extrasupscaler1,extrasupscaler2,extrasupscaler2visiblity,extrasupscaler2gfpgan,extrasupscaler2codeformer,extrasupscaler2codeformerweight,extrasresize,onlyupscale,givensubject,smartsubject,giventypeofimage,imagemodechance])
         
         automatedoutputsfolderbutton.click(openfolder)
         
@@ -628,12 +656,12 @@ class Script(scripts.Script):
 
       
 
-        return [insanitylevel,subject, artist, imagetype, prefixprompt,suffixprompt,negativeprompt, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring, seperator, givensubject, smartsubject, giventypeofimage]
+        return [insanitylevel,subject, artist, imagetype, prefixprompt,suffixprompt,negativeprompt, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring, seperator, givensubject, smartsubject, giventypeofimage, imagemodechance]
             
     
 
     
-    def run(self, p, insanitylevel, subject, artist, imagetype, prefixprompt,suffixprompt,negativeprompt, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring,seperator, givensubject, smartsubject, giventypeofimage):
+    def run(self, p, insanitylevel, subject, artist, imagetype, prefixprompt,suffixprompt,negativeprompt, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring,seperator, givensubject, smartsubject, giventypeofimage, imagemodechance):
         
         images = []
         infotexts = []
@@ -705,7 +733,7 @@ class Script(scripts.Script):
 
 
                 #Here is where we build a "normal" prompt
-                preppedprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype, False, antistring, prefixprompt, suffixprompt,promptcompounderlevel, seperator,givensubject,smartsubject,giventypeofimage)
+                preppedprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype, False, antistring, prefixprompt, suffixprompt,promptcompounderlevel, seperator,givensubject,smartsubject,giventypeofimage,imagemodechance)
 
                 # set the artist mode back when done (for automatic mode)
                 artist = artistcopy

@@ -248,7 +248,7 @@ class Script(scripts.Script):
                         This controls how often it will pick a special generation mode. It is a 1 in X chance. So lower means more often. This will only be applied of "type of image" is set to "all" and there is no Overwrite type of image set.
 
                         When set to 1, it will always pick a random special generation mode. When set to 20, it is a 1 in 20 chance this will happen.
-                        </font
+                        </font>
                         
                         ### Overwrite subject
 

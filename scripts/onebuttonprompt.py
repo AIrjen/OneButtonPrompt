@@ -222,6 +222,8 @@ class Script(scripts.Script):
                         
                         8. only other types --> Will pick only from the more unique types, such as stained glass window or a funko pop
 
+                        All modes below are considered a special image type mode.
+
                         9. only templates mode --> Will only choose from a set of wildcarded prompt templates. Templates have been gathered from various sources, such as CivitAI, prompthero, promptbook, etc.
 
                         only templates mode is perfect for beginners, who want to see some good results fast.
@@ -243,7 +245,7 @@ class Script(scripts.Script):
                         ### One in X chance to use special image type mode
 
                         <font size="2">
-                        This controls how often it will pick a special generation mode. It is a 1 in X chance. So lower means more often.
+                        This controls how often it will pick a special generation mode. It is a 1 in X chance. So lower means more often. This will only be applied of "type of image" is set to "all" and there is no Overwrite type of image set.
 
                         When set to 1, it will always pick a random special generation mode. When set to 20, it is a 1 in 20 chance this will happen.
                         </font

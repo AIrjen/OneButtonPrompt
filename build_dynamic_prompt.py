@@ -77,6 +77,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     rpgclasslist = csv_to_list("rpgclasses", antilist)
     brandlist = csv_to_list("brands", antilist)
     spacelist = csv_to_list("space", antilist)
+    poemlinelist = csv_to_list("poemlines", antilist)
+    songlinelist = csv_to_list("songlines", antilist)
 
     humanlist = fictionallist + nonfictionallist + humanoidlist
     objecttotallist = objectlist + buildinglist + vehiclelist + foodlist + spacelist
@@ -215,15 +217,24 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     
     generateevent = bool(eventlist)
     generateconcepts = bool(conceptprefixlist) + bool(conceptsuffixlist)
-
+    generatepoemline = bool(poemlinelist) 
+    generatesongline = bool(songlinelist) 
     
-    generateconcept = generateevent + generateconcepts
+
+
+    generateconcept = generateevent or generateconcepts or generatepoemline or generatesongline
 
     if(generateevent):
         eventsubjectchooserlist.append("event")
     
     if(generateconcepts):
         eventsubjectchooserlist.append("concept")
+
+    if(generatepoemline):
+        eventsubjectchooserlist.append("poemline")
+    
+    if(generatesongline):
+        eventsubjectchooserlist.append("songline")
 
     if(generateconcept):
         mainchooserlist.append("concept")
@@ -322,6 +333,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     generateanimaladdition = bool(animaladditionlist) and not templatemode
     generateaccessories = bool(buildaccessorielist) and not templatemode
     generategreatwork = bool(greatworklist) and not specialmode
+    generatepoemline = bool(poemlinelist) and not specialmode
+    generatesongline = bool(songlinelist) and not specialmode
     
     generateminilocationaddition = bool(minilocationadditionslist) and not specialmode
     generateminivomit = bool(minivomitlist) and not specialmode
@@ -1053,6 +1066,12 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                     
                     if(subjectchooser == "concept"):
                         completeprompt += " \" The -conceptprefix- of -conceptsuffix- \" "
+
+                    if(subjectchooser == "poemline"):
+                        completeprompt += " \" -poemline- \" "
+
+                    if(subjectchooser == "songline"):
+                        completeprompt += " \" -songline- \" "
                 else:
                     completeprompt += " " + givensubject + " " 
 
@@ -1194,6 +1213,14 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         if(novel_dist(insanitylevel) and generategreatwork == True):
             completeprompt += " in the style of " + random.choice(greatworklist) + ", "
 
+        #adding a poemline. But this should happen only very rarely.
+        if(novel_dist(insanitylevel) and generatepoemline == True):
+            completeprompt += " \"-poemline-\", "
+
+        #adding a songline. But this should happen only very rarely.
+        if(novel_dist(insanitylevel) and generatesongline == True):
+            completeprompt += " \"-songline-\", "
+
         # everyone loves the adding quality. The better models don't need this, but lets add it anyway
         if(uncommon_dist(insanitylevel) and generatequality == True):
             completeprompt += "-quality-, "
@@ -1236,6 +1263,12 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                     completeprompt += "-quality-, "
                 if(unique_dist(insanitylevel) and bool(artistlist)):
                     completeprompt += "-artist-, "
+                if(novel_dist(insanitylevel) and bool(greatworklist)):
+                    completeprompt += "in style of -greatwork-, "
+                if(novel_dist(insanitylevel) and bool(poemlinelist)):
+                    completeprompt += "\"-poemline-\", "
+                if(novel_dist(insanitylevel) and bool(songlinelist)):
+                    completeprompt += "\"-songline-\", "
                 
                 step = step + 1 
         
@@ -1437,9 +1470,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
     
     # lol, this needs a rewrite :D
-    while "-color-" in completeprompt or "-material-" in completeprompt or "-animal-" in completeprompt or "-object-" in completeprompt or "-fictional-" in completeprompt or "-nonfictional-" in completeprompt or "-conceptsuffix-" in completeprompt or "-building-" in completeprompt or "-vehicle-" in completeprompt or "-outfit-" in completeprompt or "-location-" in completeprompt or "-conceptprefix-" in completeprompt or "-descriptor-" in completeprompt or "-food-" in completeprompt or "-haircolor-" in completeprompt or "-hairstyle-" in completeprompt or "-job-" in completeprompt or "-culture-" in completeprompt or "-accessory-" in completeprompt or "-humanoid-" in completeprompt or "-manwoman-" in completeprompt or "-human-" in completeprompt or "-colorscheme-" in completeprompt or "-mood-" in completeprompt or "-genderdescription-" in completeprompt or "-artmovement-" in completeprompt or "-malefemale-" in completeprompt or "-objecttotal-" in completeprompt or "-bodytype-" in completeprompt or "-minilocation-" in completeprompt or "-minilocationaddition-" in completeprompt or "-pose-" in completeprompt or "-season-" in completeprompt or "-minioutfit-" in completeprompt or "-elaborateoutfit-" in completeprompt or "-minivomit-" in completeprompt or "-vomit-" in completeprompt or "-rpgclass-" in completeprompt or "-subjectfromfile-" in completeprompt or "-brand-" in completeprompt or "-space-" in completeprompt or "-artist-" in completeprompt or "-imagetype-" in completeprompt or "-othertype-" in completeprompt or "-quality-" in completeprompt or "-lighting-" in completeprompt or "-camera-" in completeprompt or "-lens-" in completeprompt or "-imagetypequality-" in completeprompt:
-        allwildcardslistnohybrid = [ "-color-","-object-", "-animal-", "-fictional-","-nonfictional-","-building-","-vehicle-","-location-","-conceptprefix-","-food-","-haircolor-","-hairstyle-","-job-", "-accessory-", "-humanoid-", "-manwoman-", "-human-", "-colorscheme-", "-mood-", "-genderdescription-", "-artmovement-", "-malefemale-", "-bodytype-", "-minilocation-", "-minilocationaddition-", "-pose-", "-season-", "-minioutfit-", "-elaborateoutfit-", "-minivomit-", "-vomit-", "-rpgclass-", "-subjectfromfile-", "-brand-", "-space-", "-artist-", "-imagetype-", "-othertype-", "-quality-", "-lighting-", "-camera-", "-lens-","-imagetypequality-"]
-        allwildcardslistnohybridlists = [colorlist, objectlist, animallist, fictionallist, nonfictionallist, buildinglist, vehiclelist, locationlist,conceptprefixlist,foodlist,haircolorlist, hairstylelist,joblist, accessorielist, humanoidlist, manwomanlist, humanlist, colorschemelist, moodlist, genderdescriptionlist, artmovementlist, malefemalelist, bodytypelist, minilocationlist, minilocationadditionslist, poselist, seasonlist, minioutfitlist, elaborateoutfitlist, minivomitlist, vomitlist, rpgclasslist, customsubjectslist, brandlist, spacelist, artistlist, imagetypelist, othertypelist, qualitylist, lightinglist, cameralist, lenslist, imagetypequalitylist]
+    while "-color-" in completeprompt or "-material-" in completeprompt or "-animal-" in completeprompt or "-object-" in completeprompt or "-fictional-" in completeprompt or "-nonfictional-" in completeprompt or "-conceptsuffix-" in completeprompt or "-building-" in completeprompt or "-vehicle-" in completeprompt or "-outfit-" in completeprompt or "-location-" in completeprompt or "-conceptprefix-" in completeprompt or "-descriptor-" in completeprompt or "-food-" in completeprompt or "-haircolor-" in completeprompt or "-hairstyle-" in completeprompt or "-job-" in completeprompt or "-culture-" in completeprompt or "-accessory-" in completeprompt or "-humanoid-" in completeprompt or "-manwoman-" in completeprompt or "-human-" in completeprompt or "-colorscheme-" in completeprompt or "-mood-" in completeprompt or "-genderdescription-" in completeprompt or "-artmovement-" in completeprompt or "-malefemale-" in completeprompt or "-objecttotal-" in completeprompt or "-bodytype-" in completeprompt or "-minilocation-" in completeprompt or "-minilocationaddition-" in completeprompt or "-pose-" in completeprompt or "-season-" in completeprompt or "-minioutfit-" in completeprompt or "-elaborateoutfit-" in completeprompt or "-minivomit-" in completeprompt or "-vomit-" in completeprompt or "-rpgclass-" in completeprompt or "-subjectfromfile-" in completeprompt or "-brand-" in completeprompt or "-space-" in completeprompt or "-artist-" in completeprompt or "-imagetype-" in completeprompt or "-othertype-" in completeprompt or "-quality-" in completeprompt or "-lighting-" in completeprompt or "-camera-" in completeprompt or "-lens-" in completeprompt or "-imagetypequality-" in completeprompt or "-poemline-" in completeprompt or "-songline-" in completeprompt or "-greatwork-" in completeprompt:
+        allwildcardslistnohybrid = [ "-color-","-object-", "-animal-", "-fictional-","-nonfictional-","-building-","-vehicle-","-location-","-conceptprefix-","-food-","-haircolor-","-hairstyle-","-job-", "-accessory-", "-humanoid-", "-manwoman-", "-human-", "-colorscheme-", "-mood-", "-genderdescription-", "-artmovement-", "-malefemale-", "-bodytype-", "-minilocation-", "-minilocationaddition-", "-pose-", "-season-", "-minioutfit-", "-elaborateoutfit-", "-minivomit-", "-vomit-", "-rpgclass-", "-subjectfromfile-", "-brand-", "-space-", "-artist-", "-imagetype-", "-othertype-", "-quality-", "-lighting-", "-camera-", "-lens-","-imagetypequality-", "-poemline-", "-songline-", "-greatwork-"]
+        allwildcardslistnohybridlists = [colorlist, objectlist, animallist, fictionallist, nonfictionallist, buildinglist, vehiclelist, locationlist,conceptprefixlist,foodlist,haircolorlist, hairstylelist,joblist, accessorielist, humanoidlist, manwomanlist, humanlist, colorschemelist, moodlist, genderdescriptionlist, artmovementlist, malefemalelist, bodytypelist, minilocationlist, minilocationadditionslist, poselist, seasonlist, minioutfitlist, elaborateoutfitlist, minivomitlist, vomitlist, rpgclasslist, customsubjectslist, brandlist, spacelist, artistlist, imagetypelist, othertypelist, qualitylist, lightinglist, cameralist, lenslist, imagetypequalitylist, poemlinelist, songlinelist, greatworklist]
         
         allwildcardslistwithhybrid = ["-material-", "-descriptor-", "-outfit-", "-conceptsuffix-","-culture-", "-objecttotal-"]
         allwildcardslistwithhybridlists = [materiallist, descriptorlist,outfitlist,conceptsuffixlist,culturelist, objecttotallist]

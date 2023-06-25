@@ -3,13 +3,24 @@ background is [-location-|-location-]
 background is -building-
 background is [-building-|-building-]
 background is [-location-|-building-]
+at -location-
+at -building-
+near -location-
+near -building-
 inside a -building-
-background is -descriptor- -location-
-background is -descriptor- -building-
 inside a -descriptor- -building-
+background is -descriptor- -building-
+background is -descriptor- -location-
+-descriptor- -location- in background
+-descriptor- -building- in background
+-building- in background
+-location- in background
 plain background
 plain -color- background
+simple background
+simple -color- background
 -color- and -color- background
 -descriptor- background
+-descriptor- -color- background
 -culture- background
 -space- background

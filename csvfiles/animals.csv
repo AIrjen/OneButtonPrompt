@@ -1,12 +1,9 @@
-animal
-creature
+Animal
+Creature
 Fish
-bird
-puppy dog
-cat
-badger
-snake
-frog 
+Bird
+Puppy Dog
+Cat
 Lion
 Elephant
 Zebra
@@ -15,7 +12,9 @@ Tiger
 Cheetah
 Leopard
 Jaguar
+Bobcat
 Panther
+Sabertooth tiger
 Hyena
 Gazelle
 Rhinoceros
@@ -126,15 +125,9 @@ Gorgon
 Naga
 Gargoyle
 Imp
-Chimpanzee
-Squirrel
-Elk
-Moose
-Raccoon
+Demon
+Succubus
 Opossum
-Bobcat
-Panther
-Sabertooth tiger
 Mammoth
 Mastodon
 Woolly rhinoceros
@@ -168,8 +161,6 @@ Djinn
 Ifrit
 Bald Eagle
 Blue Jay
-Cardinal
-Chickadee
 Condor
 Crow
 Flamingo
@@ -209,7 +200,6 @@ Chickadee
 Cuckoo
 Dove
 Duck
-Falcon
 Finch
 Goose
 Heron
@@ -264,31 +254,31 @@ Sauger
 Shad
 Sheepshead
 Yellow perch
-Siamese cat
-Persian cat
-Maine Coon cat
-Sphynx cat
-British Shorthair cat
-Scottish Fold cat
-Bengal cat
-Devon Rex cat
-Ragdoll cat
-Abyssinian cat
-American Shorthair cat
-Birman cat
-Burmese cat
-Cornish Rex cat
-Egyptian Mau cat
-Exotic Shorthair cat
-Himalayan cat
-Japanese Bobtail cat
-Korat cat
-Manx cat
+Siamese Cat
+Persian Cat
+Maine Coon Cat
+Sphynx Cat
+British Shorthair Cat
+Scottish Fold Cat
+Bengal Cat
+Devon Rex Cat
+Ragdoll Cat
+Abyssinian Cat
+American Shorthair Cat
+Birman Cat
+Burmese Cat
+Cornish Rex Cat
+Egyptian Mau Cat
+Exotic Shorthair Cat
+Himalayan Cat
+Japanese Bobtail Cat
+Korat Cat
+Manx Cat
 Norwegian Forest Cat
-Oriental Shorthair cat
-Russian Blue cat
-Turkish Angora cat
-Turkish Van cat
+Oriental Shorthair Cat
+Russian Blue Cat
+Turkish Angora Cat
+Turkish Van Cat
 Labrador Retriever
 German Shepherd
 Bulldog

@@ -64,7 +64,7 @@ It can generate the following subjects, while building a prompt:
 
 4. landscape - A landscape or a landscape with a building.  
 
-5. concept - Can be a concept, such as "the X of Y", or an historical event such as "The Trojan War".  
+5. concept - Can be a concept, such as "the X of Y", or an historical event such as "The Trojan War".  It can also do a line from a poem or from a song.
 
 It mixes techniques such as prompt switching and hybrids. 
 

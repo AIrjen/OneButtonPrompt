@@ -1,5 +1,6 @@
 -descriptor- -outfit-
 -descriptor- -culture- -outfit-
+-descriptor- -culture- -color- -outfit-
 -descriptor- -culture- -material- -outfit-
 -descriptor- -culture- -material- -color- -outfit-
 -culture- -outfit-
@@ -8,8 +9,10 @@
 -material- -color- -outfit-
 -descriptor- -color- -outfit-
 -descriptor- -material- -outfit-
+-descriptor- -material- -color- -outfit-
 -job- -outfit-
 -rpgclass- -minioutfit-
 -season- -minioutfit-
+-animal--style -outfit-
 -minioutfit- designed by -brand-
 -material-

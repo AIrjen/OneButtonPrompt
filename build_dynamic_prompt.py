@@ -94,6 +94,12 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     elif(artists != "none"):
         artistlist = csv_to_list("artists",antilist)
 
+    # create special artists lists, used in templates
+    fantasyartistlist = artist_category_csv_to_list("artists_and_category","fantasy")
+    popularartistlist = artist_category_csv_to_list("artists_and_category","popular")
+    romanticismartistlist = artist_category_csv_to_list("artists_and_category","romanticism")
+    photographyartistlist = artist_category_csv_to_list("artists_and_category","photography")
+
 
     # add any other custom lists
     stylestiloralist = csv_to_list("styles_ti_lora",antilist,"./userfiles/")
@@ -537,13 +543,14 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             # targettemplateenvironment: either civitai model or website
             # templateenvironmentsources: either
             templateprompts = [templateprompt[0] for templateprompt in templatelist if( (templateprompt[1] == targettemplateenvironment or targettemplateenvironment =="all") and (templateprompt[2] == templateenvironmentsources or templateenvironmentsources == "all") and (templateprompt[3] == forcesubject or forcesubject == "all") ) ]
-
+            templatepromptcreator = [templateprompt[1] for templateprompt in templatelist if( (templateprompt[1] == targettemplateenvironment or targettemplateenvironment =="all") and (templateprompt[2] == templateenvironmentsources or templateenvironmentsources == "all") and (templateprompt[3] == forcesubject or forcesubject == "all") ) ]
             templatesubjects= [templateprompt[4] for templateprompt in templatelist if( (templateprompt[1] == targettemplateenvironment or targettemplateenvironment =="all") and (templateprompt[2] == templateenvironmentsources or templateenvironmentsources == "all") and (templateprompt[3] == forcesubject or forcesubject == "all") )]
             
             # choose the template
             chosentemplate = random.choice(templateprompts)
             templateindex = templateprompts.index(chosentemplate)
 
+            print("Processing a prompt that was inspired from: " + templatepromptcreator[templateindex])
 
             # if there is a subject override, then replace the subject with that
             if(givensubject==""):
@@ -870,7 +877,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         # start shot size
 
         if(mainchooser in ["object", "animal", "humanoid", "concept"] and othertype == 0 and "portrait" not in completeprompt and generateshot == True and uncommon_dist(insanitylevel)):
-            completeprompt += random.choice(shotsizelist) + " of a "
+            completeprompt += "-shotsize- of a "
         elif("portrait" in completeprompt and generateshot == True):
             completeprompt += " ,close up of a "
         elif(mainchooser in ["landscape"] and generateshot == True):
@@ -1101,7 +1108,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         # SD understands emoji's. Can be used to manipulate facial expressions.
         # emoji, legendary
         if(subjectchooser in ["animal as human,","human","fictional", "non fictional", "humanoid"] and legendary_dist(insanitylevel) and generateemoji== True):
-            completeprompt += random.choice(emojilist) + ", "
+            completeprompt += "-emoji-, "
             
 
         # cosplaying
@@ -1162,7 +1169,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         # landscapes it is nice to always have a time period
         if(normal_dist(insanitylevel) or subjectchooser=="landscape"):
             if(generatetimeperiod == True):
-                completeprompt += random.choice(timeperiodlist) + ", "
+                completeprompt += "-timeperiod-, "
 
         if(mainchooser not in ["landscape"]  and rare_dist(insanitylevel) and generatefocus == True):
             completeprompt += random.choice(focuslist) + ", "
@@ -1470,9 +1477,68 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
     
     # lol, this needs a rewrite :D
-    while "-color-" in completeprompt or "-material-" in completeprompt or "-animal-" in completeprompt or "-object-" in completeprompt or "-fictional-" in completeprompt or "-nonfictional-" in completeprompt or "-conceptsuffix-" in completeprompt or "-building-" in completeprompt or "-vehicle-" in completeprompt or "-outfit-" in completeprompt or "-location-" in completeprompt or "-conceptprefix-" in completeprompt or "-descriptor-" in completeprompt or "-food-" in completeprompt or "-haircolor-" in completeprompt or "-hairstyle-" in completeprompt or "-job-" in completeprompt or "-culture-" in completeprompt or "-accessory-" in completeprompt or "-humanoid-" in completeprompt or "-manwoman-" in completeprompt or "-human-" in completeprompt or "-colorscheme-" in completeprompt or "-mood-" in completeprompt or "-genderdescription-" in completeprompt or "-artmovement-" in completeprompt or "-malefemale-" in completeprompt or "-objecttotal-" in completeprompt or "-bodytype-" in completeprompt or "-minilocation-" in completeprompt or "-minilocationaddition-" in completeprompt or "-pose-" in completeprompt or "-season-" in completeprompt or "-minioutfit-" in completeprompt or "-elaborateoutfit-" in completeprompt or "-minivomit-" in completeprompt or "-vomit-" in completeprompt or "-rpgclass-" in completeprompt or "-subjectfromfile-" in completeprompt or "-brand-" in completeprompt or "-space-" in completeprompt or "-artist-" in completeprompt or "-imagetype-" in completeprompt or "-othertype-" in completeprompt or "-quality-" in completeprompt or "-lighting-" in completeprompt or "-camera-" in completeprompt or "-lens-" in completeprompt or "-imagetypequality-" in completeprompt or "-poemline-" in completeprompt or "-songline-" in completeprompt or "-greatwork-" in completeprompt:
-        allwildcardslistnohybrid = [ "-color-","-object-", "-animal-", "-fictional-","-nonfictional-","-building-","-vehicle-","-location-","-conceptprefix-","-food-","-haircolor-","-hairstyle-","-job-", "-accessory-", "-humanoid-", "-manwoman-", "-human-", "-colorscheme-", "-mood-", "-genderdescription-", "-artmovement-", "-malefemale-", "-bodytype-", "-minilocation-", "-minilocationaddition-", "-pose-", "-season-", "-minioutfit-", "-elaborateoutfit-", "-minivomit-", "-vomit-", "-rpgclass-", "-subjectfromfile-", "-brand-", "-space-", "-artist-", "-imagetype-", "-othertype-", "-quality-", "-lighting-", "-camera-", "-lens-","-imagetypequality-", "-poemline-", "-songline-", "-greatwork-"]
-        allwildcardslistnohybridlists = [colorlist, objectlist, animallist, fictionallist, nonfictionallist, buildinglist, vehiclelist, locationlist,conceptprefixlist,foodlist,haircolorlist, hairstylelist,joblist, accessorielist, humanoidlist, manwomanlist, humanlist, colorschemelist, moodlist, genderdescriptionlist, artmovementlist, malefemalelist, bodytypelist, minilocationlist, minilocationadditionslist, poselist, seasonlist, minioutfitlist, elaborateoutfitlist, minivomitlist, vomitlist, rpgclasslist, customsubjectslist, brandlist, spacelist, artistlist, imagetypelist, othertypelist, qualitylist, lightinglist, cameralist, lenslist, imagetypequalitylist, poemlinelist, songlinelist, greatworklist]
+    while (
+    "-color-" in completeprompt or
+    "-material-" in completeprompt or
+    "-animal-" in completeprompt or
+    "-object-" in completeprompt or
+    "-fictional-" in completeprompt or
+    "-nonfictional-" in completeprompt or
+    "-conceptsuffix-" in completeprompt or
+    "-building-" in completeprompt or
+    "-vehicle-" in completeprompt or
+    "-outfit-" in completeprompt or
+    "-location-" in completeprompt or
+    "-conceptprefix-" in completeprompt or
+    "-descriptor-" in completeprompt or
+    "-food-" in completeprompt or
+    "-haircolor-" in completeprompt or
+    "-hairstyle-" in completeprompt or
+    "-job-" in completeprompt or
+    "-culture-" in completeprompt or
+    "-accessory-" in completeprompt or
+    "-humanoid-" in completeprompt or
+    "-manwoman-" in completeprompt or
+    "-human-" in completeprompt or
+    "-colorscheme-" in completeprompt or
+    "-mood-" in completeprompt or
+    "-genderdescription-" in completeprompt or
+    "-artmovement-" in completeprompt or
+    "-malefemale-" in completeprompt or
+    "-objecttotal-" in completeprompt or
+    "-bodytype-" in completeprompt or
+    "-minilocation-" in completeprompt or
+    "-minilocationaddition-" in completeprompt or
+    "-pose-" in completeprompt or
+    "-season-" in completeprompt or
+    "-minioutfit-" in completeprompt or
+    "-elaborateoutfit-" in completeprompt or
+    "-minivomit-" in completeprompt or
+    "-vomit-" in completeprompt or
+    "-rpgclass-" in completeprompt or
+    "-subjectfromfile-" in completeprompt or
+    "-brand-" in completeprompt or
+    "-space-" in completeprompt or
+    "-artist-" in completeprompt or
+    "-imagetype-" in completeprompt or
+    "-othertype-" in completeprompt or
+    "-quality-" in completeprompt or
+    "-lighting-" in completeprompt or
+    "-camera-" in completeprompt or
+    "-lens-" in completeprompt or
+    "-imagetypequality-" in completeprompt or
+    "-poemline-" in completeprompt or
+    "-songline-" in completeprompt or
+    "-greatwork-" in completeprompt or
+    "-artistfantasy-" in completeprompt or 
+    "-artistpopular-" in completeprompt or 
+    "-artistromanticism-" in completeprompt or 
+    "-artistphotography-" in completeprompt or
+    "-emoji-" in completeprompt or
+    "-timeperiod-" in completeprompt or
+    "-shotsize-" in completeprompt):
+        allwildcardslistnohybrid = [ "-color-","-object-", "-animal-", "-fictional-","-nonfictional-","-building-","-vehicle-","-location-","-conceptprefix-","-food-","-haircolor-","-hairstyle-","-job-", "-accessory-", "-humanoid-", "-manwoman-", "-human-", "-colorscheme-", "-mood-", "-genderdescription-", "-artmovement-", "-malefemale-", "-bodytype-", "-minilocation-", "-minilocationaddition-", "-pose-", "-season-", "-minioutfit-", "-elaborateoutfit-", "-minivomit-", "-vomit-", "-rpgclass-", "-subjectfromfile-", "-brand-", "-space-", "-artist-", "-imagetype-", "-othertype-", "-quality-", "-lighting-", "-camera-", "-lens-","-imagetypequality-", "-poemline-", "-songline-", "-greatwork-", "-artistfantasy-", "-artistpopular-", "-artistromanticism-", "-artistphotography-", "-emoji-", "-timeperiod-", "-shotsize-"]
+        allwildcardslistnohybridlists = [colorlist, objectlist, animallist, fictionallist, nonfictionallist, buildinglist, vehiclelist, locationlist,conceptprefixlist,foodlist,haircolorlist, hairstylelist,joblist, accessorielist, humanoidlist, manwomanlist, humanlist, colorschemelist, moodlist, genderdescriptionlist, artmovementlist, malefemalelist, bodytypelist, minilocationlist, minilocationadditionslist, poselist, seasonlist, minioutfitlist, elaborateoutfitlist, minivomitlist, vomitlist, rpgclasslist, customsubjectslist, brandlist, spacelist, artistlist, imagetypelist, othertypelist, qualitylist, lightinglist, cameralist, lenslist, imagetypequalitylist, poemlinelist, songlinelist, greatworklist, fantasyartistlist, popularartistlist, romanticismartistlist, photographyartistlist, emojilist, timeperiodlist, shotsizelist]
         
         allwildcardslistwithhybrid = ["-material-", "-descriptor-", "-outfit-", "-conceptsuffix-","-culture-", "-objecttotal-"]
         allwildcardslistwithhybridlists = [materiallist, descriptorlist,outfitlist,conceptsuffixlist,culturelist, objecttotallist]
@@ -1574,7 +1640,8 @@ def cleanup(completeprompt):
     completeprompt = re.sub('of a of a', 'of a', completeprompt)
 
     
-
+    completeprompt = re.sub('(?<!\()\s?\(', ' (', completeprompt)
+    completeprompt = re.sub('\)(?![\s)])', ') ', completeprompt)
 
     completeprompt = completeprompt.strip(", ")
 

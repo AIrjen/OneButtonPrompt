@@ -183,7 +183,7 @@ class Script(scripts.Script):
                         
                         4. landscape - A landscape or a landscape with a building.  
                         
-                        5. concept - Can be a concept, such as "a X of Y", or an historical event such as "The Trojan War".  
+                        5. concept - Can be a concept, such as "a X of Y", or an historical event such as "The Trojan War". It can also generate a line from a poem or a song. 
 
                         </font>
                         

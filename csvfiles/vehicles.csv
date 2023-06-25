@@ -1,11 +1,14 @@
 Train
+High-speed Train
+Bullet Train
 Car
 Sports car
 Muscle car
 Formula 1 car
 Ship
-Motercycle
+Motorcycle
 Bicycle
+Unicycle
 Bus
 Tram
 Plane
@@ -19,7 +22,7 @@ Roller skates
 Rollerblades
 Segway
 Snowmobile
-Skiis
+Skis
 Snowboard
 Sled
 Hot air balloon
@@ -30,6 +33,7 @@ Funicular
 Gondola
 Chair lift
 Trolley
+Rope Bridge
 Ropeway
 Jet ski
 Water scooter
@@ -64,6 +68,7 @@ Horse-drawn carriage
 -animal--drawn carriage
 Icebreaker
 Nuclear submarine
+bathysphere
 Whaling ship
 Tractor trailer
 Spacecraft
@@ -71,8 +76,9 @@ Spaceship
 Cable car
 Airship
 Space shuttle
+Falcon Heavy
+Rocketship
 Container ship
-High-speed train
 Oil tanker
 Hovercraft
 Toyota
@@ -85,6 +91,8 @@ Mercedes-Benz
 Audi
 Volkswagen
 Tesla
+Electric Car
+Electric Vehicle
 Porsche
 Ferrari
 Lamborghini

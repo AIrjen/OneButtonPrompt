@@ -1,8 +1,10 @@
 natural lighting
 flat lighting
-backlight
+back-light
+side light
+side lit
 soft light
-studio lighting
+soft lighting
 hard light
 rim light
 loop lighting
@@ -13,6 +15,7 @@ key light
 hair light
 waning light
 spotlit
+spotlight
 cinematic lighting
 moody lighting
 specular lighting
@@ -32,9 +35,13 @@ Bloom light
 Black lighting
 Gel lighting
 -color- lighting
+Moonlit
 Moonlight
 Sunlight
 Accent lighting
 Rembrandt lighting
 Candle light
-beautifully lit
+Beautifully Lit
+Ethereal Lighting
+Starlight
+Neon Light

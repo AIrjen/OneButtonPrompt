@@ -1,4 +1,4 @@
-Archticture
+Architecture
 House
 Apartment
 Townhouse
@@ -37,6 +37,7 @@ Restaurant
 Cafe
 Bar
 Nightclub
+Danceclub
 Movie theater
 Concert hall
 Stadium
@@ -51,8 +52,11 @@ Hostel
 Guesthouse
 Bed and breakfast
 Resort
+Home
 Vacation home
+Lake House
 Campground
+Summer Camp
 Marina
 Port
 Airport
@@ -81,7 +85,6 @@ Aqueduct
 Windmill
 Barn
 Silo
-Shed
 Carport
 Garage
 Workshop
@@ -100,21 +103,14 @@ Wind turbine
 Oil rig
 Water tower
 Ferris wheel
-Skyscraper
-Pyramid
 Colosseum
 Eiffel Tower
-Windmill
-Dam
 Pyramid
 Sphinx
-Castle
 Roller coaster
 Suspension bridge
 Amphitheater
 Monastery
-Stadium
-Nuclear power plant
 Arch dam
 Oil refinery
 Giant sequoia tree
@@ -129,8 +125,6 @@ Floating hotel
 Skate park
 Space station
 Oil platform
-Pyramid
-Arena
 Wind farm
 Megalopolis
 Astronomical observatory
@@ -139,14 +133,11 @@ Chemical plant
 Grain silo
 Nuclear power plant
 Space elevator
-Museum
 Offshore oil platform
-Stadium
 Solar power station
 Offshore wind farm
 Grain elevator
 Quarry
-Wind turbine
 Nuclear missile silo
 Dungeon
 Gate
@@ -156,7 +147,6 @@ Citadel
 Great Wall of China
 Machu Picchu
 Petra
-Colosseum
 Taj Mahal
 Christ the Redeemer
 Chichen Itza

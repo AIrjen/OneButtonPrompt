@@ -135,7 +135,6 @@ Archipelago
 Isthmus
 Cape
 Canyonlands
-Badlands
 Fjord
 Oasis
 Cavern
@@ -452,6 +451,7 @@ Cabin
 Palace
 Manor
 Schoolhouse
+Classroom
 Warehouse
 Factory
 Hospital
@@ -461,7 +461,6 @@ Mosque
 Temple
 Library
 Museum
-Observatory
 Observatory
 Planetarium
 Casino
@@ -593,6 +592,7 @@ Living room
 Dining room
 Kitchen
 Study
+Home
 Home office
 Media room
 Playroom
@@ -675,8 +675,9 @@ Wormhole
 Portal
 Bamboo Forest
 Labyrinth
-color field
+-color- field
 alternate dimensions
 jupiter clouds
 crack in the earth
 Mushroom Kingdom
+-animal- den

@@ -768,6 +768,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             
             if(onlyartists == True and artistmode == "enhancing"):
                 artistmode = "normal"
+            # if there are not enough artists in the list, then just go normal
+            if(len(artistlist) < 3):
+                artistmode = "normal"
             if(onlyartists == True and step == end):
                 step = step - 1
 
@@ -1172,7 +1175,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 completeprompt += "-timeperiod-, "
 
         if(mainchooser not in ["landscape"]  and rare_dist(insanitylevel) and generatefocus == True):
-            completeprompt += "-focus- "
+            completeprompt += "-focus-, "
             
 
 
@@ -1201,7 +1204,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             completeprompt += random.choice(photoadditionlist) + ", "
                 
         if(isphoto == 1 and generatecamera == True):
-            completeprompt += random.choice(cameralist) + ", "  
+            completeprompt += "-camera-, "  
 
         if(normal_dist(insanitylevel) or isphoto == 1):
             if(generatelens == True):
@@ -1366,9 +1369,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         
         # custom style list
         if(uncommon_dist(insanitylevel) and generatestyle == True):
-            completeprompt += random.choice(stylestiloralist) + ", "
+            completeprompt += "-styletilora-, "
             if(uncommon_dist(insanitylevel)):
-                completeprompt += random.choice(stylestiloralist) + ", "
+                completeprompt += "-styletilora-, "
 
 
         # custom suffix list
@@ -1407,6 +1410,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 artistmode = artistmodeslist[modeselector]
                 if artistmode in ["hybrid","switching"] and end - step == 1:
                     artistmode = "normal"
+            # if there are not enough artists in the list, then just go normal
+            if(len(artistlist) < 3):
+                artistmode = "normal"
             
             if artistmode in ["hybrid", "stopping", "adding","switching"]:
                 completeprompt += " ["
@@ -1473,7 +1479,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     if(unique_dist(insanitylevel)): # sometimes, its just nice to have descriptor and a normal "outfit". We use mini outfits for this!
                  completeprompt = completeprompt.replace("-outfit-", "-minioutfit-",1)
 
-    completeprompt = completeprompt.replace("-artist-", "art by -artist-")
+    
 
     
     # lol, this needs a rewrite :D
@@ -1545,17 +1551,20 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     "-humanaddition-" in completeprompt or
     "-overalladdition-" in completeprompt or
     "-focus-" in completeprompt or
-    "-direction-" in completeprompt):
-        allwildcardslistnohybrid = [ "-color-","-object-", "-animal-", "-fictional-","-nonfictional-","-building-","-vehicle-","-location-","-conceptprefix-","-food-","-haircolor-","-hairstyle-","-job-", "-accessory-", "-humanoid-", "-manwoman-", "-human-", "-colorscheme-", "-mood-", "-genderdescription-", "-artmovement-", "-malefemale-", "-bodytype-", "-minilocation-", "-minilocationaddition-", "-pose-", "-season-", "-minioutfit-", "-elaborateoutfit-", "-minivomit-", "-vomit-", "-rpgclass-", "-subjectfromfile-", "-brand-", "-space-", "-artist-", "-imagetype-", "-othertype-", "-quality-", "-lighting-", "-camera-", "-lens-","-imagetypequality-", "-poemline-", "-songline-", "-greatwork-", "-artistfantasy-", "-artistpopular-", "-artistromanticism-", "-artistphotography-", "-emoji-", "-timeperiod-", "-shotsize-", "-musicgenre-", "-animaladdition-", "-addontolocationinside-", "-addontolocation-", "-objectaddition-", "-humanaddition-", "-overalladdition-", "-focus-", "-direction-"]
-        allwildcardslistnohybridlists = [colorlist, objectlist, animallist, fictionallist, nonfictionallist, buildinglist, vehiclelist, locationlist,conceptprefixlist,foodlist,haircolorlist, hairstylelist,joblist, accessorielist, humanoidlist, manwomanlist, humanlist, colorschemelist, moodlist, genderdescriptionlist, artmovementlist, malefemalelist, bodytypelist, minilocationlist, minilocationadditionslist, poselist, seasonlist, minioutfitlist, elaborateoutfitlist, minivomitlist, vomitlist, rpgclasslist, customsubjectslist, brandlist, spacelist, artistlist, imagetypelist, othertypelist, qualitylist, lightinglist, cameralist, lenslist, imagetypequalitylist, poemlinelist, songlinelist, greatworklist, fantasyartistlist, popularartistlist, romanticismartistlist, photographyartistlist, emojilist, timeperiodlist, shotsizelist, musicgenrelist, animaladditionlist, addontolocationinsidelist, addontolocationlist, objectadditionslist, humanadditionlist, overalladditionlist, focuslist, directionlist]
+    "-direction-" in completeprompt or
+    "-styletilora-" in completeprompt):
+        allwildcardslistnohybrid = [ "-color-","-object-", "-animal-", "-fictional-","-nonfictional-","-building-","-vehicle-","-location-","-conceptprefix-","-food-","-haircolor-","-hairstyle-","-job-", "-accessory-", "-humanoid-", "-manwoman-", "-human-", "-colorscheme-", "-mood-", "-genderdescription-", "-artmovement-", "-malefemale-", "-bodytype-", "-minilocation-", "-minilocationaddition-", "-pose-", "-season-", "-minioutfit-", "-elaborateoutfit-", "-minivomit-", "-vomit-", "-rpgclass-", "-subjectfromfile-", "-brand-", "-space-", "-artist-", "-imagetype-", "-othertype-", "-quality-", "-lighting-", "-camera-", "-lens-","-imagetypequality-", "-poemline-", "-songline-", "-greatwork-", "-artistfantasy-", "-artistpopular-", "-artistromanticism-", "-artistphotography-", "-emoji-", "-timeperiod-", "-shotsize-", "-musicgenre-", "-animaladdition-", "-addontolocationinside-", "-addontolocation-", "-objectaddition-", "-humanaddition-", "-overalladdition-", "-focus-", "-direction-", "-styletilora-"]
+        allwildcardslistnohybridlists = [colorlist, objectlist, animallist, fictionallist, nonfictionallist, buildinglist, vehiclelist, locationlist,conceptprefixlist,foodlist,haircolorlist, hairstylelist,joblist, accessorielist, humanoidlist, manwomanlist, humanlist, colorschemelist, moodlist, genderdescriptionlist, artmovementlist, malefemalelist, bodytypelist, minilocationlist, minilocationadditionslist, poselist, seasonlist, minioutfitlist, elaborateoutfitlist, minivomitlist, vomitlist, rpgclasslist, customsubjectslist, brandlist, spacelist, artistlist, imagetypelist, othertypelist, qualitylist, lightinglist, cameralist, lenslist, imagetypequalitylist, poemlinelist, songlinelist, greatworklist, fantasyartistlist, popularartistlist, romanticismartistlist, photographyartistlist, emojilist, timeperiodlist, shotsizelist, musicgenrelist, animaladditionlist, addontolocationinsidelist, addontolocationlist, objectadditionslist, humanadditionlist, overalladditionlist, focuslist, directionlist, stylestiloralist]
         
         allwildcardslistwithhybrid = ["-material-", "-descriptor-", "-outfit-", "-conceptsuffix-","-culture-", "-objecttotal-"]
         allwildcardslistwithhybridlists = [materiallist, descriptorlist,outfitlist,conceptsuffixlist,culturelist, objecttotallist]
+        
         
         #  keywordsinstring = any(word.lower() in givensubject.lower() for word in keywordslist)
         for wildcard in allwildcardslistnohybrid:
             attachedlist = allwildcardslistnohybridlists[allwildcardslistnohybrid.index(wildcard)]
             completeprompt = replacewildcard(completeprompt, insanitylevel, wildcard, attachedlist,False)
+
 
         
         for wildcard in allwildcardslistwithhybrid:
@@ -1580,6 +1589,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
     # function
 def replacewildcard(completeprompt, insanitylevel, wildcard,listname, activatehybridorswap):
+
     if(len(listname) == 0):
         # handling empty lists
         completeprompt = completeprompt.replace(wildcard, "",1)
@@ -1598,7 +1608,18 @@ def replacewildcard(completeprompt, insanitylevel, wildcard,listname, activatehy
                 
                 completeprompt = completeprompt.replace(wildcard, hybridorswapreplacementvalue,1)
 
-            completeprompt = completeprompt.replace(wildcard, random.choice(listname),1)
+            #if list is not empty
+            if(bool(listname)):
+                replacementvalue = random.choice(listname)
+                listname.remove(replacementvalue)
+                if(wildcard == "-artist-"):
+                    replacementvalue = "art by " + replacementvalue
+                
+            else:
+                replacementvalue = ""
+            
+            completeprompt = completeprompt.replace(wildcard, replacementvalue,1)
+
 
     return completeprompt
 
@@ -1614,6 +1635,9 @@ def cleanup(completeprompt):
 
     # Move the extracted matches to the end of completeprompt
     completeprompt += " " + " ".join(matches)   
+
+    # sometimes if there are not enough artist, we get left we things formed as (:1.2)
+    completeprompt = re.sub('\(\:\d+\.\d+\)', '', completeprompt) 
 
     # all cleanup steps moved here
     completeprompt = re.sub('\[ ', '[', completeprompt)
@@ -1651,6 +1675,8 @@ def cleanup(completeprompt):
     
     completeprompt = re.sub('(?<!\()\s?\(', ' (', completeprompt)
     completeprompt = re.sub('\)(?![\s)])', ') ', completeprompt)
+
+    
 
     completeprompt = completeprompt.strip(", ")
 

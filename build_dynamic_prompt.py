@@ -1596,15 +1596,21 @@ def replacewildcard(completeprompt, insanitylevel, wildcard,listname, activatehy
     else:
 
         while wildcard in completeprompt:
-            if(unique_dist(insanitylevel) and activatehybridorswap == True):
+            if(unique_dist(insanitylevel) and activatehybridorswap == True and len(listname)>2):
                 hybridorswaplist = ["hybrid", "swap"]
                 hybridorswap = random.choice(hybridorswaplist)
-                hybridorswapreplacementvalue = "[" + random.choice(listname)
+                replacementvalue = random.choice(listname)
+                listname.remove(replacementvalue)
+                hybridorswapreplacementvalue = "[" + replacementvalue
                 
                 if(hybridorswap == "hybrid"):
-                        hybridorswapreplacementvalue += "|" + random.choice(listname) + "] "
+                        replacementvalue = random.choice(listname)
+                        listname.remove(replacementvalue)
+                        hybridorswapreplacementvalue += "|" + replacementvalue + "] "
                 if(hybridorswap == "swap"):
-                        hybridorswapreplacementvalue += ":" + random.choice(listname) + ":" + str(random.randint(1,20)) +  "] "
+                        replacementvalue = random.choice(listname)
+                        listname.remove(replacementvalue)
+                        hybridorswapreplacementvalue += ":" + replacementvalue + ":" + str(random.randint(1,20)) +  "] "
                 
                 completeprompt = completeprompt.replace(wildcard, hybridorswapreplacementvalue,1)
 

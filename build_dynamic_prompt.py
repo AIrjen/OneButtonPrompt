@@ -1647,13 +1647,12 @@ def cleanup(completeprompt):
     # first, move LoRA's to the back dynamically
 
     # Find all occurrences of text between < and > using regex
-    matches = re.findall(r"<[^>]+>", completeprompt)
+    allLoRA = re.findall(r"<[^>]+>", completeprompt)
 
     # Remove the extracted matches from completeprompt
     completeprompt = re.sub(r"<[^>]+>", "", completeprompt)
 
-    # Move the extracted matches to the end of completeprompt
-    completeprompt += " " + " ".join(matches)   
+
 
     # sometimes if there are not enough artist, we get left we things formed as (:1.2)
     completeprompt = re.sub('\(\:\d+\.\d+\)', '', completeprompt) 
@@ -1695,7 +1694,8 @@ def cleanup(completeprompt):
     completeprompt = re.sub('(?<!\()\s?\(', ' (', completeprompt)
     completeprompt = re.sub('\)(?![\s)])', ') ', completeprompt)
 
-    
+    # Move the extracted LoRA's to the end of completeprompt
+    completeprompt += " " + " ".join(allLoRA)   
 
     completeprompt = completeprompt.strip(", ")
 

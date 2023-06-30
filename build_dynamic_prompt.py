@@ -79,6 +79,10 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     spacelist = csv_to_list("space", antilist)
     poemlinelist = csv_to_list("poemlines", antilist)
     songlinelist = csv_to_list("songlines", antilist)
+    musicgenrelist = csv_to_list("musicgenres", antilist)
+    manwomanrelationlist = csv_to_list("manwomanrelations", antilist)
+    waterlocationlist = csv_to_list("waterlocations", antilist)
+    containerlist = csv_to_list("containers", antilist)
 
     humanlist = fictionallist + nonfictionallist + humanoidlist
     objecttotallist = objectlist + buildinglist + vehiclelist + foodlist + spacelist
@@ -138,8 +142,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     hybridhumanlist = []
     humanoidsubjectchooserlist = []
     eventsubjectchooserlist = []
-    addontolocationinside = []
-    addontolocation = []
+    addontolocationinsidelist = []
+    addontolocationlist = []
 
     generatevehicle = bool(vehiclelist)
     generateobject = bool(objectlist)
@@ -152,7 +156,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     if(generatevehicle):
         objectwildcardlist.append("-vehicle-")
         hybridlist.append("-vehicle-")
-        addontolocation.append(vehiclelist)
+        addontolocationlist.append("-vehicle-")
     
     if(generateobject):
         objectwildcardlist.append("-object-")
@@ -165,12 +169,13 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     if(generatespace):
         objectwildcardlist.append("-space-")
         hybridlist.append("-space-")
+        addontolocationlist.append("-space-")
 
     if(generatebuilding):
         objectwildcardlist.append("-building-")
         hybridlist.append("-building-")
-        addontolocation.append(buildinglist)
-        addontolocationinside.append(buildinglist)
+        addontolocationlist.append("-building-")
+        addontolocationinsidelist.append("-building-")
     
     if(generateobject):
         mainchooserlist.append("object")
@@ -179,8 +184,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     generatenonfictionalcharacter = bool(nonfictionallist)
     generatehumanoids = bool(humanoidlist)
     generatemanwoman = bool(manwomanlist)
+    generatemanwomanrelation = bool(manwomanrelationlist)
     generatejob = bool(joblist)
-    generatehumanoid = generatefictionalcharacter + generatenonfictionalcharacter + generatehumanoids + generatemanwoman + generatejob
+    generatehumanoid = generatefictionalcharacter + generatenonfictionalcharacter + generatehumanoids + generatemanwoman + generatejob + generatemanwomanrelation
 
 
     if(generatefictionalcharacter):
@@ -201,6 +207,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     if(generatemanwoman):
         humanoidsubjectchooserlist.append("human")
 
+    if(generatemanwomanrelation):
+        humanoidsubjectchooserlist.append("manwomanrelation")
+
     if(generatejob):
         humanoidsubjectchooserlist.append("job")
    
@@ -218,8 +227,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
     if(generatelandscape):
         mainchooserlist.append("landscape")
-        addontolocation.append(locationlist)
-        addontolocationinside.append(locationlist)
+        addontolocationlist.append("-location-")
+        addontolocationinsidelist.append("-location-")
     
     generateevent = bool(eventlist)
     generateconcepts = bool(conceptprefixlist) + bool(conceptsuffixlist)
@@ -588,7 +597,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             else:
                 subjectchooser = "animal as human"
         if(mainchooser == "humanoid"):
-            #humanoidsubjectchooserlist = ["human", "job", "fictional", "non fictional", "humanoid"]
+            #humanoidsubjectchooserlist = ["human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation"]
             subjectchooser = random.choice(humanoidsubjectchooserlist)
         if(mainchooser == "landscape"):
             subjectchooser = "landscape"
@@ -766,6 +775,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             
             if(onlyartists == True and artistmode == "enhancing"):
                 artistmode = "normal"
+            # if there are not enough artists in the list, then just go normal
+            if(len(artistlist) < 3):
+                artistmode = "normal"
             if(onlyartists == True and step == end):
                 step = step - 1
 
@@ -892,16 +904,16 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         
             # Common to have 1 description, uncommon to have 2
             if(common_dist(insanitylevel) and generatedescriptors == True):
-                completeprompt += random.choice(descriptorlist) + " "
+                completeprompt += "-descriptor- "
 
             if(uncommon_dist(insanitylevel) and generatedescriptors == True):
-                completeprompt += random.choice(descriptorlist) + " "
+                completeprompt += "-descriptor- "
 
-            if(subjectchooser in ["animal as human,","human", "job", "fictional", "non fictional", "humanoid"] and normal_dist(insanitylevel) and generatebodytype == True):
-                completeprompt += random.choice(bodytypelist) + " "
+            if(subjectchooser in ["animal as human,","human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation"] and normal_dist(insanitylevel) and generatebodytype == True):
+                completeprompt += "-bodytype- "
 
-            if(subjectchooser in ["object","animal as human,","human", "job", "fictional", "non fictional", "humanoid"] and normal_dist(insanitylevel) and generatedescriptors == True):
-                completeprompt += random.choice(culturelist) + " "
+            if(subjectchooser in ["object","animal as human,","human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation"] and normal_dist(insanitylevel) and generatedescriptors == True):
+                completeprompt += "-culture- "
 
             if(mainchooser == "object"):
                 objectwildcardlist = ["-object-", "-building-","-vehicle-","-food-", "-space-"]  # using wildcards for replacements
@@ -949,9 +961,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                         
                     if(unique_dist(insanitylevel) and generateanimaladdition == True):
                         animaladdedsomething = 1
-                        completeprompt += random.choice(animaladditionlist) + " -animal- "
+                        completeprompt += "-animaladdition- -animal- "
                     if(animaladdedsomething != 1):
-                        completeprompt += random.choice(animallist) + " "
+                        completeprompt += "-animal- "
 
                     if(hybridorswap == "hybrid"):
                         if(uncommon_dist(insanitylevel)):
@@ -973,11 +985,14 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 if(givensubject==""):
 
                     if(subjectchooser == "human"):
-                        completeprompt += random.choice(manwomanlist) + " "
+                        completeprompt += "-manwoman- "
+                    
+                    if(subjectchooser == "manwomanrelation"):
+                        completeprompt += "-manwomanrelation- "
 
                     if(subjectchooser == "job"):
-                        completeprompt += random.choice(malefemalelist) + " "
-                        completeprompt += random.choice(joblist) + " "
+                        completeprompt += "-malefemale- "
+                        completeprompt += "-job- "
 
                     if(subjectchooser == "fictional"):
                         if rare_dist(insanitylevel):
@@ -985,7 +1000,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                             hybridorswap = random.choice(hybridorswaplist)
                             completeprompt += "["
                         
-                        completeprompt += random.choice(fictionallist) + " "
+                        completeprompt += "-fictional- "
 
                         if(hybridorswap == "hybrid"):
                             completeprompt += "|" + random.choice(hybridhumanlist) + " ] "
@@ -999,7 +1014,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                             hybridorswap = random.choice(hybridorswaplist)
                             completeprompt += "["
 
-                        completeprompt += random.choice(nonfictionallist) + " "
+                        completeprompt += "-nonfictional- "
 
                         if(hybridorswap == "hybrid"):
                             completeprompt += "|" + random.choice(hybridhumanlist) + "] "
@@ -1013,7 +1028,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                             hybridorswap = random.choice(hybridorswaplist)
                             completeprompt += "["
                         
-                        completeprompt += random.choice(humanoidlist) + " "
+                        completeprompt += "-humanoid- "
 
                         if(hybridorswap == "hybrid"):
                             completeprompt += "|" + random.choice(hybridhumanlist) + "] "
@@ -1037,7 +1052,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                         hybridorswap = random.choice(hybridorswaplist)
                         completeprompt += "["
                     
-                    completeprompt += random.choice(locationlist) + " "
+                    completeprompt += "-location- "
 
                     if(hybridorswap == "hybrid"):
                         completeprompt += "|" + "-location-"  + "] "
@@ -1051,19 +1066,17 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 # shots from inside can create cool effects in landscapes
                 if(unique_dist(insanitylevel)):
                     insideshot = 1
-                    completeprompt += " from inside of a "
-                    #addontolocationinside = [locationlist,buildinglist]
-                    completeprompt += random.choice(random.choice(addontolocationinside)) + " "
+                    completeprompt += " from inside of a -addontolocationinside- "
 
                 if(normal_dist(insanitylevel) and insideshot == 0):
                     completeprompt += " and "
                     if(rare_dist(insanitylevel)):
-                        completeprompt += random.choice(descriptorlist) + " " 
+                        completeprompt += "-descriptor- " 
                     if(rare_dist(insanitylevel)):
-                        completeprompt += random.choice(culturelist) + " "
+                        completeprompt += "-culture- "
 
                     #addontolocation = [locationlist,buildinglist, vehiclelist]
-                    completeprompt += random.choice(random.choice(addontolocation)) + " "
+                    completeprompt += "-addontolocation- "
 
 
             if(mainchooser == "concept"):
@@ -1087,19 +1100,19 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         # object additions
         for i in range(2):
             if(mainchooser == "object" and uncommon_dist(insanitylevel) and generateobjectaddition == True):
-                completeprompt += ", " + random.choice(objectadditionslist) + ", "
+                completeprompt += ", -objectaddition- , "
         
         
         # riding an animal, holding an object or driving a vehicle, rare
-        if(subjectchooser in ["animal as human,","human","fictional", "non fictional", "humanoid"] and rare_dist(insanitylevel) and generatehumanaddition == True):
+        if(subjectchooser in ["animal as human,","human","fictional", "non fictional", "humanoid", "manwomanrelation"] and rare_dist(insanitylevel) and generatehumanaddition == True):
             humanspecial = 1
-            completeprompt += random.choice(humanadditionlist) + " "
+            completeprompt += "-humanaddition- "
             
         completeprompt += ", "
 
         # unique additions for all types:
         if(extraordinary_dist(insanitylevel) and generateoveralladdition == True):
-            completeprompt += random.choice(overalladditionlist) + ", "
+            completeprompt += "-overalladdition- "
 
 
 
@@ -1107,7 +1120,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
         # SD understands emoji's. Can be used to manipulate facial expressions.
         # emoji, legendary
-        if(subjectchooser in ["animal as human,","human","fictional", "non fictional", "humanoid"] and legendary_dist(insanitylevel) and generateemoji== True):
+        if(subjectchooser in ["animal as human,","human","fictional", "non fictional", "humanoid", "manwomanrelation"] and legendary_dist(insanitylevel) and generateemoji== True):
             completeprompt += "-emoji-, "
             
 
@@ -1118,7 +1131,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         # Job 
         # either go job or activity, not both
 
-        if(subjectchooser in ["animal as human","human","fictional", "non fictional", "humanoid"]  and normal_dist(insanitylevel) and humanspecial != 1 and generatesubject == True):
+        if(subjectchooser in ["animal as human","human","fictional", "non fictional", "humanoid", "manwomanrelation"]  and normal_dist(insanitylevel) and humanspecial != 1 and generatesubject == True):
             joboractivitylist = [joblist,humanactivitylist]
             completeprompt += random.choice(random.choice(joboractivitylist)) + ", "
 
@@ -1138,16 +1151,16 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             completeprompt += " -minivomit-, "
         
         # outfit builder
-        if(subjectchooser in ["animal as human","human","fictional", "non fictional", "humanoid"]  and normal_dist(insanitylevel) and generateoutfit == True and humanspecial != 1):
+        if(subjectchooser in ["animal as human","human","fictional", "non fictional", "humanoid", "manwomanrelation"]  and normal_dist(insanitylevel) and generateoutfit == True and humanspecial != 1):
             completeprompt += ", wearing " + random.choice(buildoutfitlist) + ", "
         
-        if(subjectchooser in ["animal as human","human","fictional", "non fictional", "humanoid"]  and uncommon_dist(insanitylevel) and humanspecial != 1 and generatepose == True):
+        if(subjectchooser in ["animal as human","human","fictional", "non fictional", "humanoid", "manwomanrelation"]  and uncommon_dist(insanitylevel) and humanspecial != 1 and generatepose == True):
             completeprompt += random.choice(poselist) + ", "
         
-        if(subjectchooser in ["human","job","fictional", "non fictional", "humanoid"]  and normal_dist(insanitylevel) and generatehairstyle == True):
+        if(subjectchooser in ["human","job","fictional", "non fictional", "humanoid", "manwomanrelation"]  and normal_dist(insanitylevel) and generatehairstyle == True):
             completeprompt += random.choice(buildhairlist) + ", "
 
-        if(subjectchooser in ["animal as human,","human","fictional", "non fictional", "humanoid"]  and normal_dist(insanitylevel) and generateaccessorie == True and generateaccessories == True):
+        if(subjectchooser in ["animal as human,","human","fictional", "non fictional", "humanoid", "manwomanrelation"]  and normal_dist(insanitylevel) and generateaccessorie == True and generateaccessories == True):
             completeprompt += random.choice(buildaccessorielist) + ", "
 
         if(legendary_dist(insanitylevel) and subjectchooser not in ["landscape", "concept"] and generateinsideshot == True):
@@ -1172,23 +1185,23 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 completeprompt += "-timeperiod-, "
 
         if(mainchooser not in ["landscape"]  and rare_dist(insanitylevel) and generatefocus == True):
-            completeprompt += random.choice(focuslist) + ", "
+            completeprompt += "-focus-, "
             
 
 
         # others
         if(normal_dist(insanitylevel) and generatedirection == True):
-            completeprompt += random.choice(directionlist) + ", "
+            completeprompt += "-direction-, "
 
         if(normal_dist(insanitylevel) and generatemood == True):
-            completeprompt += random.choice(moodlist) + ", " 
+            completeprompt += "-mood-, " 
 
         # add in some more mini vomits
         if(unique_dist(insanitylevel) and generateminivomit == True):
             completeprompt += " -minivomit-, "
        
         if(normal_dist(insanitylevel) and generateartmovement == True):
-            completeprompt += random.choice(artmovementlist) + ", "  
+            completeprompt += "-artmovement-, "  
         
         if(normal_dist(insanitylevel) and generatelighting == True):
             completeprompt += "-lighting-, "  
@@ -1201,7 +1214,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             completeprompt += random.choice(photoadditionlist) + ", "
                 
         if(isphoto == 1 and generatecamera == True):
-            completeprompt += random.choice(cameralist) + ", "  
+            completeprompt += "-camera-, "  
 
         if(normal_dist(insanitylevel) or isphoto == 1):
             if(generatelens == True):
@@ -1212,13 +1225,13 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
         # vomit some cool/wierd things into the prompt
         if(uncommon_dist(insanitylevel) and generatevomit == True):
-            completeprompt += random.choice(vomitlist) + ", "
+            completeprompt += "-vomit-, "
             if(uncommon_dist(insanitylevel)):
-                completeprompt += random.choice(vomitlist) + ", "
+                completeprompt += "-vomit-, "
 
         #adding a great work of art, like starry night has cool effects. But this should happen only very rarely.
         if(novel_dist(insanitylevel) and generategreatwork == True):
-            completeprompt += " in the style of " + random.choice(greatworklist) + ", "
+            completeprompt += " in the style of -greatwork-, "
 
         #adding a poemline. But this should happen only very rarely.
         if(novel_dist(insanitylevel) and generatepoemline == True):
@@ -1366,9 +1379,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         
         # custom style list
         if(uncommon_dist(insanitylevel) and generatestyle == True):
-            completeprompt += random.choice(stylestiloralist) + ", "
+            completeprompt += "-styletilora-, "
             if(uncommon_dist(insanitylevel)):
-                completeprompt += random.choice(stylestiloralist) + ", "
+                completeprompt += "-styletilora-, "
 
 
         # custom suffix list
@@ -1407,6 +1420,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 artistmode = artistmodeslist[modeselector]
                 if artistmode in ["hybrid","switching"] and end - step == 1:
                     artistmode = "normal"
+            # if there are not enough artists in the list, then just go normal
+            if(len(artistlist) < 3):
+                artistmode = "normal"
             
             if artistmode in ["hybrid", "stopping", "adding","switching"]:
                 completeprompt += " ["
@@ -1473,7 +1489,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     if(unique_dist(insanitylevel)): # sometimes, its just nice to have descriptor and a normal "outfit". We use mini outfits for this!
                  completeprompt = completeprompt.replace("-outfit-", "-minioutfit-",1)
 
-    completeprompt = completeprompt.replace("-artist-", "art by -artist-")
+    
 
     
     # lol, this needs a rewrite :D
@@ -1536,17 +1552,32 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     "-artistphotography-" in completeprompt or
     "-emoji-" in completeprompt or
     "-timeperiod-" in completeprompt or
-    "-shotsize-" in completeprompt):
-        allwildcardslistnohybrid = [ "-color-","-object-", "-animal-", "-fictional-","-nonfictional-","-building-","-vehicle-","-location-","-conceptprefix-","-food-","-haircolor-","-hairstyle-","-job-", "-accessory-", "-humanoid-", "-manwoman-", "-human-", "-colorscheme-", "-mood-", "-genderdescription-", "-artmovement-", "-malefemale-", "-bodytype-", "-minilocation-", "-minilocationaddition-", "-pose-", "-season-", "-minioutfit-", "-elaborateoutfit-", "-minivomit-", "-vomit-", "-rpgclass-", "-subjectfromfile-", "-brand-", "-space-", "-artist-", "-imagetype-", "-othertype-", "-quality-", "-lighting-", "-camera-", "-lens-","-imagetypequality-", "-poemline-", "-songline-", "-greatwork-", "-artistfantasy-", "-artistpopular-", "-artistromanticism-", "-artistphotography-", "-emoji-", "-timeperiod-", "-shotsize-"]
-        allwildcardslistnohybridlists = [colorlist, objectlist, animallist, fictionallist, nonfictionallist, buildinglist, vehiclelist, locationlist,conceptprefixlist,foodlist,haircolorlist, hairstylelist,joblist, accessorielist, humanoidlist, manwomanlist, humanlist, colorschemelist, moodlist, genderdescriptionlist, artmovementlist, malefemalelist, bodytypelist, minilocationlist, minilocationadditionslist, poselist, seasonlist, minioutfitlist, elaborateoutfitlist, minivomitlist, vomitlist, rpgclasslist, customsubjectslist, brandlist, spacelist, artistlist, imagetypelist, othertypelist, qualitylist, lightinglist, cameralist, lenslist, imagetypequalitylist, poemlinelist, songlinelist, greatworklist, fantasyartistlist, popularartistlist, romanticismartistlist, photographyartistlist, emojilist, timeperiodlist, shotsizelist]
+    "-shotsize-" in completeprompt or
+    "-musicgenre-" in completeprompt or
+    "-animaladdition-" in completeprompt or
+    "-addontolocationinside-" in completeprompt or
+    "-addontolocation-" in completeprompt or
+    "-objectaddition-" in completeprompt or
+    "-humanaddition-" in completeprompt or
+    "-overalladdition-" in completeprompt or
+    "-focus-" in completeprompt or
+    "-direction-" in completeprompt or
+    "-styletilora-" in completeprompt or
+    "-manwomanrelation-" in completeprompt or
+    "-waterlocation-" in completeprompt or
+    "-container-" in completeprompt):
+        allwildcardslistnohybrid = [ "-color-","-object-", "-animal-", "-fictional-","-nonfictional-","-building-","-vehicle-","-location-","-conceptprefix-","-food-","-haircolor-","-hairstyle-","-job-", "-accessory-", "-humanoid-", "-manwoman-", "-human-", "-colorscheme-", "-mood-", "-genderdescription-", "-artmovement-", "-malefemale-", "-bodytype-", "-minilocation-", "-minilocationaddition-", "-pose-", "-season-", "-minioutfit-", "-elaborateoutfit-", "-minivomit-", "-vomit-", "-rpgclass-", "-subjectfromfile-", "-brand-", "-space-", "-artist-", "-imagetype-", "-othertype-", "-quality-", "-lighting-", "-camera-", "-lens-","-imagetypequality-", "-poemline-", "-songline-", "-greatwork-", "-artistfantasy-", "-artistpopular-", "-artistromanticism-", "-artistphotography-", "-emoji-", "-timeperiod-", "-shotsize-", "-musicgenre-", "-animaladdition-", "-addontolocationinside-", "-addontolocation-", "-objectaddition-", "-humanaddition-", "-overalladdition-", "-focus-", "-direction-", "-styletilora-", "-manwomanrelation-", "-waterlocation-", "-container-"]
+        allwildcardslistnohybridlists = [colorlist, objectlist, animallist, fictionallist, nonfictionallist, buildinglist, vehiclelist, locationlist,conceptprefixlist,foodlist,haircolorlist, hairstylelist,joblist, accessorielist, humanoidlist, manwomanlist, humanlist, colorschemelist, moodlist, genderdescriptionlist, artmovementlist, malefemalelist, bodytypelist, minilocationlist, minilocationadditionslist, poselist, seasonlist, minioutfitlist, elaborateoutfitlist, minivomitlist, vomitlist, rpgclasslist, customsubjectslist, brandlist, spacelist, artistlist, imagetypelist, othertypelist, qualitylist, lightinglist, cameralist, lenslist, imagetypequalitylist, poemlinelist, songlinelist, greatworklist, fantasyartistlist, popularartistlist, romanticismartistlist, photographyartistlist, emojilist, timeperiodlist, shotsizelist, musicgenrelist, animaladditionlist, addontolocationinsidelist, addontolocationlist, objectadditionslist, humanadditionlist, overalladditionlist, focuslist, directionlist, stylestiloralist, manwomanrelationlist, waterlocationlist, containerlist]
         
         allwildcardslistwithhybrid = ["-material-", "-descriptor-", "-outfit-", "-conceptsuffix-","-culture-", "-objecttotal-"]
         allwildcardslistwithhybridlists = [materiallist, descriptorlist,outfitlist,conceptsuffixlist,culturelist, objecttotallist]
+        
         
         #  keywordsinstring = any(word.lower() in givensubject.lower() for word in keywordslist)
         for wildcard in allwildcardslistnohybrid:
             attachedlist = allwildcardslistnohybridlists[allwildcardslistnohybrid.index(wildcard)]
             completeprompt = replacewildcard(completeprompt, insanitylevel, wildcard, attachedlist,False)
+
 
         
         for wildcard in allwildcardslistwithhybrid:
@@ -1571,25 +1602,43 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
     # function
 def replacewildcard(completeprompt, insanitylevel, wildcard,listname, activatehybridorswap):
+
     if(len(listname) == 0):
         # handling empty lists
         completeprompt = completeprompt.replace(wildcard, "",1)
     else:
 
         while wildcard in completeprompt:
-            if(unique_dist(insanitylevel) and activatehybridorswap == True):
+            if(unique_dist(insanitylevel) and activatehybridorswap == True and len(listname)>2):
                 hybridorswaplist = ["hybrid", "swap"]
                 hybridorswap = random.choice(hybridorswaplist)
-                hybridorswapreplacementvalue = "[" + random.choice(listname)
+                replacementvalue = random.choice(listname)
+                listname.remove(replacementvalue)
+                hybridorswapreplacementvalue = "[" + replacementvalue
                 
                 if(hybridorswap == "hybrid"):
-                        hybridorswapreplacementvalue += "|" + random.choice(listname) + "] "
+                        replacementvalue = random.choice(listname)
+                        listname.remove(replacementvalue)
+                        hybridorswapreplacementvalue += "|" + replacementvalue + "] "
                 if(hybridorswap == "swap"):
-                        hybridorswapreplacementvalue += ":" + random.choice(listname) + ":" + str(random.randint(1,20)) +  "] "
+                        replacementvalue = random.choice(listname)
+                        listname.remove(replacementvalue)
+                        hybridorswapreplacementvalue += ":" + replacementvalue + ":" + str(random.randint(1,20)) +  "] "
                 
                 completeprompt = completeprompt.replace(wildcard, hybridorswapreplacementvalue,1)
 
-            completeprompt = completeprompt.replace(wildcard, random.choice(listname),1)
+            #if list is not empty
+            if(bool(listname)):
+                replacementvalue = random.choice(listname)
+                listname.remove(replacementvalue)
+                if(wildcard == "-artist-"):
+                    replacementvalue = "art by " + replacementvalue
+                
+            else:
+                replacementvalue = ""
+            
+            completeprompt = completeprompt.replace(wildcard, replacementvalue,1)
+
 
     return completeprompt
 
@@ -1605,6 +1654,9 @@ def cleanup(completeprompt):
 
     # Move the extracted matches to the end of completeprompt
     completeprompt += " " + " ".join(matches)   
+
+    # sometimes if there are not enough artist, we get left we things formed as (:1.2)
+    completeprompt = re.sub('\(\:\d+\.\d+\)', '', completeprompt) 
 
     # all cleanup steps moved here
     completeprompt = re.sub('\[ ', '[', completeprompt)
@@ -1642,6 +1694,8 @@ def cleanup(completeprompt):
     
     completeprompt = re.sub('(?<!\()\s?\(', ' (', completeprompt)
     completeprompt = re.sub('\)(?![\s)])', ') ', completeprompt)
+
+    
 
     completeprompt = completeprompt.strip(", ")
 

@@ -1,11 +1,23 @@
 from fastapi import FastAPI, Body
 import gradio as gr
 from build_dynamic_prompt import *
+from scripts.onebuttonprompt import subjects, artists, imagetypes
 
 def one_button_prompt_api(_: gr.Blocks, app: FastAPI):
     @app.get("/one_button_prompt/version")
     async def version():
         return {"version": 1.0}
+
+    @app.get("/one_button_prompt/config")
+    async def get_config():
+
+        config ={
+             "subjects": subjects,
+             "artists": artists,
+             "imagetypes": imagetypes,
+
+        }
+        return config 
 
     @app.post("/one_button_prompt/prompt/random")
     async def random_prompts(numberofprompts:int = Body(1,title="number of prompts"),

@@ -107,6 +107,14 @@ class Script(scripts.Script):
 
         with gr.Tab("Main"):
             with gr.Row():
+                gr.Markdown("""
+                            <font size="2">
+                            One Button Prompt is now active. Just press the normal Generate button to start generating images.
+
+                            The settings below give you more control over what you wish to generate.
+                            </font>
+                            """)
+            with gr.Row():
                 insanitylevel = gr.Slider(1, 10, value=5, step=1, label="Higher levels increases complexity and randomness of generated prompt")
             with gr.Row():
                 with gr.Column(scale=1, variant="compact"):
@@ -162,7 +170,9 @@ class Script(scripts.Script):
                         ### Description
                         
                         <font size="2">
-                        This generator will generate a complete full prompt for you, based on randomness. You can increase the slider, to include more things to put into the prompt. 
+                        Just press the normal Generate button.
+
+                        This generator will generate a complete full prompt for you and generate the image, based on randomness. You can increase the slider, to include more things to put into the prompt. 
                         Recommended is keeping it around 3-7. Use 10 at your own risk.
 
                         There are a lot of special things build in, based on various research papers. Just try it, and let it surprise you.
@@ -398,7 +408,7 @@ class Script(scripts.Script):
                             """
                             ### TXT2IMG
                             <font size="2">
-                            Start WebUi with option --api for this to work.
+                            Start WebUi with option --api for this to work. This is not needed for Vlad.
 
                             Note: This part is entirely optional and you can use the normal generate button.
 

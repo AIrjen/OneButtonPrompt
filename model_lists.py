@@ -12,12 +12,10 @@ def get_upscalers():
     # Upscalers are sort of hardcoded as well for Latent, but not for the 2 others. So build it up!
     latentlist=["Latent","Latent (antialiased)","Latent (bicubic)","Latent (bicubic antialiased)","Latent (nearest)","Latent (nearest-exact)","Lanczos","Nearest"]
 
-    upscalerlistfromwWebUI = [x.name for x in shared.sd_upscalers]
+    
     # From 1.4 onwards, the shared.sd_upscalers isn't available on startup. Run load_upscalers first
-    if(bool(upscalerlistfromwWebUI) == False):
-        modelloader.cleanup_models()
-        modelloader.load_upscalers()
-        upscalerlistfromwWebUI = [x.name for x in shared.sd_upscalers]
+    # It doesn't work perfectly, I have to call this each time to make sure it stays working.
+    upscalerlistfromwWebUI = upscalers_on_startup()
     
     # deduplicate the list
     upscalerlistfromwWebUI = list(dict.fromkeys(upscalerlistfromwWebUI))
@@ -40,13 +38,10 @@ def get_samplers():
     return samplerlist
 
 def get_upscalers_for_img2img():
-    upscalerlistfromwWebUI = [x.name for x in shared.sd_upscalers]
-    
+        
     # From 1.4 onwards, the shared.sd_upscalers isn't available on startup. Run load_upscalers first
-    if(bool(upscalerlistfromwWebUI) == False):
-        modelloader.cleanup_models()
-        modelloader.load_upscalers()
-        upscalerlistfromwWebUI = [x.name for x in shared.sd_upscalers]
+    # It doesn't work perfectly, I have to call this each time to make sure it stays working.
+    upscalerlistfromwWebUI = upscalers_on_startup()
     
     # deduplicate the list
     upscalerlistfromwWebUI = list(dict.fromkeys(upscalerlistfromwWebUI))
@@ -61,4 +56,23 @@ def get_samplers_for_img2img():
     samplerlist = ["Euler a", "Euler", "LMS","Heun","DPM2","DPM2 a","DPM++ 2S a","DPM++ 2M","DPM++ SDE","DPM fast","DPM adaptive","LMS Karras","DPM2 Karras","DPM2 a Karras","DPM++ 2S a Karras","DPM++ 2M Karras","DPM++ SDE Karras"]
     samplerlist += ["DDIM"] #UniPC and PLMS dont support upscaling apparently
     return samplerlist
+
+def upscalers_on_startup():
+    modelloader.cleanup_models()
+    modelloader.load_upscalers()
+    upscalerlistfromwWebUI = [x.name for x in shared.sd_upscalers]
+
+    # In vlad this seems to work, but in WebUI some of these aren't loaded yet
+    # lets just hardcode it, and get it over with
+    if('LDSR' not in upscalerlistfromwWebUI):
+        print("hello some more!")
+        upscalerlistfromwWebUI.append('LDSR')
+    if('ScuNET GAN' not in upscalerlistfromwWebUI):
+        upscalerlistfromwWebUI.append('ScuNET GAN')
+    if('ScuNET PSNR' not in upscalerlistfromwWebUI):
+        upscalerlistfromwWebUI.append('ScuNET PSNR')
+    if('SwinIR_4x' not in upscalerlistfromwWebUI and 'SwinIR 4x' not in upscalerlistfromwWebUI):
+        upscalerlistfromwWebUI.append('SwinIR_4x')
+    
+    return upscalerlistfromwWebUI
 

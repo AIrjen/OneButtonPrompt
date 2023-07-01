@@ -399,6 +399,10 @@ class Script(scripts.Script):
                             ### TXT2IMG
                             <font size="2">
                             Start WebUi with option --api for this to work.
+
+                            Note: This part is entirely optional and you can use the normal generate button.
+
+                            This part is intended for running an upscaling at the same time.
                             </font>
                             """
                             )                         

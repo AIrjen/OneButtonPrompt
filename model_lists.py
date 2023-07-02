@@ -65,7 +65,6 @@ def upscalers_on_startup():
     # In vlad this seems to work, but in WebUI some of these aren't loaded yet
     # lets just hardcode it, and get it over with
     if('LDSR' not in upscalerlistfromwWebUI):
-        print("hello some more!")
         upscalerlistfromwWebUI.append('LDSR')
     if('ScuNET GAN' not in upscalerlistfromwWebUI):
         upscalerlistfromwWebUI.append('ScuNET GAN')

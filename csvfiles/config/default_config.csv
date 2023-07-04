@@ -1,0 +1,28 @@
+#this file controls the generation process;
+#records starting with # are ignored;
+#----;
+# main subject generation options;
+# these can either be on or off;
+#----;
+# objects;
+subject_object;on
+subject_vehicle;on
+subject_food;on
+subject_space;on
+subject_building;on
+# animals;
+subject_animal;on
+# humanoids;
+subject_manwoman;on
+subject_manwomanrelation;on
+subject_fictional;on
+subject_nonfictional;on
+subject_humanoid;on
+subject_job;on
+# landscape;
+subject_landscape;on
+# concept;
+subject_event;on
+subject_concept;on
+subject_poemline;on
+subject_songline;on

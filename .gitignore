@@ -1,3 +1,4 @@
 
 *.pyc
 userfiles/antilist.csv
+userfiles/config.csv

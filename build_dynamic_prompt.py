@@ -13,6 +13,11 @@ from random_functions import *
 def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", givensubject="",smartsubject = True,giventypeofimage="", imagemodechance = 20):
 
     
+    # load the config file
+    config = load_config_csv()
+
+    
+    
     # first build up a complete anti list. Those values are removing during list building
     # this uses the antivalues string AND the antilist.csv
     emptylist = []
@@ -145,12 +150,75 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     addontolocationinsidelist = []
     addontolocationlist = []
 
-    generatevehicle = bool(vehiclelist)
-    generateobject = bool(objectlist)
-    generatefood = bool(foodlist)
-    generatebuilding = bool(buildinglist)
-    generatespace = bool(spacelist)
-    generateobject = generatevehicle + generateobject + generatefood + generatebuilding + generatespace
+    # load subjects stuff from config
+    generatevehicle = False
+    generateobject = False
+    generatefood = False
+    generatebuilding = False
+    generatespace = False
+    generateanimal = False
+    generatemanwoman = False
+    generatemanwomanrelation = False
+    generatefictionalcharacter = False
+    generatenonfictionalcharacter = False
+    generatehumanoids = False
+    generatejob = False
+    generatelandscape = False
+    generateevent = False
+    generateconcepts = False
+    generatepoemline = False
+    generatesongline = False
+
+
+    for item in config:
+        # objects
+        if item[0] == 'subject_vehicle' and item[1] == 'on':
+            generatevehicle = True
+        if item[0] == 'subject_object' and item[1] == 'on':
+            generateobject = True
+        if item[0] == 'subject_food' and item[1] == 'on':
+            generatefood = True
+        if item[0] == 'subject_building' and item[1] == 'on':
+            generatebuilding = True
+        if item[0] == 'subject_space' and item[1] == 'on':
+            generatespace = True
+        # animals
+        if item[0] == 'subject_animal' and item[1] == 'on':
+            generateanimal = True
+        # humanoids
+        if item[0] == 'subject_manwoman' and item[1] == 'on':
+            generatemanwoman = True
+        if item[0] == 'subject_manwomanrelation' and item[1] == 'on':
+            generatemanwomanrelation = True
+        if item[0] == 'subject_fictional' and item[1] == 'on':
+            generatefictionalcharacter = True
+        if item[0] == 'subject_nonfictional' and item[1] == 'on':
+            generatenonfictionalcharacter = True
+        if item[0] == 'subject_humanoid' and item[1] == 'on':
+            generatehumanoids = True
+        if item[0] == 'subject_job' and item[1] == 'on':
+            generatejob = True
+        # landscape
+        if item[0] == 'subject_landscape' and item[1] == 'on':
+            generatelandscape = True
+        # concept
+        if item[0] == 'subject_event' and item[1] == 'on':
+            generateevent = True
+        if item[0] == 'subject_concept' and item[1] == 'on':
+            generateconcepts = True
+        if item[0] == 'poemline' and item[1] == 'on':
+            generatepoemline = True
+        if item[0] == 'songline' and item[1] == 'on':
+            generatesongline = True
+        
+
+
+    generatevehicle = bool(vehiclelist) and generatevehicle
+    generateobject = bool(objectlist) and generateobject
+    generatefood = bool(foodlist) and generatefood
+    generatebuilding = bool(buildinglist) and generatebuilding
+    generatespace = bool(spacelist) and generatespace
+    generateobject = generatevehicle or generateobject or generatefood or generatebuilding or generatespace
     
 
     if(generatevehicle):
@@ -180,13 +248,13 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     if(generateobject):
         mainchooserlist.append("object")
 
-    generatefictionalcharacter = bool(fictionallist)
-    generatenonfictionalcharacter = bool(nonfictionallist)
-    generatehumanoids = bool(humanoidlist)
-    generatemanwoman = bool(manwomanlist)
-    generatemanwomanrelation = bool(manwomanrelationlist)
-    generatejob = bool(joblist)
-    generatehumanoid = generatefictionalcharacter + generatenonfictionalcharacter + generatehumanoids + generatemanwoman + generatejob + generatemanwomanrelation
+    generatefictionalcharacter = bool(fictionallist) and generatefictionalcharacter
+    generatenonfictionalcharacter = bool(nonfictionallist) and generatenonfictionalcharacter
+    generatehumanoids = bool(humanoidlist) and generatehumanoids
+    generatemanwoman = bool(manwomanlist) and generatemanwoman
+    generatemanwomanrelation = bool(manwomanrelationlist) and generatemanwomanrelation
+    generatejob = bool(joblist) and generatejob
+    generatehumanoid = generatefictionalcharacter or generatenonfictionalcharacter or generatehumanoids or generatemanwoman or generatejob or generatemanwomanrelation
 
 
     if(generatefictionalcharacter):
@@ -217,23 +285,23 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         mainchooserlist.append("humanoid")
     
     
-    generateanimal = bool(animallist)
+    generateanimal = bool(animallist) and generateanimal
 
     if(generateanimal):
         mainchooserlist.append("animal")
         hybridlist.append("-animal-")
 
-    generatelandscape = bool(locationlist)
+    generatelandscape = bool(locationlist) and generatelandscape
 
     if(generatelandscape):
         mainchooserlist.append("landscape")
         addontolocationlist.append("-location-")
         addontolocationinsidelist.append("-location-")
     
-    generateevent = bool(eventlist)
-    generateconcepts = bool(conceptprefixlist) + bool(conceptsuffixlist)
-    generatepoemline = bool(poemlinelist) 
-    generatesongline = bool(songlinelist) 
+    generateevent = bool(eventlist) and generateevent
+    generateconcepts = bool(conceptprefixlist) and bool(conceptsuffixlist) and generateconcepts
+    generatepoemline = bool(poemlinelist) and generatepoemline 
+    generatesongline = bool(songlinelist) and generatesongline
     
 
 

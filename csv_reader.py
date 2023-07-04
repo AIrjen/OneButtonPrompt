@@ -1,6 +1,7 @@
 import csv
 import random
 import os
+import shutil
 
 def random_read_from_csv(filename):
     script_dir = os.path.dirname(os.path.abspath(__file__))  # Script directory
@@ -92,3 +93,21 @@ def artist_category_csv_to_list(csvfilename,category):
 
 
 
+def load_config_csv():
+        csvlist = []
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        full_path_config_file = os.path.join(script_dir, "./userfiles/" )
+        full_path_default_config_file = os.path.join(script_dir, "./csvfiles/config/" )
+        config_file = full_path_config_file + 'config.csv'
+        default_config_file = full_path_default_config_file + 'default_config.csv'
+
+        if not os.path.exists(config_file):
+                shutil.copy2(default_config_file, config_file)
+                print("Config file created.")
+
+
+        with open(config_file, "r", newline="",encoding="utf8") as file:
+                reader = csv.DictReader(file, delimiter=";")
+                csvlist = [list(row.values()) for row in reader if not any(value.startswith('#') for value in row.values())]
+        return csvlist
+        

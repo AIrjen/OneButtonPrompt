@@ -10,7 +10,7 @@ from random_functions import *
 # insanity level controls randomness of propmt 0-10
 # forcesubject van be used to force a certain type of subject
 # Set artistmode to none, to exclude artists 
-def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", givensubject="",smartsubject = True,giventypeofimage="", imagemodechance = 20):
+def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", givensubject="",smartsubject = True,giventypeofimage="", imagemodechance = 20, gender = "all"):
 
     
     # load the config file
@@ -32,7 +32,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     animallist = csv_to_list("animals",antilist)    
     materiallist = csv_to_list("materials",antilist)
     objectlist = csv_to_list("objects",antilist)
-    fictionallist = csv_to_list("fictional characters",antilist)
+    fictionallist = csv_to_list(csvfilename="fictional characters",antilist=antilist,skipheader=True,gender=gender)
     nonfictionallist = csv_to_list("nonfictional characters",antilist)
     conceptsuffixlist = csv_to_list("concept_suffix",antilist)
     buildinglist = csv_to_list("buildings",antilist)
@@ -62,8 +62,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     joblist = csv_to_list("jobs",antilist)
     lenslist = csv_to_list("lenses",antilist)
     lightinglist = csv_to_list("lighting",antilist)
-    malefemalelist = csv_to_list("malefemale",antilist)
-    manwomanlist = csv_to_list("manwoman",antilist)
+    malefemalelist = csv_to_list(csvfilename="malefemale",antilist=antilist,skipheader=True,gender=gender)
+    manwomanlist = csv_to_list(csvfilename="manwoman",antilist=antilist,skipheader=True,gender=gender)
     moodlist = csv_to_list("moods",antilist)
     othertypelist = csv_to_list("othertypes",antilist)
     poselist = csv_to_list("poses",antilist)
@@ -72,7 +72,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     timeperiodlist = csv_to_list("timeperiods",antilist)
     vomitlist = csv_to_list("vomit",antilist)
     foodlist = csv_to_list("foods", antilist)
-    genderdescriptionlist = csv_to_list("genderdescription", antilist)
+    genderdescriptionlist = csv_to_list(csvfilename="genderdescription",antilist=antilist,skipheader=True,gender=gender)
     minilocationlist = csv_to_list("minilocations", antilist)
     minioutfitlist = csv_to_list("minioutfits", antilist)
     seasonlist = csv_to_list("seasons", antilist)
@@ -85,7 +85,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     poemlinelist = csv_to_list("poemlines", antilist)
     songlinelist = csv_to_list("songlines", antilist)
     musicgenrelist = csv_to_list("musicgenres", antilist)
-    manwomanrelationlist = csv_to_list("manwomanrelations", antilist)
+    manwomanrelationlist = csv_to_list(csvfilename="manwomanrelations",antilist=antilist,skipheader=True,gender=gender)
     waterlocationlist = csv_to_list("waterlocations", antilist)
     containerlist = csv_to_list("containers", antilist)
 

@@ -19,7 +19,7 @@ def add_from_csv(completeprompt, csvfilename, addcomma, prefix, suffix):
                 return ", ".join([completeprompt,addtoprompt])
         return " ".join([completeprompt,addtoprompt])
 
-def csv_to_list(csvfilename, antilist=[], directory="./csvfiles/", lowerandstrip=0, delimiter=";", listoflistmode = False):
+def csv_to_list(csvfilename, antilist=[], directory="./csvfiles/", lowerandstrip=0, delimiter=";", listoflistmode = False, skipheader = False, gender = "all"):
         userfilesdirectory = "./userfiles/"
         userfileaddonname = csvfilename + "_addon.csv"
         userfilereplacename = csvfilename + "_replace.csv"
@@ -40,30 +40,44 @@ def csv_to_list(csvfilename, antilist=[], directory="./csvfiles/", lowerandstrip
         if(os.path.isfile(full_path + csvfilename + ".csv")):
                 with open(full_path + csvfilename + ".csv", "r", newline="",encoding="utf8") as file:
                         reader = csv.reader(file, delimiter=delimiter)
+                        if(skipheader==True):
+                                next(reader)
                         if(listoflistmode==True):
                                 csvlist = list(reader)
                         else:
                                 for row in reader:
                                         value = row[0]
-                                        if(value.lower().strip() not in antilist):
-                                                if(lowerandstrip == 1):
-                                                        csvlist.append(row[0].lower().strip())        
-                                                csvlist.append(row[0])
+                                        if( 
+                                                (gender != "all" and row[1] == gender)
+                                                or gender == "all"
+                                                ):
+                                                if(value.lower().strip() not in antilist):
+                                                        if(lowerandstrip == 1):
+                                                                csvlist.append(row[0].lower().strip())        
+                                                        else:
+                                                                csvlist.append(row[0])
                 
         # do the add ons!
         if(directory=="./csvfiles/" or directory=="./csvfiles/special_lists/"):
                 if(os.path.isfile(userfilesfolder + csvfilename + "_addon" + ".csv")):
                         with open(userfilesfolder + csvfilename + "_addon" + ".csv", "r", newline="",encoding="utf8") as file:
                                 reader = csv.reader(file, delimiter=",")
+                                if(skipheader==True):
+                                        next(reader)
                                 if(listoflistmode==True):
                                         csvlist.append(list(reader))
                                 else:
                                         for row in reader:
                                                 value = row[0]
-                                                if(value.lower().strip() not in antilist):
-                                                        if(lowerandstrip == 1):
-                                                                csvlist.append(row[0].lower().strip())        
-                                                        csvlist.append(row[0])
+                                                if( 
+                                                (gender != "all" and row[1] == gender)
+                                                or gender == "all"
+                                                ):
+                                                        if(value.lower().strip() not in antilist):
+                                                                if(lowerandstrip == 1):
+                                                                        csvlist.append(row[0].lower().strip())        
+                                                                else:
+                                                                        csvlist.append(row[0])
 
 
         # remove duplicates, but check only for lowercase stuff

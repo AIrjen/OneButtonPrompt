@@ -58,12 +58,14 @@ def chance_roll(insanitylevel, chance):
         properties = chance_mapping[chance]
         set_number = properties['set_number']
         message = properties['message']
-        if(message != ""):
-             print(message)
         # if we have insanity level of 10, then every under rare is alwas true
         if (set_number <= 35 and insanitylevel >= 10):
+            if(message != ""):
+                print(message)
             return True 
         roll = random.randint(1, set_number) < insanitylevel
+        if(message != "" and roll == True):
+                print(message)
         return roll
     else:
         raise ValueError(f"Invalid chance value: {chance}")

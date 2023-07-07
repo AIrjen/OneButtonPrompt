@@ -199,6 +199,37 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     humanadditionchance = 'rare'
     overalladditionchance = 'extraordinary'
 
+    custominputmidrepeats = 2
+    custominputmidchance = 'uncommon'
+    minivomitmidchance = 'unique'
+
+    outfitchance = 'normal'
+    posechance = 'uncommon'
+    hairchance = 'normal'
+    accessorychance = 'normal'
+    humanoidinsideshotchance = 'legendary'
+    humanoidbackgroundchance = 'uncommon'
+
+    landscapeminilocationchance = 'uncommon'
+    generalminilocationchance = 'rare'
+
+    timperiodchance = 'normal'
+    focuschance = 'normal'
+    directionchance = 'normal'
+    moodchance = 'normal'
+    minivomitsuffixchance = 'unique'
+    artmovementchance = 'normal'
+    lightingchance = 'normal'
+    photoadditionchance = 'common'
+    lenschance = 'normal'
+    colorschemechance = 'normal'
+    vomit1chance = 'uncommon'
+    vomit2chance= 'uncommon'
+    greatworkchance = 'novel'
+    poemlinechance = 'novel'
+    songlinechance = 'novel'
+    quality1chance = 'uncommon'
+    quality2chance = 'uncommon'
 
 
     for item in config:
@@ -297,6 +328,66 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             humanadditionchance = item[1]
         if item[0] == 'overalladditionchance':
             overalladditionchance = item[1]
+
+        if item[0] == 'custominputmidrepeats':
+            custominputmidrepeats = int(item[1])
+        if item[0] == 'custominputmidchance':
+            custominputmidchance = item[1]
+        if item[0] == 'minivomitmidchance':
+            minivomitmidchance = item[1]
+        
+        if item[0] == 'outfitchance':
+            outfitchance = item[1]
+        if item[0] == 'posechance':
+            posechance = item[1]
+        if item[0] == 'hairchance':
+            hairchance = item[1]
+        if item[0] == 'accessorychance':
+            accessorychance = item[1]
+        if item[0] == 'humanoidinsideshotchance':
+            humanoidinsideshotchance = item[1]
+        if item[0] == 'humanoidbackgroundchance':
+            humanoidbackgroundchance = item[1]
+
+        if item[0] == 'landscapeminilocationchance':
+            landscapeminilocationchance = item[1]
+        if item[0] == 'generalminilocationchance':
+            generalminilocationchance = item[1]
+
+        if item[0] == 'timperiodchance':
+            timperiodchance = item[1]
+        if item[0] == 'focuschance':
+            focuschance = item[1]
+        if item[0] == 'directionchance':
+            directionchance = item[1]
+        if item[0] == 'moodchance':
+            moodchance = item[1]
+        if item[0] == 'minivomitsuffixchance':
+            minivomitsuffixchance = item[1]
+        if item[0] == 'artmovementchance':
+            artmovementchance = item[1]
+        if item[0] == 'lightingchance':
+            lightingchance = item[1]
+        if item[0] == 'photoadditionchance':
+            photoadditionchance = item[1]
+        if item[0] == 'lenschance':
+            lenschance = item[1]
+        if item[0] == 'colorschemechance':
+            colorschemechance = item[1]
+        if item[0] == 'vomit1chance':
+            vomit1chance = item[1]
+        if item[0] == 'vomit2chance':
+            vomit2chance = item[1]
+        if item[0] == 'greatworkchance':
+            greatworkchance = item[1]
+        if item[0] == 'poemlinechance':
+            poemlinechance = item[1]
+        if item[0] == 'songlinechance':
+            songlinechance = item[1]
+        if item[0] == 'quality1chance':
+            quality1chance = item[1]
+        if item[0] == 'quality2chance':
+            quality2chance = item[1]
 
 
     generatevehicle = bool(vehiclelist) and generatevehicle
@@ -1295,110 +1386,109 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         #    completeprompt += ", with " + random.choice(skintypelist) + " skin, "
 
         # custom mid list
-        if(uncommon_dist(insanitylevel) and generatecustominputmid == True):
-            completeprompt += random.choice(custominputmidlist) + ", "
-            if(uncommon_dist(insanitylevel)):
+        for i in range(custominputmidrepeats):
+            if(chance_roll(insanitylevel, custominputmidchance) and generatecustominputmid == True):
                 completeprompt += random.choice(custominputmidlist) + ", "
         
         # add in some more mini vomits
-        if(unique_dist(insanitylevel) and generateminivomit == True):
+        if(chance_roll(insanitylevel, minivomitmidchance) and generateminivomit == True):
             completeprompt += " -minivomit-, "
         
         # outfit builder
-        if(subjectchooser in ["animal as human","human","fictional", "non fictional", "humanoid", "manwomanrelation"]  and normal_dist(insanitylevel) and generateoutfit == True and humanspecial != 1):
+        if(subjectchooser in ["animal as human","human","fictional", "non fictional", "humanoid", "manwomanrelation"]  and chance_roll(insanitylevel, outfitchance) and generateoutfit == True and humanspecial != 1):
             completeprompt += ", wearing " + random.choice(buildoutfitlist) + ", "
         
-        if(subjectchooser in ["animal as human","human","fictional", "non fictional", "humanoid", "manwomanrelation"]  and uncommon_dist(insanitylevel) and humanspecial != 1 and generatepose == True):
+        if(subjectchooser in ["animal as human","human","fictional", "non fictional", "humanoid", "manwomanrelation"]  and chance_roll(insanitylevel, posechance) and humanspecial != 1 and generatepose == True):
             completeprompt += random.choice(poselist) + ", "
         
-        if(subjectchooser in ["human","job","fictional", "non fictional", "humanoid", "manwomanrelation"]  and normal_dist(insanitylevel) and generatehairstyle == True):
+        if(subjectchooser in ["human","job","fictional", "non fictional", "humanoid", "manwomanrelation"]  and chance_roll(insanitylevel, hairchance) and generatehairstyle == True):
             completeprompt += random.choice(buildhairlist) + ", "
 
-        if(subjectchooser in ["animal as human,","human","fictional", "non fictional", "humanoid", "manwomanrelation"]  and normal_dist(insanitylevel) and generateaccessorie == True and generateaccessories == True):
+        if(subjectchooser in ["animal as human,","human","fictional", "non fictional", "humanoid", "manwomanrelation"]  and chance_roll(insanitylevel, accessorychance) and generateaccessorie == True and generateaccessories == True):
             completeprompt += random.choice(buildaccessorielist) + ", "
 
-        if(legendary_dist(insanitylevel) and subjectchooser not in ["landscape", "concept"] and generateinsideshot == True):
+        if(chance_roll(insanitylevel, humanoidinsideshotchance) and subjectchooser not in ["landscape", "concept"] and generateinsideshot == True):
             insideshot = 1
             completeprompt += random.choice(insideshotlist) + ", "
         
-        if(subjectchooser not in ["landscape", "concept"] and humanspecial != 1 and insideshot == 0 and uncommon_dist(insanitylevel) and generatebackground == True):
+        if(subjectchooser not in ["landscape", "concept"] and humanspecial != 1 and insideshot == 0 and chance_roll(insanitylevel, humanoidbackgroundchance) and generatebackground == True):
             completeprompt += random.choice(backgroundtypelist) + ", "
 
         # minilocation bit
-        if(subjectchooser in ["landscape"] and uncommon_dist(insanitylevel) and generateminilocationaddition == True):
+        if(subjectchooser in ["landscape"] and chance_roll(insanitylevel, landscapeminilocationchance) and generateminilocationaddition == True):
             completeprompt += " -minilocationaddition-, "
             
-        if(rare_dist(insanitylevel) and generateminilocationaddition == True):
+        if(chance_roll(insanitylevel, generalminilocationchance) and generateminilocationaddition == True):
             completeprompt += " -minilocationaddition-, "
 
 
 
         # landscapes it is nice to always have a time period
-        if(normal_dist(insanitylevel) or subjectchooser=="landscape"):
+        if(chance_roll(insanitylevel, timperiodchance) or subjectchooser=="landscape"):
             if(generatetimeperiod == True):
                 completeprompt += "-timeperiod-, "
 
-        if(mainchooser not in ["landscape"]  and rare_dist(insanitylevel) and generatefocus == True):
+        if(mainchooser not in ["landscape"]  and chance_roll(insanitylevel, focuschance) and generatefocus == True):
             completeprompt += "-focus-, "
             
 
 
         # others
-        if(normal_dist(insanitylevel) and generatedirection == True):
+        if(chance_roll(insanitylevel, directionchance) and generatedirection == True):
             completeprompt += "-direction-, "
 
-        if(normal_dist(insanitylevel) and generatemood == True):
+        if(chance_roll(insanitylevel, moodchance) and generatemood == True):
             completeprompt += "-mood-, " 
 
         # add in some more mini vomits
-        if(unique_dist(insanitylevel) and generateminivomit == True):
+        if(chance_roll(insanitylevel, minivomitsuffixchance) and generateminivomit == True):
             completeprompt += " -minivomit-, "
        
-        if(normal_dist(insanitylevel) and generateartmovement == True):
+        if(chance_roll(insanitylevel, artmovementchance) and generateartmovement == True):
             completeprompt += "-artmovement-, "  
         
-        if(normal_dist(insanitylevel) and generatelighting == True):
+        if(chance_roll(insanitylevel, lightingchance) and generatelighting == True):
             completeprompt += "-lighting-, "  
 
         # determine wether we have a photo or not
         if("photo" in completeprompt.lower()):
             isphoto = 1
             
-        if(common_dist(insanitylevel) and isphoto == 1 and generatephotoaddition == True):
+        if(chance_roll(insanitylevel, photoadditionchance) and isphoto == 1 and generatephotoaddition == True):
             completeprompt += random.choice(photoadditionlist) + ", "
                 
         if(isphoto == 1 and generatecamera == True):
             completeprompt += "-camera-, "  
 
-        if(normal_dist(insanitylevel) or isphoto == 1):
+        if(chance_roll(insanitylevel, lenschance) or isphoto == 1):
             if(generatelens == True):
                 completeprompt += "-lens-, "
 
-        if(normal_dist(insanitylevel) and generatecolorscheme == True):
-            completeprompt += random.choice(colorschemelist) + ", "
+        if(chance_roll(insanitylevel, colorschemechance) and generatecolorscheme == True):
+            completeprompt += "-colorscheme-, "
 
         # vomit some cool/wierd things into the prompt
-        if(uncommon_dist(insanitylevel) and generatevomit == True):
+        if(chance_roll(insanitylevel, vomit1chance) and generatevomit == True):
             completeprompt += "-vomit-, "
-            if(uncommon_dist(insanitylevel)):
+            if(chance_roll(insanitylevel, vomit2chance)):
                 completeprompt += "-vomit-, "
 
         #adding a great work of art, like starry night has cool effects. But this should happen only very rarely.
-        if(novel_dist(insanitylevel) and generategreatwork == True):
+        if(chance_roll(insanitylevel, greatworkchance) and generategreatwork == True):
             completeprompt += " in the style of -greatwork-, "
 
         #adding a poemline. But this should happen only very rarely.
-        if(novel_dist(insanitylevel) and generatepoemline == True):
+        if(chance_roll(insanitylevel, poemlinechance) and generatepoemline == True):
             completeprompt += " \"-poemline-\", "
 
         #adding a songline. But this should happen only very rarely.
-        if(novel_dist(insanitylevel) and generatesongline == True):
+        if(chance_roll(insanitylevel, songlinechance) and generatesongline == True):
             completeprompt += " \"-songline-\", "
 
         # everyone loves the adding quality. The better models don't need this, but lets add it anyway
-        if(uncommon_dist(insanitylevel) and generatequality == True):
+        if(chance_roll(insanitylevel, quality1chance) and generatequality == True):
             completeprompt += "-quality-, "
-            if(uncommon_dist(insanitylevel)):
+            if(chance_roll(insanitylevel, quality2chance)):
                 completeprompt += "-quality-, "
 
         

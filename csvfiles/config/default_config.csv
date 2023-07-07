@@ -58,4 +58,38 @@ objectadditionsrepeats;2
 objectadditionschance;uncommon
 humanadditionchance;rare
 overalladditionchance;extraordinary
-
+# humanoid other stuff;
+emojichance;legendary
+joboractivitychance;normal
+# things in the middle of the prompt;
+custominputmidrepeats;2
+custominputmidchance;uncommon
+minivomitmidchance;unique
+# humanoid main stuff;
+outfitchance;normal
+posechance;uncommon
+hairchance;normal
+accessorychance;normal
+humanoidinsideshotchance;legendary
+humanoidbackgroundchance;uncommon
+# minilocation stuff;
+landscapeminilocationchance;uncommon
+generalminilocationchance;rare
+# general stuff add the end of the prompt;
+timperiodchance;normal
+focuschance;normal
+directionchance;normal
+moodchance;normal
+minivomitsuffixchance;unique
+artmovementchance;normal
+lightingchance;normal
+photoadditionchance;common
+lenschance;normal
+colorschemechance;normal
+vomit1chance;uncommon
+vomit2chance;uncommon
+greatworkchance;novel
+poemlinechance;novel
+songlinechance;novel
+quality1chance;uncommon
+quality2chance;uncommon

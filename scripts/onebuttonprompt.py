@@ -22,6 +22,7 @@ promptmode = ["at the back", "in the front"]
 promptcompounder = ["1", "2", "3", "4", "5"]
 ANDtogglemode = ["none", "automatic", "prefix AND prompt + suffix", "prefix + prefix + prompt + suffix"]
 seperatorlist = ["comma", "AND", "BREAK"]
+genders = ["all", "male", "female"]
 
 #for autorun and upscale
 sizelist = ["all", "portrait", "wide", "square", "ultrawide"]
@@ -143,8 +144,10 @@ class Script(scripts.Script):
             with gr.Row():
                  givensubject = gr.Textbox(label="Overwrite subject: ", value="")
                  smartsubject = gr.Checkbox(label="Smart subject", value = True)
-            with gr.Row():
                  giventypeofimage = gr.Textbox(label="Overwrite type of image: ", value="")
+            with gr.Row():
+                 chosengender = gr.Dropdown(
+                                    genders, "gender", value="all", visible=False)
             with gr.Row():
                 gr.Markdown("""
                             <font size="2">
@@ -570,6 +573,18 @@ class Script(scripts.Script):
         startmain.click(generateimages, inputs=[amountofimages,size,model,samplingsteps,cfg,hiresfix,hiressteps,denoisestrength,samplingmethod, upscaler,hiresscale, apiurl, qualitygate, quality, runs,insanitylevel,subject, artist, imagetype, silentmode, workprompt, antistring, prefixprompt, suffixprompt,negativeprompt,promptcompounderlevel, seperator, img2imgbatch, img2imgsamplingsteps, img2imgcfg, img2imgsamplingmethod, img2imgupscaler, img2imgmodel,img2imgactivate, img2imgscale, img2imgpadding,img2imgdenoisestrength,ultimatesdupscale,usdutilewidth, usdutileheight, usdumaskblur, usduredraw, usduSeamsfix, usdusdenoise, usduswidth, usduspadding, usdusmaskblur, controlnetenabled, controlnetmodel,img2imgdenoisestrengthmod,enableextraupscale,controlnetblockymode,extrasupscaler1,extrasupscaler2,extrasupscaler2visiblity,extrasupscaler2gfpgan,extrasupscaler2codeformer,extrasupscaler2codeformerweight,extrasresize,onlyupscale,givensubject,smartsubject,giventypeofimage,imagemodechance])
         
         automatedoutputsfolderbutton.click(openfolder)
+
+        # turn things on and off for gender
+        def subjectsvalue(subject):
+             enable=(subject=="humanoid")
+             return {
+                  chosengender: gr.update(visible=enable),
+             }
+        subject.change(
+            subjectsvalue,
+            [subject],
+            [chosengender]
+        )
         
         # Turn things off and on for onlyupscale and txt2img
         def onlyupscalevalues(onlyupscale):

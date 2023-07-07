@@ -33,7 +33,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     materiallist = csv_to_list("materials",antilist)
     objectlist = csv_to_list("objects",antilist)
     fictionallist = csv_to_list(csvfilename="fictional characters",antilist=antilist,skipheader=True,gender=gender)
-    nonfictionallist = csv_to_list("nonfictional characters",antilist)
+    nonfictionallist = csv_to_list(csvfilename="nonfictional characters",antilist=antilist,skipheader=True,gender=gender)
     conceptsuffixlist = csv_to_list("concept_suffix",antilist)
     buildinglist = csv_to_list("buildings",antilist)
     vehiclelist = csv_to_list("vehicles",antilist)
@@ -1296,6 +1296,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                         hybridorswap = ""
 
                     if(subjectchooser == "humanoid"):
+                        if(gender != "all"):
+                            completeprompt += "-malefemale- "
                         if rare_dist(insanitylevel):
                             hybridorswaplist = ["hybrid", "swap"]
                             hybridorswap = random.choice(hybridorswaplist)

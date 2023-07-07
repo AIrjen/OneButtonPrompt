@@ -47,4 +47,15 @@ subjectdescriptor1chance;common
 subjectdescriptor2chance;uncommon
 subjectbodytypechance;normal
 subjectculturechance;normal
+subjectconceptsuffixchance;unique
+# subjectlandscape specific stuff;
+subjectlandscapeinsideshotchance;unique
+subjectlandscapeaddonlocationchance;normal
+subjectlandscapeaddonlocationdescriptorchance;rare
+subjectlandscapeaddonlocationculturechance;rare
+# all additions;
+objectadditionsrepeats;2
+objectadditionschance;uncommon
+humanadditionchance;rare
+overalladditionchance;extraordinary
 

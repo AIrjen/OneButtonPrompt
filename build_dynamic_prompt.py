@@ -187,6 +187,17 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     subjectdescriptor2chance = 'uncommon'
     subjectbodytypechance = 'normal'
     subjectculturechance = 'normal'
+    subjectconceptsuffixchance = 'unique'
+
+    subjectlandscapeinsideshotchance = 'unique'
+    subjectlandscapeaddonlocationchance = 'normal'
+    subjectlandscapeaddonlocationdescriptorchance = 'rare'
+    subjectlandscapeaddonlocationculturechance = 'rare'
+
+    objectadditionsrepeats = 2
+    objectadditionschance = 'uncommon'
+    humanadditionchance = 'rare'
+    overalladditionchance = 'extraordinary'
 
 
 
@@ -266,6 +277,26 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             subjectbodytypechance = item[1]
         if item[0] == 'subjectculturechance':
             subjectculturechance = item[1]
+        if item[0] == 'subjectconceptsuffixchance':
+            subjectconceptsuffixchance = item[1]
+
+        if item[0] == 'subjectlandscapeinsideshotchance':
+            subjectlandscapeinsideshotchance = item[1]
+        if item[0] == 'subjectlandscapeaddonlocationchance':
+            subjectlandscapeaddonlocationchance = item[1]
+        if item[0] == 'subjectlandscapeaddonlocationdescriptorchance':
+            subjectlandscapeaddonlocationdescriptorchance = item[1]
+        if item[0] == 'subjectlandscapeaddonlocationculturechance':
+            subjectlandscapeaddonlocationculturechance = item[1]
+
+        if item[0] == 'objectadditionsrepeats':
+            objectadditionsrepeats = int(item[1])
+        if item[0] == 'objectadditionschance':
+            objectadditionschance = item[1]
+        if item[0] == 'humanadditionchance':
+            humanadditionchance = item[1]
+        if item[0] == 'overalladditionchance':
+            overalladditionchance = item[1]
 
 
     generatevehicle = bool(vehiclelist) and generatevehicle
@@ -1163,7 +1194,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                     completeprompt += " " + givensubject + " "     
             
              # sometimes add a suffix for more fun!
-            if( (mainchooser == "humanoid" or mainchooser == "animal" or mainchooser == "object") and  unique_dist(insanitylevel)):
+            if( (mainchooser == "humanoid" or mainchooser == "animal" or mainchooser == "object") and  chance_roll(insanitylevel, subjectconceptsuffixchance)):
                 completeprompt += " of -conceptsuffix- "
             
             if(subjectchooser == "landscape"):
@@ -1187,15 +1218,15 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 hybridorswap = ""
 
                 # shots from inside can create cool effects in landscapes
-                if(unique_dist(insanitylevel)):
+                if(chanceroll(insanitylevel, subjectlandscapeaddonlocationchance)):
                     insideshot = 1
                     completeprompt += " from inside of a -addontolocationinside- "
 
-                if(normal_dist(insanitylevel) and insideshot == 0):
+                if(chance_roll(insanitylevel, subjectlandscapeaddonlocationchance) and insideshot == 0):
                     completeprompt += " and "
-                    if(rare_dist(insanitylevel)):
+                    if(chance_roll(insanitylevel, subjectlandscapeaddonlocationdescriptorchance)):
                         completeprompt += "-descriptor- " 
-                    if(rare_dist(insanitylevel)):
+                    if(chance_roll(insanitylevel, subjectlandscapeaddonlocationculturechance)):
                         completeprompt += "-culture- "
 
                     #addontolocation = [locationlist,buildinglist, vehiclelist]
@@ -1221,20 +1252,20 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         
 
         # object additions
-        for i in range(2):
-            if(mainchooser == "object" and uncommon_dist(insanitylevel) and generateobjectaddition == True):
+        for i in range(objectadditionsrepeats):
+            if(mainchooser == "object" and chance_roll(insanitylevel, objectadditionschance) and generateobjectaddition == True):
                 completeprompt += ", -objectaddition- , "
         
         
         # riding an animal, holding an object or driving a vehicle, rare
-        if(subjectchooser in ["animal as human,","human","fictional", "non fictional", "humanoid", "manwomanrelation"] and rare_dist(insanitylevel) and generatehumanaddition == True):
+        if(subjectchooser in ["animal as human,","human","fictional", "non fictional", "humanoid", "manwomanrelation"] and chance_roll(insanitylevel, humanadditionchance) and generatehumanaddition == True):
             humanspecial = 1
             completeprompt += "-humanaddition- "
             
         completeprompt += ", "
 
         # unique additions for all types:
-        if(extraordinary_dist(insanitylevel) and generateoveralladdition == True):
+        if(chance_roll(insanitylevel, overalladditionchance) and generateoveralladdition == True):
             completeprompt += "-overalladdition- "
 
 

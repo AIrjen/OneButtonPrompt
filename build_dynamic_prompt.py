@@ -199,6 +199,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     humanadditionchance = 'rare'
     overalladditionchance = 'extraordinary'
 
+    emojichance = 'legendary'
+    joboractivitychance = 'normal'
+
     custominputmidrepeats = 2
     custominputmidchance = 'uncommon'
     minivomitmidchance = 'unique'
@@ -231,6 +234,13 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     quality1chance = 'uncommon'
     quality2chance = 'uncommon'
 
+    customstyle1chance = 'uncommon'
+    customstyle2chance = 'uncommon'
+
+    custominputsuffixrepeats = 2
+    custominputsuffixchance = 'uncommon'
+
+    artistsatbackchance = 'uncommon'
 
     for item in config:
         # objects
@@ -329,6 +339,11 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         if item[0] == 'overalladditionchance':
             overalladditionchance = item[1]
 
+        if item[0] == 'emojichance':
+            emojichance = item[1]
+        if item[0] == 'joboractivitychance':
+            joboractivitychance = item[1]
+
         if item[0] == 'custominputmidrepeats':
             custominputmidrepeats = int(item[1])
         if item[0] == 'custominputmidchance':
@@ -388,6 +403,19 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             quality1chance = item[1]
         if item[0] == 'quality2chance':
             quality2chance = item[1]
+
+        if item[0] == 'customstyle1chance':
+            customstyle1chance = item[1]
+        if item[0] == 'customstyle2chance':
+            customstyle2chance = item[1]
+        
+        if item[0] == 'custominputsuffixrepeats':
+            custominputsuffixrepeats = int(item[1])
+        if item[0] == 'custominputsuffixchance':
+            custominputsuffixchance = item[1]
+
+        if item[0] == 'artistsatbackchance':
+            artistsatbackchance = item[1]
 
 
     generatevehicle = bool(vehiclelist) and generatevehicle
@@ -989,7 +1017,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         # start artist part
 
         artistsplacement = "front"
-        if(uncommon_dist(insanitylevel) and onlyartists == False):
+        if(chance_roll(insanitylevel, artistsatbackchance) and onlyartists == False):
             artistsplacement = "back"
 
         if(artists != "none" and artistsplacement == "front" and generateartist == True):
@@ -1365,7 +1393,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
         # SD understands emoji's. Can be used to manipulate facial expressions.
         # emoji, legendary
-        if(subjectchooser in ["animal as human,","human","fictional", "non fictional", "humanoid", "manwomanrelation"] and legendary_dist(insanitylevel) and generateemoji== True):
+        if(subjectchooser in ["animal as human,","human","fictional", "non fictional", "humanoid", "manwomanrelation"] and chance_roll(insanitylevel, emojichance) and generateemoji== True):
             completeprompt += "-emoji-, "
             
 
@@ -1376,7 +1404,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         # Job 
         # either go job or activity, not both
 
-        if(subjectchooser in ["animal as human","human","fictional", "non fictional", "humanoid", "manwomanrelation"]  and normal_dist(insanitylevel) and humanspecial != 1 and generatesubject == True):
+        if(subjectchooser in ["animal as human","human","fictional", "non fictional", "humanoid", "manwomanrelation"]  and chance_roll(insanitylevel, joboractivitychance) and humanspecial != 1 and generatesubject == True):
             joboractivitylist = [joblist,humanactivitylist]
             completeprompt += random.choice(random.choice(joboractivitylist)) + ", "
 
@@ -1622,16 +1650,15 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 step = step + 1 
         
         # custom style list
-        if(uncommon_dist(insanitylevel) and generatestyle == True):
+        if(chance_roll(insanitylevel, customstyle1chance) and generatestyle == True):
             completeprompt += "-styletilora-, "
-            if(uncommon_dist(insanitylevel)):
+            if(chance_roll(insanitylevel, customstyle2chance)):
                 completeprompt += "-styletilora-, "
 
 
         # custom suffix list
-        if(uncommon_dist(insanitylevel) and generatecustominputsuffix == True):
-            completeprompt += random.choice(custominputsuffixlist) + ", "
-            if(uncommon_dist(insanitylevel)):
+        for i in range(custominputsuffixrepeats):
+            if(chance_roll(insanitylevel, custominputsuffixchance) and generatecustominputsuffix == True):
                 completeprompt += random.choice(custominputsuffixlist) + ", "
 
 

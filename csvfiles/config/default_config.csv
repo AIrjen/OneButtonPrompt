@@ -93,3 +93,9 @@ poemlinechance;novel
 songlinechance;novel
 quality1chance;uncommon
 quality2chance;uncommon
+# custom style list (lora and tis);
+customstyle1chance;uncommon
+customstyle2chance;uncommon
+# suffix custom list#
+custominputsuffixrepeats;2
+custominputsuffixchance;uncommon

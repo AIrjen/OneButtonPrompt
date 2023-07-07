@@ -26,3 +26,25 @@ subject_event;on
 subject_concept;on
 subject_poemline;on
 subject_songline;on
+#----;
+# other main lists, in order of appearance;
+# setting the random chance, for normal generation;
+# these can be, in order of most appearing to least appearing;
+# always, common, normal, uncommon, rare, legendary, unique, extraordinary, novel, never;
+custominputprefixrepeats;2
+custominputprefixchance;uncommon
+imagetypechance;normal
+imagetypequalitychance;rare
+# some prefixes that happen rarely;
+minilocationadditionchance;unique
+artmovementprefixchance;unique
+minivomitprefix1chance;rare
+minivomitprefix2chance;unique
+# shot size generation;
+shotsizechance;uncommon
+# subject specific stuff;
+subjectdescriptor1chance;common
+subjectdescriptor2chance;uncommon
+subjectbodytypechance;normal
+subjectculturechance;normal
+

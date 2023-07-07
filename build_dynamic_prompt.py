@@ -151,66 +151,121 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     addontolocationlist = []
 
     # load subjects stuff from config
-    generatevehicle = False
-    generateobject = False
-    generatefood = False
-    generatebuilding = False
-    generatespace = False
-    generateanimal = False
-    generatemanwoman = False
-    generatemanwomanrelation = False
-    generatefictionalcharacter = False
-    generatenonfictionalcharacter = False
-    generatehumanoids = False
-    generatejob = False
-    generatelandscape = False
-    generateevent = False
-    generateconcepts = False
-    generatepoemline = False
-    generatesongline = False
+    generatevehicle = True
+    generateobject = True
+    generatefood = True
+    generatebuilding = True
+    generatespace = True
+    generateanimal = True
+    generatemanwoman = True
+    generatemanwomanrelation = True
+    generatefictionalcharacter = True
+    generatenonfictionalcharacter = True
+    generatehumanoids = True
+    generatejob = True
+    generatelandscape = True
+    generateevent = True
+    generateconcepts = True
+    generatepoemline = True
+    generatesongline = True
+
+    custominputprefixrepeats = 2
+    custominputprefixchance = 'uncommon'
+
+    imagetypechance = 'normal'
+    generateimagetype = True
+    imagetypequalitychance = 'rare'
+    generateimagetypequality = True
+    generateminilocationaddition = True
+    minilocationadditionchance = 'unique'
+    artmovementprefixchance = 'unique'
+    minivomitprefix1chance = 'rare'
+    minivomitprefix2chance = 'unique'
+    shotsizechance = 'uncommon'
+
+    subjectdescriptor1chance = 'common'
+    subjectdescriptor2chance = 'uncommon'
+    subjectbodytypechance = 'normal'
+    subjectculturechance = 'normal'
+
 
 
     for item in config:
         # objects
-        if item[0] == 'subject_vehicle' and item[1] == 'on':
-            generatevehicle = True
-        if item[0] == 'subject_object' and item[1] == 'on':
-            generateobject = True
-        if item[0] == 'subject_food' and item[1] == 'on':
-            generatefood = True
-        if item[0] == 'subject_building' and item[1] == 'on':
-            generatebuilding = True
-        if item[0] == 'subject_space' and item[1] == 'on':
-            generatespace = True
+        if item[0] == 'subject_vehicle' and item[1] != 'on':
+            generatevehicle = False
+        if item[0] == 'subject_object' and item[1] != 'on':
+            generateobject = False
+        if item[0] == 'subject_food' and item[1] != 'on':
+            generatefood = False
+        if item[0] == 'subject_building' and item[1] != 'on':
+            generatebuilding = False
+        if item[0] == 'subject_space' and item[1] != 'on':
+            generatespace = False
         # animals
-        if item[0] == 'subject_animal' and item[1] == 'on':
-            generateanimal = True
+        if item[0] == 'subject_animal' and item[1] != 'on':
+            generateanimal = False
         # humanoids
-        if item[0] == 'subject_manwoman' and item[1] == 'on':
-            generatemanwoman = True
-        if item[0] == 'subject_manwomanrelation' and item[1] == 'on':
-            generatemanwomanrelation = True
-        if item[0] == 'subject_fictional' and item[1] == 'on':
-            generatefictionalcharacter = True
-        if item[0] == 'subject_nonfictional' and item[1] == 'on':
-            generatenonfictionalcharacter = True
-        if item[0] == 'subject_humanoid' and item[1] == 'on':
-            generatehumanoids = True
-        if item[0] == 'subject_job' and item[1] == 'on':
-            generatejob = True
+        if item[0] == 'subject_manwoman' and item[1] != 'on':
+            generatemanwoman = False
+        if item[0] == 'subject_manwomanrelation' and item[1] != 'on':
+            generatemanwomanrelation = False
+        if item[0] == 'subject_fictional' and item[1] != 'on':
+            generatefictionalcharacter = False
+        if item[0] == 'subject_nonfictional' and item[1] != 'on':
+            generatenonfictionalcharacter = False
+        if item[0] == 'subject_humanoid' and item[1] != 'on':
+            generatehumanoids = False
+        if item[0] == 'subject_job' and item[1] != 'on':
+            generatejob = False
         # landscape
-        if item[0] == 'subject_landscape' and item[1] == 'on':
-            generatelandscape = True
+        if item[0] == 'subject_landscape' and item[1] != 'on':
+            generatelandscape = False
         # concept
-        if item[0] == 'subject_event' and item[1] == 'on':
-            generateevent = True
-        if item[0] == 'subject_concept' and item[1] == 'on':
-            generateconcepts = True
-        if item[0] == 'poemline' and item[1] == 'on':
-            generatepoemline = True
-        if item[0] == 'songline' and item[1] == 'on':
-            generatesongline = True
+        if item[0] == 'subject_event' and item[1] != 'on':
+            generateevent = False
+        if item[0] == 'subject_concept' and item[1] != 'on':
+            generateconcepts = False
+        if item[0] == 'poemline' and item[1] != 'on':
+            generatepoemline = False
+        if item[0] == 'songline' and item[1] != 'on':
+            generatesongline = False
         
+        # main list stuff
+        if item[0] == 'custominputprefixrepeats':
+            custominputprefixrepeats = int(item[1])
+        if item[0] == 'custominputprefixchance':
+            custominputprefixchance = item[1]
+            if(custominputprefixchance == 'never'):
+                generatecustominputprefix = False
+        if item[0] == 'imagetypechance':
+            imagetypechance = item[1]
+            if(imagetypechance == 'never'):
+                generateimagetype = False
+        if item[0] == 'imagetypequalitychance':
+            imagetypequalitychance = item[1]
+            if(imagetypequalitychance == 'never'):
+                generateimagetypequality = False
+        if item[0] == 'minilocationadditionchance':
+            minilocationadditionchance = item[1]
+        if item[0] == 'artmovementprefixchance':
+            artmovementprefixchance = item[1]
+        if item[0] == 'minivomitprefix1chance':
+            minivomitprefix1chance = item[1]
+        if item[0] == 'minivomitprefix2chance':
+            minivomitprefix2chance = item[1]
+        
+        if item[0] == 'shotsizechance':
+            shotsizechance = item[1]
+
+        if item[0] == 'subjectdescriptor1chance':
+            subjectdescriptor1chance = item[1]
+        if item[0] == 'subjectdescriptor2chance':
+            subjectdescriptor2chance = item[1]
+        if item[0] == 'subjectbodytypechance':
+            subjectbodytypechance = item[1]
+        if item[0] == 'subjectculturechance':
+            subjectculturechance = item[1]
 
 
     generatevehicle = bool(vehiclelist) and generatevehicle
@@ -421,9 +476,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     
     generateminilocationaddition = bool(minilocationadditionslist) and not specialmode
     generateminivomit = bool(minivomitlist) and not specialmode
-    generateimagetypequality = bool(imagetypequalitylist) and not specialmode
+    generateimagetypequality = bool(imagetypequalitylist) and not specialmode and generateimagetypequality
     generateoveralladdition = bool(overalladditionlist) and not specialmode
-    generateimagetype = bool(imagetypelist) and not specialmode
+    generateimagetype = bool(imagetypelist) and not specialmode and generateimagetype
 
 
     # Smart subject logic
@@ -637,8 +692,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
 
         # custom prefix list
-        for i in range(2):
-            if(uncommon_dist(insanitylevel) and generatecustominputprefix == True):
+        for i in range(custominputprefixrepeats):
+            if(chance_roll(insanitylevel, custominputprefixchance) and generatecustominputprefix == True):
                 completeprompt += random.choice(custominputprefixlist) + ", "
 
 
@@ -647,7 +702,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             insanitylevel =  random.randint(1, 10)  # 10 = add everything, 1 is add almost nothing
         insanitylevel3 = int((insanitylevel/3) + 1.20)
 
-        print("Setting insanity level to " + str(insanitylevel))
+        # print("Setting insanity level to " + str(insanitylevel))
 
         # main chooser: 0 object, 1 animal, 2 humanoid, 3 landscape, 4 event/concept
         #mainchooserlist = ["object","animal","humanoid", "landscape", "concept"]
@@ -915,14 +970,14 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 othertype = 1
                 completeprompt += random.choice(othertypelist)
             
-            if(imagetype == "all" and normal_dist(insanitylevel) and amountofimagetypes <= 1):
+            if(imagetype == "all" and chance_roll(insanitylevel, imagetypechance) and amountofimagetypes <= 1):
                 amountofimagetypes = 1
             
             
 
             for i in range(amountofimagetypes):
             # one in 6 images is a complex/other type
-                if(rare_dist(insanitylevel) and generateimagetypequality):
+                if(chance_roll(insanitylevel, imagetypequalitychance) and generateimagetypequality):
                     completeprompt += "-imagetypequality- "
                 if(random.randint(0,5) < 5):
                     completeprompt += " -imagetype-, "
@@ -941,22 +996,22 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
         
         ### here we can do some other stuff to spice things up
-        if(unique_dist(insanitylevel) and generateminilocationaddition == True):
+        if(chance_roll(insanitylevel, minilocationadditionchance) and generateminilocationaddition == True):
             completeprompt += " -minilocationaddition-, "
         
-        if(unique_dist(insanitylevel) and generateartmovement == True):
+        if(chance_roll(insanitylevel, artmovementprefixchance) and generateartmovement == True):
             generateartmovement = False
             completeprompt += " -artmovement-, "
         
-        if(rare_dist(insanitylevel) and generateminivomit == True):
+        if(chance_roll(insanitylevel, minivomitprefix1chance) and generateminivomit == True):
             completeprompt += " -minivomit-, "
         
-        if(unique_dist(insanitylevel) and generateminivomit == True):
+        if(chance_roll(insanitylevel, minivomitprefix2chance) and generateminivomit == True):
             completeprompt += " -minivomit-, "
 
         # start shot size
 
-        if(mainchooser in ["object", "animal", "humanoid", "concept"] and othertype == 0 and "portrait" not in completeprompt and generateshot == True and uncommon_dist(insanitylevel)):
+        if(mainchooser in ["object", "animal", "humanoid", "concept"] and othertype == 0 and "portrait" not in completeprompt and generateshot == True and chance_roll(insanitylevel,shotsizechance)):
             completeprompt += "-shotsize- of a "
         elif("portrait" in completeprompt and generateshot == True):
             completeprompt += " ,close up of a "
@@ -971,16 +1026,16 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         # start with descriptive qualities
         
             # Common to have 1 description, uncommon to have 2
-            if(common_dist(insanitylevel) and generatedescriptors == True):
+            if(chance_roll(insanitylevel, subjectdescriptor1chance) and generatedescriptors == True):
                 completeprompt += "-descriptor- "
 
-            if(uncommon_dist(insanitylevel) and generatedescriptors == True):
+            if(chance_roll(insanitylevel, subjectdescriptor2chance) and generatedescriptors == True):
                 completeprompt += "-descriptor- "
 
-            if(subjectchooser in ["animal as human,","human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation"] and normal_dist(insanitylevel) and generatebodytype == True):
+            if(subjectchooser in ["animal as human,","human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation"] and chance_roll(insanitylevel, subjectbodytypechance) and generatebodytype == True):
                 completeprompt += "-bodytype- "
 
-            if(subjectchooser in ["object","animal as human,","human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation"] and normal_dist(insanitylevel) and generatedescriptors == True):
+            if(subjectchooser in ["object","animal as human,","human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation"] and chance_roll(insanitylevel, subjectculturechance) and generatedescriptors == True):
                 completeprompt += "-culture- "
 
             if(mainchooser == "object"):

@@ -13,6 +13,7 @@ from modules.shared import opts, cmd_opts, state
 from build_dynamic_prompt import *
 from main import *
 from model_lists import *
+from csv_reader import *
 
 subjects = ["all","object","animal","humanoid", "landscape", "concept"]
 artists = ["all", "none", "popular", "greg mode", "3D",	"abstract",	"angular", "anime"	,"architecture",	"art nouveau",	"art deco",	"baroque",	"bauhaus", 	"cartoon",	"character",	"children's illustration", 	"cityscape", 	"clean",	"cloudscape",	"collage",	"colorful",	"comics",	"cubism",	"dark",	"detailed", 	"digital",	"expressionism",	"fantasy",	"fashion",	"fauvism",	"figurativism",	"gore",	"graffiti",	"graphic design",	"high contrast",	"horror",	"impressionism",	"installation",	"landscape",	"light",	"line drawing",	"low contrast",	"luminism",	"magical realism",	"manga",	"melanin",	"messy",	"monochromatic",	"nature",	"nudity",	"photography",	"pop art",	"portrait",	"primitivism",	"psychedelic",	"realism",	"renaissance",	"romanticism",	"scene",	"sci-fi",	"sculpture",	"seascape",	"space",	"stained glass",	"still life",	"storybook realism",	"street art",	"streetscape",	"surrealism",	"symbolism",	"textile",	"ukiyo-e",	"vibrant",	"watercolor",	"whimsical"]
@@ -64,6 +65,8 @@ for filename in os.listdir(userfilesfolder):
         # directly insert into the artists list
         artists.insert(2, name)
 
+# on startup, check if we have a config file, or else create it
+load_config_csv()
      
 
 class Script(scripts.Script):

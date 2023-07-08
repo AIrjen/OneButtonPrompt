@@ -10,7 +10,7 @@ from random_functions import *
 # insanity level controls randomness of propmt 0-10
 # forcesubject van be used to force a certain type of subject
 # Set artistmode to none, to exclude artists 
-def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", givensubject="",smartsubject = True,giventypeofimage="", imagemodechance = 20, gender = "all"):
+def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", givensubject="",smartsubject = True,giventypeofimage="", imagemodechance = 20, gender = "all", subtypeobject="all", subtypehumanoid="all", subtypeconcept="all"):
 
     
     # load the config file
@@ -872,11 +872,33 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         if(mainchooser == "humanoid"):
             #humanoidsubjectchooserlist = ["human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation"]
             subjectchooser = random.choice(humanoidsubjectchooserlist)
+            if(subtypehumanoid != "all"):
+                if(subtypehumanoid == "generic humans"):
+                    subjectchooser = "human"
+                if(subtypehumanoid == "generic human relations"):
+                    subjectchooser = "manwomanrelation"
+                if(subtypehumanoid == "celebrities e.a."):
+                    subjectchooser = "non fictional"
+                if(subtypehumanoid == "fictional characters"):
+                    subjectchooser = "fictional"
+                if(subtypehumanoid == "humanoids"):
+                    subjectchooser = "humanoid"
+                if(subtypehumanoid == "based on job or title"):
+                    subjectchooser = "job"
         if(mainchooser == "landscape"):
             subjectchooser = "landscape"
         if(mainchooser == "concept"):
-            #eventsubjectchooserlist = ["event", "concept"]
+            #eventsubjectchooserlist = ["event", "concept", "poemline", "songline"]
             subjectchooser = random.choice(eventsubjectchooserlist)
+            if(subtypeconcept != "all"):
+                if(subtypeconcept == "event"):
+                    subjectchooser = "event"
+                if(subtypeconcept == "the X of Y concepts"):
+                    subjectchooser = "concept"
+                if(subtypeconcept == "lines from poems"):
+                    subjectchooser = "poemline"
+                if(subtypeconcept == "lines from songs"):
+                    subjectchooser = "songline"
 
 
         
@@ -1189,7 +1211,18 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 completeprompt += "-culture- "
 
             if(mainchooser == "object"):
-                objectwildcardlist = ["-object-", "-building-","-vehicle-","-food-", "-space-"]  # using wildcards for replacements
+                # if we have an overwrite, then make sure we only take the override
+                if(subtypeobject != "all"):
+                    if(subtypeobject == "generic objects"):
+                        objectwildcardlist = ["-object-"]
+                    if(subtypeobject == "vehicles"):
+                        objectwildcardlist = ["-vehicle-"]
+                    if(subtypeobject == "food"):
+                        objectwildcardlist = ["-food-"]
+                    if(subtypeobject == "buildings"):
+                        objectwildcardlist = ["-building-"]
+                    if(subtypeobject == "space"):
+                        objectwildcardlist = ["-space-"]
                 
                 # if we have a given subject, we should skip making an actual subject
                 if(givensubject == ""):

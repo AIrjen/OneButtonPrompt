@@ -87,6 +87,7 @@ generatefictionalcharacter = True
 generatenonfictionalcharacter = True
 generatehumanoids = True
 generatejob = True
+generatefirstnames = True
 generatelandscape = True
 generateevent = True
 generateconcepts = True
@@ -122,6 +123,8 @@ for item in config:
             generatehumanoids = False
         if item[0] == 'subject_job' and item[1] != 'on':
             generatejob = False
+        if item[0] == 'subject_firstnames' and item[1] != 'on':
+            generatefirstnames = False
         # landscape
         if item[0] == 'subject_landscape' and item[1] != 'on':
             generatelandscape = False
@@ -178,6 +181,8 @@ if(generatehumanoids):
      subjectsubtypeshumanoid.append("humanoids")
 if(generatejob):
      subjectsubtypeshumanoid.append("based on job or title")
+if(generatefirstnames):
+     subjectsubtypeshumanoid.append("based on first name")
 
 # concepts
 if(generateevent):

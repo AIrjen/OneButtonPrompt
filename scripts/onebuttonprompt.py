@@ -957,6 +957,7 @@ class Script(scripts.Script):
 
             p.prompt = promptlist
             p.batch_size = batchsize
+            p.hr_prompt = promptlist
             processed = process_images(p)
             images += processed.images
             infotexts += processed.infotexts

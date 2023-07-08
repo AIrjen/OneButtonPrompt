@@ -16,6 +16,7 @@ def call_img2img(imagelocation,originalimage, originalpnginfo ="", apiurl="http:
     url = apiurl
     script_dir = os.path.dirname(os.path.abspath(__file__))  # Script directory
     outputimg2imgfolder = os.path.join(script_dir, "./automated_outputs/img2img/" )
+    outputimg2imgfolder.replace("./", "/")
     if(filename==""):
         filename = str(uuid.uuid4())
     outputimg2imgpng = '.png'

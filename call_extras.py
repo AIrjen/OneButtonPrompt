@@ -23,6 +23,7 @@ def call_extras(imagelocation,originalimage, originalpnginfo ="", apiurl="http:/
     url = apiurl
     script_dir = os.path.dirname(os.path.abspath(__file__))  # Script directory
     outputextrasfolder = os.path.join(script_dir, "./automated_outputs/extras/" )
+    outputextrasfolder.replace("./", "/")
     if(filename==""):
         filename = str(uuid.uuid4())
     outputextrasilename = filename

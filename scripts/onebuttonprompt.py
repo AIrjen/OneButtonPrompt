@@ -718,7 +718,6 @@ class Script(scripts.Script):
                 prefixpromptcopy = prefixprompt
                 
                 if(ANDtoggle == "automatic"):
-                    preppedprompt += prefixprompt + ", "
                     if(artist != "none"):
                         preppedprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype, True, antistring) 
                     if(subject == "humanoid"):

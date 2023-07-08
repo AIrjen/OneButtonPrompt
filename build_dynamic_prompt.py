@@ -820,6 +820,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
 
             if(onlyartists == True):
+
+                # replace artist wildcards
+                completeprompt = replacewildcard(completeprompt, insanitylevel, "-artist-", artistlist, False)
                     
                 # clean it up
                 completeprompt = cleanup(completeprompt)

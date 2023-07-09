@@ -7,8 +7,8 @@ Aunt;female
 Uncle;male
 Sister;female
 Brother;male
-Sibling;undetermined
-Parent;undetermined
+Sibling;genderless
+Parent;genderless
 Wife;female
 Husband;male
 Girlfriend;female

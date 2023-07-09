@@ -80,6 +80,7 @@ generateobject = True
 generatefood = True
 generatebuilding = True
 generatespace = True
+generateflora = True
 generateanimal = True
 generatemanwoman = True
 generatemanwomanrelation = True
@@ -107,6 +108,8 @@ for item in config:
             generatebuilding = False
         if item[0] == 'subject_space' and item[1] != 'on':
             generatespace = False
+        if item[0] == 'subject_flora' and item[1] != 'on':
+            generateflora = False
         # animals
         if item[0] == 'subject_animal' and item[1] != 'on':
             generateanimal = False
@@ -167,6 +170,8 @@ if(generatebuilding):
      subjectsubtypesobject.append("buildings")
 if(generatespace):
      subjectsubtypesobject.append("space")
+if(generateflora):
+     subjectsubtypesobject.append("flora")
 
 # humanoids (should I review descriptions??)
 if(generatemanwoman):

@@ -1412,7 +1412,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 hybridorswap = ""
 
                 # shots from inside can create cool effects in landscapes
-                if(chanceroll(insanitylevel, subjectlandscapeaddonlocationchance)):
+                if(chance_roll(insanitylevel, subjectlandscapeaddonlocationchance)):
                     insideshot = 1
                     completeprompt += " from inside of a -addontolocationinside- "
 

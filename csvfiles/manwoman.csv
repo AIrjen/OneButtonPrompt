@@ -1,2 +1,7 @@
-Man
-Woman
+manwoman;gender
+Man;male
+Woman;female
+Boy;male
+Girl;female
+Male;male
+Female;female

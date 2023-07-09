@@ -34,12 +34,17 @@ def one_button_prompt_api(_: gr.Blocks, app: FastAPI):
         givensubject: str =Body('',title="givensubject"),
         smartsubject:bool = Body(True,title='smart subject'),
         giventypeofimage: str = Body('',title='given type of image'),
-        imagemodechance: int  = Body(20,title='image mode chance')):
+        imagemodechance: int  = Body(20,title='image mode chance'),
+        gender: str = Body('all',title='gender'),
+        subtypeobject: str = Body('all',title='subtypeobject'),
+        subtypehumanoid: str = Body('all', title='subtypehumanoid'), 
+        subtypeconcept: str = Body('all', title='subtypeconcept')    
+        ):
 
             
             keys = ['insanitylevel', 'forcesubject', 'artists', 'imagetype', 'onlyartists', 'antivalues', 'prefixprompt',
             'suffixprompt', 'promptcompounderlevel', 'seperator', 'givensubject', 'smartsubject', 'giventypeofimage',
-            'imagemodechance']
+            'imagemodechance', 'gender', 'subtypeobject','subtypehumanoid','subtypeconcept']
             payload = {}
             for key in keys:
                 payload[key] = locals()[key]

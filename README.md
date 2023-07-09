@@ -25,6 +25,7 @@ A simple user guide for first time use and settings is available [here](https://
 - Use __wildcards__, or __combine with Dynamic Prompts__ extension                ==> [guide to using wildcards and Dynamic Prompts](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/wildcards_and_dynamic_prompts_extension.md)
 - Has a set of __template prompts__ from various sources, __fully wildcarded__ and usable with Subject Override ==> [guide to prompt templates](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/templates.md)
 - Has multiple __prompt generation modes__ to choose from ==> [guide to prompt generation modes](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/prompt_generation_modes.md)
+- Stay in control, and fine-tune One Button Prompt with a __config__ file ==> [config file](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/config_file.md)
 
 ## How to use in automatic1111
 In TXT2IMG or IMG2IMG, select the script "One Button Prompt".

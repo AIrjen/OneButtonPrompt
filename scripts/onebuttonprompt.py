@@ -339,6 +339,62 @@ class Script(scripts.Script):
                         
                         5. concept - Can be a concept, such as "a X of Y", or an historical event such as "The Trojan War". It can also generate a line from a poem or a song. 
 
+                        After choosing object, humanoid or concept a subselection menu will show. You can pick further details here. When choosing humanoid, you can also select the gender you wish to generate.
+
+                        Type of Object:
+
+                        1. all - selects randomly (default)
+
+                        2. generic objects - Hodgepodge of objects, can be household items, weapons or any other general object.
+
+                        3. vehicles - Cars, but also planes, trains and boats.
+
+                        4. food - Meals, fruits and others.
+
+                        5. buildings - From churches to libraries to castles.
+
+                        6. space - Some bigger objects, nebula's, black holes and constellations
+
+                        7. flora - Flowers and trees.
+
+                        Type of humanoid:
+
+                        1. all - selects randomly (default)
+
+                        2. generic humans - Generic human descriptions. Example values would be Man, Woman, Male, etc
+
+                        3. generic human relations - Human relations, example values would be Grandpa, Sister, Father, etc
+
+                        4. celebrities e.a. - Known people, usually celebrities.
+
+                        5. fictional characters - Movie and videogame characters, such as Mario and Peach.
+
+                        6. humanoids - Humanoid type races, think Elves, Orcs, Dwarves, etc
+
+                        7. based on job or title - Examples are Queen, Carpenter, Vampire hunter
+
+                        8. based on first name - Examples are Anna, James, Emma etc.
+
+                        gender:
+
+                        1. all - selects randomly
+
+                        2. male
+
+                        3. female
+
+                        Type of concept:
+
+                        1. all - selects randomly (default)
+
+                        2. event - an historical event, or even mythological event. Example The fall of Rome
+
+                        3. the X of Y concepts - Randomly creates a small sentence, example The Ocean of Thought or The Fortress of Flame, etc
+
+                        4. lines from poems - Picks a line from a poem
+
+                        5. lines from songs - Picks a line from a song
+
                         </font>
                         
                         ### Artists
@@ -420,7 +476,9 @@ class Script(scripts.Script):
                         
                         Add a prompt prefix, suffix and the negative prompt in the respective fields. They will be automatically added during processing.
 
-                        These can be used to add textual inversion and LoRA's. They can also be used to add your models trigger words.
+                        These can be used to add textual inversion and LoRA's to always apply. They can also be used to add your models trigger words.
+
+                        Please read the custom_files documentation on how to apply random textual inversion and LoRA's.
 
                         </font>
 

@@ -3,6 +3,7 @@ import random
 import uuid
 import re
 from datetime import datetime
+import time
 sys.path.append(os.path.abspath(".."))
 
 from call_txt2img import *
@@ -22,8 +23,24 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
     filename=""
     originalsize=size
     originalmodel = model
+    originalsamplingmethod = samplingmethod
+
     originalimg2imgmodel = img2imgmodel
+    originalimg2imgsamplingmethod = img2imgsamplingmethod
+    originalimg2imgupscaler = img2imgupscaler
+
+    originalupscaler = upscaler
+
     insanitylevel = int(insanitylevel)
+
+    originalimg2imgdenoisestrength = img2imgdenoisestrength
+    originalimg2imgpadding = img2imgpadding
+
+    optionsresponse = requests.get(url=f'{apiurl}/sdapi/v1/options')
+    optionsresponsejson = optionsresponse.json()
+
+    currentlyselectedmodel = optionsresponsejson["sd_model_checkpoint"]
+
 
     if(onlyupscale==True):
         script_dir = os.path.dirname(os.path.abspath(__file__))  # Script directory
@@ -59,6 +76,14 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
 
     
     while steps < loops:
+        # load the base model as a workaround
+        if(steps > 0):
+            print("to prevent a memory issue, we are going to load base 1.5, and then load the chosen model back in")
+            option_payload = {
+                    "sd_model_checkpoint": "v1-5-pruned-emaonly.safetensors [6ce0161689]"
+                    }
+            response = requests.post(url=f'{apiurl}/sdapi/v1/options', json=option_payload)
+
         # build prompt
         if(silentmode==True and workprompt == ""):
             print("Trying to use provided workflow prompt, but is empty. Generating a random prompt instead.")
@@ -73,12 +98,17 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
                 randomprompt = build_dynamic_prompt(insanitylevel,subject,artist,imagetype, False,antistring,prefixprompt,suffixprompt,promptcompounderlevel, seperator,givensubject,smartsubject,giventypeofimage,imagemodechance, gender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept)
 
             # make the filename, from from a to the first comma
-            start_index = randomprompt.find("of a ") + len("of a ")
-
             # find the index of the first comma after "of a" or end of the prompt
-            end_index = randomprompt.find(",", start_index)
-            if(end_index == -1):
-                end_index=len(randomprompt)
+            if(randomprompt.find("of a ") != -1):
+                start_index = randomprompt.find("of a ") + len("of a ")
+                end_index = randomprompt.find(",", start_index)
+                if(end_index == -1):
+                    end_index=len(randomprompt)
+            else:
+                start_index = 0
+                end_index = 128
+      
+            
 
             # extract the desired substring using slicing
             filename = randomprompt[start_index:end_index]
@@ -99,6 +129,7 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
             # create a datetime object for the current date and time
             now = datetime.now()
             filenamecomplete = now.strftime("%Y%m%d%H%M%S") + "_" + filename.replace(" ", "_").strip()
+            originalfilenamecomplete = filenamecomplete
 
             # prompt + size
             if(originalsize == "all"):
@@ -113,20 +144,22 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
                 while "inpaint" in model:
                     model = random.choice(modellist)
                 print("Going to run with model " + model)
+            if(originalmodel=="currently selected model"):
+                model = currentlyselectedmodel
 
 
             # set the model here
-            if(originalmodel!="currently selected model"):
-                option_payload = {
-                    "sd_model_checkpoint": model
-                    }
-                response = requests.post(url=f'{apiurl}/sdapi/v1/options', json=option_payload)
-            
-            if(samplingmethod=="all"):
+            #if(originalmodel!="currently selected model"):
+            option_payload = {
+                "sd_model_checkpoint": model
+                }
+            response = requests.post(url=f'{apiurl}/sdapi/v1/options', json=option_payload)
+        
+            if(originalsamplingmethod=="all"):
                 samplingmethod = random.choice(samplerlist)
                 print ("Going to run with sampling method " + samplingmethod)   
 
-            if(upscaler=="all" and hiresfix == True):
+            if(originalupscaler=="all" and hiresfix == True):
                 upscaler = random.choice(upscalerlist)
                 print ("Going to run with upscaler " + upscaler)
 
@@ -158,12 +191,7 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
         img2imgloops = int(img2imgbatch)
         if(img2imgactivate == False):  # If we dont want to run, turn it off
             img2imgloops = 0
-        img2imgsteps = 0
-        
-        # start the batching!
-        while img2imgsteps < img2imgloops:
-
-
+        else:
             #Check if there is any random value we have to choose or not
             if(originalimg2imgmodel=="all"):
                 img2imgmodel = random.choice(modellist)
@@ -171,37 +199,59 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
                 while "inpaint" in model:
                     img2imgmodel = random.choice(modellist)
                 print("Going to upscale with model " + img2imgmodel)
+            if(originalimg2imgmodel=="currently selected model"):
+                img2imgmodel = currentlyselectedmodel
             
             # set the model here
-            if(originalimg2imgmodel!="currently selected model"):
-                option_payload = {
-                    "sd_model_checkpoint": img2imgmodel
-                    }
-                response = requests.post(url=f'{apiurl}/sdapi/v1/options', json=option_payload)
+            #if(originalimg2imgmodel!="currently selected model"):
+            option_payload = {
+                "sd_model_checkpoint": img2imgmodel
+                }
+            response = requests.post(url=f'{apiurl}/sdapi/v1/options', json=option_payload)
 
-            if(img2imgsamplingmethod=="all"):
+            if(originalimg2imgsamplingmethod=="all"):
                 img2imgsamplingmethod = random.choice(img2imgsamplerlist)
                 print ("Going to upscale with sampling method " + img2imgsamplingmethod)   
 
-            if(img2imgupscaler=="all"):
+            if(originalimg2imgupscaler=="all"):
                 img2imgupscaler = random.choice(img2imgupscalerlist)
                 print ("Going to run with upscaler " + img2imgupscaler)
-
+            
             # WebUI fix for PLMS and UniPC and img2img
             if(img2imgsamplingmethod in ['PLMS', 'UniPC']):  # PLMS/UniPC do not support img2img so we just silently switch to DDIM
                 img2imgsamplingmethod = 'DDIM'
 
+        img2imgsteps = 0
+        
+        # start the batching!
+        img2imgdenoisestrength = originalimg2imgdenoisestrength
+        img2imgpadding = originalimg2imgpadding
+        
+        while img2imgsteps < img2imgloops:
+            print(img2imgdenoisestrength)
+            print(img2imgpadding)
+            
+            print("test for filename issues?")
+            print(filenamecomplete)
+            
+            filenamecomplete = originalfilenamecomplete + "_" + str(img2imgsteps)
+            print(filenamecomplete)
+          
             img2img = call_img2img(image, originalimage, originalpnginfo, apiurl, filenamecomplete, randomprompt,negativeprompt,img2imgsamplingsteps, img2imgcfg, img2imgsamplingmethod, img2imgupscaler, img2imgmodel, img2imgdenoisestrength, img2imgscale, img2imgpadding,upscalescript,usdutilewidth, usdutileheight, usdumaskblur, usduredraw, usduSeamsfix, usdusdenoise, usduswidth, usduspadding, usdusmaskblur,controlnetenabled, controlnetmodel,controlnetblockymode)
             
             image = img2img[0]
             if(originalpnginfo==""):
                 originalpnginfo = img2img[1]
 
-            img2imgdenoisestrength = str(float(img2imgdenoisestrength) + float(img2imgdenoisestrengthmod)) # lower or increase the denoise strength for each batch
-            img2imgpadding = int(int(img2imgpadding) * float(img2imgscale)) # also increase padding by scale
+            img2imgdenoisestrength = str(round(float(img2imgdenoisestrength) + float(img2imgdenoisestrengthmod),2)) # lower or increase the denoise strength for each batch
+            img2imgpadding = str(int(int(img2imgpadding) * float(img2imgscale))) # also increase padding by scale
 
             if(int(img2imgpadding)>256): # but not overdo it :D
                 img2imgpadding="256"
+            
+            # Sometimes, we are too quick to do another call, causing memory issues. So we wait a bit to let the system settle done a bit.
+            # Its stupid but it works. Sometimes....
+            time.sleep(5)
             
             img2imgsteps += 1
 

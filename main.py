@@ -13,7 +13,7 @@ from call_extras import *
 from model_lists import *
 
 
-def generateimages(amount = 1, size = "all",model = "currently selected model",samplingsteps = "40",cfg= "7",hiresfix = True,hiressteps ="0",denoisestrength="0.6",samplingmethod="DPM++ SDE Karras", upscaler="R-ESRGAN 4x+", hiresscale="2",apiurl="http://127.0.0.1:7860",qualitygate=False,quality="7.6",runs="5",insanitylevel="5",subject="all", artist="all", imagetype="all",silentmode=False, workprompt="", antistring="",prefixprompt="", suffixprompt="", negativeprompt="",promptcompounderlevel = "1", seperator="comma", img2imgbatch = "1", img2imgsamplingsteps = "20", img2imgcfg = "7", img2imgsamplingmethod = "DPM++ SDE Karras", img2imgupscaler = "R-ESRGAN 4x+", img2imgmodel = "currently selected model", img2imgactivate = False, img2imgscale = "2", img2imgpadding = "64",img2imgdenoisestrength="0.3",ultimatesdupscale=False,usdutilewidth = "512", usdutileheight = "0", usdumaskblur = "8", usduredraw ="Linear", usduSeamsfix = "None", usdusdenoise = "0.35", usduswidth = "64", usduspadding ="32", usdusmaskblur = "8",controlnetenabled=False, controlnetmodel="",img2imgdenoisestrengthmod="-0.05",enableextraupscale = False,controlnetblockymode = False,extrasupscaler1 = "all",extrasupscaler2 ="all",extrasupscaler2visiblity="0.5",extrasupscaler2gfpgan="0",extrasupscaler2codeformer="0.15",extrasupscaler2codeformerweight="0.1",extrasresize="2",onlyupscale="false",givensubject="",smartsubject=True,giventypeofimage="",imagemodechance=20, gender="all", chosensubjectsubtypeobject="all", chosensubjectsubtypehumanoid="all", chosensubjectsubtypeconcept="all"):
+def generateimages(amount = 1, size = "all",model = "currently selected model",samplingsteps = "40",cfg= "7",hiresfix = True,hiressteps ="0",denoisestrength="0.6",samplingmethod="DPM++ SDE Karras", upscaler="R-ESRGAN 4x+", hiresscale="2",apiurl="http://127.0.0.1:7860",qualitygate=False,quality="7.6",runs="5",insanitylevel="5",subject="all", artist="all", imagetype="all",silentmode=False, workprompt="", antistring="",prefixprompt="", suffixprompt="", negativeprompt="",promptcompounderlevel = "1", seperator="comma", img2imgbatch = "1", img2imgsamplingsteps = "20", img2imgcfg = "7", img2imgsamplingmethod = "DPM++ SDE Karras", img2imgupscaler = "R-ESRGAN 4x+", img2imgmodel = "currently selected model", img2imgactivate = False, img2imgscale = "2", img2imgpadding = "64",img2imgdenoisestrength="0.3",ultimatesdupscale=False,usdutilewidth = "512", usdutileheight = "0", usdumaskblur = "8", usduredraw ="Linear", usduSeamsfix = "None", usdusdenoise = "0.35", usduswidth = "64", usduspadding ="32", usdusmaskblur = "8",controlnetenabled=False, controlnetmodel="",img2imgdenoisestrengthmod="-0.05",enableextraupscale = False,controlnetblockymode = False,extrasupscaler1 = "all",extrasupscaler2 ="all",extrasupscaler2visiblity="0.5",extrasupscaler2gfpgan="0",extrasupscaler2codeformer="0.15",extrasupscaler2codeformerweight="0.1",extrasresize="2",onlyupscale="false",givensubject="",smartsubject=True,giventypeofimage="",imagemodechance=20, gender="all", chosensubjectsubtypeobject="all", chosensubjectsubtypehumanoid="all", chosensubjectsubtypeconcept="all", increasestability = False):
     loops = int(amount)  # amount of images to generate
     steps = 0
     upscalefilelist=[]
@@ -39,7 +39,17 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
     optionsresponse = requests.get(url=f'{apiurl}/sdapi/v1/options')
     optionsresponsejson = optionsresponse.json()
 
+    modellist=get_models()
+    samplerlist=get_samplers()
+    upscalerlist=get_upscalers()
+    img2imgupscalerlist=get_upscalers_for_img2img()
+    img2imgsamplerlist=get_samplers_for_img2img()
+
     currentlyselectedmodel = optionsresponsejson["sd_model_checkpoint"]
+
+    tempmodel = "v1-5-pruned-emaonly.safetensors [6ce0161689]"
+    while(currentlyselectedmodel == tempmodel or tempmodel not in modellist):
+        tempmodel = random.choice(modellist)
 
 
     if(onlyupscale==True):
@@ -63,11 +73,7 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
             print("")
 
 
-    modellist=get_models()
-    samplerlist=get_samplers()
-    upscalerlist=get_upscalers()
-    img2imgupscalerlist=get_upscalers_for_img2img()
-    img2imgsamplerlist=get_samplers_for_img2img()
+
 
     if(ultimatesdupscale==False):
         upscalescript="SD upscale"
@@ -77,10 +83,16 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
     
     while steps < loops:
         # load the base model as a workaround
-        if(steps > 0):
-            print("to prevent a memory issue, we are going to load base 1.5, and then load the chosen model back in")
+        if(steps > 0 and increasestability == True):
+            print("")
+            print("Increase Stability has been turned on.")
+            print("To prevent a memory issue, we are going to load base 1.5, and then load the chosen model back in")
+            print("This helps with a memory leak issue.")
+            print("")
+            
+
             option_payload = {
-                    "sd_model_checkpoint": "v1-5-pruned-emaonly.safetensors [6ce0161689]"
+                    "sd_model_checkpoint": tempmodel
                     }
             response = requests.post(url=f'{apiurl}/sdapi/v1/options', json=option_payload)
 
@@ -228,14 +240,10 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
         img2imgpadding = originalimg2imgpadding
         
         while img2imgsteps < img2imgloops:
-            print(img2imgdenoisestrength)
-            print(img2imgpadding)
+
             
-            print("test for filename issues?")
-            print(filenamecomplete)
-            
-            filenamecomplete = originalfilenamecomplete + "_" + str(img2imgsteps)
-            print(filenamecomplete)
+            #filenamecomplete = originalfilenamecomplete + "_" + str(img2imgsteps)
+            #print(filenamecomplete)
           
             img2img = call_img2img(image, originalimage, originalpnginfo, apiurl, filenamecomplete, randomprompt,negativeprompt,img2imgsamplingsteps, img2imgcfg, img2imgsamplingmethod, img2imgupscaler, img2imgmodel, img2imgdenoisestrength, img2imgscale, img2imgpadding,upscalescript,usdutilewidth, usdutileheight, usdumaskblur, usduredraw, usduSeamsfix, usdusdenoise, usduswidth, usduspadding, usdusmaskblur,controlnetenabled, controlnetmodel,controlnetblockymode)
             

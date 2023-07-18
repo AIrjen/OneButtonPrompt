@@ -100,7 +100,7 @@ def call_img2img(imagelocation,originalimage, originalpnginfo ="", apiurl="http:
         
         if(upscaler== "4x-UltraSharp"):
             denoising_strength = "0.35"
-        if(upscaler== "R-ESRGAN 4x+ Anime6B+"):
+        if(upscaler== "R-ESRGAN 4x+ Anime6B"):
             denoising_strength = "0.6" # 0.6 is fine for the anime upscaler
         if(upscaler== "R-ESRGAN 4x+"):
             denoising_strength = "0.5" # default 0.6 is a lot and changes a lot of details
@@ -156,14 +156,14 @@ def call_img2img(imagelocation,originalimage, originalpnginfo ="", apiurl="http:
                         })
     if(upscalescript=="SD upscale"):
         payload.update({"script_name": upscalescript})
-        payload.update({"script_args": ["",int(padding),upscaler,float(scale)]})
+        payload.update({"script_args": ["",int(padding),upscaler,round(float(scale),1)]})
 
     if(upscalescript=="Ultimate SD upscale"):
         upscaler_index = [x.name.lower() for x in shared.sd_upscalers].index(upscaler.lower())
         payload.update({"script_name": upscalescript})
-        payload.update({"script_args": ["",int(usdutilewidth),int(usdutileheight),int(usdumaskblur),int(padding), int(usduswidth), float(usdusdenoise),int(usduspadding),
+        payload.update({"script_args": ["",int(usdutilewidth),int(usdutileheight),int(usdumaskblur),int(padding), int(usduswidth), round(float(usdusdenoise),2),int(usduspadding),
                                         upscaler_index,True,usduredrawint,False,int(usdusmaskblur),
-                                        seamsfixmodeint,2,"","",float(scale)]})
+                                        seamsfixmodeint,2,"","",round(float(scale),1)]})
     
     # Ultimate SD Upscale params:
     #_, tile_width, tile_height, mask_blur, padding, seams_fix_width, seams_fix_denoise, seams_fix_padding,

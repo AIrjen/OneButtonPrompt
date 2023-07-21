@@ -135,13 +135,18 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
             filename = filename.replace(":", "_")
             filename = re.sub(r'[0-9]+', '', filename)
 
+            safe_characters = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.")
+
+            # Use regular expression to filter out any characters not in the whitelist
+            filename = re.sub(r"[^{}]+".format(re.escape(''.join(safe_characters))), '', filename)
+
             if(filename==""):
                 filename = str(uuid.uuid4())
             
             # create a datetime object for the current date and time
             now = datetime.now()
             filenamecomplete = now.strftime("%Y%m%d%H%M%S") + "_" + filename.replace(" ", "_").strip()
-            originalfilenamecomplete = filenamecomplete
+            
 
             # prompt + size
             if(originalsize == "all"):

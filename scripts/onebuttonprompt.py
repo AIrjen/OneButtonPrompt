@@ -29,6 +29,9 @@ ANDtogglemode = ["none", "automatic", "prefix AND prompt + suffix", "prefix + pr
 seperatorlist = ["comma", "AND", "BREAK"]
 genders = ["all", "male", "female"]
 
+qualitymodelist = ["highest", "gated"]
+qualitykeeplist = ["keep used","keep all"]
+
 #for autorun and upscale
 sizelist = ["all", "portrait", "wide", "square", "ultrawide"]
 
@@ -672,9 +675,11 @@ class Script(scripts.Script):
                         <font size="2">
                         Uses aesthetic image scorer extension to check the quality of the image.
                         
-                        Once turned on, it will retry for n amount of times to get an image with the quality score. If not, it will take the best image so far and continue.
+                        Once turned on, it will retry for n amount of times to get an image with the quality score. If not, it will take the best image so far and continue or set it to gated to only take matching or higher quality images.
                         
-                        Idea and inspiration by xKean. 
+                        You can move Hiresfix to be applied afterwards. You can opt to keep all generated images.
+                        
+                        Idea and inspiration by xKean. Additional improvements suggested by pto2k.
                         </font>
                         """
                         )    
@@ -682,6 +687,12 @@ class Script(scripts.Script):
                     qualitygate = gr.Checkbox(label="Quality Gate", value=False)
                     quality = gr.Slider(1, 10, value = "7.2", step=0.1, label="Quality", visible = False)
                     runs = gr.Slider(1, 50, value = "5", step=1, label="Amount of tries", visible = False)
+            with gr.Row():
+                    qualityhiresfix = gr.Checkbox(label="Move Hires fix afterwards", value=False, visible = False)
+                    qualitymode = gr.Dropdown(
+                                        qualitymodelist, label= "Mode of operation", value="highest", visible = False)
+                    qualitykeep = gr.Dropdown(
+                                        qualitykeeplist, label= "Images", value="keep used", visible = False)
             with gr.Row():
                     gr.Markdown(
                         """
@@ -774,7 +785,7 @@ class Script(scripts.Script):
         prompt4toworkflow.click(prompttoworkflowprompt, inputs=prompt4, outputs=workprompt)
         prompt5toworkflow.click(prompttoworkflowprompt, inputs=prompt5, outputs=workprompt)
 
-        startmain.click(generateimages, inputs=[amountofimages,size,model,samplingsteps,cfg,hiresfix,hiressteps,denoisestrength,samplingmethod, upscaler,hiresscale, apiurl, qualitygate, quality, runs,insanitylevel,subject, artist, imagetype, silentmode, workprompt, antistring, prefixprompt, suffixprompt,negativeprompt,promptcompounderlevel, seperator, img2imgbatch, img2imgsamplingsteps, img2imgcfg, img2imgsamplingmethod, img2imgupscaler, img2imgmodel,img2imgactivate, img2imgscale, img2imgpadding,img2imgdenoisestrength,ultimatesdupscale,usdutilewidth, usdutileheight, usdumaskblur, usduredraw, usduSeamsfix, usdusdenoise, usduswidth, usduspadding, usdusmaskblur, controlnetenabled, controlnetmodel,img2imgdenoisestrengthmod,enableextraupscale,controlnetblockymode,extrasupscaler1,extrasupscaler2,extrasupscaler2visiblity,extrasupscaler2gfpgan,extrasupscaler2codeformer,extrasupscaler2codeformerweight,extrasresize,onlyupscale,givensubject,smartsubject,giventypeofimage,imagemodechance, chosengender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept, increasestability])
+        startmain.click(generateimages, inputs=[amountofimages,size,model,samplingsteps,cfg,hiresfix,hiressteps,denoisestrength,samplingmethod, upscaler,hiresscale, apiurl, qualitygate, quality, runs,insanitylevel,subject, artist, imagetype, silentmode, workprompt, antistring, prefixprompt, suffixprompt,negativeprompt,promptcompounderlevel, seperator, img2imgbatch, img2imgsamplingsteps, img2imgcfg, img2imgsamplingmethod, img2imgupscaler, img2imgmodel,img2imgactivate, img2imgscale, img2imgpadding,img2imgdenoisestrength,ultimatesdupscale,usdutilewidth, usdutileheight, usdumaskblur, usduredraw, usduSeamsfix, usdusdenoise, usduswidth, usduspadding, usdusmaskblur, controlnetenabled, controlnetmodel,img2imgdenoisestrengthmod,enableextraupscale,controlnetblockymode,extrasupscaler1,extrasupscaler2,extrasupscaler2visiblity,extrasupscaler2gfpgan,extrasupscaler2codeformer,extrasupscaler2codeformerweight,extrasresize,onlyupscale,givensubject,smartsubject,giventypeofimage,imagemodechance, chosengender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept, increasestability, qualityhiresfix, qualitymode, qualitykeep])
         
         automatedoutputsfolderbutton.click(openfolder)
 
@@ -848,14 +859,18 @@ class Script(scripts.Script):
 
                   qualitygate: gr.update(visible=onlyupscale),
                   quality: gr.update(visible=onlyupscale),
-                  runs: gr.update(visible=onlyupscale)
+                  runs: gr.update(visible=onlyupscale),
+                  qualityhiresfix: gr.update(visible=onlyupscale),
+                  qualitymode: gr.update(visible=onlyupscale),
+                  qualitykeep: gr.update(visible=onlyupscale)
+
 
              }
         
         onlyupscale.change(
             onlyupscalevalues,
             [onlyupscale],
-            [amountofimages,size,samplingsteps,cfg,hiresfix,hiressteps,hiresscale,denoisestrength,upscaler,model,samplingmethod,upscaler,qualitygate,quality,runs]
+            [amountofimages,size,samplingsteps,cfg,hiresfix,hiressteps,hiresscale,denoisestrength,upscaler,model,samplingmethod,upscaler,qualitygate,quality,runs,qualityhiresfix,qualitymode,qualitykeep]
         )
         
         
@@ -878,13 +893,16 @@ class Script(scripts.Script):
         def qgatechangevalues(qualitygate):
              return {
                   quality: gr.update(visible=qualitygate),
-                  runs: gr.update(visible=qualitygate)
+                  runs: gr.update(visible=qualitygate),
+                  qualityhiresfix: gr.update(visible=qualitygate),
+                  qualitymode: gr.update(visible=qualitygate),
+                  qualitykeep: gr.update(visible=qualitygate)
              }
         
         qualitygate.change(
             qgatechangevalues,
             [qualitygate],
-            [quality,runs]
+            [quality,runs,qualityhiresfix,qualitymode,qualitykeep]
         )
         
         # Turn things off and on for USDU

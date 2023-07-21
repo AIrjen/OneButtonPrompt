@@ -18,7 +18,10 @@ All with a single press of __One Button__.
 It works by using various calls of the WebUI API and calling them with the correct parameters in the correct order.
 
 ## Requirements
-The basic requirement, is that WebUI is started with --api enabled. To do so, go into your webui-user.bat file in the WebUi folder, and add --api to the line with set COMMANDLINE_ARGS
+The basic requirement, is that WebUI is started with --api enabled. To do so, go into your webui-user.bat file in the WebUi folder, and add --api to the line with set COMMANDLINE_ARGS.
+
+This is not needed if you are running SD Next (Vladmandic).
+
 For example, this is how my file looks like.
 
 ![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/7b118872-8584-454b-93e4-b8e522cab290)
@@ -117,7 +120,7 @@ Added option __"automatic"__, sets Upscaler and Denoise Strength based on prompt
 
 
 #### Quality Gate
-Idea and inspired by xKean. Such an awesome addition.
+Idea and inspired by xKean. Such an awesome addition. Additional ideas by pto2k.
 See requirements above.
 
 When enabling __Quality Gate__, it will repeat the above TXT2IMG process until:
@@ -125,9 +128,21 @@ When enabling __Quality Gate__, it will repeat the above TXT2IMG process until:
 - we have reached the __amount of tries__
 
 When an image reaches the quality score, all other images are removed. It will then continue with the quality image.
-If we reach the amount of tries, it will __pick the image with the highest score__. All other images are removed. It will then continue with the highest quality image.
+With standard settings, if it reaches the amount of tries, it will __pick the image with the highest score__. All other images are removed. It will then continue with the highest quality image.
 
-![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/53e67142-7eed-4a45-8168-4054545b3206)
+There are some other options as well:
+
+__Move Hires fix afterwards__ - This option needs to be used with Hires. fix enabled for it to work. It turns of Hires. fix during the initial generation of images. Once a image is chosen by the Quality Gate, it will then rerun the image, but this time with Hires. fix enabled. This allows for faster iteration.
+
+__Mode of operation__ - Standardly set to __highest__ which picks the image with the highest score. The other option is __gated__ which will only allow images scoring the 
+
+__Quality Score__ will be used. These will then not count to the Amount of images to generate.
+
+__Images__ is standarly set to __keep used__. If you set this to __keep all__, all generated images are kept, and nothing automatically removed.
+
+![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/e519795a-dbd5-4dc7-b96c-8f4975498ec2)
+
+
 
 
 ### IMG2IMG

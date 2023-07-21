@@ -7,12 +7,16 @@ import sys, os
 from PIL import Image, PngImagePlugin
 from model_lists import *
 import time
+import random
 
-def call_txt2img(passingprompt,ratio,upscale,debugmode,filename="",model = "currently selected model",samplingsteps = "40",cfg= "7",hiressteps ="0",denoisestrength="0.6",samplingmethod="DPM++ SDE Karras", upscaler="R-ESRGAN 4x+",hiresscale="2",apiurl="http://127.0.0.1:7860", qualitygate=False,quality="7.6",runs="5",negativeprompt=""):
+def call_txt2img(passingprompt,ratio,upscale,debugmode,filename="",model = "currently selected model",samplingsteps = "40",cfg= "7",hiressteps ="0",denoisestrength="0.6",samplingmethod="DPM++ SDE Karras", upscaler="R-ESRGAN 4x+",hiresscale="2",apiurl="http://127.0.0.1:7860", qualitygate=False,quality="7.6",runs="5",negativeprompt="",qualityhiresfix = False, qualitymode = "highest", qualitykeep="keep used"):
+
+
 
     #set the prompt!
     prompt = passingprompt
     checkprompt = passingprompt.lower()
+
 
     #set the URL for the API
     url = apiurl
@@ -39,7 +43,7 @@ def call_txt2img(passingprompt,ratio,upscale,debugmode,filename="",model = "curr
         height = "512"
     #upscaler
     enable_hr = upscale
-    if(debugmode==1):
+    if(debugmode==1 or qualityhiresfix == True):
         enable_hr="False"
     
     #defaults
@@ -102,6 +106,15 @@ def call_txt2img(passingprompt,ratio,upscale,debugmode,filename="",model = "curr
     scoredeclist = []
     imagelist = []
     pnginfolist = []
+    seedlist = []
+    usedseed = -1
+    imagethatiskept = ""
+
+    # flow things
+    continuewithnextpart = True
+
+    # starting seed of -1 
+    seed = -1
 
 
     #call TXT2IMG
@@ -117,7 +130,9 @@ def call_txt2img(passingprompt,ratio,upscale,debugmode,filename="",model = "curr
         "denoising_strength": denoising_strength,
         "hr_scale": hr_scale,
         "hr_upscaler": hr_upscaler,
-        "hr_second_pass_steps": hr_second_pass_steps
+        "hr_second_pass_steps": hr_second_pass_steps,
+        "seed": seed,
+        "hr_prompt": prompt
     }
 
     if(model != "currently selected model"):
@@ -125,6 +140,7 @@ def call_txt2img(passingprompt,ratio,upscale,debugmode,filename="",model = "curr
     
     if(negativeprompt != ""):
         payload.update({"negative_prompt": negativeprompt})
+        payload.update({"hr_negative_prompt": negativeprompt})
 
     while Runs < MaxRuns:
 
@@ -134,6 +150,9 @@ def call_txt2img(passingprompt,ratio,upscale,debugmode,filename="",model = "curr
         outputTXT2IMGFull = '{}{}{}'.format(outputTXT2IMGfolder,filenamefull,outputTXT2IMGpng)
 
         r = []
+        # randomize the seed ( A number between 0 and 4,294,967,295 )
+        seed = random.randrange(1, 4294967295)
+        payload["seed"] = seed
         
         # If we don't get an image back, we want to retry a few times. Max 3 times
         for i in range(4):
@@ -181,6 +200,7 @@ def call_txt2img(passingprompt,ratio,upscale,debugmode,filename="",model = "curr
                     score = image_scorer.get_score(image)
                     scoredeclist.append(score)
                     score = round(score,1)
+                    seedlist.append(seed)
 
                     scorelist.append(score)
                     imagelist.append(outputTXT2IMGFull)
@@ -193,6 +213,8 @@ def call_txt2img(passingprompt,ratio,upscale,debugmode,filename="",model = "curr
                     else:
                         runstodo = MaxRuns - Runs - 1
                         print("Not a good result. Retrying for another " + str(runstodo) + " times or until the image is good enough.")
+                        # randomize the seed for the next run
+
                         
                 except ImportError:
                     foundgood = True # just continue :)
@@ -211,22 +233,92 @@ def call_txt2img(passingprompt,ratio,upscale,debugmode,filename="",model = "curr
     if(len(imagelist) > 0):
 
         if(foundgood == True):
-            print("Removing any other images generated this run (if any).")
+            if(qualitykeep == "keep used"):
+                print("Removing any other images generated this run (if any).")
         else:
-            print("Stopped trying, keeping the best image we had so far.")
+            if(qualitymode == "highest"):
+                print("")
+                print("Stopped trying, keeping the best image we had so far.")
+                print("")
+            else:
+                print("")
+                print("Eh, its all pretty bad. Not going forward with any image.")
+                print("")
+
 
         # Get the index of the first occurrence of the maximum value in the list
+        #if(qualitymode == "highest" or (qualitymode != "highest" and foundgood == True)):
         indexofimagetokeep = scoredeclist.index(max(scoredeclist))
         outputTXT2IMGFull = imagelist[indexofimagetokeep] #store the image to keep in here, so we can pass it along
         pnginfo = pnginfolist[indexofimagetokeep]
-        imagelist.pop(indexofimagetokeep)  
+        usedseed = seedlist[indexofimagetokeep]
+        imagethatiskept = imagelist[indexofimagetokeep]
+        imagelist.pop(indexofimagetokeep)
+          
+        
         #remove all other images
-        for imagelocation in imagelist:
-            os.remove(imagelocation)
+        if(qualitykeep == "keep used"):
+            for imagelocation in imagelist:
+                os.remove(imagelocation)
+
+    if(foundgood == False and qualitymode != "highest"):
+        continuewithnextpart = False
+        if(imagethatiskept != "" and qualitykeep == "keep used"):
+            os.remove(imagethatiskept)
+
+    
+    # We have done everything, but if we want to run Hires fix from the quality gate, we are going to have to do it again. But this time a little easier.
+    # We do have the check wether we want to run hiresfix first
+    if(qualityhiresfix == True and upscale == False and continuewithnextpart == True):
+        print("Quality Gate hires fix was enabled, but no hires fix settings were given.")
+    if(qualityhiresfix == True and upscale == True and continuewithnextpart == True):
+        print("Going to run the chosen image with hiresfix")
+
+        payload["seed"] = usedseed
+        payload["enable_hr"] = "True"
+
+        # make the filename unique for hiresfix
+        addrun = "_hiresfix"
+        filenamefull = filename + addrun
+        outputTXT2IMGFull = '{}{}{}'.format(outputTXT2IMGfolder,filenamefull,outputTXT2IMGpng)
+
+        # If we don't get an image back, we want to retry a few times. Max 3 times
+        for i in range(4):
+            response = requests.post(url=f'{url}/sdapi/v1/txt2img', json=payload)
+
+            r = response.json()
+            if('images' in r):
+                break # this means if we have the images object, then we "break" out of the for loop.
+            else:
+                if(i == 3):
+                    print("If this keeps happening: Is WebUI started with --api enabled?")
+                    print("")
+                    raise ValueError("API has not been responding after several retries. Stopped processing.")
+                print("")
+                print("We haven't received an image from the API. Maybe something went wrong. Will retry after waiting a bit.")
+                
+
+                time.sleep(10 * (i+1) ) # incremental waiting time
 
 
+
+
+        for i in r['images']:
+            image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
+
+            png_payload = {
+                "image": "data:image/png;base64," + i
+            }
+            response2 = requests.post(url=f'{url}/sdapi/v1/png-info', json=png_payload)
+
+            pnginfo = PngImagePlugin.PngInfo()
+            pnginfo.add_text("parameters", response2.json().get("info"))
+            image.save(outputTXT2IMGFull, pnginfo=pnginfo)
+
+    
+    
     with open(outputTXT2IMGtxtFull,'w',encoding="utf8") as txt:
         json_object = json.dumps(payload, indent = 4)
         txt.write(json_object)
 
-    return [outputTXT2IMGFull,pnginfo]
+    return [outputTXT2IMGFull,pnginfo,continuewithnextpart]

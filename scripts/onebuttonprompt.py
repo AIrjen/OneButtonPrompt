@@ -679,7 +679,7 @@ class Script(scripts.Script):
                         
                         You can move Hiresfix to be applied afterwards. You can opt to keep all generated images.
                         
-                        Idea and inspiration by xKean. 
+                        Idea and inspiration by xKean. Additional improvements suggested by pto2k.
                         </font>
                         """
                         )    

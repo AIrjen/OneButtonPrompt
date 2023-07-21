@@ -120,7 +120,7 @@ Added option __"automatic"__, sets Upscaler and Denoise Strength based on prompt
 
 
 #### Quality Gate
-Idea and inspired by xKean. Such an awesome addition.
+Idea and inspired by xKean. Such an awesome addition. Additional ideas by pto2k.
 See requirements above.
 
 When enabling __Quality Gate__, it will repeat the above TXT2IMG process until:
@@ -140,7 +140,8 @@ __Quality Score__ will be used. These will then not count to the Amount of image
 
 __Images__ is standarly set to __keep used__. If you set this to __keep all__, all generated images are kept, and nothing automatically removed.
 
-![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/929d6578-6165-4989-b06d-b1dc7d7b88b4)
+![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/e519795a-dbd5-4dc7-b96c-8f4975498ec2)
+
 
 
 

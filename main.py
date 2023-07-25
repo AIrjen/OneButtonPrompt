@@ -13,7 +13,7 @@ from call_extras import *
 from model_lists import *
 
 
-def generateimages(amount = 1, size = "all",model = "currently selected model",samplingsteps = "40",cfg= "7",hiresfix = True,hiressteps ="0",denoisestrength="0.6",samplingmethod="DPM++ SDE Karras", upscaler="R-ESRGAN 4x+", hiresscale="2",apiurl="http://127.0.0.1:7860",qualitygate=False,quality="7.6",runs="5",insanitylevel="5",subject="all", artist="all", imagetype="all",silentmode=False, workprompt="", antistring="",prefixprompt="", suffixprompt="", negativeprompt="",promptcompounderlevel = "1", seperator="comma", img2imgbatch = "1", img2imgsamplingsteps = "20", img2imgcfg = "7", img2imgsamplingmethod = "DPM++ SDE Karras", img2imgupscaler = "R-ESRGAN 4x+", img2imgmodel = "currently selected model", img2imgactivate = False, img2imgscale = "2", img2imgpadding = "64",img2imgdenoisestrength="0.3",ultimatesdupscale=False,usdutilewidth = "512", usdutileheight = "0", usdumaskblur = "8", usduredraw ="Linear", usduSeamsfix = "None", usdusdenoise = "0.35", usduswidth = "64", usduspadding ="32", usdusmaskblur = "8",controlnetenabled=False, controlnetmodel="",img2imgdenoisestrengthmod="-0.05",enableextraupscale = False,controlnetblockymode = False,extrasupscaler1 = "all",extrasupscaler2 ="all",extrasupscaler2visiblity="0.5",extrasupscaler2gfpgan="0",extrasupscaler2codeformer="0.15",extrasupscaler2codeformerweight="0.1",extrasresize="2",onlyupscale="false",givensubject="",smartsubject=True,giventypeofimage="",imagemodechance=20, gender="all", chosensubjectsubtypeobject="all", chosensubjectsubtypehumanoid="all", chosensubjectsubtypeconcept="all", increasestability = False, qualityhiresfix = False, qualitymode = "highest", qualitykeep="keep used"):
+def generateimages(amount = 1, size = "all",model = "currently selected model",samplingsteps = "40",cfg= "7",hiresfix = True,hiressteps ="0",denoisestrength="0.6",samplingmethod="DPM++ SDE Karras", upscaler="R-ESRGAN 4x+", hiresscale="2",apiurl="http://127.0.0.1:7860",qualitygate=False,quality="7.6",runs="5",insanitylevel="5",subject="all", artist="all", imagetype="all",silentmode=False, workprompt="", antistring="",prefixprompt="", suffixprompt="", negativeprompt="",promptcompounderlevel = "1", seperator="comma", img2imgbatch = "1", img2imgsamplingsteps = "20", img2imgcfg = "7", img2imgsamplingmethod = "DPM++ SDE Karras", img2imgupscaler = "R-ESRGAN 4x+", img2imgmodel = "currently selected model", img2imgactivate = False, img2imgscale = "2", img2imgpadding = "64",img2imgdenoisestrength="0.3",ultimatesdupscale=False,usdutilewidth = "512", usdutileheight = "0", usdumaskblur = "8", usduredraw ="Linear", usduSeamsfix = "None", usdusdenoise = "0.35", usduswidth = "64", usduspadding ="32", usdusmaskblur = "8",controlnetenabled=False, controlnetmodel="",img2imgdenoisestrengthmod="-0.05",enableextraupscale = False,controlnetblockymode = False,extrasupscaler1 = "all",extrasupscaler2 ="all",extrasupscaler2visiblity="0.5",extrasupscaler2gfpgan="0",extrasupscaler2codeformer="0.15",extrasupscaler2codeformerweight="0.1",extrasresize="2",onlyupscale="false",givensubject="",smartsubject=True,giventypeofimage="",imagemodechance=20, gender="all", chosensubjectsubtypeobject="all", chosensubjectsubtypehumanoid="all", chosensubjectsubtypeconcept="all", increasestability = False, qualityhiresfix = False, qualitymode = "highest", qualitykeep="keep used", basesize = "512"):
     loops = int(amount)  # amount of images to generate
     steps = 0
     upscalefilelist=[]
@@ -36,8 +36,7 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
     originalimg2imgdenoisestrength = img2imgdenoisestrength
     originalimg2imgpadding = img2imgpadding
 
-    optionsresponse = requests.get(url=f'{apiurl}/sdapi/v1/options')
-    optionsresponsejson = optionsresponse.json()
+
 
     modellist=get_models()
     samplerlist=get_samplers()
@@ -45,9 +44,30 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
     img2imgupscalerlist=get_upscalers_for_img2img()
     img2imgsamplerlist=get_samplers_for_img2img()
 
-    currentlyselectedmodel = optionsresponsejson["sd_model_checkpoint"]
-
     tempmodel = "v1-5-pruned-emaonly.safetensors [6ce0161689]"
+
+    optionsresponse = requests.get(url=f'{apiurl}/sdapi/v1/options')
+    optionsresponsejson = optionsresponse.json()
+
+    currentlyselectedmodelhash = optionsresponsejson["sd_checkpoint_hash"]
+
+    sdmodelsrespone = requests.get(url=f'{apiurl}/sdapi/v1/sd-models')
+    sdmodelsresponsejson = sdmodelsrespone.json()
+
+    for item in sdmodelsresponsejson:
+        if(item['sha256'] == currentlyselectedmodelhash):
+            currentlyselectedmodel = item['title']
+            break
+
+    # Print the 'title' if found
+    if currentlyselectedmodel is not None:
+        print("current selected model is:")
+        print(currentlyselectedmodel)
+    else:
+        print("Cannot find current model.")
+        currentlyselectedmodel = tempmodel
+
+    
     while(currentlyselectedmodel == tempmodel or tempmodel not in modellist):
         tempmodel = random.choice(modellist)
 
@@ -187,7 +207,7 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
 
 
                 
-            txt2img = call_txt2img(randomprompt, size ,hiresfix, 0, filenamecomplete,model ,samplingsteps,cfg, hiressteps, denoisestrength,samplingmethod, upscaler,hiresscale,apiurl,qualitygate,quality,runs,negativeprompt, qualityhiresfix, qualitymode, qualitykeep)
+            txt2img = call_txt2img(randomprompt, size ,hiresfix, 0, filenamecomplete,model ,samplingsteps,cfg, hiressteps, denoisestrength,samplingmethod, upscaler,hiresscale,apiurl,qualitygate,quality,runs,negativeprompt, qualityhiresfix, qualitymode, qualitykeep, basesize)
             originalimage = txt2img[0] #Set this for later use
             originalpnginfo = txt2img[1] #Sort of hacky way of bringing this forward. But if it works, it works
             continuewithnextpart = txt2img[2]

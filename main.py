@@ -21,7 +21,7 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
     originalpnginfo =""
     randomprompt = ""
     filename=""
-    originalsize=size
+
     originalmodel = model
     originalsamplingmethod = samplingmethod
 
@@ -168,11 +168,6 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
             filenamecomplete = now.strftime("%Y%m%d%H%M%S") + "_" + filename.replace(" ", "_").strip()
             
 
-            # prompt + size
-            if(originalsize == "all"):
-                sizelist = ["portrait", "wide", "square"]
-                size = random.choice(sizelist)
-
 
             #Check if there is any random value we have to choose or not
             if(originalmodel=="all"):
@@ -309,3 +304,7 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
 
     print("")
     print("All done!")
+
+def tryinterrupt(apiurl="http://127.0.0.1:7860"):
+    response = requests.post(url=f'{apiurl}/sdapi/v1/interrupt')
+    

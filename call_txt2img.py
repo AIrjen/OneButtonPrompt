@@ -9,13 +9,14 @@ from model_lists import *
 import time
 import random
 
-def call_txt2img(passingprompt,ratio,upscale,debugmode,filename="",model = "currently selected model",samplingsteps = "40",cfg= "7",hiressteps ="0",denoisestrength="0.6",samplingmethod="DPM++ SDE Karras", upscaler="R-ESRGAN 4x+",hiresscale="2",apiurl="http://127.0.0.1:7860", qualitygate=False,quality="7.6",runs="5",negativeprompt="",qualityhiresfix = False, qualitymode = "highest", qualitykeep="keep used", basesize="512"):
+def call_txt2img(passingprompt,size,upscale,debugmode,filename="",model = "currently selected model",samplingsteps = "40",cfg= "7",hiressteps ="0",denoisestrength="0.6",samplingmethod="DPM++ SDE Karras", upscaler="R-ESRGAN 4x+",hiresscale="2",apiurl="http://127.0.0.1:7860", qualitygate=False,quality="7.6",runs="5",negativeprompt="",qualityhiresfix = False, qualitymode = "highest", qualitykeep="keep used", basesize="512"):
 
 
 
     #set the prompt!
     prompt = passingprompt
     checkprompt = passingprompt.lower()
+
 
 
     #set the URL for the API
@@ -28,29 +29,15 @@ def call_txt2img(passingprompt,ratio,upscale,debugmode,filename="",model = "curr
         steps="10"
     cfg_scale = cfg
 
+    originalsize = size
     #size
-    # from base ratio
-    if(ratio=='wide' and basesize != "1024"):
-        width = str(int(basesize) + 256)
-        height = basesize
-    elif(ratio=='wide' and basesize == "1024"):
-        width = "1152"
-        height = "896"
-    elif(ratio=='portrait' and basesize != "1024"):
-        width = basesize
-        height = str(int(basesize) + 256)
-    elif(ratio=='portrait' and basesize == "1024"):
-        width = "896"
-        height = "1152"
-    elif(ratio=='ultrawide'):
-        width = "1280"
-        height = "360"
-    elif(ratio=='ultraheight'):
-        width = "360"
-        height = "1280"
-    else:
-        width = basesize
-        height = basesize
+    sizes = setsize(size, basesize,originalsize)
+    width = sizes[0]
+    height = sizes[1]
+
+    
+   
+
     #upscaler
     enable_hr = upscale
     if(debugmode==1 or qualityhiresfix == True):
@@ -117,6 +104,10 @@ def call_txt2img(passingprompt,ratio,upscale,debugmode,filename="",model = "curr
     imagelist = []
     pnginfolist = []
     seedlist = []
+    widthlist = []
+    heightlist = []
+    usedwidht = width
+    usedheight = height
     usedseed = -1
     imagethatiskept = ""
 
@@ -163,6 +154,14 @@ def call_txt2img(passingprompt,ratio,upscale,debugmode,filename="",model = "curr
         # randomize the seed ( A number between 0 and 4,294,967,295 )
         seed = random.randrange(1, 4294967295)
         payload["seed"] = seed
+
+        # do we need to randomize the size?
+        if(originalsize=='all' or originalsize == 'wild'):
+            sizes = setsize(size, basesize, originalsize)
+            width = sizes[0]
+            height = sizes[1]
+            payload["width"] = width
+            payload["height"] = height
         
         # If we don't get an image back, we want to retry a few times. Max 3 times
         for i in range(4):
@@ -211,6 +210,8 @@ def call_txt2img(passingprompt,ratio,upscale,debugmode,filename="",model = "curr
                     scoredeclist.append(score)
                     score = round(score,1)
                     seedlist.append(seed)
+                    widthlist.append(width)
+                    heightlist.append(height)
 
                     scorelist.append(score)
                     imagelist.append(outputTXT2IMGFull)
@@ -223,7 +224,6 @@ def call_txt2img(passingprompt,ratio,upscale,debugmode,filename="",model = "curr
                     else:
                         runstodo = MaxRuns - Runs - 1
                         print("Not a good result. Retrying for another " + str(runstodo) + " times or until the image is good enough.")
-                        # randomize the seed for the next run
 
                         
                 except ImportError:
@@ -262,6 +262,8 @@ def call_txt2img(passingprompt,ratio,upscale,debugmode,filename="",model = "curr
         outputTXT2IMGFull = imagelist[indexofimagetokeep] #store the image to keep in here, so we can pass it along
         pnginfo = pnginfolist[indexofimagetokeep]
         usedseed = seedlist[indexofimagetokeep]
+        usedwidht = widthlist[indexofimagetokeep] 
+        usedheight = heightlist[indexofimagetokeep]
         imagethatiskept = imagelist[indexofimagetokeep]
         imagelist.pop(indexofimagetokeep)
           
@@ -285,6 +287,8 @@ def call_txt2img(passingprompt,ratio,upscale,debugmode,filename="",model = "curr
         print("Going to run the chosen image with hiresfix")
 
         payload["seed"] = usedseed
+        payload["width"] = usedwidht
+        payload["height"] = usedheight
         payload["enable_hr"] = "True"
 
         # make the filename unique for hiresfix
@@ -332,3 +336,37 @@ def call_txt2img(passingprompt,ratio,upscale,debugmode,filename="",model = "curr
         txt.write(json_object)
 
     return [outputTXT2IMGFull,pnginfo,continuewithnextpart]
+
+def setsize(ratio,basesize, originalsize):
+
+        # prompt + size
+    if(originalsize == "all"):
+        sizelist = ["portrait", "wide", "square"]
+        ratio = random.choice(sizelist)
+         # from base ratio
+    if(ratio=='wide' and basesize != "1024"):
+        width = str(int(basesize) + 256)
+        height = basesize
+    elif(ratio=='wide' and basesize == "1024"):
+        width = "1152"
+        height = "896"
+    elif(ratio=='portrait' and basesize != "1024"):
+        width = basesize
+        height = str(int(basesize) + 256)
+    elif(ratio=='portrait' and basesize == "1024"):
+        width = "896"
+        height = "1152"
+    elif(ratio=='ultrawide'):
+        width = "1280"
+        height = "360"
+    elif(ratio=='ultraheight'):
+        width = "360"
+        height = "1280"
+    elif(ratio=='wild'):
+        width = str(round((random.randint(0,4) * 128) + (int(basesize) /2) ) ) # random value of 0 to 512 in steps of 128 + half of base size
+        height = str(round( (random.randint(0,4) * 128) + (int(basesize) /2) ) ) # random value of 0 to 512 in steps of 128 + half of base size
+    else:
+        width = basesize
+        height = basesize
+
+    return [width, height]

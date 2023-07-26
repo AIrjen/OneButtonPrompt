@@ -33,7 +33,7 @@ qualitymodelist = ["highest", "gated"]
 qualitykeeplist = ["keep used","keep all"]
 
 #for autorun and upscale
-sizelist = ["all", "portrait", "wide", "square", "ultrawide", "ultraheight"]
+sizelist = ["all", "portrait", "wide", "square", "ultrawide", "ultraheight", "wild"]
 basesizelist = ["512", "768", "1024"]
 
 modellist = get_models()
@@ -625,6 +625,7 @@ class Script(scripts.Script):
             with gr.Row():
                     with gr.Column(scale=1):
                         startmain = gr.Button("Start generating and upscaling!")
+                        interrupt = gr.Button("Interrupt current")
                         automatedoutputsfolderbutton = gr.Button(folder_symbol)
                         apiurl = gr.Textbox(label="URL", value="http://127.0.0.1:7860")
                     with gr.Column(scale=1):
@@ -789,6 +790,7 @@ class Script(scripts.Script):
         prompt5toworkflow.click(prompttoworkflowprompt, inputs=prompt5, outputs=workprompt)
 
         startmain.click(generateimages, inputs=[amountofimages,size,model,samplingsteps,cfg,hiresfix,hiressteps,denoisestrength,samplingmethod, upscaler,hiresscale, apiurl, qualitygate, quality, runs,insanitylevel,subject, artist, imagetype, silentmode, workprompt, antistring, prefixprompt, suffixprompt,negativeprompt,promptcompounderlevel, seperator, img2imgbatch, img2imgsamplingsteps, img2imgcfg, img2imgsamplingmethod, img2imgupscaler, img2imgmodel,img2imgactivate, img2imgscale, img2imgpadding,img2imgdenoisestrength,ultimatesdupscale,usdutilewidth, usdutileheight, usdumaskblur, usduredraw, usduSeamsfix, usdusdenoise, usduswidth, usduspadding, usdusmaskblur, controlnetenabled, controlnetmodel,img2imgdenoisestrengthmod,enableextraupscale,controlnetblockymode,extrasupscaler1,extrasupscaler2,extrasupscaler2visiblity,extrasupscaler2gfpgan,extrasupscaler2codeformer,extrasupscaler2codeformerweight,extrasresize,onlyupscale,givensubject,smartsubject,giventypeofimage,imagemodechance, chosengender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept, increasestability, qualityhiresfix, qualitymode, qualitykeep, basesize])
+        interrupt.click(tryinterrupt, inputs=[apiurl])
         
         automatedoutputsfolderbutton.click(openfolder)
 

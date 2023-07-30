@@ -14,6 +14,8 @@ It is best used on all-purpose models, such as Stable Difussion 1.5 or those bas
 
 A simple user guide for first time use and settings is available [here](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/my_first_generation.md).
 
+It is also now available as a custom node for ComfyUI, with some limitations. [Check installation doc here](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/comfyui_integration.md)
+
 # Features
 - __Full prompt generation__ with the click of a button.                  ==> [guide to my first generation](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/my_first_generation.md) 
 - Supports __TXT2IMG, IMG2IMG, ControlNET, inpainting and latent couple__.  ==> [guide to IMG2IMG and ControlNET](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/the_next_generation_img2img_and_controlnet.md)

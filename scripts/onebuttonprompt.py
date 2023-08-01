@@ -1062,9 +1062,14 @@ class Script(scripts.Script):
             processed = process_images(p)
             images += processed.images
             infotexts += processed.infotexts
+            
+            # prompt and seed info for batch grid
             all_seeds.append(processed.seed)
             all_prompts.append(processed.prompt)
             
+            # prompt and seed info for individual images
+            all_seeds += processed.all_seeds
+            all_prompts += processed.all_prompts
             
             state.job = f"{state.job_no} out of {state.job_count}" 
         

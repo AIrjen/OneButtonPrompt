@@ -987,8 +987,8 @@ class Script(scripts.Script):
         #    prefixprompt = ""
 
         
-
-
+        state.job_count = batches
+        
         for i in range(batches):
             
             if(silentmode == False):
@@ -1067,6 +1067,9 @@ class Script(scripts.Script):
                 p.seed += 1
             
             p.seed +=1    
+            
+            state.job = f"{state.job_no} out of {state.job_count}" 
+        
         # just return all the things
         p.n_iter = 0
         p.batch_size = 0

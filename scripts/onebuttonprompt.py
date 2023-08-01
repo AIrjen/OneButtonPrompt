@@ -970,6 +970,9 @@ class Script(scripts.Script):
         p.n_iter = 1
         p.batch_size = 1
         
+        initialseed = p.seed
+        if p.seed == -1:
+            p.seed = int(random.randrange(4294967294))
 
         if(silentmode and workprompt != ""):
             print("Workflow mode turned on, not generating a prompt. Using workflow prompt.")
@@ -1061,15 +1064,14 @@ class Script(scripts.Script):
             infotexts += processed.infotexts
             all_seeds.append(processed.seed)
             all_prompts.append(processed.prompt)
-        
-            # Only move up a seed, when there are multiple batchsizes, and we had the first one done.
-            if(initialbatchsize != 1):
-                p.seed += 1
             
-            p.seed +=1    
             
             state.job = f"{state.job_no} out of {state.job_count}" 
         
+            # Increase seed by batchsize for unique seeds for every picture if -1 was chosen
+            if initialseed == -1:
+                p.seed += batchsize
+               
         # just return all the things
         p.n_iter = 0
         p.batch_size = 0

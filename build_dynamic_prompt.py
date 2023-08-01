@@ -10,7 +10,7 @@ from random_functions import *
 # insanity level controls randomness of propmt 0-10
 # forcesubject van be used to force a certain type of subject
 # Set artistmode to none, to exclude artists 
-def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", givensubject="",smartsubject = True,giventypeofimage="", imagemodechance = 20, gender = "all", subtypeobject="all", subtypehumanoid="all", subtypeconcept="all"):
+def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", givensubject="",smartsubject = True,giventypeofimage="", imagemodechance = 20, gender = "all", subtypeobject="all", subtypehumanoid="all", subtypeconcept="all", advancedprompting=True):
 
     
     # load the config file
@@ -1085,6 +1085,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             if modeselector < 5 and end - step >= 2:
                 artistmodeslist = ["hybrid", "stopping", "adding", "switching", "enhancing"]
                 artistmode = artistmodeslist[modeselector]
+                if(advancedprompting == False):
+                    artistmode = "normal"
                 if (artistmode in ["hybrid","switching"] and end - step == 1):
                     artistmode = "normal"
             
@@ -1137,7 +1139,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             if(onlyartists == True):
 
                 # replace artist wildcards
-                completeprompt = replacewildcard(completeprompt, insanitylevel, "-artist-", artistlist, False)
+                completeprompt = replacewildcard(completeprompt, insanitylevel, "-artist-", artistlist, False, False)
                     
                 # clean it up
                 completeprompt = cleanup(completeprompt)
@@ -1252,7 +1254,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 # if we have a given subject, we should skip making an actual subject
                 if(givensubject == ""):
 
-                    if rare_dist(insanitylevel):
+                    if(rare_dist(insanitylevel) and advancedprompting == True):
                         hybridorswaplist = ["hybrid", "swap"]
                         hybridorswap = random.choice(hybridorswaplist)
                         completeprompt += "["
@@ -1285,7 +1287,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 # if we have a given subject, we should skip making an actual subject
                 if(givensubject == ""):
 
-                    if rare_dist(insanitylevel):
+                    if(rare_dist(insanitylevel) and advancedprompting == True):
                         hybridorswaplist = ["hybrid", "swap"]
                         hybridorswap = random.choice(hybridorswaplist)
                         completeprompt += "["
@@ -1326,7 +1328,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                         completeprompt += "-job- "
 
                     if(subjectchooser == "fictional"):
-                        if rare_dist(insanitylevel):
+                        if(rare_dist(insanitylevel) and advancedprompting == True):
                             hybridorswaplist = ["hybrid", "swap"]
                             hybridorswap = random.choice(hybridorswaplist)
                             completeprompt += "["
@@ -1340,7 +1342,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                         hybridorswap = ""
 
                     if(subjectchooser == "non fictional"):
-                        if rare_dist(insanitylevel):
+                        if(rare_dist(insanitylevel)  and advancedprompting == True):
                             hybridorswaplist = ["hybrid", "swap"]
                             hybridorswap = random.choice(hybridorswaplist)
                             completeprompt += "["
@@ -1356,7 +1358,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                     if(subjectchooser == "humanoid"):
                         if(gender != "all"):
                             completeprompt += "-malefemale- "
-                        if rare_dist(insanitylevel):
+                        if(rare_dist(insanitylevel)  and advancedprompting == True):
                             hybridorswaplist = ["hybrid", "swap"]
                             hybridorswap = random.choice(hybridorswaplist)
                             completeprompt += "["
@@ -1370,7 +1372,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                         hybridorswap = ""
 
                     if(subjectchooser == "firstname"):
-                        if rare_dist(insanitylevel):
+                        if(rare_dist(insanitylevel)  and advancedprompting == True):
                             hybridorswaplist = ["hybrid", "swap"]
                             hybridorswap = random.choice(hybridorswaplist)
                             completeprompt += "["
@@ -1395,7 +1397,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 
                 # if we have a given subject, we should skip making an actual subject
                 if(givensubject == ""):
-                    if rare_dist(insanitylevel):
+                    if(rare_dist(insanitylevel) and advancedprompting == True):
                         hybridorswaplist = ["hybrid", "swap"]
                         hybridorswap = random.choice(hybridorswaplist)
                         completeprompt += "["
@@ -1764,6 +1766,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             if modeselector < 4 and end - step >= 2:
                 artistmodeslist = ["hybrid", "stopping", "adding", "switching"]
                 artistmode = artistmodeslist[modeselector]
+                if(advancedprompting == False):
+                    artistmode = "normal"
                 if artistmode in ["hybrid","switching"] and end - step == 1:
                     artistmode = "normal"
             # if there are not enough artists in the list, then just go normal
@@ -1924,13 +1928,13 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         #  keywordsinstring = any(word.lower() in givensubject.lower() for word in keywordslist)
         for wildcard in allwildcardslistnohybrid:
             attachedlist = allwildcardslistnohybridlists[allwildcardslistnohybrid.index(wildcard)]
-            completeprompt = replacewildcard(completeprompt, insanitylevel, wildcard, attachedlist,False)
+            completeprompt = replacewildcard(completeprompt, insanitylevel, wildcard, attachedlist,False, advancedprompting)
 
 
         
         for wildcard in allwildcardslistwithhybrid:
             attachedlist = allwildcardslistwithhybridlists[allwildcardslistwithhybrid.index(wildcard)]
-            completeprompt = replacewildcard(completeprompt, insanitylevel, wildcard, attachedlist,True)
+            completeprompt = replacewildcard(completeprompt, insanitylevel, wildcard, attachedlist,True, advancedprompting)
 
 
       
@@ -1949,7 +1953,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
 
     # function
-def replacewildcard(completeprompt, insanitylevel, wildcard,listname, activatehybridorswap):
+def replacewildcard(completeprompt, insanitylevel, wildcard,listname, activatehybridorswap, advancedprompting):
 
     if(len(listname) == 0):
         # handling empty lists
@@ -1957,7 +1961,7 @@ def replacewildcard(completeprompt, insanitylevel, wildcard,listname, activatehy
     else:
 
         while wildcard in completeprompt:
-            if(unique_dist(insanitylevel) and activatehybridorswap == True and len(listname)>2):
+            if(unique_dist(insanitylevel) and activatehybridorswap == True and len(listname)>2 and advancedprompting==True):
                 hybridorswaplist = ["hybrid", "swap"]
                 hybridorswap = random.choice(hybridorswaplist)
                 replacementvalue = random.choice(listname)

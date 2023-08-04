@@ -10,7 +10,7 @@ from random_functions import *
 # insanity level controls randomness of propmt 0-10
 # forcesubject van be used to force a certain type of subject
 # Set artistmode to none, to exclude artists 
-def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", givensubject="",smartsubject = True,giventypeofimage="", imagemodechance = 20, gender = "all", subtypeobject="all", subtypehumanoid="all", subtypeconcept="all"):
+def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", givensubject="",smartsubject = True,giventypeofimage="", imagemodechance = 20, gender = "all", subtypeobject="all", subtypehumanoid="all", subtypeconcept="all", advancedprompting=True):
 
     
     # load the config file
@@ -1085,6 +1085,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             if modeselector < 5 and end - step >= 2:
                 artistmodeslist = ["hybrid", "stopping", "adding", "switching", "enhancing"]
                 artistmode = artistmodeslist[modeselector]
+                if(advancedprompting == False):
+                    artistmode = "normal"
                 if (artistmode in ["hybrid","switching"] and end - step == 1):
                     artistmode = "normal"
             
@@ -1137,10 +1139,10 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             if(onlyartists == True):
 
                 # replace artist wildcards
-                completeprompt = replacewildcard(completeprompt, insanitylevel, "-artist-", artistlist, False)
+                completeprompt = replacewildcard(completeprompt, insanitylevel, "-artist-", artistlist, False, False)
                     
                 # clean it up
-                completeprompt = cleanup(completeprompt)
+                completeprompt = cleanup(completeprompt, advancedprompting)
 
                 print("only generated these artists:" + completeprompt)
                 return completeprompt
@@ -1252,7 +1254,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 # if we have a given subject, we should skip making an actual subject
                 if(givensubject == ""):
 
-                    if rare_dist(insanitylevel):
+                    if(rare_dist(insanitylevel) and advancedprompting == True):
                         hybridorswaplist = ["hybrid", "swap"]
                         hybridorswap = random.choice(hybridorswaplist)
                         completeprompt += "["
@@ -1285,7 +1287,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 # if we have a given subject, we should skip making an actual subject
                 if(givensubject == ""):
 
-                    if rare_dist(insanitylevel):
+                    if(rare_dist(insanitylevel) and advancedprompting == True):
                         hybridorswaplist = ["hybrid", "swap"]
                         hybridorswap = random.choice(hybridorswaplist)
                         completeprompt += "["
@@ -1326,7 +1328,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                         completeprompt += "-job- "
 
                     if(subjectchooser == "fictional"):
-                        if rare_dist(insanitylevel):
+                        if(rare_dist(insanitylevel) and advancedprompting == True):
                             hybridorswaplist = ["hybrid", "swap"]
                             hybridorswap = random.choice(hybridorswaplist)
                             completeprompt += "["
@@ -1340,7 +1342,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                         hybridorswap = ""
 
                     if(subjectchooser == "non fictional"):
-                        if rare_dist(insanitylevel):
+                        if(rare_dist(insanitylevel)  and advancedprompting == True):
                             hybridorswaplist = ["hybrid", "swap"]
                             hybridorswap = random.choice(hybridorswaplist)
                             completeprompt += "["
@@ -1356,7 +1358,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                     if(subjectchooser == "humanoid"):
                         if(gender != "all"):
                             completeprompt += "-malefemale- "
-                        if rare_dist(insanitylevel):
+                        if(rare_dist(insanitylevel)  and advancedprompting == True):
                             hybridorswaplist = ["hybrid", "swap"]
                             hybridorswap = random.choice(hybridorswaplist)
                             completeprompt += "["
@@ -1370,7 +1372,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                         hybridorswap = ""
 
                     if(subjectchooser == "firstname"):
-                        if rare_dist(insanitylevel):
+                        if(rare_dist(insanitylevel)  and advancedprompting == True):
                             hybridorswaplist = ["hybrid", "swap"]
                             hybridorswap = random.choice(hybridorswaplist)
                             completeprompt += "["
@@ -1395,7 +1397,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 
                 # if we have a given subject, we should skip making an actual subject
                 if(givensubject == ""):
-                    if rare_dist(insanitylevel):
+                    if(rare_dist(insanitylevel) and advancedprompting == True):
                         hybridorswaplist = ["hybrid", "swap"]
                         hybridorswap = random.choice(hybridorswaplist)
                         completeprompt += "["
@@ -1764,6 +1766,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             if modeselector < 4 and end - step >= 2:
                 artistmodeslist = ["hybrid", "stopping", "adding", "switching"]
                 artistmode = artistmodeslist[modeselector]
+                if(advancedprompting == False):
+                    artistmode = "normal"
                 if artistmode in ["hybrid","switching"] and end - step == 1:
                     artistmode = "normal"
             # if there are not enough artists in the list, then just go normal
@@ -1924,19 +1928,19 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         #  keywordsinstring = any(word.lower() in givensubject.lower() for word in keywordslist)
         for wildcard in allwildcardslistnohybrid:
             attachedlist = allwildcardslistnohybridlists[allwildcardslistnohybrid.index(wildcard)]
-            completeprompt = replacewildcard(completeprompt, insanitylevel, wildcard, attachedlist,False)
+            completeprompt = replacewildcard(completeprompt, insanitylevel, wildcard, attachedlist,False, advancedprompting)
 
 
         
         for wildcard in allwildcardslistwithhybrid:
             attachedlist = allwildcardslistwithhybridlists[allwildcardslistwithhybrid.index(wildcard)]
-            completeprompt = replacewildcard(completeprompt, insanitylevel, wildcard, attachedlist,True)
+            completeprompt = replacewildcard(completeprompt, insanitylevel, wildcard, attachedlist,True, advancedprompting)
 
 
       
     
     # clean it up
-    completeprompt = cleanup(completeprompt)
+    completeprompt = cleanup(completeprompt, advancedprompting)
 
     #just for me, some fun with posting fake dev messages (ala old sim games)
     if(random.randint(1, 50)==1):
@@ -1948,8 +1952,472 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     return completeprompt
 
 
+# function that takes an existing prompt and tries to create a variant out of it
+def createpromptvariant(prompt = "", insanitylevel = 5, antivalues = "" , gender = "all", artists = "all", advancedprompting = True):
+    # first load the lists, all copied from above (can that be done better?)
+    # do we want to use the same settings or keep it open??
+
+    # first build up a complete anti list. Those values are removing during list building
+    # this uses the antivalues string AND the antilist.csv
+    emptylist = []
+    antilist = csv_to_list("antilist",emptylist , "./userfiles/",1)
+    antivaluelist = antivalues.split(",")
+
+    antilist += antivaluelist
+
+    # build all lists here
+
+    colorlist = csv_to_list("colors",antilist)
+    animallist = csv_to_list("animals",antilist)    
+    materiallist = csv_to_list("materials",antilist)
+    objectlist = csv_to_list("objects",antilist)
+    fictionallist = csv_to_list(csvfilename="fictional characters",antilist=antilist,skipheader=True,gender=gender)
+    nonfictionallist = csv_to_list(csvfilename="nonfictional characters",antilist=antilist,skipheader=True,gender=gender)
+    conceptsuffixlist = csv_to_list("concept_suffix",antilist)
+    buildinglist = csv_to_list("buildings",antilist)
+    vehiclelist = csv_to_list("vehicles",antilist)
+    outfitlist = csv_to_list("outfits",antilist)
+    locationlist = csv_to_list("locations",antilist)
+
+    accessorielist = csv_to_list("accessories",antilist)
+    artmovementlist = csv_to_list("artmovements",antilist)
+    bodytypelist = csv_to_list("body_types",antilist)
+    cameralist = csv_to_list("cameras",antilist)
+    colorschemelist = csv_to_list("colorscheme",antilist)
+    conceptprefixlist = csv_to_list("concept_prefix",antilist)
+    culturelist = csv_to_list("cultures",antilist)
+    descriptorlist = csv_to_list("descriptors",antilist)
+    devmessagelist = csv_to_list("devmessages",antilist)
+    directionlist = csv_to_list("directions",antilist)
+    emojilist = csv_to_list("emojis",antilist)
+    eventlist = csv_to_list("events",antilist)
+    focuslist = csv_to_list("focus",antilist)
+    greatworklist = csv_to_list("greatworks",antilist)
+    haircolorlist = csv_to_list("haircolors",antilist)
+    hairstylelist = csv_to_list("hairstyles",antilist)
+    humanactivitylist = csv_to_list("human_activities",antilist)
+    humanoidlist = csv_to_list("humanoids",antilist)
+    imagetypelist = csv_to_list("imagetypes",antilist)
+    joblist = csv_to_list("jobs",antilist)
+    lenslist = csv_to_list("lenses",antilist)
+    lightinglist = csv_to_list("lighting",antilist)
+    malefemalelist = csv_to_list(csvfilename="malefemale",antilist=antilist,skipheader=True,gender=gender)
+    manwomanlist = csv_to_list(csvfilename="manwoman",antilist=antilist,skipheader=True,gender=gender)
+    moodlist = csv_to_list("moods",antilist)
+    othertypelist = csv_to_list("othertypes",antilist)
+    poselist = csv_to_list("poses",antilist)
+    qualitylist = csv_to_list("quality",antilist)
+    shotsizelist = csv_to_list("shotsizes",antilist)
+    timeperiodlist = csv_to_list("timeperiods",antilist)
+    vomitlist = csv_to_list("vomit",antilist)
+    foodlist = csv_to_list("foods", antilist)
+    genderdescriptionlist = csv_to_list(csvfilename="genderdescription",antilist=antilist,skipheader=True,gender=gender)
+    minilocationlist = csv_to_list("minilocations", antilist)
+    minioutfitlist = csv_to_list("minioutfits", antilist)
+    seasonlist = csv_to_list("seasons", antilist)
+    elaborateoutfitlist = csv_to_list("elaborateoutfits", antilist)
+    minivomitlist = csv_to_list("minivomit", antilist)
+    imagetypequalitylist = csv_to_list("imagetypequality", antilist)
+    rpgclasslist = csv_to_list("rpgclasses", antilist)
+    brandlist = csv_to_list("brands", antilist)
+    spacelist = csv_to_list("space", antilist)
+    poemlinelist = csv_to_list("poemlines", antilist)
+    songlinelist = csv_to_list("songlines", antilist)
+    musicgenrelist = csv_to_list("musicgenres", antilist)
+    manwomanrelationlist = csv_to_list(csvfilename="manwomanrelations",antilist=antilist,skipheader=True,gender=gender)
+    waterlocationlist = csv_to_list("waterlocations", antilist)
+    containerlist = csv_to_list("containers", antilist)
+    firstnamelist = csv_to_list(csvfilename="firstnames",antilist=antilist,skipheader=True,gender=gender)
+    floralist = csv_to_list("flora", antilist)
+
+    humanlist = fictionallist + nonfictionallist + humanoidlist + malefemalelist + manwomanlist + manwomanrelationlist
+    objecttotallist = objectlist + buildinglist + vehiclelist + foodlist + spacelist + floralist
+
+    # build artists list
+    artistlist = []
+    # create artist list to use in the code, maybe based on category  or personal lists
+    if(artists != "all" and artists != "none" and artists.startswith("personal_artists") == False and artists.startswith("personal artists") == False):
+        artistlist = artist_category_csv_to_list("artists_and_category",artists)
+    elif(artists.startswith("personal_artists") == True or artists.startswith("personal artists") == True):
+        artists = artists.replace(" ","_",-1) # add underscores back in
+        artistlist = csv_to_list(artists,antilist,"./userfiles/")
+    elif(artists != "none"):
+        artistlist = csv_to_list("artists",antilist)
+
+    # create special artists lists, used in templates
+    fantasyartistlist = artist_category_csv_to_list("artists_and_category","fantasy")
+    popularartistlist = artist_category_csv_to_list("artists_and_category","popular")
+    romanticismartistlist = artist_category_csv_to_list("artists_and_category","romanticism")
+    photographyartistlist = artist_category_csv_to_list("artists_and_category","photography")
+
+
+    # add any other custom lists
+    stylestiloralist = csv_to_list("styles_ti_lora",antilist,"./userfiles/")
+    generatestyle = bool(stylestiloralist) # True of not empty
+
+    custominputprefixlist = csv_to_list("custom_input_prefix",antilist,"./userfiles/")
+    generatecustominputprefix = bool(custominputprefixlist) # True of not empty
+
+    custominputmidlist = csv_to_list("custom_input_mid",antilist,"./userfiles/")
+    generatecustominputmid = bool(custominputmidlist) # True of not empty
+
+    custominputsuffixlist = csv_to_list("custom_input_suffix",antilist,"./userfiles/")
+    generatecustominputsuffix = bool(custominputsuffixlist) # True of not empty
+
+    customsubjectslist = csv_to_list("custom_subjects",antilist,"./userfiles/")
+
+    # special lists
+    backgroundtypelist = csv_to_list("backgroundtypes", antilist,"./csvfiles/special_lists/")
+    insideshotlist =  csv_to_list("insideshots", antilist,"./csvfiles/special_lists/")
+    photoadditionlist = csv_to_list("photoadditions", antilist,"./csvfiles/special_lists/")
+    buildhairlist = csv_to_list("buildhair", antilist,"./csvfiles/special_lists/")
+    buildoutfitlist = csv_to_list("buildoutfit", antilist,"./csvfiles/special_lists/")
+    objectadditionslist = csv_to_list("objectadditions", antilist,"./csvfiles/special_lists/")
+    humanadditionlist = csv_to_list("humanadditions", antilist,"./csvfiles/special_lists/")
+    animaladditionlist = csv_to_list("animaladditions", antilist,"./csvfiles/special_lists/")
+    buildaccessorielist = csv_to_list("buildaccessorie", antilist,"./csvfiles/special_lists/")
+    minilocationadditionslist = csv_to_list("minilocationadditions", antilist,"./csvfiles/special_lists/")
+    overalladditionlist = csv_to_list("overalladditions", antilist,"./csvfiles/special_lists/")
+    imagetypemodelist = csv_to_list("imagetypemodes", antilist,"./csvfiles/special_lists/")
+
+
+    prompt = prompt.replace(",", " , ")
+    prompt = prompt.replace("(", " ( ")
+    prompt = prompt.replace(")", " ) ")
+    prompt = prompt.replace("[", " [ ")
+    prompt = prompt.replace("]", " ] ")
+    prompt = prompt.replace("|", " | ")
+    prompt = prompt.replace(":", " : ")
+
+    prompt = " " + prompt
+    # store the (sort of) original prompt
+    originalprompt = prompt
+    ### Get all combinations of 1 to 4 consecutive words
+
+
+    words = prompt.split()
+    num_words = len(words)
+    
+    combinations_list = []
+    
+    for length in range(1, 5):  # Generate combinations of length 1 to 4
+        for start_idx in range(num_words - length + 1):
+            end_idx = start_idx + length
+            combination = ' '.join(words[start_idx:end_idx])
+            combinations_list.append(combination)
+    
+    maxamountofruns = 4
+    runs = 0
+
+    if(insanitylevel != 0):
+        print("")
+        print("Creating a prompt variation")
+        print("")
+        while(originalprompt == prompt and runs != maxamountofruns):
+            for combination in combinations_list:
+                lowercase_combination = combination.lower()
+                combination = " " + combination + " "
+
+               # some rare changes if needed
+                if lowercase_combination in [x.lower() for x in humanlist] and chance_roll(insanitylevel, "rare"):
+                    prompt = prompt.replace(combination," -human- ")
+
+                if lowercase_combination in [x.lower() for x in objecttotallist] and chance_roll(insanitylevel, "rare"):
+                    prompt = prompt.replace(combination," -objecttotal- ")
+                
+                if lowercase_combination in [x.lower() for x in artistlist] and chance_roll(insanitylevel, "rare"):
+                    prompt = prompt.replace(combination," -artist- ")
+                
+
+                if lowercase_combination in [x.lower() for x in colorlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -color- ")
+
+                if lowercase_combination in [x.lower() for x in animallist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -animal- ")
+                
+                if lowercase_combination in [x.lower() for x in objectlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -object- ")
+                            
+                if lowercase_combination in [x.lower() for x in fictionallist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -fictional- ")
+
+                
+                if lowercase_combination in [x.lower() for x in nonfictionallist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -nonfictional- ")
+
+                
+                #if lowercase_combination in [x.lower() for x in conceptsuffixlist] and chance_roll(insanitylevel, "uncommon"):
+                #   prompt = prompt.replace(combination," -conceptsuffix- ")
+
+                
+                if lowercase_combination in [x.lower() for x in buildinglist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -building- ")
+
+                
+                if lowercase_combination in [x.lower() for x in vehiclelist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -vehicle- ")
+
+                
+                if lowercase_combination in [x.lower() for x in outfitlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -outfit- ")
+
+                
+                if lowercase_combination in [x.lower() for x in locationlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -location- ")
+
+                
+                if lowercase_combination in [x.lower() for x in accessorielist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -accessorie- ")
+
+                
+                if lowercase_combination in [x.lower() for x in artmovementlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -artmovement- ")
+
+                
+                if lowercase_combination in [x.lower() for x in bodytypelist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -bodytype- ")
+
+                
+                if lowercase_combination in [x.lower() for x in cameralist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -camera- ")
+
+                
+                if lowercase_combination in [x.lower() for x in colorschemelist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -colorscheme- ")
+
+                
+                #if lowercase_combination in [x.lower() for x in conceptprefixlist] and chance_roll(insanitylevel, "uncommon"):
+                #    prompt = prompt.replace(combination," -conceptprefix- ")
+
+                
+                if lowercase_combination in [x.lower() for x in culturelist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -culture- ")
+
+                
+                if lowercase_combination in [x.lower() for x in descriptorlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -descriptor- ")
+
+                if lowercase_combination in [x.lower() for x in directionlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -direction- ")
+
+                if lowercase_combination in [x.lower() for x in emojilist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -emoji- ")
+                    
+                if lowercase_combination in [x.lower() for x in eventlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -event- ")
+
+                if lowercase_combination in [x.lower() for x in focuslist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -focus- ")
+
+                if lowercase_combination in [x.lower() for x in greatworklist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -greatwork- ")
+
+                if lowercase_combination in [x.lower() for x in haircolorlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -haircolor- ")
+
+                if lowercase_combination in [x.lower() for x in hairstylelist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -hairstyle- ")
+
+                if lowercase_combination in [x.lower() for x in directionlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -direction- ")
+
+                if lowercase_combination in [x.lower() for x in humanoidlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -humanoid- ")
+
+                if lowercase_combination in [x.lower() for x in joblist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -job- ")
+
+                if lowercase_combination in [x.lower() for x in lenslist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -lens- ")
+                if lowercase_combination in [x.lower() for x in lightinglist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -lighting- ")
+                if lowercase_combination in [x.lower() for x in malefemalelist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -malefemale- ")
+                if lowercase_combination in [x.lower() for x in manwomanlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -manwoman- ")
+                if lowercase_combination in [x.lower() for x in moodlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -mood- ")
+                if lowercase_combination in [x.lower() for x in othertypelist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -othertype- ")
+                if lowercase_combination in [x.lower() for x in poselist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -pose- ")
+                if lowercase_combination in [x.lower() for x in qualitylist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -quality- ")
+                if lowercase_combination in [x.lower() for x in shotsizelist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -shotsize- ")
+                if lowercase_combination in [x.lower() for x in timeperiodlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -timeperiod- ")
+                if lowercase_combination in [x.lower() for x in vomitlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -vomit- ")
+                if lowercase_combination in [x.lower() for x in foodlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -food- ")
+                if lowercase_combination in [x.lower() for x in genderdescriptionlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -genderdescription- ")
+                if lowercase_combination in [x.lower() for x in minilocationlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -minilocation- ")
+                if lowercase_combination in [x.lower() for x in minioutfitlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -minioutfit- ")
+                if lowercase_combination in [x.lower() for x in lenslist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -lens- ")
+                if lowercase_combination in [x.lower() for x in seasonlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -season- ")
+                if lowercase_combination in [x.lower() for x in imagetypequalitylist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -imagetypequality- ")
+                if lowercase_combination in [x.lower() for x in rpgclasslist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -rpgclass- ")
+                if lowercase_combination in [x.lower() for x in brandlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -brand- ")
+                if lowercase_combination in [x.lower() for x in spacelist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -space- ")
+                if lowercase_combination in [x.lower() for x in poemlinelist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -poemline- ")
+                if lowercase_combination in [x.lower() for x in songlinelist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -songline- ")
+                if lowercase_combination in [x.lower() for x in musicgenrelist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -musicgenre- ")
+                if lowercase_combination in [x.lower() for x in manwomanrelationlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -manwomanrelation- ")
+                if lowercase_combination in [x.lower() for x in waterlocationlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -waterlocation- ")
+                if lowercase_combination in [x.lower() for x in containerlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -container- ")
+                if lowercase_combination in [x.lower() for x in firstnamelist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -firstname- ")
+                if lowercase_combination in [x.lower() for x in floralist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -flora- ")
+                
+
+
+                if lowercase_combination in [x.lower() for x in fantasyartistlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -artistfantasy- ")
+                if lowercase_combination in [x.lower() for x in popularartistlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -artistpopular- ")
+                if lowercase_combination in [x.lower() for x in romanticismartistlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -artistromanticism- ")
+                if lowercase_combination in [x.lower() for x in photographyartistlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -artistphotography- ")
+
+                if lowercase_combination in [x.lower() for x in stylestiloralist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -styletilora- ")
+                if lowercase_combination in [x.lower() for x in waterlocationlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -waterlocation- ")
+
+            runs += 1
+         
+        
+
+    prompt = prompt.replace(" :", ":")
+    prompt = prompt.replace(": ", ":")
+
+    completeprompt = prompt
+
+
+
+    while (
+        "-color-" in completeprompt or
+        "-material-" in completeprompt or
+        "-animal-" in completeprompt or
+        "-object-" in completeprompt or
+        "-fictional-" in completeprompt or
+        "-nonfictional-" in completeprompt or
+        "-conceptsuffix-" in completeprompt or
+        "-building-" in completeprompt or
+        "-vehicle-" in completeprompt or
+        "-outfit-" in completeprompt or
+        "-location-" in completeprompt or
+        "-conceptprefix-" in completeprompt or
+        "-descriptor-" in completeprompt or
+        "-food-" in completeprompt or
+        "-haircolor-" in completeprompt or
+        "-hairstyle-" in completeprompt or
+        "-job-" in completeprompt or
+        "-culture-" in completeprompt or
+        "-accessory-" in completeprompt or
+        "-humanoid-" in completeprompt or
+        "-manwoman-" in completeprompt or
+        "-human-" in completeprompt or
+        "-colorscheme-" in completeprompt or
+        "-mood-" in completeprompt or
+        "-genderdescription-" in completeprompt or
+        "-artmovement-" in completeprompt or
+        "-malefemale-" in completeprompt or
+        "-objecttotal-" in completeprompt or
+        "-bodytype-" in completeprompt or
+        "-minilocation-" in completeprompt or
+        "-minilocationaddition-" in completeprompt or
+        "-pose-" in completeprompt or
+        "-season-" in completeprompt or
+        "-minioutfit-" in completeprompt or
+        "-elaborateoutfit-" in completeprompt or
+        "-minivomit-" in completeprompt or
+        "-vomit-" in completeprompt or
+        "-rpgclass-" in completeprompt or
+        "-subjectfromfile-" in completeprompt or
+        "-brand-" in completeprompt or
+        "-space-" in completeprompt or
+        "-artist-" in completeprompt or
+        "-imagetype-" in completeprompt or
+        "-othertype-" in completeprompt or
+        "-quality-" in completeprompt or
+        "-lighting-" in completeprompt or
+        "-camera-" in completeprompt or
+        "-lens-" in completeprompt or
+        "-imagetypequality-" in completeprompt or
+        "-poemline-" in completeprompt or
+        "-songline-" in completeprompt or
+        "-greatwork-" in completeprompt or
+        "-artistfantasy-" in completeprompt or 
+        "-artistpopular-" in completeprompt or 
+        "-artistromanticism-" in completeprompt or 
+        "-artistphotography-" in completeprompt or
+        "-emoji-" in completeprompt or
+        "-timeperiod-" in completeprompt or
+        "-shotsize-" in completeprompt or
+        "-musicgenre-" in completeprompt or
+        "-animaladdition-" in completeprompt or
+        "-objectaddition-" in completeprompt or
+        "-humanaddition-" in completeprompt or
+        "-overalladdition-" in completeprompt or
+        "-focus-" in completeprompt or
+        "-direction-" in completeprompt or
+        "-styletilora-" in completeprompt or
+        "-manwomanrelation-" in completeprompt or
+        "-waterlocation-" in completeprompt or
+        "-container-" in completeprompt or
+        "-firstname-" in completeprompt or
+        "-flora-" in completeprompt):
+            allwildcardslistnohybrid = [ "-color-","-object-", "-animal-", "-fictional-","-nonfictional-","-building-","-vehicle-","-location-","-conceptprefix-","-food-","-haircolor-","-hairstyle-","-job-", "-accessory-", "-humanoid-", "-manwoman-", "-human-", "-colorscheme-", "-mood-", "-genderdescription-", "-artmovement-", "-malefemale-", "-bodytype-", "-minilocation-", "-minilocationaddition-", "-pose-", "-season-", "-minioutfit-", "-elaborateoutfit-", "-minivomit-", "-vomit-", "-rpgclass-", "-subjectfromfile-", "-brand-", "-space-", "-artist-", "-imagetype-", "-othertype-", "-quality-", "-lighting-", "-camera-", "-lens-","-imagetypequality-", "-poemline-", "-songline-", "-greatwork-", "-artistfantasy-", "-artistpopular-", "-artistromanticism-", "-artistphotography-", "-emoji-", "-timeperiod-", "-shotsize-", "-musicgenre-", "-animaladdition-", "-objectaddition-", "-humanaddition-", "-overalladdition-", "-focus-", "-direction-", "-styletilora-", "-manwomanrelation-", "-waterlocation-", "-container-", "-firstname-", "-flora-"]
+            allwildcardslistnohybridlists = [colorlist, objectlist, animallist, fictionallist, nonfictionallist, buildinglist, vehiclelist, locationlist,conceptprefixlist,foodlist,haircolorlist, hairstylelist,joblist, accessorielist, humanoidlist, manwomanlist, humanlist, colorschemelist, moodlist, genderdescriptionlist, artmovementlist, malefemalelist, bodytypelist, minilocationlist, minilocationadditionslist, poselist, seasonlist, minioutfitlist, elaborateoutfitlist, minivomitlist, vomitlist, rpgclasslist, customsubjectslist, brandlist, spacelist, artistlist, imagetypelist, othertypelist, qualitylist, lightinglist, cameralist, lenslist, imagetypequalitylist, poemlinelist, songlinelist, greatworklist, fantasyartistlist, popularartistlist, romanticismartistlist, photographyartistlist, emojilist, timeperiodlist, shotsizelist, musicgenrelist, animaladditionlist, objectadditionslist, humanadditionlist, overalladditionlist, focuslist, directionlist, stylestiloralist, manwomanrelationlist, waterlocationlist, containerlist, firstnamelist, floralist]
+            
+            allwildcardslistwithhybrid = ["-material-", "-descriptor-", "-outfit-", "-conceptsuffix-","-culture-", "-objecttotal-"]
+            allwildcardslistwithhybridlists = [materiallist, descriptorlist,outfitlist,conceptsuffixlist,culturelist, objecttotallist]
+            
+            
+            #  keywordsinstring = any(word.lower() in givensubject.lower() for word in keywordslist)
+            for wildcard in allwildcardslistnohybrid:
+                attachedlist = allwildcardslistnohybridlists[allwildcardslistnohybrid.index(wildcard)]
+                completeprompt = replacewildcard(completeprompt, insanitylevel, wildcard, attachedlist,False, advancedprompting)
+
+
+            
+            for wildcard in allwildcardslistwithhybrid:
+                attachedlist = allwildcardslistwithhybridlists[allwildcardslistwithhybrid.index(wildcard)]
+                completeprompt = replacewildcard(completeprompt, insanitylevel, wildcard, attachedlist,True, advancedprompting)
+
+
+        
+        
+    # clean it up
+    completeprompt = cleanup(completeprompt, advancedprompting)
+    
+
+
+
+
+    return completeprompt
+
     # function
-def replacewildcard(completeprompt, insanitylevel, wildcard,listname, activatehybridorswap):
+def replacewildcard(completeprompt, insanitylevel, wildcard,listname, activatehybridorswap, advancedprompting):
 
     if(len(listname) == 0):
         # handling empty lists
@@ -1957,7 +2425,7 @@ def replacewildcard(completeprompt, insanitylevel, wildcard,listname, activatehy
     else:
 
         while wildcard in completeprompt:
-            if(unique_dist(insanitylevel) and activatehybridorswap == True and len(listname)>2):
+            if(unique_dist(insanitylevel) and activatehybridorswap == True and len(listname)>2 and advancedprompting==True):
                 hybridorswaplist = ["hybrid", "swap"]
                 hybridorswap = random.choice(hybridorswaplist)
                 replacementvalue = random.choice(listname)
@@ -1990,7 +2458,12 @@ def replacewildcard(completeprompt, insanitylevel, wildcard,listname, activatehy
 
     return completeprompt
 
-def cleanup(completeprompt):
+def replace_match(match):
+    # Extract the first word from the match
+    words = match.group(0)[1:-1].split('|')
+    return words[0]
+
+def cleanup(completeprompt, advancedprompting):
 
     # first, move LoRA's to the back dynamically
 
@@ -2001,6 +2474,16 @@ def cleanup(completeprompt):
     completeprompt = re.sub(r"<[^>]+>", "", completeprompt)
 
 
+    # if we are not using advanced prompting, remove any hybrid stuff:
+    if(advancedprompting==False):
+        hybridpattern = r'\[\w+\|\w+\]'
+        # Replace the matched pattern with the first word in the group
+        completeprompt = re.sub(hybridpattern, replace_match, completeprompt)
+
+        # Doesnt work if there are multiple words, so then just get rid of things as is :D
+        completeprompt = completeprompt.replace("[", " ")
+        completeprompt = completeprompt.replace("]", " ")
+        completeprompt = completeprompt.replace("|", " ")
 
     # sometimes if there are not enough artist, we get left we things formed as (:1.2)
     completeprompt = re.sub('\(\:\d+\.\d+\)', '', completeprompt) 

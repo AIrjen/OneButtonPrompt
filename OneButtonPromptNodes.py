@@ -186,7 +186,7 @@ class SavePromptToFile:
         directoryandfilename = os.path.abspath(os.path.join(output_directory, filenamecomplete))
         
 
-        with open(directoryandfilename, 'w') as file:
+        with open(directoryandfilename, 'w', encoding="utf-8") as file:
             file.write("prompt: " + positive_prompt + "\n")
             file.write("negative prompt: " + negative_prompt + "\n")
 

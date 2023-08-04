@@ -2197,7 +2197,6 @@ def createpromptvariant(prompt = "", insanitylevel = 5, antivalues = "" , gender
                 if lowercase_combination in [x.lower() for x in descriptorlist] and chance_roll(insanitylevel, "uncommon"):
                     prompt = prompt.replace(combination," -descriptor- ")
 
-                
                 if lowercase_combination in [x.lower() for x in directionlist] and chance_roll(insanitylevel, "uncommon"):
                     prompt = prompt.replace(combination," -direction- ")
 
@@ -2207,10 +2206,8 @@ def createpromptvariant(prompt = "", insanitylevel = 5, antivalues = "" , gender
                 if lowercase_combination in [x.lower() for x in eventlist] and chance_roll(insanitylevel, "uncommon"):
                     prompt = prompt.replace(combination," -event- ")
 
-
                 if lowercase_combination in [x.lower() for x in focuslist] and chance_roll(insanitylevel, "uncommon"):
                     prompt = prompt.replace(combination," -focus- ")
-
 
                 if lowercase_combination in [x.lower() for x in greatworklist] and chance_roll(insanitylevel, "uncommon"):
                     prompt = prompt.replace(combination," -greatwork- ")
@@ -2300,13 +2297,20 @@ def createpromptvariant(prompt = "", insanitylevel = 5, antivalues = "" , gender
                 if lowercase_combination in [x.lower() for x in photographyartistlist] and chance_roll(insanitylevel, "uncommon"):
                     prompt = prompt.replace(combination," -artistphotography- ")
 
+                if lowercase_combination in [x.lower() for x in stylestiloralist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -styletilora- ")
+                if lowercase_combination in [x.lower() for x in waterlocationlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -waterlocation- ")
+
             runs += 1
          
         
 
-
+    prompt = prompt.replace(" :", ":")
+    prompt = prompt.replace(": ", ":")
 
     completeprompt = prompt
+
 
 
     while (

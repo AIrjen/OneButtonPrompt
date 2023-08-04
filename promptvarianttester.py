@@ -35,4 +35,4 @@ def generatepromptvariants(amount = 1,prompt="",insanitylevel="5"):
     print("")
     print("All done!")
 
-generatepromptvariants(1,"purple (galaxy) in a bottle, background is a lush jungle and a woman wearing a summer dress, -artmovement-", 0)
+generatepromptvariants(1,"purple (galaxy) in a (bottle:1.2), <bla:1>, background is a lush jungle and a woman wearing a summer dress, -artmovement-", 5)

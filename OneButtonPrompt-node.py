@@ -1,5 +1,8 @@
 import sys
 import os
+import folder_paths
+from datetime import datetime
+import uuid
  
 # adding Folder_2/subfolder to the system path
 # sys.path.insert(0, '/home/amninder/Desktop/project/Folder_2/subfolder')
@@ -115,16 +118,93 @@ class CreatePromptVariant:
         
         return (generatedprompt,)
 
+# Let us create our own prompt saver. Not everyone has WAS installed
+class SavePromptToFile:
+    def __init__(self):
+        pass
+
+    @classmethod
+    def INPUT_TYPES(s):
+        return {
+            "required": {
+                "positive_prompt": ("STRING",{"multiline": True}),
+                "negative_prompt": ("STRING",{"multiline": True}),
+            },
+        }
+
+    OUTPUT_NODE = True
+    RETURN_TYPES = ()
+    FUNCTION = "saveprompttofile"
+
+    CATEGORY = "OneButtonPrompt"
+
+    def saveprompttofile(self, positive_prompt, negative_prompt):
+        
+        # make the filename, from from a to the first comma
+        # find the index of the first comma after "of a" or end of the prompt
+        if(positive_prompt.find("of a ") != -1):
+            start_index = positive_prompt.find("of a ") + len("of a ")
+            end_index = positive_prompt.find(",", start_index)
+            if(end_index == -1):
+                end_index=len(positive_prompt)
+        else:
+            start_index = 0
+            end_index = 128
+  
+        
+
+        # extract the desired substring using slicing
+        filename = positive_prompt[start_index:end_index]
+
+        # cleanup some unsafe things in the filename
+        filename = filename.replace("\"", "")
+        filename = filename.replace("[", "")
+        filename = filename.replace("|", "")
+        filename = filename.replace("]", "")
+        filename = filename.replace("<", "")
+        filename = filename.replace(">", "")
+        filename = filename.replace(":", "_")
+        filename = re.sub(r'[0-9]+', '', filename)
+
+        safe_characters = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.")
+
+        # Use regular expression to filter out any characters not in the whitelist
+        filename = re.sub(r"[^{}]+".format(re.escape(''.join(safe_characters))), '', filename)
+        
+
+        if(filename==""):
+            filename = str(uuid.uuid4())
+        
+        # create a datetime object for the current date and time
+        now = datetime.now()
+        filenamecomplete = now.strftime("%Y%m%d%H%M%S") + "_" + filename.replace(" ", "_").strip() + ".txt"
+       
+        
+        # Get the output folder from comfy
+        output_directory = folder_paths.output_directory
+        
+        directoryandfilename = os.path.abspath(os.path.join(output_directory, filenamecomplete))
+        
+
+        with open(directoryandfilename, 'w') as file:
+            file.write("prompt: " + positive_prompt + "\n")
+            file.write("negative prompt: " + negative_prompt + "\n")
+
+
+
+        return ("done")
 
 # A dictionary that contains all nodes you want to export with their names
 # NOTE: names should be globally unique
 NODE_CLASS_MAPPINGS = {
     "OneButtonPrompt": OneButtonPrompt,
-    "CreatePromptVariant": CreatePromptVariant
+    "CreatePromptVariant": CreatePromptVariant,
+    "SavePromptToFile": SavePromptToFile
 }
 
 # A dictionary that contains the friendly/humanly readable titles for the nodes
 NODE_DISPLAY_NAME_MAPPINGS = {
     "OneButtonPrompt": "One Button Prompt",
-    "CreatePromptVariant": "Create Prompt Variant"
+    "CreatePromptVariant": "Create Prompt Variant",
+    "SavePromptToFile": "Save Prompt To File"
 }

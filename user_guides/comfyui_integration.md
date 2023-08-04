@@ -32,6 +32,10 @@ All settings work similar to the settings in the Automatic1111 documentation.
 
 It will generate a prompt from scratch, or based on several of your inputs and settings.
 
+![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/bca84637-a667-48e4-888d-9b0318eb4f43)
+
+Please refer to the other documentation to see what each setting does.
+
 ### Create Prompt Variant
 You can use the "Create Prompt Variant" node, to create variants based on a prompt you input. The strength of the variant is set with the "insanity level" slider. Simply connect it between the positive prompt and the CLIP encoder module.
 

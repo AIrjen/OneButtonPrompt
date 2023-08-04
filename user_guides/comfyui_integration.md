@@ -28,6 +28,10 @@ It should be available in ComfyUI manager soonish as well.
 
 ### One Button Prompt
 
+All settings work similar to the settings in the Automatic1111 documentation.
+
+It will generate a prompt from scratch, or based on several of your inputs and settings.
+
 ### Create Prompt Variant
 You can use the "Create Prompt Variant" node, to create variants based on a prompt you input. The strength of the variant is set with the "insanity level" slider. Simply connect it between the positive prompt and the CLIP encoder module.
 
@@ -44,6 +48,16 @@ These are all generated with the same model, same settings, same seed. But some 
 Here is an example of the entire example workflow.
 
 ![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/117fc612-5a7d-4b0d-b163-adf8ff84555c)
+
+### Save Prompt To File
+
+Use the Save Prompt To File node to actually save the prompt in a text file. Since ComfyUI stores the entire flow in the image, it doesn't store the actual generated prompt.
+
+You can also use other extension for this. But I thought it was nice to include a save options nativly. There are other options out there as well.
+
+Just simply also connect the output of One Button Prompt to the Postive Prompt node.
+
+![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/1557546d-36f3-4ce0-9532-cf5a8386297d)
 
 
 ### Known issues

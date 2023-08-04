@@ -30,15 +30,14 @@ class OneButtonPrompt:
                
         return {
             "required": {
-                "prompt": ("STRING", {"input_format": {"generatedprompt": "STRING"}})
-            },
-            "optional": {
                 "insanitylevel": ("INT", {
                     "default": 5,
                     "min": 1, #Minimum value
                     "max": 10, #Maximum value
                     "step": 1 #Slider's step
                 }),
+                },
+            "optional": {
                 "artist": (artists, {"default": "all"}),
                 "imagetype": (imagetypes, {"default": "all"}),
                 "imagemodechance": ("INT", {
@@ -70,19 +69,62 @@ class OneButtonPrompt:
 
     CATEGORY = "OneButtonPrompt"
     
-    def Comfy_OBP(self, prompt, insanitylevel, custom_subject,seed, artist,imagetype, subject, imagemodechance, humanoids_gender, subject_subtype_objects, subject_subtypes_humanoids, subject_subtypes_concepts):
+    def Comfy_OBP(self, insanitylevel, custom_subject,seed, artist,imagetype, subject, imagemodechance, humanoids_gender, subject_subtype_objects, subject_subtypes_humanoids, subject_subtypes_concepts):
         generatedprompt = build_dynamic_prompt(insanitylevel,subject,artist,imagetype,False,"","","",1,"",custom_subject,True,"",imagemodechance, humanoids_gender, subject_subtype_objects, subject_subtypes_humanoids, subject_subtypes_concepts, False)
         #print(generatedprompt)
+        return (generatedprompt,)
+
+
+class CreatePromptVariant:
+
+
+    def __init__(self):
+        pass
+    
+    @classmethod
+    def INPUT_TYPES(s):
+               
+        return {
+            "required": {
+                "prompt_input": ("STRING", {"default": '', "multiline": True}),
+            },
+            "optional": {
+                "insanitylevel": ("INT", {
+                    "default": 5,
+                    "min": 1, #Minimum value
+                    "max": 10, #Maximum value
+                    "step": 1 #Slider's step
+                }),
+                "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF}),
+            },
+        }
+
+    RETURN_TYPES = ("STRING",)
+    RETURN_NAMES = ("prompt",)
+
+    FUNCTION = "Comfy_OBP_PromptVariant"
+
+    #OUTPUT_NODE = False
+
+    CATEGORY = "OneButtonPrompt"
+    
+    def Comfy_OBP_PromptVariant(self, prompt_input, insanitylevel, seed):
+        generatedprompt = createpromptvariant(prompt_input, insanitylevel)
+        
+        print(generatedprompt)
+        
         return (generatedprompt,)
 
 
 # A dictionary that contains all nodes you want to export with their names
 # NOTE: names should be globally unique
 NODE_CLASS_MAPPINGS = {
-    "OneButtonPrompt": OneButtonPrompt
+    "OneButtonPrompt": OneButtonPrompt,
+    "CreatePromptVariant": CreatePromptVariant
 }
 
 # A dictionary that contains the friendly/humanly readable titles for the nodes
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "OneButtonPrompt": "One Button Prompt"
+    "OneButtonPrompt": "One Button Prompt",
+    "CreatePromptVariant": "Create Prompt Variant"
 }

@@ -2082,6 +2082,14 @@ def createpromptvariant(prompt = "", insanitylevel = 5, antivalues = "" , gender
 
 
     prompt = prompt.replace(",", " , ")
+    prompt = prompt.replace("(", " ( ")
+    prompt = prompt.replace(")", " ) ")
+    prompt = prompt.replace("[", " [ ")
+    prompt = prompt.replace("]", " ] ")
+    prompt = prompt.replace("|", " | ")
+    prompt = prompt.replace(":", " : ")
+
+    prompt = " " + prompt
     # store the (sort of) original prompt
     originalprompt = prompt
     ### Get all combinations of 1 to 4 consecutive words
@@ -2092,197 +2100,208 @@ def createpromptvariant(prompt = "", insanitylevel = 5, antivalues = "" , gender
     
     combinations_list = []
     
-    for length in range(1, 5):  # Generate combinations of length 2 and 3
+    for length in range(1, 5):  # Generate combinations of length 1 to 4
         for start_idx in range(num_words - length + 1):
             end_idx = start_idx + length
             combination = ' '.join(words[start_idx:end_idx])
             combinations_list.append(combination)
     
+    maxamountofruns = 4
+    runs = 0
 
-    while(originalprompt == prompt):
-        for combination in combinations_list:
-            lowercase_combination = combination.lower()
+    if(insanitylevel != 0):
+        print("")
+        print("Creating a prompt variation")
+        print("")
+        while(originalprompt == prompt and runs != maxamountofruns):
+            for combination in combinations_list:
+                lowercase_combination = combination.lower()
+                combination = " " + combination + " "
 
-            if lowercase_combination in [x.lower() for x in colorlist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-color-")
+               # some rare changes if needed
+                if lowercase_combination in [x.lower() for x in humanlist] and chance_roll(insanitylevel, "rare"):
+                    prompt = prompt.replace(combination," -human- ")
 
-            if lowercase_combination in [x.lower() for x in animallist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-animal-")
-            
-            if lowercase_combination in [x.lower() for x in objectlist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-object-")
-                        
-            if lowercase_combination in [x.lower() for x in fictionallist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-fictional-")
-
-            
-            if lowercase_combination in [x.lower() for x in nonfictionallist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-nonfictional-")
-
-            
-            #if lowercase_combination in [x.lower() for x in conceptsuffixlist] and chance_roll(insanitylevel, "uncommon"):
-            #   prompt = prompt.replace(combination,"-conceptsuffix-")
-
-            
-            if lowercase_combination in [x.lower() for x in buildinglist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-building-")
-
-            
-            if lowercase_combination in [x.lower() for x in vehiclelist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-vehicle-")
-
-            
-            if lowercase_combination in [x.lower() for x in outfitlist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-outfit-")
-
-            
-            if lowercase_combination in [x.lower() for x in locationlist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-location-")
-
-            
-            if lowercase_combination in [x.lower() for x in accessorielist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-accessorie-")
-
-            
-            if lowercase_combination in [x.lower() for x in artmovementlist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-artmovement-")
-
-            
-            if lowercase_combination in [x.lower() for x in bodytypelist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-bodytype-")
-
-            
-            if lowercase_combination in [x.lower() for x in cameralist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-camera-")
-
-            
-            if lowercase_combination in [x.lower() for x in colorschemelist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-colorscheme-")
-
-            
-            #if lowercase_combination in [x.lower() for x in conceptprefixlist] and chance_roll(insanitylevel, "uncommon"):
-            #    prompt = prompt.replace(combination,"-conceptprefix-")
-
-            
-            if lowercase_combination in [x.lower() for x in culturelist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-culture-")
-
-            
-            if lowercase_combination in [x.lower() for x in descriptorlist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-descriptor-")
-
-            
-            if lowercase_combination in [x.lower() for x in directionlist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-direction-")
-
-            if lowercase_combination in [x.lower() for x in emojilist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-emoji-")
+                if lowercase_combination in [x.lower() for x in objecttotallist] and chance_roll(insanitylevel, "rare"):
+                    prompt = prompt.replace(combination," -objecttotal- ")
                 
-            if lowercase_combination in [x.lower() for x in eventlist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-event-")
+                if lowercase_combination in [x.lower() for x in artistlist] and chance_roll(insanitylevel, "rare"):
+                    prompt = prompt.replace(combination," -artist- ")
+                
 
+                if lowercase_combination in [x.lower() for x in colorlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -color- ")
 
-            if lowercase_combination in [x.lower() for x in focuslist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-focus-")
-
-
-            if lowercase_combination in [x.lower() for x in greatworklist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-greatwork-")
-
-            if lowercase_combination in [x.lower() for x in haircolorlist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-haircolor-")
-
-            if lowercase_combination in [x.lower() for x in hairstylelist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-hairstyle-")
-
-            if lowercase_combination in [x.lower() for x in directionlist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-direction-")
-
-            if lowercase_combination in [x.lower() for x in humanoidlist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-humanoid-")
-
-            if lowercase_combination in [x.lower() for x in joblist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-job-")
-
-            if lowercase_combination in [x.lower() for x in lenslist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-lens-")
-            if lowercase_combination in [x.lower() for x in lightinglist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-lighting-")
-            if lowercase_combination in [x.lower() for x in malefemalelist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-malefemale-")
-            if lowercase_combination in [x.lower() for x in manwomanlist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-manwoman-")
-            if lowercase_combination in [x.lower() for x in moodlist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-mood-")
-            if lowercase_combination in [x.lower() for x in othertypelist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-othertype-")
-            if lowercase_combination in [x.lower() for x in poselist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-pose-")
-            if lowercase_combination in [x.lower() for x in qualitylist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-quality-")
-            if lowercase_combination in [x.lower() for x in shotsizelist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-shotsize-")
-            if lowercase_combination in [x.lower() for x in timeperiodlist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-timeperiod-")
-            if lowercase_combination in [x.lower() for x in vomitlist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-vomit-")
-            if lowercase_combination in [x.lower() for x in foodlist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-food-")
-            if lowercase_combination in [x.lower() for x in genderdescriptionlist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-genderdescription-")
-            if lowercase_combination in [x.lower() for x in minilocationlist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-minilocation-")
-            if lowercase_combination in [x.lower() for x in minioutfitlist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-minioutfit-")
-            if lowercase_combination in [x.lower() for x in lenslist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-lens-")
-            if lowercase_combination in [x.lower() for x in seasonlist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-season-")
-            if lowercase_combination in [x.lower() for x in imagetypequalitylist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-imagetypequality-")
-            if lowercase_combination in [x.lower() for x in rpgclasslist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-rpgclass-")
-            if lowercase_combination in [x.lower() for x in brandlist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-brand-")
-            if lowercase_combination in [x.lower() for x in spacelist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-space-")
-            if lowercase_combination in [x.lower() for x in poemlinelist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-poemline-")
-            if lowercase_combination in [x.lower() for x in songlinelist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-songline-")
-            if lowercase_combination in [x.lower() for x in musicgenrelist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-musicgenre-")
-            if lowercase_combination in [x.lower() for x in manwomanrelationlist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-manwomanrelation-")
-            if lowercase_combination in [x.lower() for x in waterlocationlist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-waterlocation-")
-            if lowercase_combination in [x.lower() for x in containerlist] and chance_roll(insanitylevel, "uncommon"):
-                print("HELLO")
-                prompt = prompt.replace(combination,"-container-")
-            if lowercase_combination in [x.lower() for x in firstnamelist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-firstname-")
-            if lowercase_combination in [x.lower() for x in floralist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-flora-")
-            
-            # some rare changes if needed
-            if lowercase_combination in [x.lower() for x in humanlist] and chance_roll(insanitylevel, "rare"):
-                prompt = prompt.replace(combination,"-human-")
-
-            if lowercase_combination in [x.lower() for x in objecttotallist] and chance_roll(insanitylevel, "rare"):
-                prompt = prompt.replace(combination,"-objecttotal-")
-            
-
-            if lowercase_combination in [x.lower() for x in fantasyartistlist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-artistfantasy-")
-            if lowercase_combination in [x.lower() for x in popularartistlist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-artistpopular-")
-            if lowercase_combination in [x.lower() for x in romanticismartistlist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-artistromanticism-")
-            if lowercase_combination in [x.lower() for x in photographyartistlist] and chance_roll(insanitylevel, "uncommon"):
-                prompt = prompt.replace(combination,"-artistphotography-")
-
+                if lowercase_combination in [x.lower() for x in animallist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -animal- ")
+                
+                if lowercase_combination in [x.lower() for x in objectlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -object- ")
+                            
+                if lowercase_combination in [x.lower() for x in fictionallist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -fictional- ")
 
                 
+                if lowercase_combination in [x.lower() for x in nonfictionallist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -nonfictional- ")
+
+                
+                #if lowercase_combination in [x.lower() for x in conceptsuffixlist] and chance_roll(insanitylevel, "uncommon"):
+                #   prompt = prompt.replace(combination," -conceptsuffix- ")
+
+                
+                if lowercase_combination in [x.lower() for x in buildinglist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -building- ")
+
+                
+                if lowercase_combination in [x.lower() for x in vehiclelist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -vehicle- ")
+
+                
+                if lowercase_combination in [x.lower() for x in outfitlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -outfit- ")
+
+                
+                if lowercase_combination in [x.lower() for x in locationlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -location- ")
+
+                
+                if lowercase_combination in [x.lower() for x in accessorielist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -accessorie- ")
+
+                
+                if lowercase_combination in [x.lower() for x in artmovementlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -artmovement- ")
+
+                
+                if lowercase_combination in [x.lower() for x in bodytypelist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -bodytype- ")
+
+                
+                if lowercase_combination in [x.lower() for x in cameralist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -camera- ")
+
+                
+                if lowercase_combination in [x.lower() for x in colorschemelist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -colorscheme- ")
+
+                
+                #if lowercase_combination in [x.lower() for x in conceptprefixlist] and chance_roll(insanitylevel, "uncommon"):
+                #    prompt = prompt.replace(combination," -conceptprefix- ")
+
+                
+                if lowercase_combination in [x.lower() for x in culturelist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -culture- ")
+
+                
+                if lowercase_combination in [x.lower() for x in descriptorlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -descriptor- ")
+
+                
+                if lowercase_combination in [x.lower() for x in directionlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -direction- ")
+
+                if lowercase_combination in [x.lower() for x in emojilist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -emoji- ")
+                    
+                if lowercase_combination in [x.lower() for x in eventlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -event- ")
+
+
+                if lowercase_combination in [x.lower() for x in focuslist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -focus- ")
+
+
+                if lowercase_combination in [x.lower() for x in greatworklist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -greatwork- ")
+
+                if lowercase_combination in [x.lower() for x in haircolorlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -haircolor- ")
+
+                if lowercase_combination in [x.lower() for x in hairstylelist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -hairstyle- ")
+
+                if lowercase_combination in [x.lower() for x in directionlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -direction- ")
+
+                if lowercase_combination in [x.lower() for x in humanoidlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -humanoid- ")
+
+                if lowercase_combination in [x.lower() for x in joblist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -job- ")
+
+                if lowercase_combination in [x.lower() for x in lenslist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -lens- ")
+                if lowercase_combination in [x.lower() for x in lightinglist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -lighting- ")
+                if lowercase_combination in [x.lower() for x in malefemalelist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -malefemale- ")
+                if lowercase_combination in [x.lower() for x in manwomanlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -manwoman- ")
+                if lowercase_combination in [x.lower() for x in moodlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -mood- ")
+                if lowercase_combination in [x.lower() for x in othertypelist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -othertype- ")
+                if lowercase_combination in [x.lower() for x in poselist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -pose- ")
+                if lowercase_combination in [x.lower() for x in qualitylist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -quality- ")
+                if lowercase_combination in [x.lower() for x in shotsizelist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -shotsize- ")
+                if lowercase_combination in [x.lower() for x in timeperiodlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -timeperiod- ")
+                if lowercase_combination in [x.lower() for x in vomitlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -vomit- ")
+                if lowercase_combination in [x.lower() for x in foodlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -food- ")
+                if lowercase_combination in [x.lower() for x in genderdescriptionlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -genderdescription- ")
+                if lowercase_combination in [x.lower() for x in minilocationlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -minilocation- ")
+                if lowercase_combination in [x.lower() for x in minioutfitlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -minioutfit- ")
+                if lowercase_combination in [x.lower() for x in lenslist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -lens- ")
+                if lowercase_combination in [x.lower() for x in seasonlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -season- ")
+                if lowercase_combination in [x.lower() for x in imagetypequalitylist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -imagetypequality- ")
+                if lowercase_combination in [x.lower() for x in rpgclasslist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -rpgclass- ")
+                if lowercase_combination in [x.lower() for x in brandlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -brand- ")
+                if lowercase_combination in [x.lower() for x in spacelist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -space- ")
+                if lowercase_combination in [x.lower() for x in poemlinelist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -poemline- ")
+                if lowercase_combination in [x.lower() for x in songlinelist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -songline- ")
+                if lowercase_combination in [x.lower() for x in musicgenrelist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -musicgenre- ")
+                if lowercase_combination in [x.lower() for x in manwomanrelationlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -manwomanrelation- ")
+                if lowercase_combination in [x.lower() for x in waterlocationlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -waterlocation- ")
+                if lowercase_combination in [x.lower() for x in containerlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -container- ")
+                if lowercase_combination in [x.lower() for x in firstnamelist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -firstname- ")
+                if lowercase_combination in [x.lower() for x in floralist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -flora- ")
+                
+
+
+                if lowercase_combination in [x.lower() for x in fantasyartistlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -artistfantasy- ")
+                if lowercase_combination in [x.lower() for x in popularartistlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -artistpopular- ")
+                if lowercase_combination in [x.lower() for x in romanticismartistlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -artistromanticism- ")
+                if lowercase_combination in [x.lower() for x in photographyartistlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -artistphotography- ")
+
+            runs += 1
+         
         
 
 
@@ -2435,6 +2454,11 @@ def replacewildcard(completeprompt, insanitylevel, wildcard,listname, activatehy
 
     return completeprompt
 
+def replace_match(match):
+    # Extract the first word from the match
+    words = match.group(0)[1:-1].split('|')
+    return words[0]
+
 def cleanup(completeprompt, advancedprompting):
 
     # first, move LoRA's to the back dynamically
@@ -2450,7 +2474,12 @@ def cleanup(completeprompt, advancedprompting):
     if(advancedprompting==False):
         hybridpattern = r'\[\w+\|\w+\]'
         # Replace the matched pattern with the first word in the group
-        completeprompt = re.sub(hybridpattern, r'\1', completeprompt)
+        completeprompt = re.sub(hybridpattern, replace_match, completeprompt)
+
+        # Doesnt work if there are multiple words, so then just get rid of things as is :D
+        completeprompt = completeprompt.replace("[", " ")
+        completeprompt = completeprompt.replace("]", " ")
+        completeprompt = completeprompt.replace("|", " ")
 
     # sometimes if there are not enough artist, we get left we things formed as (:1.2)
     completeprompt = re.sub('\(\:\d+\.\d+\)', '', completeprompt) 

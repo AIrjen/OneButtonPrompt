@@ -34,8 +34,12 @@ If you want to use the workflow prompt, turn on __Workflow mode__. This way the 
 The workflow prompt can process One Button Prompt wildcards. Please refer to [wildcards documentation](https://github.com/AIrjen/OneButtonPrompt/blob/docs_and_small_updates/user_guides/wildcards_and_dynamic_prompts_extension.md)
 
 ## Using the prompt variant slider
-It is very hard to explain what does this, expect to tell you it works like magic. It only works for the English language.
+The prompt variant slider creates variants of the workflow prompt.
 
+#### How it works
+It creates a small rift in subspace near your Central Processing Unit. Through this rift, it connects to various alternative universes where you are doing the exact same thing at the exact same time. It then flows their prompt to yours (and the other way around). This way, we get a slightly alternative prompt since it was from a slightly alternative universe. The prompt variant slider determines how many alternate universes away it should take the prompt from.
+
+#### An example
 To give an example, I first take a prompt from CivitAI, to prove it can work on anything. As usual, it's a long prompt, and it gives a good result. Lets try it out!
 
 In this test, I am keeping the seed to 1, and the samplers etc all the same.

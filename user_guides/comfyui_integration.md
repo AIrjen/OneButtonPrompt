@@ -39,7 +39,10 @@ Please refer to the other documentation to see what each setting does.
 ### Create Prompt Variant
 You can use the "Create Prompt Variant" node, to create variants based on a prompt you input. The strength of the variant is set with the "insanity level" slider. Simply connect it between the positive prompt and the CLIP encoder module.
 
-It will automatically create a small variance in the prompt, based on magic. It might not work for every prompt.
+#### How it works
+It creates a small rift in subspace near your Central Processing Unit. Through this rift, it connects to various alternative universes where you are doing the exact same thing at the exact same time. It then flows their prompt to yours (and the other way around). This way, we get a slightly alternative prompt since it was from a slightly alternative universe. The prompt variant slider determines how many alternate universes away it should take the prompt from.
+
+### Example
 
 ![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/a0191a18-eac9-4261-ab26-4dfdd997dad0)
 

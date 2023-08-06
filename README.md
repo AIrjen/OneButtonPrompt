@@ -6,7 +6,7 @@
 
 # Summary
 
-One Button Prompt is a tool/script for automatic1111 for beginners who have problems writing a good prompt, or advanced users who want to get inspired.
+One Button Prompt is a tool/script for automatic1111/ComfyUI for beginners who have problems writing a good prompt, or advanced users who want to get inspired.
 
 It generates an entire prompt from scratch. It is random, but controlled. You simply load up the script and press generate, and let it surprise you.
 
@@ -14,12 +14,12 @@ It is best used on all-purpose models, such as Stable Difussion 1.5 or those bas
 
 A simple user guide for first time use and settings is available [here](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/my_first_generation.md).
 
-It is also now available as a custom node for ComfyUI, with some limitations. [Check installation doc here](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/comfyui_integration.md)
+It is also now available as a custom node for ComfyUI. [Check installation doc here](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/comfyui_integration.md)
 
 # Features
 - __Full prompt generation__ with the click of a button.                  ==> [guide to my first generation](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/my_first_generation.md) 
 - Supports __TXT2IMG, IMG2IMG, ControlNET, inpainting and latent couple__.  ==> [guide to IMG2IMG and ControlNET](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/the_next_generation_img2img_and_controlnet.md)
-- __Workflow assist__, generate multiple prompts with One Button.
+- __Workflow assist__, generate multiple prompts with One Button. Create __prompt variants__ with ease. ==> [guide to workflow assist and prompt variant mode](workflow_assist_and_prompt_variant_mode.md)
 - Create __infinite variations__ of a __chosen subject__.                     ==> [guide to override subject](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/override_subject_and_infinite_variations.md)
 - Fully __automated generation, classification and upscaling__.           ==> [guide to one_button_run_and_upscale](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/one_button_run_and_upscale.md)
 - Add __LoRA's__, customize lists and personal artists choices.           ==> [guide to custom files](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/custom_files.md)

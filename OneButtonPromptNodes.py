@@ -4,10 +4,8 @@ import folder_paths
 from datetime import datetime
 import uuid
  
-# adding Folder_2/subfolder to the system path
-# sys.path.insert(0, '/home/amninder/Desktop/project/Folder_2/subfolder')
-custom_nodes_path = os.path.dirname(__file__)
-onebuttonprompt_path = os.path.join(custom_nodes_path, "..", "onebuttonprompt")
+custom_nodes_path = os.path.join(folder_paths.base_path, "custom_nodes")
+onebuttonprompt_path = os.path.join(custom_nodes_path, "onebuttonprompt")
 sys.path.insert(0, onebuttonprompt_path)
 
 from build_dynamic_prompt import *

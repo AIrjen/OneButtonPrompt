@@ -21,6 +21,7 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
     originalpnginfo =""
     randomprompt = ""
     filename=""
+    continuewithnextpart = True
 
     originalmodel = model
     originalsamplingmethod = samplingmethod

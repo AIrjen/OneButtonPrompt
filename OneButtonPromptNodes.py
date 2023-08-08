@@ -5,8 +5,9 @@ from datetime import datetime
 import uuid
  
 custom_nodes_path = os.path.join(folder_paths.base_path, "custom_nodes")
-onebuttonprompt_path = os.path.join(custom_nodes_path, "onebuttonprompt")
-sys.path.insert(0, onebuttonprompt_path)
+onebuttonprompt_path = os.path.join(custom_nodes_path, "OneButtonPrompt")
+
+sys.path.append(onebuttonprompt_path)
 
 from build_dynamic_prompt import *
 

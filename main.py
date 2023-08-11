@@ -108,15 +108,17 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
         if(steps > 0 and increasestability == True):
             print("")
             print("Increase Stability has been turned on.")
-            print("To prevent a memory issue, we are going to load base 1.5, and then load the chosen model back in")
-            print("This helps with a memory leak issue.")
+            print("To prevent a memory issue, we are going to unload and then load the checkpoint back in.")
+            print("This helps with a memory leak issue. However A1111 is bad with memory management.")
             print("")
-            
 
-            option_payload = {
-                    "sd_model_checkpoint": tempmodel
-                    }
-            response = requests.post(url=f'{apiurl}/sdapi/v1/options', json=option_payload)
+            response = requests.post(url=f'{apiurl}/sdapi/v1/unload-checkpoint')
+
+            print("model unloaded")
+
+            response = requests.post(url=f'{apiurl}/sdapi/v1/reload-checkpoint')
+
+            print("model reloaded")
 
         # build prompt
         if(silentmode==True and workprompt == ""):

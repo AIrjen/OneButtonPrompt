@@ -38,6 +38,7 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
     originalimg2imgpadding = img2imgpadding
 
 
+    currentlyselectedmodel = ""
 
     modellist=get_models()
     samplerlist=get_samplers()
@@ -61,7 +62,7 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
             break
 
     # Print the 'title' if found
-    if currentlyselectedmodel is not None:
+    if currentlyselectedmodel != "":
         print("current selected model is:")
         print(currentlyselectedmodel)
     else:

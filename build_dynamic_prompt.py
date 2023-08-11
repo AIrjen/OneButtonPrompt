@@ -1236,6 +1236,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 completeprompt += "-culture- "
 
             if(mainchooser == "object"):
+                # first add a wildcard that can be used to create prompt strenght
+                completeprompt += " -objectstrengthstart-"
                 # if we have an overwrite, then make sure we only take the override
                 if(subtypeobject != "all"):
                     if(subtypeobject == "generic objects"):
@@ -1281,8 +1283,12 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                     completeprompt += " " + givensubject + " "
                 
                 hybridorswap = ""
+                # completion of strenght end
+                completeprompt += "-objectstrengthend-"
 
             if(mainchooser == "animal"):
+                # first add a wildcard that can be used to create prompt strenght
+                completeprompt += " -objectstrengthstart-"
                 
                 # if we have a given subject, we should skip making an actual subject
                 if(givensubject == ""):
@@ -1312,9 +1318,14 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                     completeprompt += " " + givensubject + " "
                 
                 hybridorswap = ""
+
+                # completion of strenght end
+                completeprompt += "-objectstrengthend-"
             
             # if we have a given subject, we should skip making an actual subject
             if(mainchooser == "humanoid"):
+                # first add a wildcard that can be used to create prompt strenght
+                completeprompt += " -objectstrengthstart-"
                 if(givensubject==""):
 
                     if(subjectchooser == "human"):
@@ -1387,13 +1398,18 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
 
                 else:
-                    completeprompt += " " + givensubject + " "     
+                    completeprompt += " " + givensubject + " "  
+
+                # completion of strenght end
+                completeprompt += "-objectstrengthend-"   
             
              # sometimes add a suffix for more fun!
             if( (mainchooser == "humanoid" or mainchooser == "animal" or mainchooser == "object") and  chance_roll(insanitylevel, subjectconceptsuffixchance)):
                 completeprompt += " of -conceptsuffix- "
             
             if(subjectchooser == "landscape"):
+                # first add a wildcard that can be used to create prompt strenght
+                completeprompt += " -objectstrengthstart-"
                 
                 # if we have a given subject, we should skip making an actual subject
                 if(givensubject == ""):
@@ -1413,6 +1429,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 
                 hybridorswap = ""
 
+                # completion of strenght end
+                completeprompt += "-objectstrengthend-"
+
                 # shots from inside can create cool effects in landscapes
                 if(chance_roll(insanitylevel, subjectlandscapeaddonlocationchance)):
                     insideshot = 1
@@ -1430,6 +1449,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
 
             if(mainchooser == "concept"):
+                # first add a wildcard that can be used to create prompt strenght
+                completeprompt += " -objectstrengthstart-"
                 if(givensubject == ""):
                     if(subjectchooser == "event"):
                         completeprompt += " \"" + random.choice(eventlist) + "\" "
@@ -1445,7 +1466,10 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 else:
                     completeprompt += " " + givensubject + " " 
 
-        
+                # completion of strenght end
+                completeprompt += "-objectstrengthend-"
+
+
 
         # object additions
         for i in range(objectadditionsrepeats):
@@ -1938,7 +1962,30 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
 
       
+    # prompt strenght stuff
+
+    # if the given subject already is formed like this ( :1.x)
+    # then just ignore this
     
+    matches = []
+    if(givensubject != ""):
+        pattern = r'\(\w+:\d+\.\d+\)'
+        matches = re.findall(pattern, givensubject)
+
+
+    if(len(completeprompt) > 325 and matches == []):
+        if(len(completeprompt) < 375):
+            strenght = "1.1"  
+        elif(len(completeprompt) < 450):
+            strenght = "1.2"  
+        else:
+            strenght = "1.3"  
+        completeprompt = completeprompt.replace("-objectstrengthstart-","(")
+        completeprompt = completeprompt.replace("-objectstrengthend-",":" + strenght + ")")
+    else:
+        completeprompt = completeprompt.replace("-objectstrengthstart-","")
+        completeprompt = completeprompt.replace("-objectstrengthend-","")
+
     # clean it up
     completeprompt = cleanup(completeprompt, advancedprompting)
 

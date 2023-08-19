@@ -14,7 +14,7 @@ neonpunk style -subject-, cyberpunk, vaporwave, neon, vibes, vibrant, stunningly
 origami style -subject-, paper art, pleated paper, folded, origami art, pleats, cut and fold, centered composition
 cinematic photo -subject-, 35mm photograph, film, bokeh, professional, 4k, highly detailed
 pixel-art -subject-, low-res, blocky, pixel art style, 8-bit graphics
-texture {prompt} top down close-up
+texture -subject-, top down close-up
 advertising poster style -subject-, Professional, modern, product-focused, commercial, eye-catching, highly detailed
 automotive advertisement style -subject-, sleek, dynamic, professional, commercial, vehicle-focused, high-resolution, highly detailed
 corporate branding style -subject-, professional, clean, modern, sleek, minimalist, business-oriented, highly detailed

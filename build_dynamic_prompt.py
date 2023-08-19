@@ -10,7 +10,7 @@ from random_functions import *
 # insanity level controls randomness of propmt 0-10
 # forcesubject van be used to force a certain type of subject
 # Set artistmode to none, to exclude artists 
-def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", givensubject="",smartsubject = True,giventypeofimage="", imagemodechance = 20, gender = "all", subtypeobject="all", subtypehumanoid="all", subtypeconcept="all", advancedprompting=True):
+def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", givensubject="",smartsubject = True,giventypeofimage="", imagemodechance = 20, gender = "all", subtypeobject="all", subtypehumanoid="all", subtypeconcept="all", advancedprompting=True, hardturnoffemojis=False):
 
     
     # load the config file
@@ -140,6 +140,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     minilocationadditionslist = csv_to_list("minilocationadditions", antilist,"./csvfiles/special_lists/")
     overalladditionlist = csv_to_list("overalladditions", antilist,"./csvfiles/special_lists/")
     imagetypemodelist = csv_to_list("imagetypemodes", antilist,"./csvfiles/special_lists/")
+    
+    styleslist = csv_to_list("styles", antilist,"./csvfiles/templates/")
+
 
     
     # subjects
@@ -349,6 +352,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
         if item[0] == 'emojichance':
             emojichance = item[1]
+            if(hardturnoffemojis==True):
+                emojichance='never'
         if item[0] == 'joboractivitychance':
             joboractivitychance = item[1]
 
@@ -559,6 +564,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     photofantasymode = False
     massivemadnessmode = False
     onlysubjectmode = False
+    stylesmode = False
+
     # determine wether we should go for a template or not. Not hooked up to insanitylevel
     if(imagetype == "only templates mode"):
         specialmode = True
@@ -600,6 +607,11 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         specialmode = True
         onlysubjectmode = True
         print("Running in only subject mode")
+
+    if(imagetype == "fixed styles mode"):
+        specialmode = True
+        stylesmode = True
+        print("Running with a randomized style instead of a randomized prompt")
 
 
     # main stuff
@@ -1053,6 +1065,14 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                     completeprompt += "-imagetype-, "
                 step = step + 1 
             completeprompt += " ("
+
+
+         # start styles mode here
+        if(stylesmode == True):
+            chosenstyle = random.choice(styleslist)
+            chosenstyleprefix = chosenstyle.split("-subject-")[0]
+            chosenstylesuffix= chosenstyle.split("-subject-")[1]
+            completeprompt += chosenstyleprefix
 
 
 
@@ -1749,6 +1769,11 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 if(rare_dist(insanitylevel) and bool(cameralist)):
                     completeprompt += "-camera-, "
                 step = step + 1 
+
+        # start styles mode here
+        if(stylesmode == True):
+            completeprompt += chosenstylesuffix
+
         
         # custom style list
         if(chance_roll(insanitylevel, customstyle1chance) and generatestyle == True):

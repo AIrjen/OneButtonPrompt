@@ -456,7 +456,7 @@ class Script(scripts.Script):
 
                         16. subject only mode --> Will only generate a subject, with no additional frills.
 
-                        17. fixed styles mode --> Generate a subject on top of a fixed style. Credits to Triple Headed Monkey. Go check his stuff out!
+                        17. fixed styles mode --> Generate a subject on top of a fixed style.
 
                         ### One in X chance to use special image type mode
 

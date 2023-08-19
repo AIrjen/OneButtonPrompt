@@ -3,6 +3,7 @@ import os
 import folder_paths
 from datetime import datetime
 import uuid
+import platform
  
 custom_nodes_path = os.path.join(folder_paths.base_path, "custom_nodes")
 onebuttonprompt_path = os.path.join(custom_nodes_path, "OneButtonPrompt")
@@ -267,12 +268,15 @@ class CreatePromptVariant:
 # Let us create our own prompt saver. Not everyone has WAS installed
 class SavePromptToFile:
     def __init__(self):
-        pass
+        self.output_dir = folder_paths.get_output_directory()
+        self.type = "output"
+        self.prefix_append = ""
 
     @classmethod
     def INPUT_TYPES(s):
         return {
             "required": {
+                "filename_prefix": ("STRING", {"default": "Prompt"}),
                 "positive_prompt": ("STRING",{"multiline": True}),
                 "negative_prompt": ("STRING",{"multiline": True}),
             },
@@ -284,8 +288,61 @@ class SavePromptToFile:
 
     CATEGORY = "OneButtonPrompt"
 
-    def saveprompttofile(self, positive_prompt, negative_prompt):
-        
+    def saveprompttofile(self, positive_prompt, negative_prompt, filename_prefix):
+        # Some stuff for the prefix
+        filename_prefix += self.prefix_append
+
+        # turns out there is some hardcoded stuff on saveimage we have to kind of repeat here
+        # Find the %date:yyyy-M-d% pattern using regular expression
+        pattern = r'%date:([^\%]+)%'
+        match = re.search(pattern, filename_prefix)
+
+        if match:
+            # Extract the date format from the match
+            date_format = match.group(1)
+
+            # Get the current date
+            current_date = datetime.now()
+
+            # convert the ComfyUI standard into Python standard format.
+            # What a crazy way of doing this
+            # first lol, I got to make sure it doesn't overlap things
+            date_format = date_format.replace('M', 'X')
+            date_format = date_format.replace('m', 'Z')
+            
+            # This is so bad
+
+            # lets make it even worse, it work differently on windows than in Linux
+            if(platform.system() == 'Windows'):
+
+                date_format = date_format.replace('yyyy', '%Y')
+                date_format = date_format.replace('yy', '%#y')
+                date_format = date_format.replace('X', '%#m')
+                date_format = date_format.replace('d', '%#d')
+                date_format = date_format.replace('h', '%#H')
+                date_format = date_format.replace('Z', '%#M')
+                date_format = date_format.replace('s', '%#S')
+            else:
+                date_format = date_format.replace('yyyy', '%Y')
+                date_format = date_format.replace('yy', '%-y')
+                date_format = date_format.replace('X', '%-m')
+                date_format = date_format.replace('d', '%-d')
+                date_format = date_format.replace('h', '%-H')
+                date_format = date_format.replace('Z', '%-M')
+                date_format = date_format.replace('s', '%-S')
+
+
+            # Format the date using the extracted format
+            formatted_date = current_date.strftime(date_format)
+
+            # Replace the matched pattern with the formatted date
+            filename_prefix = re.sub(pattern, formatted_date, filename_prefix)
+            
+
+           
+
+        full_output_folder, filename_short, counter, subfolder, filename_prefix = folder_paths.get_save_image_path(filename_prefix, self.output_dir)
+
         # make the filename, from from a to the first comma
         # find the index of the first comma after "of a" or end of the prompt
         if(positive_prompt.find("of a ") != -1):
@@ -297,8 +354,6 @@ class SavePromptToFile:
             start_index = 0
             end_index = 128
   
-        
-
         # extract the desired substring using slicing
         filename = positive_prompt[start_index:end_index]
 
@@ -310,6 +365,7 @@ class SavePromptToFile:
         filename = filename.replace("<", "")
         filename = filename.replace(">", "")
         filename = filename.replace(":", "_")
+        filename = filename.replace(".", "")
         filename = re.sub(r'[0-9]+', '', filename)
 
         safe_characters = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.")
@@ -321,15 +377,20 @@ class SavePromptToFile:
         if(filename==""):
             filename = str(uuid.uuid4())
         
+        if(filename_prefix == ""):
         # create a datetime object for the current date and time
-        now = datetime.now()
-        filenamecomplete = now.strftime("%Y%m%d%H%M%S") + "_" + filename.replace(" ", "_").strip() + ".txt"
-       
+        # if there is no prefix
+            now = datetime.now()
+            filenamecomplete = now.strftime("%Y%m%d%H%M%S") + "_" + filename.replace(" ", "_").strip() + ".txt"
         
-        # Get the output folder from comfy
-        output_directory = folder_paths.output_directory
+        else:
+            # lol since we insert a file, the counter of the image goes up by 1.
+            # So we add 1 here, so the prompt file matches the image file
+            formatted_counter = str(counter + 1).zfill(5)
+            filenamecomplete = filename_short + "_" + formatted_counter + "_" + filename.replace(" ", "_").strip() + ".txt"
+    
         
-        directoryandfilename = os.path.abspath(os.path.join(output_directory, filenamecomplete))
+        directoryandfilename = os.path.abspath(os.path.join(full_output_folder, filenamecomplete))
         
 
         with open(directoryandfilename, 'w', encoding="utf-8") as file:

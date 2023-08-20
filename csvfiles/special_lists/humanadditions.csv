@@ -1,8 +1,6 @@
 riding a -animal-
 holding a -object-
 driving a -vehicle-
-visiting a -building-
-visiting -location-
 with a -animal-
 surrounded by -object-s
 surrounded by -flora-s
@@ -15,7 +13,9 @@ with -color- skin
 with -material- skin
 feeling -mood-
 expression is -mood-
-bathing in a -waterlocation-
+-miniactivity- in a -waterlocation-
+-miniactivity- at a -location-
+-miniactivity- in a -building-
 -pose- under a -waterlocation-
 , torn -minioutfit-
 wearing -elaborateoutfit-

@@ -281,7 +281,7 @@ Fractal
 Pentagram
 -conceptsuffix-potion
 Roast beef
--object- in a bottle
+-object- in a -container-
 Faberge egg
 Quilt
 Circlet
@@ -322,3 +322,5 @@ Hyperboloid
 Mobius strip
 Klein bottle
 Sphericon
+Totem
+-material- Totem

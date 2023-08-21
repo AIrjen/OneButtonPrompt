@@ -92,6 +92,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     floralist = csv_to_list("flora", antilist)
     printlist = csv_to_list("prints", antilist)
     patternlist = csv_to_list("patterns", antilist)
+    chairlist = csv_to_list("chairs", antilist)
 
     humanlist = fictionallist + nonfictionallist + humanoidlist
     objecttotallist = objectlist + buildinglist + vehiclelist + foodlist + spacelist + floralist + containerlist
@@ -144,6 +145,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     overalladditionlist = csv_to_list("overalladditions", antilist,"./csvfiles/special_lists/")
     imagetypemodelist = csv_to_list("imagetypemodes", antilist,"./csvfiles/special_lists/")
     miniactivitylist = csv_to_list("miniactivity", antilist,"./csvfiles/special_lists/")
+    animalsuffixadditionlist = csv_to_list("animalsuffixadditions", antilist,"./csvfiles/special_lists/")
     
     styleslist = csv_to_list("styles", antilist,"./csvfiles/templates/")
 
@@ -1328,6 +1330,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                     if(animaladdedsomething != 1):
                         completeprompt += "-animal- "
 
+                   
+
                     if(hybridorswap == "hybrid"):
                         if(uncommon_dist(insanitylevel)):
                             completeprompt += "|" + random.choice(hybridlist) + "] "
@@ -1345,6 +1349,10 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
                 # completion of strenght end
                 completeprompt += "-objectstrengthend-"
+
+                if(legendary_dist(insanitylevel)):
+                    animaladdedsomething = 1
+                    completeprompt += "-animalsuffixaddition- "
             
             # if we have a given subject, we should skip making an actual subject
             if(mainchooser == "humanoid"):
@@ -1974,9 +1982,11 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     "-flora-" in completeprompt or
     "-print-" in completeprompt or
     "-miniactivity-" in completeprompt or
-    "-pattern-" in completeprompt):
-        allwildcardslistnohybrid = [ "-color-","-object-", "-animal-", "-fictional-","-nonfictional-","-building-","-vehicle-","-location-","-conceptprefix-","-food-","-haircolor-","-hairstyle-","-job-", "-accessory-", "-humanoid-", "-manwoman-", "-human-", "-colorscheme-", "-mood-", "-genderdescription-", "-artmovement-", "-malefemale-", "-bodytype-", "-minilocation-", "-minilocationaddition-", "-pose-", "-season-", "-minioutfit-", "-elaborateoutfit-", "-minivomit-", "-vomit-", "-rpgclass-", "-subjectfromfile-", "-brand-", "-space-", "-artist-", "-imagetype-", "-othertype-", "-quality-", "-lighting-", "-camera-", "-lens-","-imagetypequality-", "-poemline-", "-songline-", "-greatwork-", "-artistfantasy-", "-artistpopular-", "-artistromanticism-", "-artistphotography-", "-emoji-", "-timeperiod-", "-shotsize-", "-musicgenre-", "-animaladdition-", "-addontolocationinside-", "-addontolocation-", "-objectaddition-", "-humanaddition-", "-overalladdition-", "-focus-", "-direction-", "-styletilora-", "-manwomanrelation-", "-waterlocation-", "-container-", "-firstname-", "-flora-", "-print-", "-miniactivity-", "-pattern-"]
-        allwildcardslistnohybridlists = [colorlist, objectlist, animallist, fictionallist, nonfictionallist, buildinglist, vehiclelist, locationlist,conceptprefixlist,foodlist,haircolorlist, hairstylelist,joblist, accessorielist, humanoidlist, manwomanlist, humanlist, colorschemelist, moodlist, genderdescriptionlist, artmovementlist, malefemalelist, bodytypelist, minilocationlist, minilocationadditionslist, poselist, seasonlist, minioutfitlist, elaborateoutfitlist, minivomitlist, vomitlist, rpgclasslist, customsubjectslist, brandlist, spacelist, artistlist, imagetypelist, othertypelist, qualitylist, lightinglist, cameralist, lenslist, imagetypequalitylist, poemlinelist, songlinelist, greatworklist, fantasyartistlist, popularartistlist, romanticismartistlist, photographyartistlist, emojilist, timeperiodlist, shotsizelist, musicgenrelist, animaladditionlist, addontolocationinsidelist, addontolocationlist, objectadditionslist, humanadditionlist, overalladditionlist, focuslist, directionlist, stylestiloralist, manwomanrelationlist, waterlocationlist, containerlist, firstnamelist, floralist, printlist, miniactivitylist, patternlist]
+    "-pattern-" in completeprompt or
+    "-animalsuffixaddition-" in completeprompt or
+    "-chair-" in completeprompt):
+        allwildcardslistnohybrid = [ "-color-","-object-", "-animal-", "-fictional-","-nonfictional-","-building-","-vehicle-","-location-","-conceptprefix-","-food-","-haircolor-","-hairstyle-","-job-", "-accessory-", "-humanoid-", "-manwoman-", "-human-", "-colorscheme-", "-mood-", "-genderdescription-", "-artmovement-", "-malefemale-", "-bodytype-", "-minilocation-", "-minilocationaddition-", "-pose-", "-season-", "-minioutfit-", "-elaborateoutfit-", "-minivomit-", "-vomit-", "-rpgclass-", "-subjectfromfile-", "-brand-", "-space-", "-artist-", "-imagetype-", "-othertype-", "-quality-", "-lighting-", "-camera-", "-lens-","-imagetypequality-", "-poemline-", "-songline-", "-greatwork-", "-artistfantasy-", "-artistpopular-", "-artistromanticism-", "-artistphotography-", "-emoji-", "-timeperiod-", "-shotsize-", "-musicgenre-", "-animaladdition-", "-addontolocationinside-", "-addontolocation-", "-objectaddition-", "-humanaddition-", "-overalladdition-", "-focus-", "-direction-", "-styletilora-", "-manwomanrelation-", "-waterlocation-", "-container-", "-firstname-", "-flora-", "-print-", "-miniactivity-", "-pattern-", "-animalsuffixaddition-", "-chair-"]
+        allwildcardslistnohybridlists = [colorlist, objectlist, animallist, fictionallist, nonfictionallist, buildinglist, vehiclelist, locationlist,conceptprefixlist,foodlist,haircolorlist, hairstylelist,joblist, accessorielist, humanoidlist, manwomanlist, humanlist, colorschemelist, moodlist, genderdescriptionlist, artmovementlist, malefemalelist, bodytypelist, minilocationlist, minilocationadditionslist, poselist, seasonlist, minioutfitlist, elaborateoutfitlist, minivomitlist, vomitlist, rpgclasslist, customsubjectslist, brandlist, spacelist, artistlist, imagetypelist, othertypelist, qualitylist, lightinglist, cameralist, lenslist, imagetypequalitylist, poemlinelist, songlinelist, greatworklist, fantasyartistlist, popularartistlist, romanticismartistlist, photographyartistlist, emojilist, timeperiodlist, shotsizelist, musicgenrelist, animaladditionlist, addontolocationinsidelist, addontolocationlist, objectadditionslist, humanadditionlist, overalladditionlist, focuslist, directionlist, stylestiloralist, manwomanrelationlist, waterlocationlist, containerlist, firstnamelist, floralist, printlist, miniactivitylist, patternlist, animalsuffixadditionlist, chairlist]
         
         allwildcardslistwithhybrid = ["-material-", "-descriptor-", "-outfit-", "-conceptsuffix-","-culture-", "-objecttotal-", "-outfitprinttotal-"]
         allwildcardslistwithhybridlists = [materiallist, descriptorlist,outfitlist,conceptsuffixlist,culturelist, objecttotallist, outfitprinttotallist]
@@ -2111,6 +2121,7 @@ def createpromptvariant(prompt = "", insanitylevel = 5, antivalues = "" , gender
     floralist = csv_to_list("flora", antilist)
     printlist = csv_to_list("prints", antilist)
     patternlist = csv_to_list("patterns", antilist)
+    chairlist = csv_to_list("chairs", antilist)
 
     humanlist = fictionallist + nonfictionallist + humanoidlist + malefemalelist + manwomanlist + manwomanrelationlist
     objecttotallist = objectlist + buildinglist + vehiclelist + foodlist + spacelist + floralist + containerlist
@@ -2251,7 +2262,7 @@ def createpromptvariant(prompt = "", insanitylevel = 5, antivalues = "" , gender
 
                 
                 if lowercase_combination in [x.lower() for x in accessorielist] and chance_roll(insanitylevel, "uncommon"):
-                    prompt = prompt.replace(combination," -accessorie- ")
+                    prompt = prompt.replace(combination," -accessory- ")
 
                 
                 if lowercase_combination in [x.lower() for x in artmovementlist] and chance_roll(insanitylevel, "uncommon"):
@@ -2375,6 +2386,8 @@ def createpromptvariant(prompt = "", insanitylevel = 5, antivalues = "" , gender
                     prompt = prompt.replace(combination," -miniactivity- ")
                 if lowercase_combination in [x.lower() for x in patternlist] and chance_roll(insanitylevel, "uncommon"):
                     prompt = prompt.replace(combination," -pattern- ")
+                if lowercase_combination in [x.lower() for x in chairlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -chair- ")
 
 
                 if lowercase_combination in [x.lower() for x in fantasyartistlist] and chance_roll(insanitylevel, "uncommon"):

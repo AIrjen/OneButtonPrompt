@@ -32,16 +32,33 @@ def get_upscalers():
     return upscalerlist
 
 def get_samplers():
-       
-    samplerlistfromWebUI = {x.name: x for x in sd_samplers.all_samplers}
-    samplerlist = list(samplerlistfromWebUI.keys())
+    samplerlist = list(sd_samplers.all_samplers_map.keys())
 
     # fallback method
-    # Samplers are hardcoded in WEBui, so lets do it here as well
     if(samplerlist==[]):
-        samplerlist = ["Euler a", "Euler", "LMS","Heun","DPM2","DPM2 a","DPM++ 2S a","DPM++ 2M","DPM++ SDE","DPM fast","DPM adaptive","LMS Karras","DPM2 Karras","DPM2 a Karras","DPM++ 2S a Karras","DPM++ 2M Karras","DPM++ SDE Karras"]
-        samplerlist += ["DDIM","UniPC", "PLMS"]
-    
+        samplerlist = [
+            "DDIM",
+            "DPM adaptive",
+            "DPM fast",
+            "DPM++ 2M Karras",
+            "DPM++ 2M",
+            "DPM++ 2S a Karras",
+            "DPM++ 2S a",
+            "DPM++ SDE Karras",
+            "DPM++ SDE",
+            "DPM2 Karras",
+            "DPM2 a Karras",
+            "DPM2 a",
+            "DPM2",
+            "Euler a",
+            "Euler",
+            "Heun",
+            "LMS Karras",
+            "LMS",
+            "PLMS",
+            "UniPC",
+        ]
+
     return samplerlist
 
 def get_upscalers_for_img2img():
@@ -59,9 +76,13 @@ def get_upscalers_for_img2img():
     return upscalerlistfromwWebUI
 
 def get_samplers_for_img2img():
-    #Samplers are hardcoded in WEBui, so lets do it here as well
-    samplerlist = ["Euler a", "Euler", "LMS","Heun","DPM2","DPM2 a","DPM++ 2S a","DPM++ 2M","DPM++ SDE","DPM fast","DPM adaptive","LMS Karras","DPM2 Karras","DPM2 a Karras","DPM++ 2S a Karras","DPM++ 2M Karras","DPM++ SDE Karras"]
-    samplerlist += ["DDIM"] #UniPC and PLMS dont support upscaling apparently
+    samplerlist = get_samplers().copy()
+
+    #UniPC and PLMS dont support upscaling apparently
+    for s in ["UniPC", "PLMS"]:
+        if samplerlist and s in samplerlist:
+            samplerlist.remove(s)
+
     return samplerlist
 
 def upscalers_on_startup():
@@ -81,4 +102,3 @@ def upscalers_on_startup():
         upscalerlistfromwWebUI.append('SwinIR_4x')
     
     return upscalerlistfromwWebUI
-

@@ -1,13 +1,14 @@
-import sys, os
+import os
 import random
-import uuid
 import re
+import sys
+import uuid
 from datetime import datetime
+
 sys.path.append(os.path.abspath(".."))
 
 
 from build_dynamic_prompt import *
-
 
 
 def generatepromptvariants(amount = 1,prompt="",insanitylevel="5"):

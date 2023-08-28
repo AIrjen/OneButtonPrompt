@@ -1,8 +1,10 @@
-import modules.scripts as scripts
-import os
-from modules import modelloader, paths, shared, sd_models, sd_samplers
-from modules.paths import models_path, script_path
 import importlib
+import os
+
+import modules.scripts as scripts
+from modules import modelloader, paths, sd_models, sd_samplers, shared
+from modules.paths import models_path, script_path
+
 
 def get_models():
     modellist = sd_models.checkpoint_tiles()

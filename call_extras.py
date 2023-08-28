@@ -1,11 +1,11 @@
-import os
-import requests
-import io
 import base64
-import uuid
-from PIL import Image, PngImagePlugin
+import io
+import os
 import time
+import uuid
 
+import requests
+from PIL import Image, PngImagePlugin
 
 
 def call_extras(imagelocation,originalimage, originalpnginfo ="", apiurl="http://127.0.0.1:7860",filename="",extrasupscaler1 = "all",extrasupscaler2 ="all",extrasupscaler2visiblity="0.5",extrasupscaler2gfpgan="0",extrasupscaler2codeformer="0.15",extrasupscaler2codeformerweight="0.1",extrasresize="2"):

@@ -1,6 +1,7 @@
-from call_img2img import *
-from call_extras import *
 import os
+
+from call_extras import *
+from call_img2img import *
 
 # C:\automated_output\extras\
 # C:\automated_output\img2img\

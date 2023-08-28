@@ -1,4 +1,6 @@
 import random
+
+
 def common_dist(insanitylevel):
     return (random.randint(1, 5)<insanitylevel or insanitylevel >= 10)
 

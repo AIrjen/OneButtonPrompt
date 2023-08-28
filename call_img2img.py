@@ -1,12 +1,14 @@
-import os
-import requests
-import io
 import base64
-import uuid
-from PIL import Image, PngImagePlugin
-from modules import shared
-from model_lists import *
+import io
+import os
 import time
+import uuid
+
+import requests
+from modules import shared
+from PIL import Image, PngImagePlugin
+
+from model_lists import *
 
 
 def call_img2img(imagelocation,originalimage, originalpnginfo ="", apiurl="http://127.0.0.1:7860",filename="", prompt = "", negativeprompt = "", img2imgsamplingsteps = "20", img2imgcfg = "7", img2imgsamplingmethod = "DPM++ SDE Karras", img2imgupscaler = "R-ESRGAN 4x+", img2imgmodel = "currently selected model", denoising_strength = "0.3", scale = "2", padding = "64",upscalescript="SD upscale",usdutilewidth = "512", usdutileheight = "0", usdumaskblur = "8", usduredraw ="Linear", usduSeamsfix = "None", usdusdenoise = "0.35", usduswidth = "64", usduspadding ="32", usdusmaskblur = "8",controlnetenabled=False, controlnetmodel="",controlnetblockymode=False):

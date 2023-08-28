@@ -1,7 +1,8 @@
 import csv
-import random
 import os
+import random
 import shutil
+
 
 def random_read_from_csv(filename):
     script_dir = os.path.dirname(os.path.abspath(__file__))  # Script directory

@@ -1,7 +1,9 @@
-from fastapi import FastAPI, Body
 import gradio as gr
+from fastapi import Body, FastAPI
+
 from build_dynamic_prompt import *
-from scripts.onebuttonprompt import subjects, artists, imagetypes
+from scripts.onebuttonprompt import artists, imagetypes, subjects
+
 
 def one_button_prompt_api(_: gr.Blocks, app: FastAPI):
     @app.get("/one_button_prompt/version")

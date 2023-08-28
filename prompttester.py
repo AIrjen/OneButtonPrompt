@@ -1,13 +1,14 @@
-import sys, os
+import os
 import random
-import uuid
 import re
+import sys
+import uuid
 from datetime import datetime
+
 sys.path.append(os.path.abspath(".."))
 
 
 from build_dynamic_prompt import *
-
 
 
 def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", imagetype="all",onlyartists=False, workprompt="", antistring="",prefixprompt="", suffixprompt="", negativeprompt="",promptcompounderlevel = "1", seperator="comma",givensubject="",smartsubject=True,giventypeofimage="",imagemodechance=20, gender = "all", subtypeobject = "all", subtypehumanoid = "all", subtypeconcept = "all", advancedprompting = True, hardturnoffemojis=False):

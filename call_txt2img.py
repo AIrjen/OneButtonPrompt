@@ -1,13 +1,17 @@
-import json
-import requests
-import io
 import base64
-import uuid
-import sys, os
-from PIL import Image, PngImagePlugin
-from model_lists import *
-import time
+import io
+import json
+import os
 import random
+import sys
+import time
+import uuid
+
+import requests
+from PIL import Image, PngImagePlugin
+
+from model_lists import *
+
 
 def call_txt2img(passingprompt,size,upscale,debugmode,filename="",model = "currently selected model",samplingsteps = "40",cfg= "7",hiressteps ="0",denoisestrength="0.6",samplingmethod="DPM++ SDE Karras", upscaler="R-ESRGAN 4x+",hiresscale="2",apiurl="http://127.0.0.1:7860", qualitygate=False,quality="7.6",runs="5",negativeprompt="",qualityhiresfix = False, qualitymode = "highest", qualitykeep="keep used", basesize="512"):
 

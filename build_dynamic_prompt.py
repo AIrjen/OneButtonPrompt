@@ -1,9 +1,8 @@
 import random
 import re
+
 from csv_reader import *
 from random_functions import *
-
-
 
 
 #builds a prompt dynamically

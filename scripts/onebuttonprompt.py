@@ -1,20 +1,17 @@
-import modules.scripts as scripts
-import gradio as gr
 import os
 import platform
 import subprocess as sp
 
+import gradio as gr
+import modules.scripts as scripts
 from modules import images
-from modules.processing import process_images, Processed
-from modules.processing import Processed
-from modules.shared import opts, cmd_opts, state
-
+from modules.processing import Processed, process_images
+from modules.shared import cmd_opts, opts, state
 
 from build_dynamic_prompt import *
+from csv_reader import *
 from main import *
 from model_lists import *
-from csv_reader import *
-
 
 #subjects = ["all","object","animal","humanoid", "landscape", "concept"]
 subjects =["all"]

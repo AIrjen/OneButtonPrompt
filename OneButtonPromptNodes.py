@@ -1,10 +1,11 @@
-import sys
 import os
-import folder_paths
-from datetime import datetime
-import uuid
 import platform
- 
+import sys
+import uuid
+from datetime import datetime
+
+import folder_paths
+
 custom_nodes_path = os.path.join(folder_paths.base_path, "custom_nodes")
 onebuttonprompt_path = os.path.join(custom_nodes_path, "OneButtonPrompt")
 

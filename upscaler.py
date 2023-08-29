@@ -1,6 +1,7 @@
-from call_img2img import *
-from call_extras import *
 import os
+
+from call_extras import call_extras
+from call_img2img import call_img2img
 
 # C:\automated_output\extras\
 # C:\automated_output\img2img\
@@ -14,7 +15,7 @@ for filename in os.listdir(directory):
     f = os.path.join(directory, filename)
     # checking if it is a file
     if os.path.isfile(f):
-  
-        img2img1 = call_img2img(f,0.25,1.5,256)
-        
+
+        img2img1 = call_img2img(f, 0.25, 1.5, 256)
+
         finalfile = call_extras(img2img1)

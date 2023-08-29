@@ -1,4 +1,7 @@
-
+.tox*
 *.pyc
+automated_outputs/*
 userfiles/antilist.csv
 userfiles/config.csv
+userfiles/*replace.csv
+userfiles/*addon.csv

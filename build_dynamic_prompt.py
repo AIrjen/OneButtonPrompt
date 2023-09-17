@@ -22,9 +22,13 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     # this uses the antivalues string AND the antilist.csv
     emptylist = []
     antilist = csv_to_list("antilist",emptylist , "./userfiles/",1)
+    
     antivaluelist = antivalues.split(",")
 
     antilist += antivaluelist
+
+    # clean up antivalue list:
+    antilist = [s.strip().lower() for s in antilist]
 
     # build all lists here
 

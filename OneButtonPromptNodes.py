@@ -220,7 +220,7 @@ class OneButtonPrompt:
     CATEGORY = "OneButtonPrompt"
     
     def Comfy_OBP(self, insanitylevel, custom_subject, seed, artist, imagetype, subject, imagemodechance, humanoids_gender, subject_subtype_objects, subject_subtypes_humanoids, subject_subtypes_concepts, emojis):
-        generatedprompt = build_dynamic_prompt(insanitylevel,subject,artist,imagetype,False,"","","",1,"",seed,custom_subject,True,"",imagemodechance, humanoids_gender, subject_subtype_objects, subject_subtypes_humanoids, subject_subtypes_concepts, False, emojis)
+        generatedprompt = build_dynamic_prompt(insanitylevel,subject,artist,imagetype,False,"","","",1,"",custom_subject,True,"",imagemodechance, humanoids_gender, subject_subtype_objects, subject_subtypes_humanoids, subject_subtypes_concepts, False, emojis, seed)
         #print(generatedprompt)
         return (generatedprompt,)
 

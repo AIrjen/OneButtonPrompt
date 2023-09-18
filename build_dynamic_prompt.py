@@ -10,10 +10,14 @@ from random_functions import *
 # insanity level controls randomness of propmt 0-10
 # forcesubject van be used to force a certain type of subject
 # Set artistmode to none, to exclude artists 
-def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", seed=0, givensubject="",smartsubject = True,giventypeofimage="", imagemodechance = 20, gender = "all", subtypeobject="all", subtypehumanoid="all", subtypeconcept="all", advancedprompting=True, hardturnoffemojis=False):
+def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", givensubject="",smartsubject = True,giventypeofimage="", imagemodechance = 20, gender = "all", subtypeobject="all", subtypehumanoid="all", subtypeconcept="all", advancedprompting=True, hardturnoffemojis=False, seed=-1):
 
     # set seed
-    random.seed(seed)
+    # For use in ComfyUI (might bring to Automatic1111 as well)
+    # lets do it when its lower than 1, to have it work on 0 and -1
+    # Otherwise, just do nothing and it will keep on working based on an earlier set seed
+    if(seed < 1):
+        random.seed(seed)
 
     # load the config file
     config = load_config_csv()

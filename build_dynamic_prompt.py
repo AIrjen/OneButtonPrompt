@@ -14,9 +14,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
     # set seed
     # For use in ComfyUI (might bring to Automatic1111 as well)
-    # lets do it when its lower than 1, to have it work on 0 and -1
+    # lets do it when its larger than 0
     # Otherwise, just do nothing and it will keep on working based on an earlier set seed
-    if(seed < 1):
+    if(seed > 0):
         random.seed(seed)
 
     # load the config file

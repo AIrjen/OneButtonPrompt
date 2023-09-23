@@ -143,22 +143,22 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     customsubjectslist = csv_to_list("custom_subjects",antilist,"./userfiles/")
 
     # special lists
-    backgroundtypelist = csv_to_list("backgroundtypes", antilist,"./csvfiles/special_lists/")
-    insideshotlist =  csv_to_list("insideshots", antilist,"./csvfiles/special_lists/")
-    photoadditionlist = csv_to_list("photoadditions", antilist,"./csvfiles/special_lists/")
-    buildhairlist = csv_to_list("buildhair", antilist,"./csvfiles/special_lists/")
-    buildoutfitlist = csv_to_list("buildoutfit", antilist,"./csvfiles/special_lists/")
-    objectadditionslist = csv_to_list("objectadditions", antilist,"./csvfiles/special_lists/")
-    humanadditionlist = csv_to_list("humanadditions", antilist,"./csvfiles/special_lists/")
-    animaladditionlist = csv_to_list("animaladditions", antilist,"./csvfiles/special_lists/")
-    buildaccessorielist = csv_to_list("buildaccessorie", antilist,"./csvfiles/special_lists/")
-    minilocationadditionslist = csv_to_list("minilocationadditions", antilist,"./csvfiles/special_lists/")
-    overalladditionlist = csv_to_list("overalladditions", antilist,"./csvfiles/special_lists/")
-    imagetypemodelist = csv_to_list("imagetypemodes", antilist,"./csvfiles/special_lists/")
-    miniactivitylist = csv_to_list("miniactivity", antilist,"./csvfiles/special_lists/")
-    animalsuffixadditionlist = csv_to_list("animalsuffixadditions", antilist,"./csvfiles/special_lists/")
+    backgroundtypelist = csv_to_list("backgroundtypes", antilist,"./csvfiles/special_lists/",0,"?")
+    insideshotlist =  csv_to_list("insideshots", antilist,"./csvfiles/special_lists/",0,"?")
+    photoadditionlist = csv_to_list("photoadditions", antilist,"./csvfiles/special_lists/",0,"?")
+    buildhairlist = csv_to_list("buildhair", antilist,"./csvfiles/special_lists/",0,"?")
+    buildoutfitlist = csv_to_list("buildoutfit", antilist,"./csvfiles/special_lists/",0,"?")
+    objectadditionslist = csv_to_list("objectadditions", antilist,"./csvfiles/special_lists/",0,"?")
+    humanadditionlist = csv_to_list("humanadditions", antilist,"./csvfiles/special_lists/",0,"?")
+    animaladditionlist = csv_to_list("animaladditions", antilist,"./csvfiles/special_lists/",0,"?")
+    buildaccessorielist = csv_to_list("buildaccessorie", antilist,"./csvfiles/special_lists/",0,"?")
+    minilocationadditionslist = csv_to_list("minilocationadditions", antilist,"./csvfiles/special_lists/",0,"?")
+    overalladditionlist = csv_to_list("overalladditions", antilist,"./csvfiles/special_lists/",0,"?")
+    imagetypemodelist = csv_to_list("imagetypemodes", antilist,"./csvfiles/special_lists/",0,"?")
+    miniactivitylist = csv_to_list("miniactivity", antilist,"./csvfiles/special_lists/",0,"?")
+    animalsuffixadditionlist = csv_to_list("animalsuffixadditions", antilist,"./csvfiles/special_lists/",0,"?")
     
-    styleslist = csv_to_list("styles", antilist,"./csvfiles/templates/")
+    styleslist = csv_to_list("styles", antilist,"./csvfiles/templates/",0,"?")
 
 
     
@@ -1922,15 +1922,15 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     #end of the while loop, now clean up the prompt
 
     # first, we are going to parse any custom functions we have build in
-    # these are 
+    # this is OR()
     # OR()
     
     # OR(foo;bar;bla)  --> randomly take foo, bar or bla
     # OR(foo;bar;bla;uncommon) --> Take foo, unless it hits uncommon roll. Then take bar or bla
+    # OR(;foo)  --> empty or foo
+    # OR(;foo;uncommon) --> empty unless it hits uncommon roll. Then take foo
+    # OR(;foo;bar;uncommon) --> empty unless it hits uncommon roll. Then take foo or bar
     
-    # and 
-    # RNG()
-    # RNG(foo;uncommon) --> Take foo when it hits uncommon roll, else empty
 
 
 
@@ -2206,19 +2206,19 @@ def createpromptvariant(prompt = "", insanitylevel = 5, antivalues = "" , gender
     customsubjectslist = csv_to_list("custom_subjects",antilist,"./userfiles/")
 
     # special lists
-    backgroundtypelist = csv_to_list("backgroundtypes", antilist,"./csvfiles/special_lists/")
-    insideshotlist =  csv_to_list("insideshots", antilist,"./csvfiles/special_lists/")
-    photoadditionlist = csv_to_list("photoadditions", antilist,"./csvfiles/special_lists/")
-    buildhairlist = csv_to_list("buildhair", antilist,"./csvfiles/special_lists/")
-    buildoutfitlist = csv_to_list("buildoutfit", antilist,"./csvfiles/special_lists/")
-    objectadditionslist = csv_to_list("objectadditions", antilist,"./csvfiles/special_lists/")
-    humanadditionlist = csv_to_list("humanadditions", antilist,"./csvfiles/special_lists/")
-    animaladditionlist = csv_to_list("animaladditions", antilist,"./csvfiles/special_lists/")
-    buildaccessorielist = csv_to_list("buildaccessorie", antilist,"./csvfiles/special_lists/")
-    minilocationadditionslist = csv_to_list("minilocationadditions", antilist,"./csvfiles/special_lists/")
-    overalladditionlist = csv_to_list("overalladditions", antilist,"./csvfiles/special_lists/")
-    imagetypemodelist = csv_to_list("imagetypemodes", antilist,"./csvfiles/special_lists/")
-    miniactivitylist = csv_to_list("miniactivity", antilist,"./csvfiles/special_lists/")
+    backgroundtypelist = csv_to_list("backgroundtypes", antilist,"./csvfiles/special_lists/",0,"?")
+    insideshotlist =  csv_to_list("insideshots", antilist,"./csvfiles/special_lists/",0,"?")
+    photoadditionlist = csv_to_list("photoadditions", antilist,"./csvfiles/special_lists/",0,"?")
+    buildhairlist = csv_to_list("buildhair", antilist,"./csvfiles/special_lists/",0,"?")
+    buildoutfitlist = csv_to_list("buildoutfit", antilist,"./csvfiles/special_lists/",0,"?")
+    objectadditionslist = csv_to_list("objectadditions", antilist,"./csvfiles/special_lists/",0,"?")
+    humanadditionlist = csv_to_list("humanadditions", antilist,"./csvfiles/special_lists/",0,"?")
+    animaladditionlist = csv_to_list("animaladditions", antilist,"./csvfiles/special_lists/",0,"?")
+    buildaccessorielist = csv_to_list("buildaccessorie", antilist,"./csvfiles/special_lists/",0,"?")
+    minilocationadditionslist = csv_to_list("minilocationadditions", antilist,"./csvfiles/special_lists/",0,"?")
+    overalladditionlist = csv_to_list("overalladditions", antilist,"./csvfiles/special_lists/",0,"?")
+    imagetypemodelist = csv_to_list("imagetypemodes", antilist,"./csvfiles/special_lists/",0,"?")
+    miniactivitylist = csv_to_list("miniactivity", antilist,"./csvfiles/special_lists/",0,"?")
 
 
     prompt = prompt.replace(",", " , ")
@@ -2709,23 +2709,6 @@ def custom_or(values, insanitylevel = 5):
         selected_value = random.choice(values)
     return selected_value
 
-def custom_rng(values, insanitylevel = 5):
-    # Check if the last element is one of the specific values
-    last_element = values[-1]
-   
-    if last_element in ['always', 'common', 'normal','uncommon', 'rare', 'legendary','unique', 'extraordinary', 'novel', 'never']:
-        # If we do not hit the change roll, then do nothing
-        if not(chance_roll(insanitylevel, last_element)):
-            return ""
-        # Else return the first element
-        else:
-            return values[0]
-
-
-    else:
-        print("RNG function failed. invalid config!")
-    return ""
-
 def parse_custom_functions(completeprompt, insanitylevel = 5):
 
     # Regular expression pattern to match 'or()' function calls and their arguments
@@ -2754,7 +2737,7 @@ def parse_custom_functions(completeprompt, insanitylevel = 5):
         or_replacement = ""
 
 
-        # Split the arguments by ','
+        # Split the arguments by ';'
         arguments = [arg.strip() for arg in match.split(';')]
         
         # Evaluate the 'or()' function and append the result to the results list
@@ -2762,37 +2745,6 @@ def parse_custom_functions(completeprompt, insanitylevel = 5):
         completematch = 'OR(' + match + ')'
         completeprompt = completeprompt.replace(completematch, or_replacement)
 
-    # Then parse the RNG function
-    # Regular expression pattern to match 'RNG()' function calls and their arguments
-    RNGpattern = r'RNG\((.*?)\)'
-    RNGbasesearch = 'RNG('
-
-    while re.findall(RNGpattern, completeprompt):
-
-        # basically start from right to left to start replacing, so we can do nesting
-        # probably not very stable, but seems to work :)
-        startofRNG = completeprompt.rfind(RNGbasesearch)
-
-        lastpartofcompleteprompt = completeprompt[startofRNG:]
- 
-        # Find all 'or()' function calls and their arguments in the text
-        matches = re.findall(RNGpattern, lastpartofcompleteprompt)
-
-        # Sort the matches based on the length of the OR expressions
-        matches.sort(key=len)
-
-
-        match = matches[0] # get the first value, so smallest goes first!
-
-        rng_replacement = ""
-
-
-        # Split the arguments by ';'
-        arguments = [arg.strip() for arg in match.split(';')]
-        
-        # Evaluate the 'or()' function and append the result to the results list
-        rng_replacement = custom_rng(arguments, insanitylevel)
-        completematch = 'RNG(' + match + ')'
-        completeprompt = completeprompt.replace(completematch, rng_replacement)
+    
 
     return completeprompt

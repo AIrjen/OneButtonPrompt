@@ -1,15 +1,10 @@
-with -material- wings
-with -material- tail
-with -material- ears
--animal- hybrid
-with -animal- skin
-with -pattern- skin
+with OR(-material-;-descriptor-) OR(wings; tail; ears)
+- OR(-animal-;-humanoid-) OR(;hybrid;normal)
+with OR(-animal-;-pattern-) skin
 wearing a -accessory-
-with -pattern- -print-
-with -color- details
-with -material- -minioutfit-
+with OR(-pattern-;-color-;rare) -print-
+with OR(-color-;-material-;unique) details
+with OR(-material-;-descriptor-;-color-) -minioutfit-
 with -descriptor- parts
--miniactivity- at a -location-
--miniactivity- in a -building-
-- -humanoid-
+-miniactivity- at a OR(-location-;-building-)
 looking like a -objecttotal-

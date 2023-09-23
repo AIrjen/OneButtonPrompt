@@ -1,25 +1,15 @@
-riding a -animal-
+OR(riding;with) a -animal-
 holding a -object-
 driving a -vehicle-
-with a -animal-
-surrounded by -object-s
-surrounded by -flora-s
-surrounded by -space-
+surrounded by OR(-object-s;-flora-s;-space-)
 eating -food-
-and -human-
-holding hands with -human-
+OR(and;holding hands with) -human-
 cosplaying as -fictional-
-with -color- skin
-with -material- skin
-feeling -mood-
-expression is -mood-
--miniactivity- in a -waterlocation-
--miniactivity- at a -location-
--miniactivity- in a -building-
-, torn -minioutfit-
+with OR(-color-;-material-) skin
+OR(feeling;expression is) -mood-
+-miniactivity- OR(in;at) a (-location-;-building-;-waterlocation-)
 wearing -elaborateoutfit-
--animal- hybrid
+- OR(-animal-;-humanoid-) OR(;hybrid;normal)
 as -culture- -rpgclass-
-sitting in a -descriptor- -chair-
+sitting in a OR(-descriptor-;uncommon) -chair-
 inside a -container-
-- -humanoid-

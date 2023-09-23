@@ -46,4 +46,4 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
     print("")
     print("All done!")
 
-generateprompts(20,8,"all","all","all",False,"","","PREFIXPROMPT" ,"OR(;-descriptor-;normal) OR(;-culture-;uncommon) OR(;-color-;uncommon) -accessory- OR(; , -accessory-; , -descriptor- -accessory-;rare) OR(; and -accessory-;unique)","",1,"","OR(;-descriptor-;normal), BLA",True,"",100, "all", "all", "all", "all", False, True)
+generateprompts(20,8,"all","all","all",False,"","","PREFIXPROMPT" ,"OR(;-descriptor-;-culture-;-color-;lush;dense;-season-;normal) -minilocation- OR(; with -flora-; and -space- in background; and -minilocation-;rare)","",1,"","OR(;-descriptor-;normal), BLA",True,"",100, "all", "all", "all", "all", False, True)

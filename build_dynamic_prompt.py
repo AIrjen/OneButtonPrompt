@@ -2691,6 +2691,8 @@ def custom_or(values, insanitylevel = 5):
     # Check if the last element is one of the specific values
     last_element = values[-1]
     first_element = values[0]
+
+    print(values)
    
     if last_element in ['always', 'common', 'normal','uncommon', 'rare', 'legendary','unique', 'extraordinary', 'novel', 'never']:
         # If we do not hit the change roll, then take the first element.

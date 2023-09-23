@@ -1921,6 +1921,15 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
     #end of the while loop, now clean up the prompt
 
+    # first, we are going to parse any custom functions we have build in
+    # these are 
+    # OR()
+    # and 
+    # CHANCEROLL()
+    completeprompt = parse_custom_functions(completeprompt)
+
+
+
     # first some manual stuff for outfit
 
     if(unique_dist(insanitylevel)): # sometimes, its just nice to have descriptor and a normal "outfit". We use mini outfits for this!
@@ -2667,5 +2676,66 @@ def cleanup(completeprompt, advancedprompting):
     completeprompt += " " + " ".join(allLoRA)   
 
     completeprompt = completeprompt.strip(", ")
+
+    return completeprompt
+
+def custom_or(values):
+    # Check if the last element is one of the specific values
+    last_element = values[-1]
+    first_element = values[0]
+   
+    if last_element in ['always', 'common', 'normal','uncommon', 'rare', 'legendary','unique', 'extraordinary', 'novel', 'never']:
+        # If we do not hit the change roll, then take the first element.
+        if not(chance_roll(5, last_element)):
+            return first_element
+        # Else anything but the first or last element
+        else:
+            values.remove(first_element)
+            values.remove(last_element)
+            selected_value = random.choice(values)
+            return selected_value
+
+
+    else:
+        # Randomly select one element from the list
+        selected_value = random.choice(values)
+    return selected_value
+
+def parse_custom_functions(completeprompt):
+
+    # Regular expression pattern to match 'or()' function calls and their arguments
+    ORpattern = r'OR\((.*?)\)'
+    ORbasesearch = 'OR('
+
+
+
+    while re.findall(ORpattern, completeprompt):
+
+        # basically start from right to left to start replacing, so we can do nesting
+        # probably not very stable, but seems to work :)
+        startofOR = completeprompt.rfind(ORbasesearch)
+
+        lastpartofcompleteprompt = completeprompt[startofOR:]
+ 
+        # Find all 'or()' function calls and their arguments in the text
+        matches = re.findall(ORpattern, lastpartofcompleteprompt)
+
+        # Sort the matches based on the length of the OR expressions
+        matches.sort(key=len)
+
+
+        match = matches[0] # get the first value, so smallest goes first!
+
+        or_replacement = ""
+
+
+        # Split the arguments by ','
+        arguments = [arg.strip() for arg in match.split(',')]
+        
+        # Evaluate the 'or()' function and append the result to the results list
+        or_replacement = custom_or(arguments)
+        completematch = 'OR(' + match + ')'
+        completeprompt = completeprompt.replace(completematch, or_replacement)
+
 
     return completeprompt

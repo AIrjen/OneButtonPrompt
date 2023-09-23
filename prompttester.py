@@ -46,4 +46,4 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
     print("")
     print("All done!")
 
-generateprompts(10,8,"all","all","all",False,"","","PREFIXPROMPT" ,"SUFFIXPROMPT","",1,"","",True,"",100, "all", "all", "all", "all", False, True)
+generateprompts(1,8,"all","all","all",False,"","","PREFIXPROMPT" ,"OR(SUFFIX, SUFFIXPROMPT)","",1,"","OR(HELLO , OR(THERE,BACK), EVERYONE, uncommon)",True,"",100, "all", "all", "all", "all", False, True)

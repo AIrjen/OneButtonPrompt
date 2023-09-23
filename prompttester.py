@@ -51,4 +51,4 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
     print("")
     print("All done!")
 
-generateprompts(10,5,"all","all","all",False,"","","PREFIXPROMPT" ,"SUFFIXPROMPT","",1,"","-objecttotal- covered in -covering-",True,"",100, "all", "all", "all", "all", False, True)
+generateprompts(10,5,"all","all","all",False,"","","PREFIXPROMPT" ,"SUFFIXPROMPT","",1,"","",True,"",100, "all", "all", "all", "all", False, True)

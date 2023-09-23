@@ -50,7 +50,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     outfitlist = csv_to_list("outfits",antilist)
     locationlist = csv_to_list("locations",antilist)
 
-    accessorielist = csv_to_list("accessories",antilist)
+    accessorielist = csv_to_list("accessories",antilist,"./csvfiles/",0,"?")
     artmovementlist = csv_to_list("artmovements",antilist)
     bodytypelist = csv_to_list("body_types",antilist)
     cameralist = csv_to_list("cameras",antilist)
@@ -1921,20 +1921,12 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
     #end of the while loop, now clean up the prompt
 
-    # first, we are going to parse any custom functions we have build in
-    # this is OR()
-    # OR()
-    
-    # OR(foo;bar;bla)  --> randomly take foo, bar or bla
-    # OR(foo;bar;bla;uncommon) --> Take foo, unless it hits uncommon roll. Then take bar or bla
-    # OR(;foo)  --> empty or foo
-    # OR(;foo;uncommon) --> empty unless it hits uncommon roll. Then take foo
-    # OR(;foo;bar;uncommon) --> empty unless it hits uncommon roll. Then take foo or bar
+
     
 
 
 
-    completeprompt = parse_custom_functions(completeprompt, insanitylevel)
+    # completeprompt = parse_custom_functions(completeprompt, insanitylevel)
 
 
 
@@ -2073,6 +2065,20 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         completeprompt = completeprompt.replace("-objectstrengthstart-","")
         completeprompt = completeprompt.replace("-objectstrengthend-","")
 
+    
+    # Now, we are going to parse any custom functions we have build in
+    # this is OR()
+    # OR()
+    
+    # OR(foo;bar;bla)  --> randomly take foo, bar or bla
+    # OR(foo;bar;bla;uncommon) --> Take foo, unless it hits uncommon roll. Then take bar or bla
+    # OR(;foo)  --> empty or foo
+    # OR(;foo;uncommon) --> empty unless it hits uncommon roll. Then take foo
+    # OR(;foo;bar;uncommon) --> empty unless it hits uncommon roll. Then take foo or bar
+    
+    
+    completeprompt = parse_custom_functions(completeprompt, insanitylevel)
+    
     # clean it up
     completeprompt = cleanup(completeprompt, advancedprompting)
 
@@ -2113,7 +2119,7 @@ def createpromptvariant(prompt = "", insanitylevel = 5, antivalues = "" , gender
     outfitlist = csv_to_list("outfits",antilist)
     locationlist = csv_to_list("locations",antilist)
 
-    accessorielist = csv_to_list("accessories",antilist)
+    accessorielist = csv_to_list("accessories",antilist,"./csvfiles/",0,"?")
     artmovementlist = csv_to_list("artmovements",antilist)
     bodytypelist = csv_to_list("body_types",antilist)
     cameralist = csv_to_list("cameras",antilist)
@@ -2692,7 +2698,6 @@ def custom_or(values, insanitylevel = 5):
     last_element = values[-1]
     first_element = values[0]
 
-    print(values)
    
     if last_element in ['always', 'common', 'normal','uncommon', 'rare', 'legendary','unique', 'extraordinary', 'novel', 'never']:
         # If we do not hit the change roll, then take the first element.

@@ -38,7 +38,12 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
             print("")
             print(result)
             break
-        
+
+        if(" OR " in result):
+            print("There is a mistake in a OR statement")
+            print("")
+            print(result)
+            break
 
         steps += 1
     
@@ -46,4 +51,4 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
     print("")
     print("All done!")
 
-generateprompts(20,8,"all","all","all",False,"","","PREFIXPROMPT" ,"OR(;-descriptor-;-culture-;-color-;lush;dense;-season-;normal) -minilocation- OR(; with -flora-; and -space- in background; and -minilocation-;rare)","",1,"","OR(;-descriptor-;normal), BLA",True,"",100, "all", "all", "all", "all", False, True)
+generateprompts(1000,5,"all","all","all",False,"","","PREFIXPROMPT" ,"SUFFIXPROMPT","",1,"","",True,"",100, "all", "all", "all", "all", False, True)

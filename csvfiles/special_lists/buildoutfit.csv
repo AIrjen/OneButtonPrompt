@@ -1,4 +1,4 @@
-OR(;-descriptor-;normal) OR(;-color-;uncommon) OR(;-culture-;uncommon) OR (;-material-;rare) -outfit-
+OR(;-descriptor-;normal) OR(;-color-;uncommon) OR(;-culture-;uncommon) OR(;-material-;rare) -outfit-
 OR(;-descriptor-;normal) OR(;-descriptor-;uncommon) OR(;-color-;uncommon) -outfit-
 OR(-job-;-rpgclass-;-season-;-animal--style) OR(-minioutfit-;-outfit-;rare)
 OR(;-descriptor-;uncommon) OR(-minioutfit-;-outfit-;rare) OR(;designed by -brand-;uncommon)

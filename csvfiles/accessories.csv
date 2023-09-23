@@ -89,7 +89,6 @@ Lapel Pin
 Body Chain
 Brooch
 Anklet
-Toe Ring
 Nose Ring
 Lip Ring
 Belly Button Ring
@@ -121,34 +120,13 @@ Buttons
 Tattoos
 Cigarette
 Pipe
--material- trimmings
-Handlebar Mustache
-Full Beard
+OR(-material-;-color-) trimmings
+OR(;Handlebar;Horseshoe;Pencil;Large;Small;common) Mustache
+OR(;Full;Stubble;Circle;Light;Large;Small;common) Beard
 Goatee
 Soul Patch
 Mutton Chops
-Circle Beard
-Horseshoe Mustache
-Stubble Beard
-Imperial Mustache
-Pencil Mustache
-Face Painting
-Day of the Dead Face Paint
--animal- Face Paint
-Tribal Face Paint
-Tribal Face Marks
-Clown Face Paint
-Halloween Face Paint
-Fantasy Face Paint
-Sports Team Face Paint
-Superhero Face Paint
--animal- Tattoo
--object- Tattoo
--vehicle- Tattoo
--building- Tattoo
-Body Tattoos
-Face Tattoos
-Tattoos
-Tribal Tattoos
+OR(;Day of the Dead;Tribal;Clown;Halloween;Fantasy;Sports Team;Superhero;-animal-;common) Face OR(Painting;Paint)
+OR(-animal-;-objecttotal-;-pattern-;henna;-building-;body;face;tribal) Tattoo
 Geass
 Shoulder pads

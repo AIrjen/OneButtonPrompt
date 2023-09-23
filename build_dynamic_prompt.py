@@ -1924,9 +1924,17 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     # first, we are going to parse any custom functions we have build in
     # these are 
     # OR()
+    
+    # OR(foo;bar;bla)  --> randomly take foo, bar or bla
+    # OR(foo;bar;bla;uncommon) --> Take foo, unless it hits uncommon roll. Then take bar or bla
+    
     # and 
-    # CHANCEROLL()
-    completeprompt = parse_custom_functions(completeprompt)
+    # RNG()
+    # RNG(foo;uncommon) --> Take foo when it hits uncommon roll, else empty
+
+
+
+    completeprompt = parse_custom_functions(completeprompt, insanitylevel)
 
 
 
@@ -2679,14 +2687,14 @@ def cleanup(completeprompt, advancedprompting):
 
     return completeprompt
 
-def custom_or(values):
+def custom_or(values, insanitylevel = 5):
     # Check if the last element is one of the specific values
     last_element = values[-1]
     first_element = values[0]
    
     if last_element in ['always', 'common', 'normal','uncommon', 'rare', 'legendary','unique', 'extraordinary', 'novel', 'never']:
         # If we do not hit the change roll, then take the first element.
-        if not(chance_roll(5, last_element)):
+        if not(chance_roll(insanitylevel, last_element)):
             return first_element
         # Else anything but the first or last element
         else:
@@ -2701,7 +2709,24 @@ def custom_or(values):
         selected_value = random.choice(values)
     return selected_value
 
-def parse_custom_functions(completeprompt):
+def custom_rng(values, insanitylevel = 5):
+    # Check if the last element is one of the specific values
+    last_element = values[-1]
+   
+    if last_element in ['always', 'common', 'normal','uncommon', 'rare', 'legendary','unique', 'extraordinary', 'novel', 'never']:
+        # If we do not hit the change roll, then do nothing
+        if not(chance_roll(insanitylevel, last_element)):
+            return ""
+        # Else return the first element
+        else:
+            return values[0]
+
+
+    else:
+        print("RNG function failed. invalid config!")
+    return ""
+
+def parse_custom_functions(completeprompt, insanitylevel = 5):
 
     # Regular expression pattern to match 'or()' function calls and their arguments
     ORpattern = r'OR\((.*?)\)'
@@ -2730,12 +2755,44 @@ def parse_custom_functions(completeprompt):
 
 
         # Split the arguments by ','
-        arguments = [arg.strip() for arg in match.split(',')]
+        arguments = [arg.strip() for arg in match.split(';')]
         
         # Evaluate the 'or()' function and append the result to the results list
-        or_replacement = custom_or(arguments)
+        or_replacement = custom_or(arguments, insanitylevel)
         completematch = 'OR(' + match + ')'
         completeprompt = completeprompt.replace(completematch, or_replacement)
 
+    # Then parse the RNG function
+    # Regular expression pattern to match 'RNG()' function calls and their arguments
+    RNGpattern = r'RNG\((.*?)\)'
+    RNGbasesearch = 'RNG('
+
+    while re.findall(RNGpattern, completeprompt):
+
+        # basically start from right to left to start replacing, so we can do nesting
+        # probably not very stable, but seems to work :)
+        startofRNG = completeprompt.rfind(RNGbasesearch)
+
+        lastpartofcompleteprompt = completeprompt[startofRNG:]
+ 
+        # Find all 'or()' function calls and their arguments in the text
+        matches = re.findall(RNGpattern, lastpartofcompleteprompt)
+
+        # Sort the matches based on the length of the OR expressions
+        matches.sort(key=len)
+
+
+        match = matches[0] # get the first value, so smallest goes first!
+
+        rng_replacement = ""
+
+
+        # Split the arguments by ';'
+        arguments = [arg.strip() for arg in match.split(';')]
+        
+        # Evaluate the 'or()' function and append the result to the results list
+        rng_replacement = custom_rng(arguments, insanitylevel)
+        completematch = 'RNG(' + match + ')'
+        completeprompt = completeprompt.replace(completematch, rng_replacement)
 
     return completeprompt

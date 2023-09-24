@@ -39,9 +39,10 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     # Some tricks for gender to make sure we can choose Him/Her/It etc on the right time.
     if(gender=="all"):
         genderchoicelist = ["male", "female"]
-        gender == random.choice(genderchoicelist)
+        gender = random.choice(genderchoicelist)
     heshelist = ["it"]
     hisherlist = ["it's"]
+    himherlist = ["it"]
 
     # build all lists here
 
@@ -971,12 +972,16 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
         # After we chose the subject, lets set all things ready for He/She/It etc
         if(subjectchooser in ["human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation","firstname"]):
+            print("HELLO")
+            print(gender)
             if(gender == "male"):
                 heshelist = ["he"]
                 hisherlist = ["his"]
+                himherlist = ["him"]
             if(gender == "female"):
                 heshelist = ["she"]
                 hisherlist = ["her"]
+                himherlist = ["her"]
 
 
            
@@ -1601,7 +1606,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         
         # outfit builder
         if(subjectchooser in ["animal as human","human","fictional", "non fictional", "humanoid", "manwomanrelation", "firstname"]  and chance_roll(insanitylevel, outfitchance) and generateoutfit == True and humanspecial != 1):
-            completeprompt += ", " + random.choice(buildoutfitlist) + ", "
+            completeprompt += " " + random.choice(buildoutfitlist) + ", "
         
         if(subjectchooser in ["animal as human","human","fictional", "non fictional", "humanoid", "manwomanrelation", "firstname"]  and chance_roll(insanitylevel, posechance) and humanspecial != 1 and generatepose == True):
             completeprompt += random.choice(poselist) + ", "
@@ -2041,9 +2046,10 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     "-cardname-" in completeprompt or
     "-covering-" in completeprompt or
     "-heshe-" in completeprompt or
-    "-hisher-" in completeprompt):
-        allwildcardslistnohybrid = [ "-color-","-object-", "-animal-", "-fictional-","-nonfictional-","-building-","-vehicle-","-location-","-conceptprefix-","-food-","-haircolor-","-hairstyle-","-job-", "-accessory-", "-humanoid-", "-manwoman-", "-human-", "-colorscheme-", "-mood-", "-genderdescription-", "-artmovement-", "-malefemale-", "-bodytype-", "-minilocation-", "-minilocationaddition-", "-pose-", "-season-", "-minioutfit-", "-elaborateoutfit-", "-minivomit-", "-vomit-", "-rpgclass-", "-subjectfromfile-", "-brand-", "-space-", "-artist-", "-imagetype-", "-othertype-", "-quality-", "-lighting-", "-camera-", "-lens-","-imagetypequality-", "-poemline-", "-songline-", "-greatwork-", "-artistfantasy-", "-artistpopular-", "-artistromanticism-", "-artistphotography-", "-emoji-", "-timeperiod-", "-shotsize-", "-musicgenre-", "-animaladdition-", "-addontolocationinside-", "-addontolocation-", "-objectaddition-", "-humanaddition-", "-overalladdition-", "-focus-", "-direction-", "-styletilora-", "-manwomanrelation-", "-waterlocation-", "-container-", "-firstname-", "-flora-", "-print-", "-miniactivity-", "-pattern-", "-animalsuffixaddition-", "-chair-", "-cardname-", "-covering-", "-heshe-", "-hisher-"]
-        allwildcardslistnohybridlists = [colorlist, objectlist, animallist, fictionallist, nonfictionallist, buildinglist, vehiclelist, locationlist,conceptprefixlist,foodlist,haircolorlist, hairstylelist,joblist, accessorielist, humanoidlist, manwomanlist, humanlist, colorschemelist, moodlist, genderdescriptionlist, artmovementlist, malefemalelist, bodytypelist, minilocationlist, minilocationadditionslist, poselist, seasonlist, minioutfitlist, elaborateoutfitlist, minivomitlist, vomitlist, rpgclasslist, customsubjectslist, brandlist, spacelist, artistlist, imagetypelist, othertypelist, qualitylist, lightinglist, cameralist, lenslist, imagetypequalitylist, poemlinelist, songlinelist, greatworklist, fantasyartistlist, popularartistlist, romanticismartistlist, photographyartistlist, emojilist, timeperiodlist, shotsizelist, musicgenrelist, animaladditionlist, addontolocationinsidelist, addontolocationlist, objectadditionslist, humanadditionlist, overalladditionlist, focuslist, directionlist, stylestiloralist, manwomanrelationlist, waterlocationlist, containerlist, firstnamelist, floralist, printlist, miniactivitylist, patternlist, animalsuffixadditionlist, chairlist, cardnamelist, coveringlist, heshelist, hisherlist]
+    "-hisher-" in completeprompt or
+    "-himher-" in completeprompt):
+        allwildcardslistnohybrid = [ "-color-","-object-", "-animal-", "-fictional-","-nonfictional-","-building-","-vehicle-","-location-","-conceptprefix-","-food-","-haircolor-","-hairstyle-","-job-", "-accessory-", "-humanoid-", "-manwoman-", "-human-", "-colorscheme-", "-mood-", "-genderdescription-", "-artmovement-", "-malefemale-", "-bodytype-", "-minilocation-", "-minilocationaddition-", "-pose-", "-season-", "-minioutfit-", "-elaborateoutfit-", "-minivomit-", "-vomit-", "-rpgclass-", "-subjectfromfile-", "-brand-", "-space-", "-artist-", "-imagetype-", "-othertype-", "-quality-", "-lighting-", "-camera-", "-lens-","-imagetypequality-", "-poemline-", "-songline-", "-greatwork-", "-artistfantasy-", "-artistpopular-", "-artistromanticism-", "-artistphotography-", "-emoji-", "-timeperiod-", "-shotsize-", "-musicgenre-", "-animaladdition-", "-addontolocationinside-", "-addontolocation-", "-objectaddition-", "-humanaddition-", "-overalladdition-", "-focus-", "-direction-", "-styletilora-", "-manwomanrelation-", "-waterlocation-", "-container-", "-firstname-", "-flora-", "-print-", "-miniactivity-", "-pattern-", "-animalsuffixaddition-", "-chair-", "-cardname-", "-covering-", "-heshe-", "-hisher-", "-himher-"]
+        allwildcardslistnohybridlists = [colorlist, objectlist, animallist, fictionallist, nonfictionallist, buildinglist, vehiclelist, locationlist,conceptprefixlist,foodlist,haircolorlist, hairstylelist,joblist, accessorielist, humanoidlist, manwomanlist, humanlist, colorschemelist, moodlist, genderdescriptionlist, artmovementlist, malefemalelist, bodytypelist, minilocationlist, minilocationadditionslist, poselist, seasonlist, minioutfitlist, elaborateoutfitlist, minivomitlist, vomitlist, rpgclasslist, customsubjectslist, brandlist, spacelist, artistlist, imagetypelist, othertypelist, qualitylist, lightinglist, cameralist, lenslist, imagetypequalitylist, poemlinelist, songlinelist, greatworklist, fantasyartistlist, popularartistlist, romanticismartistlist, photographyartistlist, emojilist, timeperiodlist, shotsizelist, musicgenrelist, animaladditionlist, addontolocationinsidelist, addontolocationlist, objectadditionslist, humanadditionlist, overalladditionlist, focuslist, directionlist, stylestiloralist, manwomanrelationlist, waterlocationlist, containerlist, firstnamelist, floralist, printlist, miniactivitylist, patternlist, animalsuffixadditionlist, chairlist, cardnamelist, coveringlist, heshelist, hisherlist, himherlist]
         
         allwildcardslistwithhybrid = ["-material-", "-descriptor-", "-outfit-", "-conceptsuffix-","-culture-", "-objecttotal-", "-outfitprinttotal-"]
         allwildcardslistwithhybridlists = [materiallist, descriptorlist,outfitlist,conceptsuffixlist,culturelist, objecttotallist, outfitprinttotallist]

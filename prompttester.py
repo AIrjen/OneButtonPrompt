@@ -51,4 +51,6 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
     print("")
     print("All done!")
 
-generateprompts(10,5,"humanoid","all","all",False,"","","PREFIXPROMPT" ,"SUFFIXPROMPT -sameoutfit-","",1,"","",True,"",100, "all", "all", "all", "all", False, True)
+generateprompts(10,9,"humanoid","all","all",False,"","","PREFIXPROMPT" 
+                ,"SUFFIXPROMPT . -heshe- is OR(wearing a;dressed in a) OR(;-descriptor-;normal) OR(;-color-;uncommon) OR(;-culture-;uncommon) OR(;-material-;rare) -outfit- that was OR(designed;made) by -brand-. It is OR(-descriptor-;-color-;normal) OR(;and OR(-descriptor-;-color-;normal);normal). OR(;The -sameoutfit- looks -descriptor- on -himher-.;unique)"
+                ,"",1,"","",True,"",100, "all", "all", "all", "all", False, True)

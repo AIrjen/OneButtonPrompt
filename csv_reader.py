@@ -48,7 +48,7 @@ def csv_to_list(csvfilename, antilist=[], directory="./csvfiles/", lowerandstrip
                                 for row in reader:
                                         value = row[0]
                                         if( 
-                                                (gender != "all" and row[1] == gender)
+                                                gender != "all" and (row[1] == gender or row[1] == "genderless" or row[1] == "both")
                                                 or gender == "all"
                                                 ):
                                                 if(value.lower().strip() not in antilist):
@@ -70,7 +70,7 @@ def csv_to_list(csvfilename, antilist=[], directory="./csvfiles/", lowerandstrip
                                         for row in reader:
                                                 value = row[0]
                                                 if( 
-                                                (gender != "all" and row[1] == gender)
+                                                gender != "all" and (row[1] == gender or row[1] == "genderless" or row[1] == "both")
                                                 or gender == "all"
                                                 ):
                                                         if(value.lower().strip() not in antilist):

@@ -1,6 +1,6 @@
-OR(;-descriptor-;normal) OR(;-color-;uncommon) OR(;-culture-;uncommon) OR(;-material-;rare) -outfit-
-OR(;-descriptor-;normal) OR(;-descriptor-;uncommon) OR(;-color-;uncommon) -outfit-
-OR(-job-;-rpgclass-;-season-;-animal--style) OR(-minioutfit-;-outfit-;rare)
-OR(;-descriptor-;uncommon) OR(-minioutfit-;-outfit-;rare) OR(;designed by -brand-;uncommon)
-OR(-material-;-color-)
-OR(;-descriptor-;-material-;-color-;uncommon) OR(-outfit-;-minioutfit-;rare) with OR(-pattern-;-outfitprinttotal-;-material-;uncommon) -print-
+OR(wearing;dressed in;in;normal) OR(;-descriptor-;normal) OR(;-color-;uncommon) OR(;-culture-;uncommon) OR(;-material-;rare) -outfit-
+OR(wearing;dressed in;in;normal) OR(;-descriptor-;normal) OR(;-descriptor-;uncommon) OR(;-color-;uncommon) -outfit-
+OR(wearing;dressed in;in;normal) OR(-job-;-rpgclass-;-season-;-animal--style) OR(-minioutfit-;-outfit-;rare)
+OR(wearing;dressed in;in;normal) OR(;-descriptor-;uncommon) OR(-minioutfit-;-outfit-;rare) OR(;designed by -brand-;uncommon)
+wearing OR(-material-;-color-)
+OR(wearing;dressed in;in;normal) OR(;-descriptor-;-material-;-color-;uncommon) OR(-outfit-;-minioutfit-;rare) with OR(-pattern-;-outfitprinttotal-;-material-;uncommon) -print-

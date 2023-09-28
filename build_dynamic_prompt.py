@@ -2603,13 +2603,15 @@ def replace_match(match):
 
 def cleanup(completeprompt, advancedprompting):
 
+    # This part is turned off, will bring it back later as an option
+    
     # first, move LoRA's to the back dynamically
 
     # Find all occurrences of text between < and > using regex
-    allLoRA = re.findall(r"<[^>]+>", completeprompt)
+    # allLoRA = re.findall(r"<[^>]+>", completeprompt)
 
     # Remove the extracted matches from completeprompt
-    completeprompt = re.sub(r"<[^>]+>", "", completeprompt)
+    # completeprompt = re.sub(r"<[^>]+>", "", completeprompt)
 
 
     # if we are not using advanced prompting, remove any hybrid stuff:
@@ -2664,7 +2666,7 @@ def cleanup(completeprompt, advancedprompting):
     completeprompt = re.sub('\)(?![\s)])', ') ', completeprompt)
 
     # Move the extracted LoRA's to the end of completeprompt
-    completeprompt += " " + " ".join(allLoRA)   
+    #completeprompt += " " + " ".join(allLoRA)   
 
     completeprompt = completeprompt.strip(", ")
 

@@ -51,13 +51,13 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
     print("")
     print("All done!")
 
-generateprompts(10,5
-                ,"humanoid" # subject
+generateprompts(10,10
+                ,"" # subject
                 ,"all","all",False,"","","PREFIXPROMPT" 
-                ,"SUFFIXPROMPT"
+                ,"SUFFIXPROMPT -heshe- is looking here"
                 ,"",1,""
                 ,"" # subject override
                 ,True,
                 "",100, "all", "all", "all", "all", False, True, 0
-                , "armor" #outfit override
+                , "" #outfit override
                 )

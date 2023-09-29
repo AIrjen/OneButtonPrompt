@@ -2680,6 +2680,26 @@ def replacewildcard(completeprompt, insanitylevel, wildcard,listname, activatehy
             if(wildcard == "-outfit-" or wildcard == "-minioutfit-"):
                 completeprompt = completeprompt.replace("-sameoutfit-", replacementvalue,1)
 
+            if(wildcard in ["-animal-"
+                            ,"-human-"
+                            ,"-humanoid-"
+                            , "-manwoman-"
+                            , "-malefemale-"
+                            , "-object-"
+                            , "-fictional-"
+                            , "-nonfictional-"
+                            , "-building-"
+                            , "-vehicle-"
+                            , "-food-"
+                            , "-job-"
+                            , "-objecttotal-"
+                            , "-space-"
+                            , "-firstname-"]  
+                            and chance_roll(insanitylevel, "uncommon")):
+                completeprompt = completeprompt.replace("-heshe-", "the " + replacementvalue,1)
+
+
+
             
             completeprompt = completeprompt.replace(wildcard, replacementvalue,1)
 

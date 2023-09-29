@@ -10,7 +10,7 @@ from build_dynamic_prompt import *
 
 
 
-def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", imagetype="all",onlyartists=False, workprompt="", antistring="",prefixprompt="", suffixprompt="", negativeprompt="",promptcompounderlevel = "1", seperator="comma",givensubject="",smartsubject=True,giventypeofimage="",imagemodechance=20, gender = "all", subtypeobject = "all", subtypehumanoid = "all", subtypeconcept = "all", advancedprompting = True, hardturnoffemojis=False):
+def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", imagetype="all",onlyartists=False, workprompt="", antistring="",prefixprompt="", suffixprompt="", negativeprompt="",promptcompounderlevel = "1", seperator="comma",givensubject="",smartsubject=True,giventypeofimage="",imagemodechance=20, gender = "all", subtypeobject = "all", subtypehumanoid = "all", subtypeconcept = "all", advancedprompting = True, hardturnoffemojis=False, seed=0, overrideoutfit=""):
     loops = int(amount)  # amount of images to generate
     steps = 0
    
@@ -18,7 +18,7 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
     while steps < loops:
         # build prompt
     
-        result = build_dynamic_prompt(insanitylevel,subject,artist,imagetype, onlyartists,antistring,prefixprompt,suffixprompt,promptcompounderlevel, seperator,givensubject,smartsubject,giventypeofimage,imagemodechance, gender, subtypeobject, subtypehumanoid, subtypeconcept, advancedprompting, hardturnoffemojis)
+        result = build_dynamic_prompt(insanitylevel,subject,artist,imagetype, onlyartists,antistring,prefixprompt,suffixprompt,promptcompounderlevel, seperator,givensubject,smartsubject,giventypeofimage,imagemodechance, gender, subtypeobject, subtypehumanoid, subtypeconcept, advancedprompting, hardturnoffemojis, seed, overrideoutfit)
 
         print("")
         print("loop " + str(steps))
@@ -51,6 +51,8 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
     print("")
     print("All done!")
 
-generateprompts(10,9,"humanoid","all","all",False,"","","PREFIXPROMPT" 
-                ,"SUFFIXPROMPT , OR(wearing;dressed in;in;normal) OR(;-outfitdescriptor-;normal) OR(;-color-;uncommon) OR(;-culture-;uncommon) OR(;-material-;rare) -outfit-"
-                ,"",1,"","",True,"",100, "all", "all", "all", "all", False, True)
+generateprompts(10,5,"all","all","all",False,"","","PREFIXPROMPT" 
+                ,"SUFFIXPROMPT"
+                ,"",1,"","",True,"",100, "all", "all", "all", "all", False, True, 0
+                , "armor" #outfit override
+                )

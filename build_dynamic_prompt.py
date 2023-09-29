@@ -10,7 +10,7 @@ from random_functions import *
 # insanity level controls randomness of propmt 0-10
 # forcesubject van be used to force a certain type of subject
 # Set artistmode to none, to exclude artists 
-def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", givensubject="",smartsubject = True,giventypeofimage="", imagemodechance = 20, gender = "all", subtypeobject="all", subtypehumanoid="all", subtypeconcept="all", advancedprompting=True, hardturnoffemojis=False, seed=-1):
+def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", givensubject="",smartsubject = True,giventypeofimage="", imagemodechance = 20, gender = "all", subtypeobject="all", subtypehumanoid="all", subtypeconcept="all", advancedprompting=True, hardturnoffemojis=False, seed=-1, overrideoutfit=""):
 
     # set seed
     # For use in ComfyUI (might bring to Automatic1111 as well)
@@ -1608,6 +1608,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         # outfit builder
         if(subjectchooser in ["animal as human","human","fictional", "non fictional", "humanoid", "manwomanrelation", "firstname"]  and chance_roll(insanitylevel, outfitchance) and generateoutfit == True and humanspecial != 1):
             completeprompt += " " + random.choice(buildoutfitlist) + ", "
+        elif(overrideoutfit != ""):
+            completeprompt += " " + random.choice(buildoutfitlist) + ", "
         
         if(subjectchooser in ["animal as human","human","fictional", "non fictional", "humanoid", "manwomanrelation", "firstname"]  and chance_roll(insanitylevel, posechance) and humanspecial != 1 and generatepose == True):
             completeprompt += random.choice(poselist) + ", "
@@ -1957,11 +1959,19 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     # first some manual stuff for outfit
 
     if(unique_dist(insanitylevel)): # sometimes, its just nice to have descriptor and a normal "outfit". We use mini outfits for this!
-                 completeprompt = completeprompt.replace("-outfit-", "-minioutfit-",1)
+        completeprompt = completeprompt.replace("-outfit-", "-minioutfit-",1)
     if(rare_dist(insanitylevel)): # Use base outfit descriptor, until we are not.
-                 completeprompt = completeprompt.replace("-outfitdescriptor-", "-descriptor-",1)
+        completeprompt = completeprompt.replace("-outfitdescriptor-", "-descriptor-",1)
 
+    if(overrideoutfit != ""):
+        completeprompt = completeprompt.replace("-sameoutfit-", overrideoutfit)
+        completeprompt = completeprompt.replace("-outfit-", overrideoutfit,1)
+        completeprompt = completeprompt.replace("-minioutfit-", overrideoutfit,1)
+        completeprompt = completeprompt.replace("-overrideoutfit-", overrideoutfit)
     
+    # If we don't have an override outfit, then remove this part
+    completeprompt = completeprompt.replace("-overrideoutfit-", "")
+
 
     
     # lol, this needs a rewrite :D

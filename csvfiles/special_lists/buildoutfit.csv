@@ -1,9 +1,10 @@
 , OR(wearing;dressed in;in;normal) OR(;-outfitdescriptor-;normal) OR(;-color-;uncommon) OR(;-culture-;uncommon) OR(;-material-;rare) -outfit-
 , OR(wearing;dressed in;in;normal) OR(;-outfitdescriptor-;normal) OR(;-outfitdescriptor-;uncommon) OR(;-color-;uncommon) -outfit-
+, OR(wearing;dressed in;in;normal) OR(;-outfitdescriptor-;normal) OR(;-outfitdescriptor-;uncommon) OR(;-color-;uncommon) -outfit- OR(; and OR(;-outfitdescriptor-;uncommon) OR(;-color-;uncommon) -outfit-;rare)
 , OR(wearing;dressed in;in;normal) OR(-job-;-rpgclass-;-season-;-animal--style) OR(-minioutfit-;-outfit-;rare)
 , OR(wearing;dressed in;in;normal) OR(;-outfitdescriptor-;uncommon) OR(-minioutfit-;-outfit-;rare) OR(;designed by -brand-;uncommon)
 , wearing OR(-material-;-color-) -overrideoutfit-
-, OR(wearing;dressed in;in;normal) OR(;-outfitdescriptor-;-material-;-color-;uncommon) OR(-outfit-;-minioutfit-;rare) with OR(-pattern-;-outfitprinttotal-;-material-;uncommon) -print-
+, OR(wearing;dressed in;in;normal) OR(;-outfitdescriptor-;-material-;-color-;uncommon) OR(-outfit-;-minioutfit-;rare) with OR(-pattern-;-outfitprinttotal-;-material-;uncommon) -print-.
 . -heshe- is OR(wearing a;dressed in) OR(;-hisher-;-hisher- -outfitdescriptor-;rare) -outfit-. OR(-hisher-;The;normal) -sameoutfit- is OR(-outfitdescriptor-;-color-) OR( OR(and has;. It has) OR(-pattern-;-outfitprinttotal-;-material-;uncommon) -print- on it.; and is OR(made of;detailed with bits of) -material-;rare) OR(;.It looks -outfitdescriptor- on -himher-.;unique)
 . -heshe- is OR(wearing;dressed in) OR(;-hisher-;-hisher- traditional;rare) -culture- -outfit-. OR(; OR(-hisher-;The;normal) -sameoutfit- is OR(-outfitdescriptor-;-color-).;normal) OR(;.It looks -outfitdescriptor- on -himher-.;unique)
 . -heshe- is OR(wearing a;dressed in a) OR(;-outfitdescriptor-;normal) OR(;-color-;uncommon) OR(;-culture-;uncommon) OR(;-material-;rare) -outfit- that was OR(designed;made;inspired) by -brand-. It is OR(-outfitdescriptor-;-color-;normal) OR(;and OR(-outfitdescriptor-;-color-;normal);normal) OR(;. The -sameoutfit- looks -outfitdescriptor- on -himher-.;unique)

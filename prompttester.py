@@ -52,7 +52,7 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
     print("All done!")
 
 generateprompts(10,5,"all","all","all",False,"","","PREFIXPROMPT" 
-                ,"SUFFIXPROMPT"
+                ,"SUFFIXPROMPT, -hisher- hair is OR(-haircolor-;-descriptor-;-culture-;uncommon) OR(;and styled as -hairstyle-;rare)"
                 ,"",1,"","",True,"",100, "all", "all", "all", "all", False, True, 0
                 , "armor" #outfit override
                 )

@@ -1957,6 +1957,29 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     # In front and the back?
     completeprompt = parse_custom_functions(completeprompt, insanitylevel)
 
+    # Sometimes change he/she to the actual subject
+    if(normal_dist(insanitylevel)
+       and  "-human-" in completeprompt or
+            "-humanoid-" in completeprompt or
+            "-manwoman-"  in completeprompt or                           
+            "-job-" in completeprompt or
+            "-fictional-" in completeprompt or
+            "-nonfictional-" in completeprompt or
+            "-firstname-" in completeprompt or
+            "-malefemale-" in completeprompt):
+        completeprompt = completeprompt.replace("-heshe-", "-samehumansubject-",1)
+
+        # Sometimes change he/she to the actual subject
+    if(normal_dist(insanitylevel)
+       and "-animal-" in completeprompt or                          
+            "-object-" in completeprompt or
+            "-vehicle-" in completeprompt or
+            "-food-" in completeprompt or
+            "-objecttotal-" in completeprompt or
+            "-space-" in completeprompt or
+            "-flora-" in completeprompt):
+        completeprompt = completeprompt.replace("-heshe-", "-sameothersubject-",1)
+
     # hair descriptor
     if(rare_dist(insanitylevel)): # Use base outfit descriptor, until we are not.
         completeprompt = completeprompt.replace("-hairdescriptor-", "-descriptor-",1)
@@ -2680,23 +2703,38 @@ def replacewildcard(completeprompt, insanitylevel, wildcard,listname, activatehy
             if(wildcard == "-outfit-" or wildcard == "-minioutfit-"):
                 completeprompt = completeprompt.replace("-sameoutfit-", replacementvalue,1)
 
-            if(wildcard in ["-animal-"
-                            ,"-human-"
+            if(wildcard in ["-human-"
                             ,"-humanoid-"
-                            , "-manwoman-"
-                            , "-malefemale-"
-                            , "-object-"
-                            , "-fictional-"
+                            , "-manwoman-"                            
+                            , "-job-"]
+                            and "-samehumansubject-" in completeprompt):
+                            if(completeprompt.index(wildcard) < completeprompt.index("-samehumansubject-")):
+                                completeprompt = completeprompt.replace("-samehumansubject-", "the " + replacementvalue)
+            
+            if(wildcard in ["-fictional-"
                             , "-nonfictional-"
-                            , "-building-"
+                            , "-firstname-"]
+                            and "-samehumansubject-" in completeprompt):
+                            if(completeprompt.index(wildcard) < completeprompt.index("-samehumansubject-")):
+                                completeprompt = completeprompt.replace("-samehumansubject-", replacementvalue)
+
+            # This one last, since then it is the only subject we have left
+            if(wildcard in ["-malefemale-"]
+               and "-samehumansubject-" in completeprompt):
+               if(completeprompt.index(wildcard) < completeprompt.index("-samehumansubject-")):
+                    completeprompt = completeprompt.replace("-samehumansubject-", "the " + replacementvalue,1)
+
+            if(wildcard in ["-animal-"                         
+                            , "-object-"
                             , "-vehicle-"
                             , "-food-"
-                            , "-job-"
-                            , "-objecttotal-"
+                            , "-objecttotal-" 
                             , "-space-"
-                            , "-firstname-"]  
-                            and chance_roll(insanitylevel, "uncommon")):
-                completeprompt = completeprompt.replace("-heshe-", "the " + replacementvalue,1)
+                            , "-flora-"]
+                        and "-sameothersubject-" in completeprompt):
+                if(completeprompt.index(wildcard) < completeprompt.index("-sameothersubject-")):
+                            completeprompt = completeprompt.replace("-sameothersubject-", "the " + replacementvalue,1)
+
 
 
 
@@ -2835,6 +2873,10 @@ def parse_custom_functions(completeprompt, insanitylevel = 5):
         arguments = [arg.strip() for arg in match.split(';')]
         
         # Evaluate the 'or()' function and append the result to the results list
+
+        # For debugging, enable these lines
+        #print(completeprompt)
+        #print(arguments)
         or_replacement = custom_or(arguments, insanitylevel)
         completematch = 'OR(' + match + ')'
         completeprompt = completeprompt.replace(completematch, or_replacement)

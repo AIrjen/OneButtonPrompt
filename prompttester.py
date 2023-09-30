@@ -51,7 +51,7 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
     print("")
     print("All done!")
 
-generateprompts(10,10
+generateprompts(100,10
                 ,"" # subject
                 ,"all","all",False,"","","PREFIXPROMPT" 
                 ,"SUFFIXPROMPT -heshe- is looking here"

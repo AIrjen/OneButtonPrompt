@@ -123,9 +123,26 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     outfitprinttotallist = objecttotallist + locationlist + colorlist + musicgenrelist + seasonlist + animallist + patternlist
 
     # build artists list
+
+    # we want to create more cohorence, so we are adding all (wild) mode for the old logic
+    # all else will be more constrained per type, to produce better images.
+    # the popular artists will be used more the lower the insanitylevel is
+    # Future: add in personal artists lists as well
+    artisttypes = ["popular", "3D",	"abstract",	"angular", "anime"	,"architecture",	"art nouveau",	"art deco",	"baroque",	"bauhaus", 	"cartoon",	"character",	"children's illustration", 	"cityscape", 	"clean",	"cloudscape",	"collage",	"colorful",	"comics",	"cubism",	"dark",	"detailed", 	"digital",	"expressionism",	"fantasy",	"fashion",	"fauvism",	"figurativism",	"gore",	"graffiti",	"graphic design",	"high contrast",	"horror",	"impressionism",	"installation",	"landscape",	"light",	"line drawing",	"low contrast",	"luminism",	"magical realism",	"manga",	"melanin",	"messy",	"monochromatic",	"nature",	"nudity",	"photography",	"pop art",	"portrait",	"primitivism",	"psychedelic",	"realism",	"renaissance",	"romanticism",	"scene",	"sci-fi",	"sculpture",	"seascape",	"space",	"stained glass",	"still life",	"storybook realism",	"street art",	"streetscape",	"surrealism",	"symbolism",	"textile",	"ukiyo-e",	"vibrant",	"watercolor",	"whimsical"]
+    artiststyleselector = ""
+    if(artists == "all" and common_dist(insanitylevel)):
+        artiststyleselector = random.choice(artisttypes)
+        artists = artiststyleselector
+    elif(artists == "all"):
+        artists = "popular"
+        artistpopularstyles = ["anime", "detailed", 	"digital", "fantasy",	"fashion" , "concept", "graphic design" , "photography",  "portrait",  "sci-fi", "realism"]
+        artiststyleselector = random.choice(artistpopularstyles)
+
+
+
     artistlist = []
     # create artist list to use in the code, maybe based on category  or personal lists
-    if(artists != "all" and artists != "none" and artists.startswith("personal_artists") == False and artists.startswith("personal artists") == False):
+    if(artists != "all (wild)" and artists != "none" and artists.startswith("personal_artists") == False and artists.startswith("personal artists") == False):
         artistlist = artist_category_csv_to_list("artists_and_category",artists)
     elif(artists.startswith("personal_artists") == True or artists.startswith("personal artists") == True):
         artists = artists.replace(" ","_",-1) # add underscores back in
@@ -976,8 +993,6 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
         # After we chose the subject, lets set all things ready for He/She/It etc
         if(subjectchooser in ["human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation","firstname"]):
-            print("HELLO")
-            print(gender)
             if(gender == "male"):
                 heshelist = ["he"]
                 hisherlist = ["his"]
@@ -1136,11 +1151,13 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
         artistsplacement = "front"
         if(chance_roll(insanitylevel, artistsatbackchance) and onlyartists == False):
-            artistsplacement = "back"
+            artistlocations = ["back", "middle"]
+            artistsplacement = random.choice(artistlocations)
 
         if(artists != "none" and artistsplacement == "front" and generateartist == True):
             # take 1-3 artists, weighted to 1-2
             step = random.randint(0, 1)
+            minstep = step
             end = random.randint(1, insanitylevel3)
 
 
@@ -1185,7 +1202,13 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                     completeprompt += " ("
 
                 #completeprompt = add_from_csv(completeprompt, "artists", 0, "art by ","")
-                completeprompt += "-artist-"
+                if(step == minstep):
+                    if(giventypeofimage=="" and imagetype == "all" and random.randint(0, 1) == 0):
+                        completeprompt += artiststyleselector + " art "
+                    artistbylist = ["art by", "designed by", "stylized by", "by"]
+                else:
+                    artistbylist = [""]
+                completeprompt += random.choice(artistbylist) + " -artist-"
                 
                 if isweighted == 1:
                     completeprompt += ":" + str(1 + (random.randint(-3,3)/10)) + ")"       
@@ -1194,9 +1217,11 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                     completeprompt += "|"
                 if artistmode in ["switching"] and not end - step == 1:
                     completeprompt += ":"
-            
-                if artistmode not in ["hybrid", "switching"]and not end - step == 1:
+                
+                if artistmode not in ["hybrid", "switching"]and not end - step > 1:
                     completeprompt += ","
+                elif artistmode not in ["hybrid", "switching"]and not end - step == 1:
+                    completeprompt += " and "
                 
                 isweighted = 0
                 
@@ -2692,8 +2717,6 @@ def replacewildcard(completeprompt, insanitylevel, wildcard,listname, activatehy
                 replacementvalue = random.choice(listname)
                 if(wildcard not in ["-heshe-", "-himher-","-hisher-"]):
                     listname.remove(replacementvalue)
-                if(wildcard == "-artist-"):
-                    replacementvalue = "OR(;art by; designed by; stylized by;common) " + replacementvalue
                 
             else:
                 replacementvalue = ""
@@ -2806,6 +2829,8 @@ def cleanup(completeprompt, advancedprompting):
     completeprompt = re.sub(', of a', ' of a', completeprompt)
     completeprompt = re.sub('of a,', 'of a', completeprompt)
     completeprompt = re.sub('of a of a', 'of a', completeprompt)
+
+    completeprompt = re.sub('art art', 'art', completeprompt)
 
     
     completeprompt = re.sub('(?<!\()\s?\(', ' (', completeprompt)

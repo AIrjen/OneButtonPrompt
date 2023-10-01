@@ -958,13 +958,13 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             # remove the shizzle based on chance?
             # we want it to be MORE diverce when the insanity level raises
             # in this case, raise the chance for a humanoid, gets more wierd when going above 5
-            if(random.randint(0,5) < insanitylevel and "concept" in mainchooserlist):
+            if(random.randint(4,7) > insanitylevel and "concept" in mainchooserlist):
                 mainchooserlist.remove("concept")
-            if(random.randint(0,4) < insanitylevel and "landscape" in mainchooserlist):
+            if(random.randint(4,7) > insanitylevel and "landscape" in mainchooserlist):
                 mainchooserlist.remove("landscape")
-            if(random.randint(0,4) < insanitylevel and "object" in mainchooserlist):
+            if(random.randint(4,7) > insanitylevel and "object" in mainchooserlist):
                 mainchooserlist.remove("object")
-            if(random.randint(0,8) < insanitylevel and "animal" in mainchooserlist):
+            if(random.randint(4,9) > insanitylevel and "animal" in mainchooserlist):
                 mainchooserlist.remove("animal")
         
         # second for landscapes
@@ -978,13 +978,13 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             # remove the shizzle based on chance?
             # we want it to be MORE diverce when the insanity level raises
             # in this case, raise the chance for a landscape, gets more wierd when going above 5
-            if(random.randint(0,6) < insanitylevel and "concept" in mainchooserlist):
+            if(random.randint(4,7) > insanitylevel and "concept" in mainchooserlist):
                 mainchooserlist.remove("concept")
-            if(random.randint(0,4) < insanitylevel and "animal" in mainchooserlist):
+            if(random.randint(4,7) > insanitylevel and "animal" in mainchooserlist):
                 mainchooserlist.remove("animal")
-            if(random.randint(0,4) < insanitylevel and "object" in mainchooserlist):
+            if(random.randint(4,7) > insanitylevel and "object" in mainchooserlist):
                 mainchooserlist.remove("object")
-            if(random.randint(0,8) < insanitylevel and "humanoid" in mainchooserlist):
+            if(random.randint(4,9) > insanitylevel and "humanoid" in mainchooserlist):
                 mainchooserlist.remove("humanoid")
  
 
@@ -1005,7 +1005,36 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 subjectchooser = "animal as human"
         if(mainchooser == "humanoid"):
             #humanoidsubjectchooserlist = ["human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation", "firstname"]
+            # Lets put generic humans as a more 'normal' value. Manwoman relation as the least picked.
+            # balanced around 5, to have more normal man/woman
+            # lower values even more stable
+            # Upper values are still quite random
+            humanoidsubjectchooserlistbackup = humanoidsubjectchooserlist.copy() # make a backup of the list
+
+            if(random.randint(4,13) > insanitylevel and "manwomanrelation" in humanoidsubjectchooserlist):
+                humanoidsubjectchooserlist.remove("manwomanrelation")
+            if(random.randint(4,13) > insanitylevel and "firstname" in humanoidsubjectchooserlist):
+                humanoidsubjectchooserlist.remove("firstname")
+            if(random.randint(3,11) > insanitylevel and "job" in humanoidsubjectchooserlist):
+                humanoidsubjectchooserlist.remove("job")
+            if(random.randint(3,11) > insanitylevel and "fictional" in humanoidsubjectchooserlist):
+                humanoidsubjectchooserlist.remove("fictional")
+            if(random.randint(3,11) > insanitylevel and "non fictional" in humanoidsubjectchooserlist):
+                humanoidsubjectchooserlist.remove("non fictional")
+            if(random.randint(3,11) > insanitylevel and "humanoid" in humanoidsubjectchooserlist):
+                humanoidsubjectchooserlist.remove("humanoid")
+            # more random stuff on higher levels
+            if(random.randint(8,13) < insanitylevel and "human" in humanoidsubjectchooserlist):
+                humanoidsubjectchooserlist.remove("human")
+            
+            # if we accidently remove everything, then restore the backup list
+            if(not bool(humanoidsubjectchooserlist)):
+                humanoidsubjectchooserlist = humanoidsubjectchooserlistbackup
+                        
             subjectchooser = random.choice(humanoidsubjectchooserlist)
+            
+            
+            
             if(subtypehumanoid != "all"):
                 if(subtypehumanoid == "generic humans"):
                     subjectchooser = "human"

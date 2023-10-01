@@ -52,7 +52,7 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
     print("All done!")
 
 generateprompts(10,5
-                ,"" # subject
+                ,"humanoid" # subject
                 ,"all" # artists
                 ,"all",False,"","","PREFIXPROMPT" 
                 ,"SUFFIXPROMPT -artiststyle-"

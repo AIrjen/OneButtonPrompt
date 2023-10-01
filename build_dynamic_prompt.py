@@ -128,21 +128,23 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     # all else will be more constrained per type, to produce better images.
     # the popular artists will be used more the lower the insanitylevel is
     # Future: add in personal artists lists as well
-    artisttypes = ["popular", "3D",	"abstract",	"angular", "anime"	,"architecture",	"art nouveau",	"art deco",	"baroque",	"bauhaus", 	"cartoon",	"character",	"children's illustration", 	"cityscape", 	"clean",	"cloudscape",	"collage",	"colorful",	"comics",	"cubism",	"dark",	"detailed", 	"digital",	"expressionism",	"fantasy",	"fashion",	"fauvism",	"figurativism",	"gore",	"graffiti",	"graphic design",	"high contrast",	"horror",	"impressionism",	"installation",	"landscape",	"light",	"line drawing",	"low contrast",	"luminism",	"magical realism",	"manga",	"melanin",	"messy",	"monochromatic",	"nature",	"nudity",	"photography",	"pop art",	"portrait",	"primitivism",	"psychedelic",	"realism",	"renaissance",	"romanticism",	"scene",	"sci-fi",	"sculpture",	"seascape",	"space",	"stained glass",	"still life",	"storybook realism",	"street art",	"streetscape",	"surrealism",	"symbolism",	"textile",	"ukiyo-e",	"vibrant",	"watercolor",	"whimsical"]
+    artisttypes = ["popular", "3D",	"abstract",	"angular", "anime"	,"architecture",	"art nouveau",	"art deco",	"baroque",	"bauhaus", 	"cartoon",	"character",	"children's illustration", 	"cityscape", 	"clean",	"cloudscape",	"collage",	"colorful",	"comics",	"cubism",	"dark",	"detailed", 	"digital",	"expressionism",	"fantasy",	"fashion",	"fauvism",	"figurativism",	"gore",	"graffiti",	"graphic design",	"high contrast",	"horror",	"impressionism",	"installation",	"landscape",	"light",	"line drawing",	"low contrast",	"luminism",	"magical realism",	"manga",	"melanin",	"messy",	"monochromatic",	"nature",	"photography",	"pop art",	"portrait",	"primitivism",	"psychedelic",	"realism",	"renaissance",	"romanticism",	"scene",	"sci-fi",	"sculpture",	"seascape",	"space",	"stained glass",	"still life",	"storybook realism",	"street art",	"streetscape",	"surrealism",	"symbolism",	"textile",	"ukiyo-e",	"vibrant",	"watercolor",	"whimsical"]
     artiststyleselector = ""
+    artiststyleselectormode = "normal"
     if(artists == "all" and common_dist(insanitylevel)):
         artiststyleselector = random.choice(artisttypes)
         artists = artiststyleselector
     elif(artists == "all"):
+        artiststyleselectormode = "custom"
         artists = "popular"
-        artistpopularstyles = ["anime", "detailed", 	"digital", "fantasy",	"fashion" , "concept", "graphic design" , "photography",  "portrait",  "sci-fi", "realism"]
-        artiststyleselector = random.choice(artistpopularstyles)
+        # artistpopularstyles = ["anime", "detailed", 	"digital", "fantasy",	"fashion" , "concept", "graphic design" , "photography",  "portrait",  "sci-fi", "realism"]
+        # artiststyleselector = random.choice(artistpopularstyles)
 
 
 
     artistlist = []
     # create artist list to use in the code, maybe based on category  or personal lists
-    if(artists != "all (wild)" and artists != "none" and artists.startswith("personal_artists") == False and artists.startswith("personal artists") == False):
+    if(artists != "all (wild)" and artists != "all" and artists != "none" and artists.startswith("personal_artists") == False and artists.startswith("personal artists") == False):
         artistlist = artist_category_csv_to_list("artists_and_category",artists)
     elif(artists.startswith("personal_artists") == True or artists.startswith("personal artists") == True):
         artists = artists.replace(" ","_",-1) # add underscores back in
@@ -1203,8 +1205,12 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
                 #completeprompt = add_from_csv(completeprompt, "artists", 0, "art by ","")
                 if(step == minstep):
+                    # sometimes do this
                     if(giventypeofimage=="" and imagetype == "all" and random.randint(0, 1) == 0):
-                        completeprompt += artiststyleselector + " art "
+                        if(artiststyleselectormode == "normal"):
+                            completeprompt += artiststyleselector + " art "
+                        else:
+                            completeprompt += "-artiststyle- art "
                     artistbylist = ["art by", "designed by", "stylized by", "by"]
                 else:
                     artistbylist = [""]
@@ -1251,6 +1257,10 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
             completeprompt += ", "
 
+            
+            # sometimes do this as well
+            if(giventypeofimage=="" and imagetype == "all" and random.randint(0, 2) == 0):
+                completeprompt += "-artiststyle- art, "
 
 
             if artistmode in ["enhancing"]:
@@ -2126,13 +2136,13 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         #  keywordsinstring = any(word.lower() in givensubject.lower() for word in keywordslist)
         for wildcard in allwildcardslistnohybrid:
             attachedlist = allwildcardslistnohybridlists[allwildcardslistnohybrid.index(wildcard)]
-            completeprompt = replacewildcard(completeprompt, insanitylevel, wildcard, attachedlist,False, advancedprompting)
+            completeprompt = replacewildcard(completeprompt, insanitylevel, wildcard, attachedlist,False, advancedprompting, artiststyleselector)
 
 
         
         for wildcard in allwildcardslistwithhybrid:
             attachedlist = allwildcardslistwithhybridlists[allwildcardslistwithhybrid.index(wildcard)]
-            completeprompt = replacewildcard(completeprompt, insanitylevel, wildcard, attachedlist,True, advancedprompting)
+            completeprompt = replacewildcard(completeprompt, insanitylevel, wildcard, attachedlist,True, advancedprompting, artiststyleselector)
 
 
       
@@ -2686,7 +2696,7 @@ def createpromptvariant(prompt = "", insanitylevel = 5, antivalues = "" , gender
     return completeprompt
 
     # function
-def replacewildcard(completeprompt, insanitylevel, wildcard,listname, activatehybridorswap, advancedprompting):
+def replacewildcard(completeprompt, insanitylevel, wildcard,listname, activatehybridorswap, advancedprompting, artiststyleselector = ""):
 
     if(len(listname) == 0):
         # handling empty lists
@@ -2717,14 +2727,39 @@ def replacewildcard(completeprompt, insanitylevel, wildcard,listname, activatehy
                 replacementvalue = random.choice(listname)
                 if(wildcard not in ["-heshe-", "-himher-","-hisher-"]):
                     listname.remove(replacementvalue)
+
+
                 
             else:
                 replacementvalue = ""
+
+            # override for artist and artiststyle, only for first artist
+            if(wildcard == "-artist-" and "-artiststyle-" in completeprompt):
+                artiststyles = []
+                artiststyle = []
+                chosenartiststyle = ""
+                artiststyles = artist_category_by_category_csv_to_list("artists_and_category",replacementvalue)
+                artiststyle = artiststyles[0].split(",")
+
+                artiststyle = list(filter(lambda x: len(x) > 0, artiststyle)) # remove empty values
+
+                print(artiststyles)
+                print(artiststyle)
+                if(artiststyleselector in artiststyle):
+                    artiststyle.remove(artiststyleselector)
+                # keep on looping until we have no more wildcards or no more styles to choose from
+                # leftovers will be removed in the cleaning step
+                while bool(artiststyle) and "-artiststyle-" in completeprompt:
+                
+                    chosenartiststyle = random.choice(artiststyle)
+                    completeprompt = completeprompt.replace("-artiststyle-",chosenartiststyle ,1)
+                    artiststyle.remove(chosenartiststyle)
 
             # Sneaky overrides for "same" wildcards
             # Are overwritten with their first parent
             if(wildcard == "-outfit-" or wildcard == "-minioutfit-"):
                 completeprompt = completeprompt.replace("-sameoutfit-", replacementvalue,1)
+
 
             if(wildcard in ["-human-"
                             ,"-humanoid-"
@@ -2831,6 +2866,8 @@ def cleanup(completeprompt, advancedprompting):
     completeprompt = re.sub('of a of a', 'of a', completeprompt)
 
     completeprompt = re.sub('art art', 'art', completeprompt)
+    completeprompt = re.sub('-artiststyle- art', '', completeprompt)
+    completeprompt = re.sub('-artiststyle-', '', completeprompt)
 
     
     completeprompt = re.sub('(?<!\()\s?\(', ' (', completeprompt)

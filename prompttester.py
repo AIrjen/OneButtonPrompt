@@ -53,8 +53,9 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
 
 generateprompts(10,5
                 ,"" # subject
-                ,"all","all",False,"","","PREFIXPROMPT" 
-                ,"SUFFIXPROMPT -heshe- is looking here"
+                ,"all"
+                ,"all",False,"","","PREFIXPROMPT" 
+                ,"SUFFIXPROMPT -artiststyle-"
                 ,"",1,""
                 ,"" # subject override
                 ,True,

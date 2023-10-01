@@ -945,6 +945,51 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
         # main chooser: 0 object, 1 animal, 2 humanoid, 3 landscape, 4 event/concept
         #mainchooserlist = ["object","animal","humanoid", "landscape", "concept"]
+
+        # ["popular", "3D",	"abstract",	"angular", "anime"	,"architecture",	"art nouveau",	"art deco",	"baroque",	"bauhaus", 	"cartoon",	"character",	"children's illustration", 	"cityscape", 	"clean",	"cloudscape",	"collage",	"colorful",	"comics",	"cubism",	"dark",	"detailed", 	"digital",	"expressionism",	"fantasy",	"fashion",	"fauvism",	"figurativism",	"gore",	"graffiti",	"graphic design",	"high contrast",	"horror",	"impressionism",	"installation",	"landscape",	"light",	"line drawing",	"low contrast",	"luminism",	"magical realism",	"manga",	"melanin",	"messy",	"monochromatic",	"nature",	"photography",	"pop art",	"portrait",	"primitivism",	"psychedelic",	"realism",	"renaissance",	"romanticism",	"scene",	"sci-fi",	"sculpture",	"seascape",	"space",	"stained glass",	"still life",	"storybook realism",	"street art",	"streetscape",	"surrealism",	"symbolism",	"textile",	"ukiyo-e",	"vibrant",	"watercolor",	"whimsical"]
+    
+        # Some new logic, lets base the main chooser list on the chosen art category, to make it more cohorent
+        # first for humanoids
+        artiststylelistforchecking = ["popular", "3D",	"anime"	"art nouveau",	"art deco",	"character", "fantasy",	"fashion", "manga", "photography","portrait","sci-fi"]
+        if((artiststyleselector in artiststylelistforchecking
+           or artists in artiststylelistforchecking)
+           and (forcesubject == "all" or forcesubject == "")):
+
+            # remove the shizzle based on chance?
+            # we want it to be MORE diverce when the insanity level raises
+            # in this case, raise the chance for a humanoid, gets more wierd when going above 5
+            if(random.randint(0,5) < insanitylevel and "concept" in mainchooserlist):
+                mainchooserlist.remove("concept")
+            if(random.randint(0,4) < insanitylevel and "landscape" in mainchooserlist):
+                mainchooserlist.remove("landscape")
+            if(random.randint(0,4) < insanitylevel and "object" in mainchooserlist):
+                mainchooserlist.remove("object")
+            if(random.randint(0,8) < insanitylevel and "animal" in mainchooserlist):
+                mainchooserlist.remove("animal")
+        
+        # second for landscapes
+        # Some new logic, lets base the main chooser list on the chosen art category, to make it more cohorent
+        artiststylelistforchecking = ["architecture","bauhaus", "cityscape", "cloudscape","impressionism",	"installation",	"landscape","magical realism",	"nature", "romanticism","seascape",	"space",	"streetscape"]
+    
+        if((artiststyleselector in artiststylelistforchecking
+           or artists in artiststylelistforchecking)
+           and (forcesubject == "all" or forcesubject == "")):
+ 
+            # remove the shizzle based on chance?
+            # we want it to be MORE diverce when the insanity level raises
+            # in this case, raise the chance for a landscape, gets more wierd when going above 5
+            if(random.randint(0,6) < insanitylevel and "concept" in mainchooserlist):
+                mainchooserlist.remove("concept")
+            if(random.randint(0,4) < insanitylevel and "animal" in mainchooserlist):
+                mainchooserlist.remove("animal")
+            if(random.randint(0,4) < insanitylevel and "object" in mainchooserlist):
+                mainchooserlist.remove("object")
+            if(random.randint(0,8) < insanitylevel and "humanoid" in mainchooserlist):
+                mainchooserlist.remove("humanoid")
+ 
+
+
+        
         mainchooser = random.choice(mainchooserlist)
         
         if(forcesubject != "" and forcesubject != "all"):

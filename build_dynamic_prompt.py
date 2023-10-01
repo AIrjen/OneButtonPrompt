@@ -137,8 +137,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     elif(artists == "all"):
         artiststyleselectormode = "custom"
         artists = "popular"
-        # artistpopularstyles = ["anime", "detailed", 	"digital", "fantasy",	"fashion" , "concept", "graphic design" , "photography",  "portrait",  "sci-fi", "realism"]
-        # artiststyleselector = random.choice(artistpopularstyles)
+    else:
+        artiststyleselectormode = "custom"
 
 
 
@@ -1152,7 +1152,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         # start artist part
 
         artistsplacement = "front"
-        if(chance_roll(insanitylevel, artistsatbackchance) and onlyartists == False):
+        # remove the artistsatbackchange to be depended on the insanitylevel, we would like this to be a set chance
+        if(random.randint(0, 2) == 0 and onlyartists == False):
             artistlocations = ["back", "middle"]
             artistsplacement = random.choice(artistlocations)
 
@@ -1683,6 +1684,92 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             completeprompt += "-focus-, "
             
 
+        # artists in the middle, can happen as well:
+
+        if(artists != "none" and artistsplacement == "middle" and generateartist == True):
+            completeprompt += ", "
+            
+            # sometimes do this as well, but now in the front of the artists
+            if(giventypeofimage=="" and imagetype == "all" and random.randint(0, 2) == 0):
+                completeprompt += "-artiststyle- art, "
+
+            # take 1-3 artists, weighted to 1-2
+            step = random.randint(0, 1)
+            minstep = step
+            end = random.randint(1, insanitylevel3)
+
+
+
+
+            # determine artist mode:
+            # normal
+            # hybrid |
+            # switching A:B:X
+            # adding at step x  a:X
+            # stopping at step x ::X
+
+            
+            modeselector = random.randint(0,10)
+            if modeselector < 4 and end - step >= 2:
+                artistmodeslist = ["hybrid", "stopping", "adding", "switching"]
+                artistmode = artistmodeslist[modeselector]
+                if(advancedprompting == False):
+                    artistmode = "normal"
+                if artistmode in ["hybrid","switching"] and end - step == 1:
+                    artistmode = "normal"
+            # if there are not enough artists in the list, then just go normal
+            if(len(artistlist) < 3):
+                artistmode = "normal"
+            
+            if artistmode in ["hybrid", "stopping", "adding","switching"]:
+                completeprompt += " ["
+                
+            while step < end: 
+                if(normal_dist(insanitylevel)):
+                    isweighted = 1
+                
+                if isweighted == 1:
+                    completeprompt += " ("
+
+                #completeprompt = add_from_csv(completeprompt, "artists", 0, "art by ","")
+                if(step == minstep):
+                    # sometimes do this
+                    if(giventypeofimage=="" and imagetype == "all" and random.randint(0, 1) == 0):
+                        if(artiststyleselectormode == "normal"):
+                            completeprompt += artiststyleselector + " art "
+                        else:
+                            completeprompt += "-artiststyle- art "
+                    artistbylist = ["art by", "designed by", "stylized by", "by"]
+                else:
+                    artistbylist = [""]
+                completeprompt += random.choice(artistbylist) + " -artist-"
+                
+                if isweighted == 1:
+                    completeprompt += ":" + str(1 + (random.randint(-3,3)/10)) + ")"       
+                
+                if artistmode in ["hybrid"] and not end - step == 1:
+                    completeprompt += "|"
+                if artistmode in ["switching"] and not end - step == 1:
+                    completeprompt += ":"
+            
+                if artistmode not in ["hybrid", "switching"]and not end - step == 1:
+                    completeprompt += ","
+                
+                isweighted = 0
+                
+                step = step + 1
+
+            if artistmode in ["stopping"]:
+                completeprompt += "::"
+                completeprompt += str(random.randint(1,19))
+            
+            if artistmode in ["switching","adding"]:
+                completeprompt += ":" + str(random.randint(1,18))
+            if artistmode in ["hybrid", "stopping","adding", "switching"]:
+                completeprompt += "] "
+            
+            completeprompt += ", "
+            # end of the artist stuff
 
         # others
         if(chance_roll(insanitylevel, directionchance) and generatedirection == True):
@@ -1900,6 +1987,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             completeprompt += ", "
             # take 1-3 artists, weighted to 1-2
             step = random.randint(0, 1)
+            minstep = step
             end = random.randint(1, insanitylevel3)
 
 
@@ -1936,7 +2024,17 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                     completeprompt += " ("
 
                 #completeprompt = add_from_csv(completeprompt, "artists", 0, "art by ","")
-                completeprompt += "-artist-"
+                if(step == minstep):
+                    # sometimes do this
+                    if(giventypeofimage=="" and imagetype == "all" and random.randint(0, 1) == 0):
+                        if(artiststyleselectormode == "normal"):
+                            completeprompt += artiststyleselector + " art "
+                        else:
+                            completeprompt += "-artiststyle- art "
+                    artistbylist = ["art by", "designed by", "stylized by", "by"]
+                else:
+                    artistbylist = [""]
+                completeprompt += random.choice(artistbylist) + " -artist-"
                 
                 if isweighted == 1:
                     completeprompt += ":" + str(1 + (random.randint(-3,3)/10)) + ")"       
@@ -2743,10 +2841,13 @@ def replacewildcard(completeprompt, insanitylevel, wildcard,listname, activatehy
 
                 artiststyle = list(filter(lambda x: len(x) > 0, artiststyle)) # remove empty values
 
-                print(artiststyles)
-                print(artiststyle)
                 if(artiststyleselector in artiststyle):
                     artiststyle.remove(artiststyleselector)
+
+                # Sorry folks, this only works when you directly select it as a style
+                if("nudity" in artiststyle):
+                    artiststyle.remove("nudity")
+
                 # keep on looping until we have no more wildcards or no more styles to choose from
                 # leftovers will be removed in the cleaning step
                 while bool(artiststyle) and "-artiststyle-" in completeprompt:
@@ -2866,6 +2967,7 @@ def cleanup(completeprompt, advancedprompting):
     completeprompt = re.sub('of a of a', 'of a', completeprompt)
 
     completeprompt = re.sub('art art', 'art', completeprompt)
+    completeprompt = re.sub('-artiststyle- art,', '', completeprompt)
     completeprompt = re.sub('-artiststyle- art', '', completeprompt)
     completeprompt = re.sub('-artiststyle-', '', completeprompt)
 

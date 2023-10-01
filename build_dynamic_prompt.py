@@ -1250,7 +1250,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 completeprompt = replacewildcard(completeprompt, insanitylevel, "-artist-", artistlist, False, False)
                     
                 # clean it up
-                completeprompt = cleanup(completeprompt, advancedprompting)
+                completeprompt = cleanup(completeprompt, advancedprompting, insanitylevel)
 
                 print("only generated these artists:" + completeprompt)
                 return completeprompt
@@ -2283,7 +2283,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     completeprompt = parse_custom_functions(completeprompt, insanitylevel)
     
     # clean it up
-    completeprompt = cleanup(completeprompt, advancedprompting)
+    completeprompt = cleanup(completeprompt, advancedprompting, insanitylevel)
 
     #just for me, some fun with posting fake dev messages (ala old sim games)
     if(random.randint(1, 50)==1):
@@ -2785,7 +2785,7 @@ def createpromptvariant(prompt = "", insanitylevel = 5, antivalues = "" , gender
         
         
     # clean it up
-    completeprompt = cleanup(completeprompt, advancedprompting)
+    completeprompt = cleanup(completeprompt, advancedprompting, insanitylevel)
     
 
 
@@ -2837,7 +2837,7 @@ def replacewildcard(completeprompt, insanitylevel, wildcard,listname, activatehy
                 artiststyle = []
                 chosenartiststyle = ""
                 artiststyles = artist_category_by_category_csv_to_list("artists_and_category",replacementvalue)
-                artiststyle = artiststyles[0].split(",")
+                artiststyle = [x.strip() for x in artiststyles[0].split(",")]
 
                 artiststyle = list(filter(lambda x: len(x) > 0, artiststyle)) # remove empty values
 
@@ -2908,7 +2908,7 @@ def replace_match(match):
     words = match.group(0)[1:-1].split('|')
     return words[0]
 
-def cleanup(completeprompt, advancedprompting):
+def cleanup(completeprompt, advancedprompting, insanitylevel = 5):
 
     # first, move LoRA's to the back dynamically
 
@@ -2932,6 +2932,11 @@ def cleanup(completeprompt, advancedprompting):
 
     # sometimes if there are not enough artist, we get left we things formed as (:1.2)
     completeprompt = re.sub('\(\:\d+\.\d+\)', '', completeprompt) 
+
+    # lets also remove some wierd stuff on lower insanitylevels
+    if(insanitylevel < 7):
+        completeprompt = completeprompt.replace("DayGlo", " ")
+        completeprompt = completeprompt.replace("fluorescent", " ")
 
     # all cleanup steps moved here
     completeprompt = re.sub('\[ ', '[', completeprompt)

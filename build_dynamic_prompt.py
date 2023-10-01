@@ -128,7 +128,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     # all else will be more constrained per type, to produce better images.
     # the popular artists will be used more the lower the insanitylevel is
     # Future: add in personal artists lists as well
-    artisttypes = ["popular", "3D",	"abstract",	"angular", "anime"	,"architecture",	"art nouveau",	"art deco",	"baroque",	"bauhaus", 	"cartoon",	"character",	"children's illustration", 	"cityscape", 	"clean",	"cloudscape",	"collage",	"colorful",	"comics",	"cubism",	"dark",	"detailed", 	"digital",	"expressionism",	"fantasy",	"fashion",	"fauvism",	"figurativism",	"gore",	"graffiti",	"graphic design",	"high contrast",	"horror",	"impressionism",	"installation",	"landscape",	"light",	"line drawing",	"low contrast",	"luminism",	"magical realism",	"manga",	"melanin",	"messy",	"monochromatic",	"nature",	"photography",	"pop art",	"portrait",	"primitivism",	"psychedelic",	"realism",	"renaissance",	"romanticism",	"scene",	"sci-fi",	"sculpture",	"seascape",	"space",	"stained glass",	"still life",	"storybook realism",	"street art",	"streetscape",	"surrealism",	"symbolism",	"textile",	"ukiyo-e",	"vibrant",	"watercolor",	"whimsical"]
+    artisttypes = ["popular", "3D",	"abstract",	"angular", "anime"	,"architecture",	"art nouveau",	"art deco",	"baroque",	"bauhaus", 	"cartoon",	"character",	"children's illustration", 	"cityscape", 	"clean",	"cloudscape",	"collage",	"colorful",	"comics",	"cubism",	"dark",	"detailed", 	"digital",	"expressionism",	"fantasy",	"fashion",	"fauvism",	"figurativism",	"graffiti",	"graphic design",	"high contrast",	"horror",	"impressionism",	"installation",	"landscape",	"light",	"line drawing",	"low contrast",	"luminism",	"magical realism",	"manga",	"melanin",	"messy",	"monochromatic",	"nature",	"photography",	"pop art",	"portrait",	"primitivism",	"psychedelic",	"realism",	"renaissance",	"romanticism",	"scene",	"sci-fi",	"sculpture",	"seascape",	"space",	"stained glass",	"still life",	"storybook realism",	"street art",	"streetscape",	"surrealism",	"symbolism",	"textile",	"ukiyo-e",	"vibrant",	"watercolor",	"whimsical"]
     artiststyleselector = ""
     artiststyleselectormode = "normal"
     if(artists == "all" and common_dist(insanitylevel)):
@@ -1211,7 +1211,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 if(rare_dist(insanitylevel) and bool(imagetypelist)):
                     completeprompt += "-imagetype-, "
                 step = step + 1 
-            completeprompt += " ("
+            
 
 
          # start styles mode here
@@ -1362,7 +1362,16 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             # one in 6 images is a complex/other type
                 if(chance_roll(insanitylevel, imagetypequalitychance) and generateimagetypequality):
                     completeprompt += "-imagetypequality- "
-                if(random.randint(0,5) < 5):
+                if("photography" in artiststyleselector
+                        or "photography" in artists):
+                    completeprompt += " photograph, "
+                elif("portrait" in artiststyleselector 
+                        or "portrait" in artists):
+                    completeprompt += " portrait, "
+                if("landscape" in artiststyleselector
+                        or "landscape" in artists):
+                    completeprompt += " landscape, "
+                elif(random.randint(0,5) < 5):
                     completeprompt += " -imagetype-, "
                 else:
                     othertype = 1
@@ -1407,13 +1416,16 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         # start subject building
         if(generatesubject == True):
         # start with descriptive qualities
-        
-            # Common to have 1 description, uncommon to have 2
-            if(chance_roll(insanitylevel, subjectdescriptor1chance) and generatedescriptors == True):
-                completeprompt += "-descriptor- "
 
-            if(chance_roll(insanitylevel, subjectdescriptor2chance) and generatedescriptors == True):
-                completeprompt += "-descriptor- "
+            # Sometimes the descriptors are at the back, in more natural language. Lets determine.
+            descriptorsintheback = random.randint(0,2)
+            if(descriptorsintheback < 2):
+                # Common to have 1 description, uncommon to have 2
+                if(chance_roll(insanitylevel, subjectdescriptor1chance) and generatedescriptors == True):
+                    completeprompt += "-descriptor- "
+
+                if(chance_roll(insanitylevel, subjectdescriptor2chance) and generatedescriptors == True):
+                    completeprompt += "-descriptor- "
 
             if(subjectchooser in ["animal as human,","human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation","firstname"] and chance_roll(insanitylevel, subjectbodytypechance) and generatebodytype == True):
                 completeprompt += "-bodytype- "
@@ -1469,8 +1481,6 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                     completeprompt += " " + givensubject + " "
                 
                 hybridorswap = ""
-                # completion of strenght end
-                completeprompt += "-objectstrengthend-"
 
             if(mainchooser == "animal"):
                 # first add a wildcard that can be used to create prompt strenght
@@ -1507,12 +1517,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 
                 hybridorswap = ""
 
-                # completion of strenght end
-                completeprompt += "-objectstrengthend-"
-
-                if(legendary_dist(insanitylevel)):
-                    animaladdedsomething = 1
-                    completeprompt += "-animalsuffixaddition- "
+                
             
             # if we have a given subject, we should skip making an actual subject
             if(mainchooser == "humanoid"):
@@ -1591,13 +1596,20 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
                 else:
                     completeprompt += " " + givensubject + " "  
-
-                # completion of strenght end
-                completeprompt += "-objectstrengthend-"   
+ 
             
              # sometimes add a suffix for more fun!
             if( (mainchooser == "humanoid" or mainchooser == "animal" or mainchooser == "object") and  chance_roll(insanitylevel, subjectconceptsuffixchance)):
                 completeprompt += " of -conceptsuffix- "
+
+            if(mainchooser == "humanoid" or mainchooser == "animal" or mainchooser == "object"):
+            # completion of strenght end
+                completeprompt += "-objectstrengthend-"  
+            
+            if(mainchooser == 'animal' and legendary_dist(insanitylevel)):
+                animaladdedsomething = 1
+                completeprompt += " -animalsuffixaddition- "
+            
             
             if(subjectchooser == "landscape"):
                 # first add a wildcard that can be used to create prompt strenght
@@ -1664,7 +1676,13 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 # completion of strenght end
                 completeprompt += "-objectstrengthend-"
 
+            if(descriptorsintheback == 2):
+                # Common to have 1 description, uncommon to have 2
+                if(chance_roll(insanitylevel, subjectdescriptor1chance) and generatedescriptors == True):
+                    completeprompt += ", OR(;-heshe- is;normal) OR(;a very;rare) -descriptor- "
 
+                    if(chance_roll(insanitylevel, subjectdescriptor2chance) and generatedescriptors == True):
+                        completeprompt += " and -descriptor- "
 
         # object additions
         for i in range(objectadditionsrepeats):
@@ -2003,7 +2021,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         
         # start second part of massive madness here
         if(massivemadnessmode == True):
-            completeprompt += ":1.3), "
+            completeprompt += ", "
             step = 0
             end = random.randint(1, insanitylevel) + 1
             while step < end:
@@ -2163,29 +2181,40 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
     # In front and the back?
     completeprompt = parse_custom_functions(completeprompt, insanitylevel)
-
+    
     # Sometimes change he/she to the actual subject
-    if(normal_dist(insanitylevel)
-       and  "-human-" in completeprompt or
-            "-humanoid-" in completeprompt or
-            "-manwoman-"  in completeprompt or                           
-            "-job-" in completeprompt or
-            "-fictional-" in completeprompt or
-            "-nonfictional-" in completeprompt or
-            "-firstname-" in completeprompt or
-            "-malefemale-" in completeprompt):
-        completeprompt = completeprompt.replace("-heshe-", "-samehumansubject-",1)
+    # Doesnt work if someone puts in a manual subject
+    if(mainchooser == "humanoid" and givensubject == ""):
+        samehumanreplacementlist = ["-heshe-","-heshe-","-heshe-","-heshe-","-heshe-", "-samehumansubject-", "-samehumansubject-", "-samehumansubject-", "-samehumansubject-", "-samehumansubject-"]
+        random.shuffle(samehumanreplacementlist)
+        
+        # Convert completeprompt to a list to allow character-wise manipulation
+        completeprompt_list = list(completeprompt)
+        # Iterate over the characters in completeprompt_list
+        for i in range(len(completeprompt_list) - len("-heshe-") + 1):
+            if "".join(completeprompt_list[i:i+len("-heshe-")]) == "-heshe-":
+                # Replace -heshe- with a value from the shuffled list
+                replacement = samehumanreplacementlist.pop()
+                completeprompt_list[i:i+len("-heshe-")] = replacement
+
+        # Convert the list back to a string
+        completeprompt = "".join(completeprompt_list)
 
         # Sometimes change he/she to the actual subject
-    if(normal_dist(insanitylevel)
-       and "-animal-" in completeprompt or                          
-            "-object-" in completeprompt or
-            "-vehicle-" in completeprompt or
-            "-food-" in completeprompt or
-            "-objecttotal-" in completeprompt or
-            "-space-" in completeprompt or
-            "-flora-" in completeprompt):
-        completeprompt = completeprompt.replace("-heshe-", "-sameothersubject-",1)
+    if(mainchooser in  ["animal", "object"] and givensubject == ""):
+        sameobjectreplacementlist = ["-heshe-","-heshe-","-heshe-","-heshe-","-heshe-", "-sameothersubject-", "-sameothersubject-", "-sameothersubject-", "-sameothersubject-", "-sameothersubject-"]
+        random.shuffle(sameobjectreplacementlist)
+        # Convert completeprompt to a list to allow character-wise manipulation
+        completeprompt_list = list(completeprompt)
+
+        # Iterate over the characters in completeprompt_list
+        for i in range(len(completeprompt_list) - len("-heshe-") + 1):
+            if "".join(completeprompt_list[i:i+len("-heshe-")]) == "-heshe-":
+                # Replace -heshe- with a value from the shuffled list
+                replacement = sameobjectreplacementlist.pop()
+                completeprompt_list[i:i+len("-heshe-")] = replacement
+        # Convert the list back to a string
+        completeprompt = "".join(completeprompt_list)
 
     # hair descriptor
     if(rare_dist(insanitylevel)): # Use base outfit descriptor, until we are not.
@@ -2857,7 +2886,6 @@ def createpromptvariant(prompt = "", insanitylevel = 5, antivalues = "" , gender
 
 
         
-        
     # clean it up
     completeprompt = cleanup(completeprompt, advancedprompting, insanitylevel)
     
@@ -2930,11 +2958,23 @@ def replacewildcard(completeprompt, insanitylevel, wildcard,listname, activatehy
                     completeprompt = completeprompt.replace("-artiststyle-",chosenartiststyle ,1)
                     artiststyle.remove(chosenartiststyle)
 
+            
+            
             # Sneaky overrides for "same" wildcards
             # Are overwritten with their first parent
             if(wildcard == "-outfit-" or wildcard == "-minioutfit-"):
                 completeprompt = completeprompt.replace("-sameoutfit-", replacementvalue,1)
 
+            # Why do it in this detail?? Because we can:
+            # Check if "from" exists in the string. For example Chun Li from Streetfighter, becomes Chun li
+            if "from" in replacementvalue:
+                # Find the index of "from" in the string
+                from_index = replacementvalue.find("from")
+
+                # Remove everything from and including "from"
+                replacementvalueforoverrides = replacementvalue[:from_index].strip()
+            else:
+                replacementvalueforoverrides = replacementvalue
 
             if(wildcard in ["-human-"
                             ,"-humanoid-"
@@ -2942,20 +2982,20 @@ def replacewildcard(completeprompt, insanitylevel, wildcard,listname, activatehy
                             , "-job-"]
                             and "-samehumansubject-" in completeprompt):
                             if(completeprompt.index(wildcard) < completeprompt.index("-samehumansubject-")):
-                                completeprompt = completeprompt.replace("-samehumansubject-", "the " + replacementvalue)
+                                completeprompt = completeprompt.replace("-samehumansubject-", "the " + replacementvalueforoverrides)
             
             if(wildcard in ["-fictional-"
                             , "-nonfictional-"
                             , "-firstname-"]
                             and "-samehumansubject-" in completeprompt):
                             if(completeprompt.index(wildcard) < completeprompt.index("-samehumansubject-")):
-                                completeprompt = completeprompt.replace("-samehumansubject-", replacementvalue)
+                                completeprompt = completeprompt.replace("-samehumansubject-", replacementvalueforoverrides)
 
             # This one last, since then it is the only subject we have left
             if(wildcard in ["-malefemale-"]
                and "-samehumansubject-" in completeprompt):
                if(completeprompt.index(wildcard) < completeprompt.index("-samehumansubject-")):
-                    completeprompt = completeprompt.replace("-samehumansubject-", "the " + replacementvalue,1)
+                    completeprompt = completeprompt.replace("-samehumansubject-", "the " + replacementvalueforoverrides,1)
 
             if(wildcard in ["-animal-"                         
                             , "-object-"
@@ -2966,13 +3006,13 @@ def replacewildcard(completeprompt, insanitylevel, wildcard,listname, activatehy
                             , "-flora-"]
                         and "-sameothersubject-" in completeprompt):
                 if(completeprompt.index(wildcard) < completeprompt.index("-sameothersubject-")):
-                            completeprompt = completeprompt.replace("-sameothersubject-", "the " + replacementvalue,1)
+                            completeprompt = completeprompt.replace("-sameothersubject-", "the " + replacementvalueforoverrides,1)
 
 
 
-
-            
             completeprompt = completeprompt.replace(wildcard, replacementvalue,1)
+            
+            
 
 
     return completeprompt

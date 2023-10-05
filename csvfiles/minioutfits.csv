@@ -1,8 +1,8 @@
-outfit
-clothes
-armor
-dress
-suit
-robe
-costume
-tunic
+OR(;elegant;casual;uncommon) outfit?both
+clothes?both
+OR(;heavy;medium;light;uncommon) armor?both
+OR(;A-line;maxi;formal;Halter;Midi;mini;Off-the-shoulder;Peplum;Ruffled;Sheath;Strapless;wedding;uncommon) dress?female
+OR(;business;formal;uncommon) suit?both
+robe?both
+costume?both
+tunic?both

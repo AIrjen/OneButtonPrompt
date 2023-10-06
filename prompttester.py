@@ -52,13 +52,17 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
     print("All done!")
 
 generateprompts(10,8
-                ,"humanoid" # subject
+                ,"" # subject
                 ,"all" # artists
                 ,"all",False,"","","PREFIXPROMPT" 
                 ,"SUFFIXPROMPT -heshe- -heshe- -heshe- -minioutfit-"
                 ,"",1,""
                 ,"" # subject override
                 ,True,
-                "",100, "all", "all", "all", "all", False, True, 0
+                "",100, "all"
+                , "all" # object types
+                , "all"  # humanoid types
+                , "all" # concept types
+                , False, True, 0
                 , "" #outfit override
                 )

@@ -1,0 +1,8 @@
+manwomanmultiple?gender
+Twins?genderless
+Couple?genderless
+Triplets?genderless
+OR(Husband;Wife) and OR(Husband;Wife)?genderless
+a OR(group;couple) of OR(friends;people)?genderless
+OR(2;3;4;5) OR(women;girls)?female
+OR(2;3;4;5) OR(men;boys)?male

@@ -88,6 +88,7 @@ generateflora = True
 generateanimal = True
 generatemanwoman = True
 generatemanwomanrelation = True
+generatemanwomanmultiple = True
 generatefictionalcharacter = True
 generatenonfictionalcharacter = True
 generatehumanoids = True
@@ -123,6 +124,8 @@ for item in config:
             generatemanwoman = False
         if item[0] == 'subject_manwomanrelation' and item[1] != 'on':
             generatemanwomanrelation = False
+        if item[0] == 'subject_manwomanmultiple' and item[1] != 'on':
+            generatemanwomanmultiple = False
         if item[0] == 'subject_fictional' and item[1] != 'on':
             generatefictionalcharacter = False
         if item[0] == 'subject_nonfictional' and item[1] != 'on':
@@ -153,7 +156,7 @@ if(generatevehicle or generateobject or generatefood or generatebuilding or gene
      subjects.append("object")
 if(generateanimal):
      subjects.append("animal")
-if(generatemanwoman or generatemanwomanrelation or generatefictionalcharacter or generatenonfictionalcharacter or generatehumanoids or generatejob):
+if(generatemanwoman or generatemanwomanrelation or generatefictionalcharacter or generatenonfictionalcharacter or generatehumanoids or generatejob or generatemanwomanmultiple):
      subjects.append("humanoid")
 if(generatelandscape):
      subjects.append("landscape")
@@ -195,6 +198,9 @@ if(generatejob):
      subjectsubtypeshumanoid.append("based on job or title")
 if(generatefirstnames):
      subjectsubtypeshumanoid.append("based on first name")
+if(generatemanwomanmultiple):
+     subjectsubtypeshumanoid.append("multiple humans")
+
 
 # concepts
 if(generateevent):

@@ -1430,7 +1430,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         elif(generateshot == True): 
             completeprompt += ", "
     
-
+        genjoboractivity = False
         # start subject building
         if(generatesubject == True):
         # start with descriptive qualities
@@ -1450,6 +1450,10 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                         completeprompt += "-humandescriptor- "
                     else:
                         completeprompt += "-descriptor- "
+            
+            # age, very rare to add.
+            if(subjectchooser in ["human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation", "manwomanmultiple","firstname"] and extraordinary_dist(insanitylevel)):
+                completeprompt += str(random.randint(20,99)) + " OR(y.o.;year old) "
 
             if(subjectchooser in ["animal as human,","human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation", "manwomanmultiple","firstname"] and chance_roll(insanitylevel, subjectbodytypechance) and generatebodytype == True):
                 completeprompt += "-bodytype- "
@@ -1542,7 +1546,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 hybridorswap = ""
 
              # move job or activity logic here. We want to place it at 2 different places maybe
-            genjoboractivity = False
+            
             if(subjectchooser in ["animal as human","human","fictional", "non fictional", "humanoid", "manwomanrelation", "manwomanmultiple","firstname"]  and chance_roll(insanitylevel, joboractivitychance) and humanspecial != 1 and generatesubject == True):
                 genjoboractivity = True
                 genjoboractivitylocationslist = ["front","middle","back", "back"]
@@ -1727,7 +1731,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                         elif(subjectchooser == "manwomanmultiple"):
                             completeprompt += ", the -samehumansubject are OR(;very;rare) -humandescriptor-"
                         else:
-                            completeprompt += ", OR(;the;normal) OR(-manwoman-;-samehumansubject-) is OR(;very;rare) -humandescriptor-"
+                            completeprompt += ", OR(the -manwoman-;-samehumansubject-) is OR(;very;rare) -humandescriptor-"
                     else:
                         completeprompt += ", OR(;-heshe- is;normal) OR(;very;rare) -descriptor- "
 

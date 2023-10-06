@@ -78,7 +78,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     humanactivitylist = csv_to_list("human_activities",antilist)
     humanoidlist = csv_to_list("humanoids",antilist)
     imagetypelist = csv_to_list("imagetypes",antilist)
-    joblist = csv_to_list("jobs",antilist)
+    joblist = csv_to_list(csvfilename="jobs",antilist=antilist,skipheader=True,gender=gender)
     lenslist = csv_to_list("lenses",antilist)
     lightinglist = csv_to_list("lighting",antilist)
     malefemalelist = csv_to_list(csvfilename="malefemale",antilist=antilist,skipheader=True,gender=gender)
@@ -1525,6 +1525,16 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 
                 hybridorswap = ""
 
+             # move job or activity logic here. We want to place it at 2 different places maybe
+            genjoboractivity = False
+            if(subjectchooser in ["animal as human","human","fictional", "non fictional", "humanoid", "manwomanrelation","firstname"]  and chance_roll(insanitylevel, joboractivitychance) and humanspecial != 1 and generatesubject == True):
+                genjoboractivity = True
+                genjoboractivitylocationslist = ["front","middle","back", "back"]
+                genjoboractivitylocation = random.choice(genjoboractivitylocationslist)
+    
+
+            if(genjoboractivity and genjoboractivitylocation=="front"):
+                completeprompt += "-job- "
                 
             
             # if we have a given subject, we should skip making an actual subject
@@ -1684,13 +1694,21 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 # completion of strenght end
                 completeprompt += "-objectstrengthend-"
 
+            if(genjoboractivity and genjoboractivitylocation=="middle"):
+                joboractivitylist = [joblist,humanactivitylist]
+                completeprompt += random.choice(random.choice(joboractivitylist)) + ", "
+            
+            
             if(descriptorsintheback == 2):
                 # Common to have 1 description, uncommon to have 2
                 if(chance_roll(insanitylevel, subjectdescriptor1chance) and generatedescriptors == True):
                     if(subjectchooser in ["animal as human,","human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation","firstname"]):
-                        completeprompt += ", OR(;-heshe- is;normal) OR(;a very;rare) -humandescriptor- "
+                        if(random.randint(0,3) > 0):
+                            completeprompt += ", OR(;-heshe- is;normal) OR(;very;rare) -humandescriptor- "
+                        else:
+                            completeprompt += ", OR(;the;normal) OR(-manwoman-;-samehumansubject-) is OR(;very;rare) -humandescriptor-"
                     else:
-                        completeprompt += ", OR(;-heshe- is;normal) OR(;a very;rare) -descriptor- "
+                        completeprompt += ", OR(;-heshe- is;normal) OR(;very;rare) -descriptor- "
 
                     if(chance_roll(insanitylevel, subjectdescriptor2chance) and generatedescriptors == True):
                         if(subjectchooser in ["animal as human,","human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation","firstname"]):
@@ -1733,7 +1751,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         # Job 
         # either go job or activity, not both
 
-        if(subjectchooser in ["animal as human","human","fictional", "non fictional", "humanoid", "manwomanrelation","firstname"]  and chance_roll(insanitylevel, joboractivitychance) and humanspecial != 1 and generatesubject == True):
+        if(genjoboractivity and genjoboractivitylocation=="back"):
             joboractivitylist = [joblist,humanactivitylist]
             completeprompt += random.choice(random.choice(joboractivitylist)) + ", "
 
@@ -2468,7 +2486,7 @@ def createpromptvariant(prompt = "", insanitylevel = 5, antivalues = "" , gender
     humanactivitylist = csv_to_list("human_activities",antilist)
     humanoidlist = csv_to_list("humanoids",antilist)
     imagetypelist = csv_to_list("imagetypes",antilist)
-    joblist = csv_to_list("jobs",antilist)
+    joblist = joblist = csv_to_list(csvfilename="jobs",antilist=antilist,skipheader=True,gender=gender)
     lenslist = csv_to_list("lenses",antilist)
     lightinglist = csv_to_list("lighting",antilist)
     malefemalelist = csv_to_list(csvfilename="malefemale",antilist=antilist,skipheader=True,gender=gender)
@@ -3110,6 +3128,7 @@ def cleanup(completeprompt, advancedprompting, insanitylevel = 5):
     while "  " in completeprompt:
         completeprompt = re.sub('  ', ' ', completeprompt)
     completeprompt = re.sub('a The', 'The', completeprompt)
+    completeprompt = re.sub('the the', 'the', completeprompt)
     completeprompt = re.sub(', ,', ',', completeprompt)
     completeprompt = re.sub(',,', ',', completeprompt)
 

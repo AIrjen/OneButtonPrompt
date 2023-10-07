@@ -66,6 +66,7 @@ overalladditionchance;extraordinary
 emojichance;legendary
 buildfacechance;legendary
 humanexpressionchance;rare
+humanvomitchance;rare
 joboractivitychance;normal
 # things in the middle of the prompt;
 custominputmidrepeats;2

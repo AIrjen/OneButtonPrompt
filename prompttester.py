@@ -52,14 +52,16 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
     print("All done!")
 
 generateprompts(10,5
-                ,"humanoid" # subject
-                ,"character" # artists
-                ,"all",False,"","","PREFIXPROMPT" 
-                ,"SUFFIXPROMPT -humanexpression-"
+                ,"all" # subject
+                ,"all" # artists
+                ,"all" # image type  "only other types", "only templates mode", "art blaster mode", "quality vomit mode", "color cannon mode", "unique art mode", "massive madness mode", "photo fantasy mode", "subject only mode", "fixed styles mode"
+                ,False,"","","PREFIXPROMPT" 
+                ,"SUFFIXPROMPT"
                 ,"",1,""
                 ,"" # subject override
                 ,True,
-                "",100, "all"
+                "",20
+                , "all" # gender
                 , "all" # object types
                 , "all"  # humanoid types
                 , "all" # concept types

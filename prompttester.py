@@ -51,11 +51,11 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
     print("")
     print("All done!")
 
-generateprompts(10,5
+generateprompts(10,8
                 ,"humanoid" # subject
                 ,"all" # artists
                 ,"all",False,"","","PREFIXPROMPT" 
-                ,"SUFFIXPROMPT a OR(group;couple;crowd;bunch) of OR(-fictional-;-nonfictional-;-humanoid-)s"
+                ,"SUFFIXPROMPT OR(;-heshe- has a ;rare) -buildfacepart- OR(; OR(,;and) -buildfacepart-;uncommon) OR(; and -buildfacepart-;legendary)"
                 ,"",1,""
                 ,"" # subject override
                 ,True,

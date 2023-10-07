@@ -210,6 +210,10 @@ class OneButtonPrompt:
                     "multiline": False, #True if you want the field to look like the one on the ClipTextEncode node
                     "default": ""
                 }),
+                "custom_outfit": ("STRING", {
+                    "multiline": False, # This is the overwrite for an outfit, super nice
+                    "default": ""
+                }),
                 "subject_subtype_objects": (subjectsubtypesobject, {"default": "all"}),
                 "subject_subtypes_humanoids": (subjectsubtypeshumanoid, {"default": "all"}),
                 "humanoids_gender": (genders, {"default": "all"}),
@@ -229,8 +233,8 @@ class OneButtonPrompt:
 
     CATEGORY = "OneButtonPrompt"
     
-    def Comfy_OBP(self, insanitylevel, custom_subject, seed, artist, imagetype, subject, imagemodechance, humanoids_gender, subject_subtype_objects, subject_subtypes_humanoids, subject_subtypes_concepts, emojis):
-        generatedprompt = build_dynamic_prompt(insanitylevel,subject,artist,imagetype,False,"","","",1,"",custom_subject,True,"",imagemodechance, humanoids_gender, subject_subtype_objects, subject_subtypes_humanoids, subject_subtypes_concepts, False, emojis, seed)
+    def Comfy_OBP(self, insanitylevel, custom_subject, seed, artist, imagetype, subject, imagemodechance, humanoids_gender, subject_subtype_objects, subject_subtypes_humanoids, subject_subtypes_concepts, emojis, custom_outfit):
+        generatedprompt = build_dynamic_prompt(insanitylevel,subject,artist,imagetype,False,"","","",1,"",custom_subject,True,"",imagemodechance, humanoids_gender, subject_subtype_objects, subject_subtypes_humanoids, subject_subtypes_concepts, False, emojis, seed, custom_outfit)
         #print(generatedprompt)
         return (generatedprompt,)
 

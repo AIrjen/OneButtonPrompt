@@ -52,10 +52,10 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
     print("All done!")
 
 generateprompts(10,5
-                ,"animal" # subject
-                ,"all" # artists
+                ,"humanoid" # subject
+                ,"character" # artists
                 ,"all",False,"","","PREFIXPROMPT" 
-                ,"SUFFIXPROMPT OR(;-heshe- has ;rare) -facepart- of OR(-conceptsuffix-;-basicbitchdescriptor-;uncommon) OR(; and -facepart- of OR(-conceptsuffix-;-basicbitchdescriptor-;uncommon);uncommon)"
+                ,"SUFFIXPROMPT -humanexpression-"
                 ,"",1,""
                 ,"" # subject override
                 ,True,

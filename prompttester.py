@@ -55,7 +55,7 @@ generateprompts(10,8
                 ,"humanoid" # subject
                 ,"all" # artists
                 ,"all",False,"","","PREFIXPROMPT" 
-                ,"SUFFIXPROMPT OR(;-heshe- has a ;rare) -buildfacepart- OR(; OR(,;and) -buildfacepart-;uncommon) OR(; and -buildfacepart-;legendary)"
+                ,"SUFFIXPROMPT OR(;-heshe- has ;rare) OR(;very;legendary) -humandescriptor- -facepart- OR(; and -humandescriptor- -facepart-;uncommon)"
                 ,"",1,""
                 ,"" # subject override
                 ,True,

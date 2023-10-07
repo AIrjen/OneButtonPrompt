@@ -3225,6 +3225,11 @@ def cleanup(completeprompt, advancedprompting, insanitylevel = 5):
     completeprompt = re.sub('they is', 'they are', completeprompt)
     completeprompt = re.sub('they has', 'they have', completeprompt)
 
+    # some space tricks
+    completeprompt = re.sub('- shaped', '-shaped', completeprompt)
+    completeprompt = re.sub('mecha- ', 'mecha-', completeprompt)
+
+
     # clean up some hacky multiples with adding a s to the end
     completeprompt = re.sub('fs ', 'ves ', completeprompt)
     completeprompt = re.sub('fs,', 'ves,', completeprompt)

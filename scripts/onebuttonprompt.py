@@ -412,12 +412,20 @@ class Script(scripts.Script):
 
                         5. lines from songs - Picks a line from a song
 
+                        6. names from card based games - Picks a card name from various card games, such as magic the gathering, yugioh and many others.
+
                         </font>
                         
                         ### Artists
                         
                         <font size="2">
-                        Artists have a major impact on the result. Automatically, it will select between 0-3 artists out of 3483 artists for your prompt.  
+                        Artists have a major impact on the result.
+                        
+                        1. all - it will cohesivly add about between 0-3 artists and style description. 
+                        
+                        2. all (wild) - it will randomly select between 0-3 artists out of 3483 artists for your prompt. 
+
+                        Others will select within that artist category
                         
                         You can turn it off and maybe add your own in the prefix or suffix prompt fields
                         </font>
@@ -489,6 +497,14 @@ class Script(scripts.Script):
                         
                         It will then recognize the body type and not generate it. It also recognizes the keyword wearing, and will not generate an outfit.
 
+                        ### Overwrite outfit
+
+                        When you fill in the override outfit field, it will generate an outfit in the prompt based on the given value. It can be used in combination with override subject, but does not have to be. It works best with smaller descriptions of the outfit.
+
+                        An example would be: space suit, red dress, cloak.
+
+                        Works best when you set the subjects to to humanoid.
+                        
                         ### Other prompt fields
 
                         The existing prompt and negative prompt fields are ignored.

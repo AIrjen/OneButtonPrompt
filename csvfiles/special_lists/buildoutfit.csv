@@ -1,22 +1,11 @@
--descriptor- -outfit-
--descriptor- -culture- -outfit-
--descriptor- -culture- -color- -outfit-
--descriptor- -culture- -material- -outfit-
--descriptor- -culture- -material- -color- -outfit-
--culture- -outfit-
--material- -outfit-
--color- -outfit-
--material- -color- -outfit-
--descriptor- -color- -outfit-
--descriptor- -material- -outfit-
--descriptor- -material- -color- -outfit-
--job- -outfit-
--rpgclass- -minioutfit-
--season- -minioutfit-
--animal--style -outfit-
--minioutfit- designed by -brand-
--material-
--descriptor- -outfit- with -outfitprinttotal- -print-
--material- -minioutfit- with -outfitprinttotal- -print-
--color- -outfit- with -material- -print-
--outfit- in -pattern- -print-
+, OR(wearing;dressed in;in;normal) OR(;a very;rare) OR(;-outfitdescriptor-;normal) OR(;-color-;uncommon) OR(;-culture-;uncommon) OR(;-material-;rare) -outfit-
+, OR(wearing;dressed in;in;normal) OR(;-outfitdescriptor-;normal) OR(;-outfitdescriptor-;uncommon) OR(;-color-;uncommon) -outfit-
+, OR(wearing;dressed in;in;normal) OR(;-outfitdescriptor-;normal) OR(;-outfitdescriptor-;uncommon) OR(;-color-;uncommon) -outfit- OR(; and OR(;-outfitdescriptor-;uncommon) OR(;-color-;uncommon) -outfit-;rare)
+, OR(wearing;dressed in;in;normal) OR(-job-;-rpgclass-;-season-;-animal--style) OR(-minioutfit-;-outfit-;rare)
+, OR(wearing;dressed in;in;normal) OR(;-outfitdescriptor-;uncommon) OR(-minioutfit-;-outfit-;rare) OR(;OR(designed;made;inspired;forged) by -brand-;uncommon)
+, wearing OR(-material-;-color-) -overrideoutfit-
+, OR(wearing;dressed in;in;normal) OR(;-outfitdescriptor-;-material-;-color-;uncommon) OR(-outfit-;-minioutfit-;rare) with OR(-pattern-;-outfitprinttotal-;-material-;uncommon) -print-,
+, -heshe- is OR(wearing a;dressed in) OR(;-hisher-;-hisher- -outfitdescriptor-;rare) -outfit-, OR(-hisher-;The;normal) -sameoutfit- is OR(-outfitdescriptor-;-color-) OR( OR(and has;, It has) OR(-pattern-;-outfitprinttotal-;-material-;uncommon) -print- on it,; and is OR(made of;detailed with bits of) -material-;rare) OR(;, It looks OR(;very;rare) -outfitdescriptor- on -himher-,;unique)
+, -heshe- is OR(wearing;dressed in) OR(;-hisher-;-hisher- traditional;rare) -culture- -outfit-, OR(; OR(-hisher-;The;normal) -sameoutfit- is OR(-outfitdescriptor-;-color-),;normal) OR(;, It looks OR(;very;rare) -outfitdescriptor- on -himher-,;unique)
+, -heshe- is OR(wearing a;dressed in a) OR(;-outfitdescriptor-;normal) OR(;-color-;uncommon) OR(;-culture-;uncommon) OR(;-material-;rare) -outfit- that was OR(designed;made;inspired;forged) by -brand-, It is OR(;very;rare) OR(-outfitdescriptor-;-color-;normal) OR(;and OR(-outfitdescriptor-;-color-;normal);normal) OR(;, The -sameoutfit- looks OR(;very;rare) -outfitdescriptor- on -himher-,;unique)
+, OR(wearing;dressed in;in;normal) OR(;a very;rare) OR(;-outfitdescriptor-;normal) OR(-minioutfit-;-outfit-;uncommon), OR(-hisher-;The;normal) -sameoutfit- -outfitvomit-

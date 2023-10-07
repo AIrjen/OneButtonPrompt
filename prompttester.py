@@ -10,7 +10,7 @@ from build_dynamic_prompt import *
 
 
 
-def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", imagetype="all",onlyartists=False, workprompt="", antistring="",prefixprompt="", suffixprompt="", negativeprompt="",promptcompounderlevel = "1", seperator="comma",givensubject="",smartsubject=True,giventypeofimage="",imagemodechance=20, gender = "all", subtypeobject = "all", subtypehumanoid = "all", subtypeconcept = "all", advancedprompting = True, hardturnoffemojis=False):
+def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", imagetype="all",onlyartists=False, workprompt="", antistring="",prefixprompt="", suffixprompt="", negativeprompt="",promptcompounderlevel = "1", seperator="comma",givensubject="",smartsubject=True,giventypeofimage="",imagemodechance=20, gender = "all", subtypeobject = "all", subtypehumanoid = "all", subtypeconcept = "all", advancedprompting = True, hardturnoffemojis=False, seed=0, overrideoutfit=""):
     loops = int(amount)  # amount of images to generate
     steps = 0
    
@@ -18,7 +18,7 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
     while steps < loops:
         # build prompt
     
-        result = build_dynamic_prompt(insanitylevel,subject,artist,imagetype, onlyartists,antistring,prefixprompt,suffixprompt,promptcompounderlevel, seperator,givensubject,smartsubject,giventypeofimage,imagemodechance, gender, subtypeobject, subtypehumanoid, subtypeconcept, advancedprompting, hardturnoffemojis)
+        result = build_dynamic_prompt(insanitylevel,subject,artist,imagetype, onlyartists,antistring,prefixprompt,suffixprompt,promptcompounderlevel, seperator,givensubject,smartsubject,giventypeofimage,imagemodechance, gender, subtypeobject, subtypehumanoid, subtypeconcept, advancedprompting, hardturnoffemojis, seed, overrideoutfit)
 
         print("")
         print("loop " + str(steps))
@@ -38,7 +38,12 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
             print("")
             print(result)
             break
-        
+
+        if(" OR " in result):
+            print("There is a mistake in a OR statement")
+            print("")
+            print(result)
+            break
 
         steps += 1
     
@@ -46,4 +51,20 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
     print("")
     print("All done!")
 
-generateprompts(10,8,"all","all","all",False,"","","PREFIXPROMPT" ,"SUFFIXPROMPT","",1,"","",True,"",100, "all", "all", "all", "all", False, True)
+generateprompts(10,5
+                ,"all" # subject
+                ,"all (wild)" # artists
+                ,"all" # image type  "only other types", "only templates mode", "art blaster mode", "quality vomit mode", "color cannon mode", "unique art mode", "massive madness mode", "photo fantasy mode", "subject only mode", "fixed styles mode"
+                ,False,"","","PREFIXPROMPT" 
+                ,"SUFFIXPROMPT"
+                ,"",1,""
+                ,"" # subject override
+                ,True,
+                "",20
+                , "all" # gender
+                , "all" # object types
+                , "all"  # humanoid types
+                , "all" # concept types
+                , False, True, 0
+                , "" #outfit override
+                )

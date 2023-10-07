@@ -1,0 +1,11 @@
+has OR(;large;small;giant;tiny;normal) OR(;-color-;normal) bowOR(;s;normal)
+has OR(;large;small;giant;tiny;normal) OR(;Leather;normal) OR(belt;strap)OR(;s;normal)
+has OR(Metal;Iron;Diamond;Steel;metallic) OR(plates;plating)
+has a crest on chest
+is OR(zipped up;unzipped;partially unzipped)
+is OR(off-the-shoulder;strapless;cropped;ruffled)
+is OR(;very;normal) OR(large;small;tight;loose;baggy;delicate;wet;-outfitdescriptor-)
+is made from OR(satin;curderoy;lace;cotton;metal;-material-)
+has lots of OR(tiny;intricate) details OR(;and motifs;normal)
+is inspired by OR(nature;futurism;fashion;fantasy;sci-fi;ancient times;cinema)
+also has a OR(;large;flowing;rare) OR(hooded cloak;cloak;cape;coat;-season- coat)

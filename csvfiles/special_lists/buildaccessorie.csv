@@ -1,11 +1,1 @@
--accessory-
--descriptor- -accessory-
--culture- -accessory-
--color- -accessory-
--accessory-, -accessory-
--descriptor- -accessory-, -accessory-
--descriptor- -accessory-, -descriptor- -accessory-
--descriptor- -accessory-, -culture- -accessory-
--culture- -accessory-, -accessory-
--accessory-, -accessory-, -accessory-
--descriptor- -accessory-, -accessory-, -accessory-
+OR(;-heshe- has a;rare) OR(;-descriptor-;normal) OR(;-culture-;uncommon) OR(;-color-;uncommon) -accessory- OR(; , -accessory-; , -descriptor- -accessory-;rare) OR(; and -accessory-;unique)

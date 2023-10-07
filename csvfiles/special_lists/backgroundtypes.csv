@@ -1,27 +1,4 @@
-background is -location-
-background is [-location-|-location-]
-background is -building-
-background is [-building-|-building-]
-background is [-location-|-building-]
-at -location-
-at -building-
-near -location-
-near -building-
-inside a -building-
-inside a -descriptor- -building-
-background is -descriptor- -building-
-background is -descriptor- -location-
--descriptor- -location- in background
--descriptor- -building- in background
--building- in background
--location- in background
-plain background
-plain -color- background
-simple background
-simple -color- background
--color- and -color- background
--descriptor- background
--descriptor- -color- background
--culture- background
--space- background
--flora- in background
+OR(background is;at;near;inside a) OR(;-descriptor-;normal) OR(-location-;-building-;-minilocation-)
+OR(;-descriptor-;normal) OR(-location-;-building-;-minilocation-) in background
+OR(;plain;simple;detailed;complex;centered;normal) OR(;-descriptor-;-color-;-color- and -color-;-colorscheme-;normal) background
+OR(-culture-;-space-;-flora-;-minilocation- and -flora-;-season-) background

@@ -1,0 +1,8 @@
+OR(full;thick;thin;plump;cute;beautiful;Pouty;Sensual;Voluptuous;Delicate;Soft;Supple;Natural;Glossy;Defined;Tender;Rosy) lips
+OR(full;thick;thin;open;wide;narrow;expressive;Mysterious;cute;beautiful) mouth
+OR(detailed;clear;cute;beautiful;weary;tired;glowing;narrow;almond-shaped;round;large;small;Sparkling;Luminous;Dreamy;Mysterious) OR(;-eyecolor-;normal) eyes
+OR(thick;arched;bushy;small;large;Well-groomed;Sculpted;Tapered;Curved;Natural;Full;Elegant;Prominent) eyebrows
+OR(large;small;short;long;cute;Button;Upturned;Snub;Sharp;Flat;High-bridged;Bulbous) nose
+OR(strong;pronounced;weak;small;large;Chiseled;Square;Defined;Dimpled;Round;Double;Slender;Soft) chin
+OR(oval;wide;large;small;triangle;round-;square-;hearth-;diamond-;pear-;Rectangular;Long;Angular;Symmetrical;Asymmetrical;full;Slim;Narrow) shaped face
+OR(rosy;defined;Chubby;Sculpted;cute;beautiful;hollow;dimpled;peachy;defined;flushed;plump;rounded;high;subtle) cheeks

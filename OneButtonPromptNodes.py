@@ -13,7 +13,7 @@ sys.path.append(onebuttonprompt_path)
 from build_dynamic_prompt import *
 from csv_reader import *
 
-artists = ["all", "none", "popular", "greg mode", "3D",	"abstract",	"angular", "anime"	,"architecture",	"art nouveau",	"art deco",	"baroque",	"bauhaus", 	"cartoon",	"character",	"children's illustration", 	"cityscape", 	"clean",	"cloudscape",	"collage",	"colorful",	"comics",	"cubism",	"dark",	"detailed", 	"digital",	"expressionism",	"fantasy",	"fashion",	"fauvism",	"figurativism",	"gore",	"graffiti",	"graphic design",	"high contrast",	"horror",	"impressionism",	"installation",	"landscape",	"light",	"line drawing",	"low contrast",	"luminism",	"magical realism",	"manga",	"melanin",	"messy",	"monochromatic",	"nature",	"nudity",	"photography",	"pop art",	"portrait",	"primitivism",	"psychedelic",	"realism",	"renaissance",	"romanticism",	"scene",	"sci-fi",	"sculpture",	"seascape",	"space",	"stained glass",	"still life",	"storybook realism",	"street art",	"streetscape",	"surrealism",	"symbolism",	"textile",	"ukiyo-e",	"vibrant",	"watercolor",	"whimsical"]
+artists = ["all", "all (wild)", "none", "popular", "greg mode", "3D",	"abstract",	"angular", "anime"	,"architecture",	"art nouveau",	"art deco",	"baroque",	"bauhaus", 	"cartoon",	"character",	"children's illustration", 	"cityscape", 	"clean",	"cloudscape",	"collage",	"colorful",	"comics",	"cubism",	"dark",	"detailed", 	"digital",	"expressionism",	"fantasy",	"fashion",	"fauvism",	"figurativism",	"gore",	"graffiti",	"graphic design",	"high contrast",	"horror",	"impressionism",	"installation",	"landscape",	"light",	"line drawing",	"low contrast",	"luminism",	"magical realism",	"manga",	"melanin",	"messy",	"monochromatic",	"nature",	"nudity",	"photography",	"pop art",	"portrait",	"primitivism",	"psychedelic",	"realism",	"renaissance",	"romanticism",	"scene",	"sci-fi",	"sculpture",	"seascape",	"space",	"stained glass",	"still life",	"storybook realism",	"street art",	"streetscape",	"surrealism",	"symbolism",	"textile",	"ukiyo-e",	"vibrant",	"watercolor",	"whimsical"]
 imagetypes = ["all", "all - force multiple",  "photograph", "octane render","digital art","concept art", "painting", "portrait", "anime key visual", "only other types", "only templates mode", "art blaster mode", "quality vomit mode", "color cannon mode", "unique art mode", "massive madness mode", "photo fantasy mode", "subject only mode", "fixed styles mode"]
 subjects =["all", "object", "animal", "humanoid", "landscape", "concept"]
 genders = ["all", "male", "female"]
@@ -53,6 +53,7 @@ generateflora = True
 generateanimal = True
 generatemanwoman = True
 generatemanwomanrelation = True
+generatemanwomanmultiple = True
 generatefictionalcharacter = True
 generatenonfictionalcharacter = True
 generatehumanoids = True
@@ -88,6 +89,8 @@ for item in config:
             generatemanwoman = False
         if item[0] == 'subject_manwomanrelation' and item[1] != 'on':
             generatemanwomanrelation = False
+        if item[0] == 'subject_manwomanmultiple' and item[1] != 'on':
+            generatemanwomanmultiple = False
         if item[0] == 'subject_fictional' and item[1] != 'on':
             generatefictionalcharacter = False
         if item[0] == 'subject_nonfictional' and item[1] != 'on':
@@ -118,7 +121,7 @@ if(generatevehicle or generateobject or generatefood or generatebuilding or gene
      subjects.append("object")
 if(generateanimal):
      subjects.append("animal")
-if(generatemanwoman or generatemanwomanrelation or generatefictionalcharacter or generatenonfictionalcharacter or generatehumanoids or generatejob):
+if(generatemanwoman or generatemanwomanrelation or generatefictionalcharacter or generatenonfictionalcharacter or generatehumanoids or generatejob or generatemanwomanmultiple):
      subjects.append("humanoid")
 if(generatelandscape):
      subjects.append("landscape")
@@ -160,6 +163,8 @@ if(generatejob):
      subjectsubtypeshumanoid.append("based on job or title")
 if(generatefirstnames):
      subjectsubtypeshumanoid.append("based on first name")
+if(generatemanwomanmultiple):
+     subjectsubtypeshumanoid.append("multiple humans")
 
 # concepts
 if(generateevent):
@@ -205,6 +210,10 @@ class OneButtonPrompt:
                     "multiline": False, #True if you want the field to look like the one on the ClipTextEncode node
                     "default": ""
                 }),
+                "custom_outfit": ("STRING", {
+                    "multiline": False, # This is the overwrite for an outfit, super nice
+                    "default": ""
+                }),
                 "subject_subtype_objects": (subjectsubtypesobject, {"default": "all"}),
                 "subject_subtypes_humanoids": (subjectsubtypeshumanoid, {"default": "all"}),
                 "humanoids_gender": (genders, {"default": "all"}),
@@ -224,8 +233,8 @@ class OneButtonPrompt:
 
     CATEGORY = "OneButtonPrompt"
     
-    def Comfy_OBP(self, insanitylevel, custom_subject, seed, artist, imagetype, subject, imagemodechance, humanoids_gender, subject_subtype_objects, subject_subtypes_humanoids, subject_subtypes_concepts, emojis):
-        generatedprompt = build_dynamic_prompt(insanitylevel,subject,artist,imagetype,False,"","","",1,"",custom_subject,True,"",imagemodechance, humanoids_gender, subject_subtype_objects, subject_subtypes_humanoids, subject_subtypes_concepts, False, emojis, seed)
+    def Comfy_OBP(self, insanitylevel, custom_subject, seed, artist, imagetype, subject, imagemodechance, humanoids_gender, subject_subtype_objects, subject_subtypes_humanoids, subject_subtypes_concepts, emojis, custom_outfit):
+        generatedprompt = build_dynamic_prompt(insanitylevel,subject,artist,imagetype,False,"","","",1,"",custom_subject,True,"",imagemodechance, humanoids_gender, subject_subtype_objects, subject_subtypes_humanoids, subject_subtypes_concepts, False, emojis, seed, custom_outfit)
         #print(generatedprompt)
         return (generatedprompt,)
 

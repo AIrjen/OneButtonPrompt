@@ -32,5 +32,7 @@ cat
 - custom_subjects.csv
 Values to be attached to -subjectfromfile- wildcard. This wildcard can be used in the subject override field, and it will pick the subjects randomly from this file.
 
+- custom_outfits.csv
+Values to be attached to -outfitfromfile- wildcard. This wildcard can be used in the outfit override field, and it will pick the outfits randomly from this file.
 
 Happy prompting!

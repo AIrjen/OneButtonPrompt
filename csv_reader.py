@@ -48,7 +48,7 @@ def csv_to_list(csvfilename, antilist=[], directory="./csvfiles/", lowerandstrip
                                 for row in reader:
                                         value = row[0]
                                         if( 
-                                                (gender != "all" and row[1] == gender)
+                                                gender != "all" and (row[1] == gender or row[1] == "genderless" or row[1] == "both")
                                                 or gender == "all"
                                                 ):
                                                 if(value.lower().strip() not in antilist):
@@ -70,7 +70,7 @@ def csv_to_list(csvfilename, antilist=[], directory="./csvfiles/", lowerandstrip
                                         for row in reader:
                                                 value = row[0]
                                                 if( 
-                                                (gender != "all" and row[1] == gender)
+                                                gender != "all" and (row[1] == gender or row[1] == "genderless" or row[1] == "both")
                                                 or gender == "all"
                                                 ):
                                                         if(value.lower().strip() not in antilist):
@@ -94,6 +94,17 @@ def csv_to_list(csvfilename, antilist=[], directory="./csvfiles/", lowerandstrip
         
         return deduplicated_list
 
+def artist_category_by_category_csv_to_list(csvfilename,artist):
+        csvlist = []
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        full_path = os.path.join(script_dir, "./csvfiles/" )
+        with open(full_path + csvfilename + ".csv", "r", newline="",encoding="utf8") as file:
+                reader = csv.DictReader(file, delimiter=",")
+                for row in reader:
+                        if(row["Artist"] == artist):
+                                csvlist.append(row["Tags"])
+        return csvlist
+
 def artist_category_csv_to_list(csvfilename,category):
         csvlist = []
         script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -104,8 +115,6 @@ def artist_category_csv_to_list(csvfilename,category):
                         if(row[category] == "1"):
                                 csvlist.append(row["Artist"])
         return csvlist
-
-
 
 def load_config_csv():
         csvlist = []

@@ -1,25 +1,16 @@
-riding a -animal-
-holding a -object-
-driving a -vehicle-
-with a -animal-
-surrounded by -object-s
-surrounded by -flora-s
-surrounded by -space-
-eating -food-
-and -human-
-holding hands with -human-
-cosplaying as -fictional-
-with -color- skin
-with -material- skin
-feeling -mood-
-expression is -mood-
--miniactivity- in a -waterlocation-
--miniactivity- at a -location-
--miniactivity- in a -building-
-, torn -minioutfit-
-wearing -elaborateoutfit-
--animal- hybrid
-as -culture- -rpgclass-
-sitting in a -descriptor- -chair-
-inside a -container-
-- -humanoid-
+OR(;, -heshe- is;rare) OR(riding;with) a -animal-
+OR(;, -heshe- is;rare) holding a -object-
+OR(;, -heshe- is;rare) driving a -vehicle-
+OR(;, -heshe- is;rare) surrounded by OR(-object-s;-flora-s;-space-)
+OR(;, -heshe- is;rare) eating -food-
+OR(;, -heshe- is;rare) OR(and;holding hands with) -human-
+OR(;, -heshe- is;rare) cosplaying as -fictional-
+OR(with;, -heshe- is;rare) OR(-color-;-material-) skin
+OR(, -heshe- is;feeling;expression is) -mood-
+OR(;, -heshe- is;rare) -miniactivity- OR(in;at) a OR(-location-;-building-;-waterlocation-)
+OR(;, -heshe- is;rare) wearing -elaborateoutfit-
+- OR(-animal-;-humanoid-) OR(;hybrid;normal)
+OR(;, -heshe-;rare) as -culture- -rpgclass-
+OR(;, -heshe- is;rare) sitting in a OR(;-descriptor-;uncommon) -chair-
+OR(;, -heshe- is;rare) inside a -container-
+OR(;, -heshe- is;rare) OR(surrounded by;being looked at by) a OR(couple;group) of OR(;-descriptor-;uncommon) OR(people;-malefemale-s;animals) OR(;wearing OR(;-descriptor-;uncommon) -outfit-;rare)

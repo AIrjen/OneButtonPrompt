@@ -1727,7 +1727,11 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 # shots from inside can create cool effects in landscapes
                 if(chance_roll(insanitylevel, subjectlandscapeaddonlocationchance) and insideshot == 0):
                     insideshot = 1
-                    completeprompt += " from inside of a -addontolocationinside- "
+                    # lets cheat a bit here, we can do something cool I saw on reddit
+                    if(mainchooser=="humanoid" and legendary_dist(insanitylevel)):
+                        completeprompt += " looking at a -addontolocationinside- "
+                    else:
+                        completeprompt += " from inside of a -addontolocationinside- "
 
                 if(chance_roll(insanitylevel, subjectlandscapeaddonlocationchance) and insideshot == 0):
                     completeprompt += " and "
@@ -3312,6 +3316,8 @@ def cleanup(completeprompt, advancedprompting, insanitylevel = 5):
     completeprompt = re.sub('-artiststyle- art,', '', completeprompt)
     completeprompt = re.sub('-artiststyle- art', '', completeprompt)
     completeprompt = re.sub('-artiststyle-', '', completeprompt)
+    completeprompt = re.sub('- art ', '', completeprompt)
+    
 
     completeprompt = re.sub('a his', 'his', completeprompt)
     completeprompt = re.sub('a her', 'her', completeprompt)

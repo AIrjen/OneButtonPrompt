@@ -52,10 +52,10 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
     print("All done!")
 
 generateprompts(10,5
-                ,"humanoid" # subject
+                ,"landscape" # subject
                 ,"all" # artists
                 ,"all",False,"","","PREFIXPROMPT" 
-                ,"SUFFIXPROMPT , , OR(wearing;dressed in;in;normal) OR(;a very;rare) OR(;-outfitdescriptor-;normal) OR(-minioutfit-;-outfit-;uncommon), OR(-hisher-;The;normal) -sameoutfit- -outfitvomit-"
+                ,"SUFFIXPROMPT"
                 ,"",1,""
                 ,"" # subject override
                 ,True,

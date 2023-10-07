@@ -904,6 +904,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         hybridorswap = ""
         artistmode = "normal"
         insideshot = 0
+        buildingfullmode = False
       
         completeprompt += prefixprompt
 
@@ -999,7 +1000,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
  
 
 
-        
+        # choose the main subject type
         mainchooser = random.choice(mainchooserlist)
         
         if(forcesubject != "" and forcesubject != "all"):
@@ -1435,6 +1436,16 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         if(generatesubject == True):
         # start with descriptive qualities
 
+            # Once in a very rare while, we get a ... full of ...s
+            if(novel_dist(insanitylevel) and subjectchooser in ["animal", "animal as human,","human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation","firstname"]):         
+                buildingfullmode = True
+                insideshot = 1
+                heshelist = ["they"]
+                hisherlist = ["their"]
+                himherlist = ["them"]
+                completeprompt += "a OR(-building-;-location-;-waterlocation-;-container-;rare) full of "
+
+
             # Sometimes the descriptors are at the back, in more natural language. Lets determine.
             descriptorsintheback = random.randint(0,2)
             if(descriptorsintheback < 2):
@@ -1549,7 +1560,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             
             if(subjectchooser in ["animal as human","human","fictional", "non fictional", "humanoid", "manwomanrelation", "manwomanmultiple","firstname"]  and chance_roll(insanitylevel, joboractivitychance) and humanspecial != 1 and generatesubject == True):
                 genjoboractivity = True
-                genjoboractivitylocationslist = ["front","middle","back", "back"]
+                genjoboractivitylocationslist = ["front","middle", "middle","back","back", "back"]
                 genjoboractivitylocation = random.choice(genjoboractivitylocationslist)
     
 
@@ -1564,25 +1575,25 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 if(givensubject==""):
 
                     if(subjectchooser == "human"):
-                        completeprompt += "-manwoman- "
+                        completeprompt += "-manwoman-"
                     
                     if(subjectchooser == "manwomanrelation"):
-                        completeprompt += "-manwomanrelation- "
+                        completeprompt += "-manwomanrelation-"
 
                     if(subjectchooser == "manwomanmultiple"):
-                        completeprompt += "-manwomanmultiple- "
+                        completeprompt += "-manwomanmultiple-"
 
                     if(subjectchooser == "job"):
                         completeprompt += "-malefemale- "
-                        completeprompt += "-job- "
+                        completeprompt += "-job-"
 
                     if(subjectchooser == "fictional"):
-                        if(rare_dist(insanitylevel) and advancedprompting == True):
+                        if(rare_dist(insanitylevel) and advancedprompting == True and buildingfullmode == False):
                             hybridorswaplist = ["hybrid", "swap"]
                             hybridorswap = random.choice(hybridorswaplist)
                             completeprompt += "["
                         
-                        completeprompt += "-fictional- "
+                        completeprompt += "-fictional-"
 
                         if(hybridorswap == "hybrid"):
                             completeprompt += "|" + random.choice(hybridhumanlist) + " ] "
@@ -1591,12 +1602,12 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                         hybridorswap = ""
 
                     if(subjectchooser == "non fictional"):
-                        if(rare_dist(insanitylevel)  and advancedprompting == True):
+                        if(rare_dist(insanitylevel)  and advancedprompting == True and buildingfullmode == False):
                             hybridorswaplist = ["hybrid", "swap"]
                             hybridorswap = random.choice(hybridorswaplist)
                             completeprompt += "["
 
-                        completeprompt += "-nonfictional- "
+                        completeprompt += "-nonfictional-"
 
                         if(hybridorswap == "hybrid"):
                             completeprompt += "|" + random.choice(hybridhumanlist) + "] "
@@ -1607,12 +1618,12 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                     if(subjectchooser == "humanoid"):
                         if(gender != "all"):
                             completeprompt += "-malefemale- "
-                        if(rare_dist(insanitylevel)  and advancedprompting == True):
+                        if(rare_dist(insanitylevel)  and advancedprompting == True and buildingfullmode == False):
                             hybridorswaplist = ["hybrid", "swap"]
                             hybridorswap = random.choice(hybridorswaplist)
                             completeprompt += "["
                         
-                        completeprompt += "-humanoid- "
+                        completeprompt += "-humanoid-"
 
                         if(hybridorswap == "hybrid"):
                             completeprompt += "|" + random.choice(hybridhumanlist) + "] "
@@ -1621,19 +1632,21 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                         hybridorswap = ""
 
                     if(subjectchooser == "firstname"):
-                        if(rare_dist(insanitylevel)  and advancedprompting == True):
+                        if(rare_dist(insanitylevel)  and advancedprompting == True and buildingfullmode == False):
                             hybridorswaplist = ["hybrid", "swap"]
                             hybridorswap = random.choice(hybridorswaplist)
                             completeprompt += "["
                         
-                        completeprompt += "-firstname- "
+                        completeprompt += "-firstname-"
 
                         if(hybridorswap == "hybrid"):
                             completeprompt += "|" + "-firstname-" + "] "
                         if(hybridorswap == "swap"):
                             completeprompt += ":" + "-firstname-" + ":" + str(random.randint(1,5)) +  "] "
                         hybridorswap = ""
-
+                    if(buildingfullmode == True):
+                        completeprompt += "s"
+                    completeprompt += " "
 
                 else:
                     completeprompt += " " + givensubject + " "  
@@ -1678,7 +1691,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 completeprompt += "-objectstrengthend-"
 
                 # shots from inside can create cool effects in landscapes
-                if(chance_roll(insanitylevel, subjectlandscapeaddonlocationchance)):
+                if(chance_roll(insanitylevel, subjectlandscapeaddonlocationchance) and insideshot == 0):
                     insideshot = 1
                     completeprompt += " from inside of a -addontolocationinside- "
 
@@ -1729,7 +1742,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                         if(random.randint(0,3) > 0):
                             completeprompt += ", OR(;-heshe- is;normal) OR(;very;rare) -humandescriptor- "
                         elif(subjectchooser == "manwomanmultiple"):
-                            completeprompt += ", the -samehumansubject are OR(;very;rare) -humandescriptor-"
+                            completeprompt += ", the -samehumansubject- are OR(;very;rare) -humandescriptor-"
                         else:
                             completeprompt += ", OR(the -manwoman-;-samehumansubject-) is OR(;very;rare) -humandescriptor-"
                     else:
@@ -3152,6 +3165,7 @@ def cleanup(completeprompt, advancedprompting, insanitylevel = 5):
     completeprompt = re.sub(',:', ':', completeprompt)
 
     completeprompt = re.sub(',,', ', ', completeprompt)
+    completeprompt = re.sub(',,', ', ', completeprompt)
     completeprompt = re.sub(',,,', ', ', completeprompt)
     completeprompt = re.sub(', ,', ',', completeprompt)
     completeprompt = re.sub(' , ', ', ', completeprompt)
@@ -3168,6 +3182,15 @@ def cleanup(completeprompt, advancedprompting, insanitylevel = 5):
     completeprompt = re.sub(', of a', ' of a', completeprompt)
     completeprompt = re.sub('of a,', 'of a', completeprompt)
     completeprompt = re.sub('of a of a', 'of a', completeprompt)
+    completeprompt = re.sub(' a a ', ' a ', completeprompt)
+
+    # a / an
+    completeprompt = re.sub(' a a', ' an a', completeprompt)
+    completeprompt = re.sub(' a e', ' an e', completeprompt)
+    completeprompt = re.sub(' a i', ' an i', completeprompt)
+    completeprompt = re.sub(' a u', ' an u', completeprompt)
+    completeprompt = re.sub(' a o', ' an o', completeprompt)
+
 
     completeprompt = re.sub('art art', 'art', completeprompt)
     completeprompt = re.sub('-artiststyle- art,', '', completeprompt)
@@ -3184,6 +3207,14 @@ def cleanup(completeprompt, advancedprompting, insanitylevel = 5):
     completeprompt = re.sub('fs,', 'ves,', completeprompt)
     completeprompt = re.sub('sss ', 'ss ', completeprompt)
     completeprompt = re.sub('sss,', 'ss,', completeprompt)
+    completeprompt = re.sub(' Mans', ' Men,', completeprompt)
+    completeprompt = re.sub(' mans', ' men', completeprompt)
+    completeprompt = re.sub(' Womans,', ' Women', completeprompt)
+    completeprompt = re.sub(' womans,', ' women,', completeprompt)
+    completeprompt = re.sub('\(Mans', '(Men,', completeprompt)
+    completeprompt = re.sub('\(mans', '(men', completeprompt)
+    completeprompt = re.sub('\(Womans', '(Women', completeprompt)
+    completeprompt = re.sub('\(womans', '(women', completeprompt)
 
     
     completeprompt = re.sub('(?<!\()\s?\(', ' (', completeprompt)

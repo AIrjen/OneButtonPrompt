@@ -3179,6 +3179,12 @@ def cleanup(completeprompt, advancedprompting, insanitylevel = 5):
     completeprompt = re.sub('they is', 'they are', completeprompt)
     completeprompt = re.sub('they has', 'they have', completeprompt)
 
+    # clean up some hacky multiples with adding a s to the end
+    completeprompt = re.sub('fs ', 'ves ', completeprompt)
+    completeprompt = re.sub('fs,', 'ves,', completeprompt)
+    completeprompt = re.sub('sss ', 'ss ', completeprompt)
+    completeprompt = re.sub('sss,', 'ss,', completeprompt)
+
     
     completeprompt = re.sub('(?<!\()\s?\(', ' (', completeprompt)
     completeprompt = re.sub('\)(?![\s)])', ') ', completeprompt)

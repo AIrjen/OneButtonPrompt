@@ -55,7 +55,7 @@ generateprompts(10,5
                 ,"humanoid" # subject
                 ,"all" # artists
                 ,"all",False,"","","PREFIXPROMPT" 
-                ,"SUFFIXPROMPT -heshe- -heshe- -heshe- -minioutfit-"
+                ,"SUFFIXPROMPT a OR(group;couple;crowd;bunch) of OR(-fictional-;-nonfictional-;-humanoid-)s"
                 ,"",1,""
                 ,"" # subject override
                 ,True,

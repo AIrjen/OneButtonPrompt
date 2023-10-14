@@ -53,7 +53,7 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
 
 generateprompts(10,5
                 ,"all" # subject
-                ,"all (wild)" # artists
+                ,"all" # artists
                 ,"all" # image type  "only other types", "only templates mode", "art blaster mode", "quality vomit mode", "color cannon mode", "unique art mode", "massive madness mode", "photo fantasy mode", "subject only mode", "fixed styles mode"
                 ,False,"","","PREFIXPROMPT" 
                 ,"SUFFIXPROMPT"
@@ -63,7 +63,7 @@ generateprompts(10,5
                 "",20
                 , "all" # gender
                 , "all" # object types
-                , "all"  # humanoid types
+                , "all"  # humanoid types   --multiple humans
                 , "all" # concept types
                 , False, True, 0
                 , "" #outfit override

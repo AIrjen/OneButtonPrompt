@@ -1,9 +1,9 @@
-(-color- and -color-:0.7)
--color- and -color- details
--color- and -color- dust particles
--color- and -color- flakes
--color- and -color- fractal art
--color- and -color- splash
+(-colorcombination-:0.7)
+-colorcombination- details
+-colorcombination- dust particles
+-colorcombination- flakes
+-colorcombination- fractal art
+-colorcombination- splash
 -color- background
 -color- details
 -color- dust particles
@@ -16,6 +16,7 @@
 -color- power aura
 -color- sky
 -color- splash
+-colorcombination-
 -space-
 arcane
 behance
@@ -118,3 +119,4 @@ vintage
 Zentangle
 Liminal dream
 -basicbitchdescriptor-
+-color- mist

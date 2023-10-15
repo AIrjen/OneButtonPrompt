@@ -1426,6 +1426,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
                 # replace artist wildcards
                 completeprompt = replacewildcard(completeprompt, insanitylevel, "-artist-", artistlist, False, False)
+                completeprompt = replacewildcard(completeprompt, insanitylevel, "-gregmode-", gregmodelist, False, False)
                     
                 # clean it up
                 completeprompt = cleanup(completeprompt, advancedprompting, insanitylevel)

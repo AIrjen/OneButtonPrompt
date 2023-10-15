@@ -75,7 +75,8 @@ generateprompts(10,5
                 ,"all" # subject
                 ,"all" # artists
                 ,"all" # image type  "only other types", "only templates mode", "art blaster mode", "quality vomit mode", "color cannon mode", "unique art mode", "massive madness mode", "photo fantasy mode", "subject only mode", "fixed styles mode"
-                ,False,"","","PREFIXPROMPT" 
+                , False # only artists
+                ,"","","PREFIXPROMPT" 
                 ,"SUFFIXPROMPT"
                 ,"",1,""
                 ,"" # subject override

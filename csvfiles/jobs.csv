@@ -3,7 +3,8 @@ Abbot;both
 Abjurer;both
 Acrobat;both
 Activist;both
-Actor;both
+Actor;male
+Actress;female
 Adventurer;both
 Air traffic controller;both
 Airbender;both
@@ -55,6 +56,7 @@ Bladesinger;both
 Blood mage;both
 Bohemian;both
 Bollywood Dancer;both
+Boss;both
 Bookbinder;both
 Botanist;both
 Bounty hunter;both
@@ -116,7 +118,8 @@ Cyborg;both
 Dance teacher;both
 Dancer;both
 Dandy;male
-Dark knight;both
+Dark Knight;both
+Dark Souls Boss;both
 Deacon;both
 Death knight;both
 Death knight;both
@@ -130,7 +133,7 @@ Diplomat;both
 DJ;both
 Dockworker;both
 Doctor;both
-doll;both
+Doll;both
 Dragon knight;both
 Dragon rider;both
 Dragon slayer;both
@@ -351,9 +354,11 @@ Pilgrim;both
 Pilot;both
 Pirate captain;both
 Pirate;both
-plain jane;female
+Plain Jane;female
 Playwright;both
 Plumber;both
+Pokemon Gym Leader;both
+Pokemon trainer;both
 Police officer;both
 Politician;both
 Pop Singer;both
@@ -489,6 +494,8 @@ Vampire hunter;both
 Vampire lord;both
 Veterinarian;both
 Vicar;both
+Video Game Character;both
+Video Game Boss;both
 Viking Berserker;both
 Viking Warrior;both
 Viking;both

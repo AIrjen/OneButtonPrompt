@@ -44,6 +44,26 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
             print("")
             print(result)
             break
+        
+        # Use regex to find words enclosed by hyphens, the wildcards1
+        # make some minor exceptions
+        resultnew = result
+        resultnew = resultnew.replace("-eye-", " eye ")
+        resultnew = resultnew.replace("-of-", " of ")
+        resultnew = resultnew.replace("-the-", " the ")
+        resultnew = resultnew.replace("-up-", " up ")
+        matches = re.findall(r'-\w+-', resultnew)
+
+        # Filter out matches with commas and spaces
+        wildcards = [match for match in matches if ',' not in match and ' ' not in match]
+        
+
+        if(wildcards):
+            print("There is a wildcard still in the prompt")
+            print("")
+            print(result)
+            break
+
 
         steps += 1
     
@@ -52,7 +72,7 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
     print("All done!")
 
 generateprompts(10,5
-                ,"humanoid" # subject
+                ,"animal" # subject
                 ,"all" # artists
                 ,"all" # image type  "only other types", "only templates mode", "art blaster mode", "quality vomit mode", "color cannon mode", "unique art mode", "massive madness mode", "photo fantasy mode", "subject only mode", "fixed styles mode"
                 ,False,"","","PREFIXPROMPT" 
@@ -63,8 +83,10 @@ generateprompts(10,5
                 "",20
                 , "all" # gender
                 , "all" # object types
-                , "celebrities e.a."  # humanoid types   -- all,generic humans,generic human relations, multiple humans, celebrities e.a.,fictional,humanoids, based on job or title,based on first name
+                , "all"  # humanoid types   -- all,generic humans,generic human relations, multiple humans, celebrities e.a.,fictional,humanoids, based on job or title,based on first name
                 , "all" # concept types
-                , False, True, 0
+                , True  # prompt switching
+                , False  # Turn off emojis
+                , 0  # seed
                 , "" #outfit override
                 )

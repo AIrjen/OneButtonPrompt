@@ -72,7 +72,7 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
     print("All done!")
 
 generateprompts(10,5
-                ,"animal" # subject
+                ,"all" # subject
                 ,"all" # artists
                 ,"all" # image type  "only other types", "only templates mode", "art blaster mode", "quality vomit mode", "color cannon mode", "unique art mode", "massive madness mode", "photo fantasy mode", "subject only mode", "fixed styles mode"
                 ,False,"","","PREFIXPROMPT" 
@@ -85,8 +85,8 @@ generateprompts(10,5
                 , "all" # object types
                 , "all"  # humanoid types   -- all,generic humans,generic human relations, multiple humans, celebrities e.a.,fictional,humanoids, based on job or title,based on first name
                 , "all" # concept types
-                , True  # prompt switching
-                , False  # Turn off emojis
+                , False  # prompt switching
+                , True  # Turn off emojis
                 , 0  # seed
                 , "" #outfit override
                 )

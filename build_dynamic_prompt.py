@@ -184,7 +184,16 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         artists = artiststyleselector
     elif(artists == "all"):
         artiststyleselectormode = "custom"
-        artists = "popular"
+        # go popular! Or even worse, we go full greg mode!
+        if(common_dist(max(3,insanitylevel))):
+            artists = "popular"
+        # only on lower instanity levels anyway
+        elif(insanitylevel < 6):
+            artists = "greg mode"
+        else:
+            artists = "popular"
+
+
     else:
         artiststyleselectormode = "custom"
 
@@ -205,6 +214,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     popularartistlist = artist_category_csv_to_list("artists_and_category","popular")
     romanticismartistlist = artist_category_csv_to_list("artists_and_category","romanticism")
     photographyartistlist = artist_category_csv_to_list("artists_and_category","photography")
+    gregmodelist = csv_to_list("gregmode", antilist)
 
 
     # add any other custom lists
@@ -1321,90 +1331,95 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             artistsplacement = random.choice(artistlocations)
 
         if(artists != "none" and artistsplacement == "front" and generateartist == True):
-            # take 1-3 artists, weighted to 1-2
-            step = random.randint(0, 1)
-            minstep = step
-            end = random.randint(1, insanitylevel3)
+            if(artists == "greg mode"):
+                artistbylist = ["art by", "designed by", "stylized by", "by"]
+                completeprompt += random.choice(artistbylist) + " -gregmode- "
+            else:
+                    
+                # take 1-3 artists, weighted to 1-2
+                step = random.randint(0, 1)
+                minstep = step
+                end = random.randint(1, insanitylevel3)
 
 
 
 
-            # determine artist mode:
-            # normal
-            # hybrid |
-            # switching A:B:X
-            # adding at step x  a:X
-            # stopping at step x ::X
-            # enhancing from step  x
+                # determine artist mode:
+                # normal
+                # hybrid |
+                # switching A:B:X
+                # adding at step x  a:X
+                # stopping at step x ::X
+                # enhancing from step  x
 
 
 
 
-            modeselector = random.randint(0,10)
-            if modeselector < 5 and end - step >= 2:
-                artistmodeslist = ["hybrid", "stopping", "adding", "switching", "enhancing"]
-                artistmode = artistmodeslist[modeselector]
-                if(advancedprompting == False):
+                modeselector = random.randint(0,10)
+                if modeselector < 5 and end - step >= 2:
+                    artistmodeslist = ["hybrid", "stopping", "adding", "switching", "enhancing"]
+                    artistmode = artistmodeslist[modeselector]
+                    if(advancedprompting == False):
+                        artistmode = "normal"
+                    if (artistmode in ["hybrid","switching"] and end - step == 1):
+                        artistmode = "normal"
+                
+                if(onlyartists == True and artistmode == "enhancing"):
                     artistmode = "normal"
-                if (artistmode in ["hybrid","switching"] and end - step == 1):
+                # if there are not enough artists in the list, then just go normal
+                if(len(artistlist) < 3):
                     artistmode = "normal"
-            
-            if(onlyartists == True and artistmode == "enhancing"):
-                artistmode = "normal"
-            # if there are not enough artists in the list, then just go normal
-            if(len(artistlist) < 3):
-                artistmode = "normal"
-            if(onlyartists == True and step == end):
-                step = step - 1
+                if(onlyartists == True and step == end):
+                    step = step - 1
 
-            if artistmode in ["hybrid", "stopping", "adding","switching"]:
-                completeprompt += " ["
-                
-            while step < end: 
-                if(normal_dist(insanitylevel)):
-                    isweighted = 1
-                
-                if isweighted == 1:
-                    completeprompt += " ("
+                if artistmode in ["hybrid", "stopping", "adding","switching"]:
+                    completeprompt += " ["
+                    
+                while step < end: 
+                    if(normal_dist(insanitylevel)):
+                        isweighted = 1
+                    
+                    if isweighted == 1:
+                        completeprompt += " ("
 
-                #completeprompt = add_from_csv(completeprompt, "artists", 0, "art by ","")
-                if(step == minstep):
-                    # sometimes do this
-                    if(giventypeofimage=="" and imagetype == "all" and random.randint(0, 1) == 0):
-                        if(artiststyleselectormode == "normal"):
-                            completeprompt += artiststyleselector + " art "
-                        else:
-                            completeprompt += "-artiststyle- art "
-                    artistbylist = ["art by", "designed by", "stylized by", "by"]
-                else:
-                    artistbylist = [""]
-                completeprompt += random.choice(artistbylist) + " -artist-"
-                
-                if isweighted == 1:
-                    completeprompt += ":" + str(1 + (random.randint(-3,3)/10)) + ")"       
-                
-                if artistmode in ["hybrid"] and not end - step == 1:
-                    completeprompt += "|"
-                if artistmode in ["switching"] and not end - step == 1:
-                    completeprompt += ":"
-                
-                if artistmode not in ["hybrid", "switching"]and not end - step > 1:
-                    completeprompt += ","
-                elif artistmode not in ["hybrid", "switching"]and not end - step == 1:
-                    completeprompt += " and "
-                
-                isweighted = 0
-                
-                step = step + 1
+                    #completeprompt = add_from_csv(completeprompt, "artists", 0, "art by ","")
+                    if(step == minstep):
+                        # sometimes do this
+                        if(giventypeofimage=="" and imagetype == "all" and random.randint(0, 1) == 0):
+                            if(artiststyleselectormode == "normal"):
+                                completeprompt += artiststyleselector + " art "
+                            else:
+                                completeprompt += "-artiststyle- art "
+                        artistbylist = ["art by", "designed by", "stylized by", "by"]
+                    else:
+                        artistbylist = [""]
+                    completeprompt += random.choice(artistbylist) + " -artist-"
+                    
+                    if isweighted == 1:
+                        completeprompt += ":" + str(1 + (random.randint(-3,3)/10)) + ")"       
+                    
+                    if artistmode in ["hybrid"] and not end - step == 1:
+                        completeprompt += "|"
+                    if artistmode in ["switching"] and not end - step == 1:
+                        completeprompt += ":"
+                    
+                    if artistmode not in ["hybrid", "switching"]and not end - step > 1:
+                        completeprompt += ","
+                    elif artistmode not in ["hybrid", "switching"]and not end - step == 1:
+                        completeprompt += " and "
+                    
+                    isweighted = 0
+                    
+                    step = step + 1
 
-            if artistmode in ["stopping"]:
-                completeprompt += "::"
-                completeprompt += str(random.randint(1,19))
-            
-            if artistmode in ["switching","adding"]:
-                completeprompt += ":" + str(random.randint(1,18))
-            if artistmode in ["hybrid", "stopping","adding", "switching"]:
-                completeprompt += "] "
+                if artistmode in ["stopping"]:
+                    completeprompt += "::"
+                    completeprompt += str(random.randint(1,19))
+                
+                if artistmode in ["switching","adding"]:
+                    completeprompt += ":" + str(random.randint(1,18))
+                if artistmode in ["hybrid", "stopping","adding", "switching"]:
+                    completeprompt += "] "
 
 
             if(onlyartists == True):
@@ -1974,88 +1989,92 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
         if(artists != "none" and artistsplacement == "middle" and generateartist == True):
             completeprompt += ", "
-            
-            # sometimes do this as well, but now in the front of the artists
-            if(giventypeofimage=="" and imagetype == "all" and random.randint(0, 2) == 0):
-                completeprompt += "-artiststyle- art, "
+            if(artists == "greg mode"):
+                artistbylist = ["art by", "designed by", "stylized by", "by"]
+                completeprompt += random.choice(artistbylist) + " -gregmode- "
+            else:
+                
+                # sometimes do this as well, but now in the front of the artists
+                if(giventypeofimage=="" and imagetype == "all" and random.randint(0, 2) == 0):
+                    completeprompt += "-artiststyle- art, "
 
-            # take 1-3 artists, weighted to 1-2
-            step = random.randint(0, 1)
-            minstep = step
-            end = random.randint(1, insanitylevel3)
+                # take 1-3 artists, weighted to 1-2
+                step = random.randint(0, 1)
+                minstep = step
+                end = random.randint(1, insanitylevel3)
 
 
 
 
-            # determine artist mode:
-            # normal
-            # hybrid |
-            # switching A:B:X
-            # adding at step x  a:X
-            # stopping at step x ::X
+                # determine artist mode:
+                # normal
+                # hybrid |
+                # switching A:B:X
+                # adding at step x  a:X
+                # stopping at step x ::X
 
-            
-            modeselector = random.randint(0,10)
-            if modeselector < 4 and end - step >= 2:
-                artistmodeslist = ["hybrid", "stopping", "adding", "switching"]
-                artistmode = artistmodeslist[modeselector]
-                if(advancedprompting == False):
+                
+                modeselector = random.randint(0,10)
+                if modeselector < 4 and end - step >= 2:
+                    artistmodeslist = ["hybrid", "stopping", "adding", "switching"]
+                    artistmode = artistmodeslist[modeselector]
+                    if(advancedprompting == False):
+                        artistmode = "normal"
+                    if artistmode in ["hybrid","switching"] and end - step == 1:
+                        artistmode = "normal"
+                # if there are not enough artists in the list, then just go normal
+                if(len(artistlist) < 3):
                     artistmode = "normal"
-                if artistmode in ["hybrid","switching"] and end - step == 1:
-                    artistmode = "normal"
-            # if there are not enough artists in the list, then just go normal
-            if(len(artistlist) < 3):
-                artistmode = "normal"
-            
-            if artistmode in ["hybrid", "stopping", "adding","switching"]:
-                completeprompt += " ["
                 
-            while step < end: 
-                if(normal_dist(insanitylevel)):
-                    isweighted = 1
-                
-                if isweighted == 1:
-                    completeprompt += " ("
+                if artistmode in ["hybrid", "stopping", "adding","switching"]:
+                    completeprompt += " ["
+                    
+                while step < end: 
+                    if(normal_dist(insanitylevel)):
+                        isweighted = 1
+                    
+                    if isweighted == 1:
+                        completeprompt += " ("
 
-                #completeprompt = add_from_csv(completeprompt, "artists", 0, "art by ","")
-                if(step == minstep):
-                    # sometimes do this
-                    if(giventypeofimage=="" and imagetype == "all" and random.randint(0, 1) == 0):
-                        if(artiststyleselectormode == "normal"):
-                            completeprompt += artiststyleselector + " art "
-                        else:
-                            completeprompt += "-artiststyle- art "
-                    artistbylist = ["art by", "designed by", "stylized by", "by"]
-                else:
-                    artistbylist = [""]
-                completeprompt += random.choice(artistbylist) + " -artist-"
+                    #completeprompt = add_from_csv(completeprompt, "artists", 0, "art by ","")
+                    if(step == minstep):
+                        # sometimes do this
+                        if(giventypeofimage=="" and imagetype == "all" and random.randint(0, 1) == 0):
+                            if(artiststyleselectormode == "normal"):
+                                completeprompt += artiststyleselector + " art "
+                            else:
+                                completeprompt += "-artiststyle- art "
+                        artistbylist = ["art by", "designed by", "stylized by", "by"]
+                    else:
+                        artistbylist = [""]
+                    completeprompt += random.choice(artistbylist) + " -artist-"
+                    
+                    if isweighted == 1:
+                        completeprompt += ":" + str(1 + (random.randint(-3,3)/10)) + ")"       
+                    
+                    if artistmode in ["hybrid"] and not end - step == 1:
+                        completeprompt += "|"
+                    if artistmode in ["switching"] and not end - step == 1:
+                        completeprompt += ":"
                 
-                if isweighted == 1:
-                    completeprompt += ":" + str(1 + (random.randint(-3,3)/10)) + ")"       
-                
-                if artistmode in ["hybrid"] and not end - step == 1:
-                    completeprompt += "|"
-                if artistmode in ["switching"] and not end - step == 1:
-                    completeprompt += ":"
-            
-                if artistmode not in ["hybrid", "switching"]and not end - step == 1:
-                    completeprompt += ","
-                
-                isweighted = 0
-                
-                step = step + 1
+                    if artistmode not in ["hybrid", "switching"]and not end - step == 1:
+                        completeprompt += ","
+                    
+                    isweighted = 0
+                    
+                    step = step + 1
 
-            if artistmode in ["stopping"]:
-                completeprompt += "::"
-                completeprompt += str(random.randint(1,19))
-            
-            if artistmode in ["switching","adding"]:
-                completeprompt += ":" + str(random.randint(1,18))
-            if artistmode in ["hybrid", "stopping","adding", "switching"]:
-                completeprompt += "] "
-            
-            completeprompt += ", "
-            # end of the artist stuff
+                if artistmode in ["stopping"]:
+                    completeprompt += "::"
+                    completeprompt += str(random.randint(1,19))
+                
+                if artistmode in ["switching","adding"]:
+                    completeprompt += ":" + str(random.randint(1,18))
+                if artistmode in ["hybrid", "stopping","adding", "switching"]:
+                    completeprompt += "] "
+                
+                completeprompt += ", "
+                # end of the artist stuff
 
         # others
         if(chance_roll(insanitylevel, directionchance) and generatedirection == True):
@@ -2277,81 +2296,85 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
         if(artists != "none" and artistsplacement == "back" and generateartist == True):
             completeprompt += ", "
-            # take 1-3 artists, weighted to 1-2
-            step = random.randint(0, 1)
-            minstep = step
-            end = random.randint(1, insanitylevel3)
+            if(artists == "greg mode"):
+                artistbylist = ["art by", "designed by", "stylized by", "by"]
+                completeprompt += random.choice(artistbylist) + " -gregmode- "
+            else:
+                # take 1-3 artists, weighted to 1-2
+                step = random.randint(0, 1)
+                minstep = step
+                end = random.randint(1, insanitylevel3)
 
 
 
 
-            # determine artist mode:
-            # normal
-            # hybrid |
-            # switching A:B:X
-            # adding at step x  a:X
-            # stopping at step x ::X
+                # determine artist mode:
+                # normal
+                # hybrid |
+                # switching A:B:X
+                # adding at step x  a:X
+                # stopping at step x ::X
 
-            
-            modeselector = random.randint(0,10)
-            if modeselector < 4 and end - step >= 2:
-                artistmodeslist = ["hybrid", "stopping", "adding", "switching"]
-                artistmode = artistmodeslist[modeselector]
-                if(advancedprompting == False):
+                
+                modeselector = random.randint(0,10)
+                if modeselector < 4 and end - step >= 2:
+                    artistmodeslist = ["hybrid", "stopping", "adding", "switching"]
+                    artistmode = artistmodeslist[modeselector]
+                    if(advancedprompting == False):
+                        artistmode = "normal"
+                    if artistmode in ["hybrid","switching"] and end - step == 1:
+                        artistmode = "normal"
+                # if there are not enough artists in the list, then just go normal
+                if(len(artistlist) < 3):
                     artistmode = "normal"
-                if artistmode in ["hybrid","switching"] and end - step == 1:
-                    artistmode = "normal"
-            # if there are not enough artists in the list, then just go normal
-            if(len(artistlist) < 3):
-                artistmode = "normal"
-            
-            if artistmode in ["hybrid", "stopping", "adding","switching"]:
-                completeprompt += " ["
                 
-            while step < end: 
-                if(normal_dist(insanitylevel)):
-                    isweighted = 1
-                
-                if isweighted == 1:
-                    completeprompt += " ("
+                if artistmode in ["hybrid", "stopping", "adding","switching"]:
+                    completeprompt += " ["
+                    
+                while step < end: 
+                    if(normal_dist(insanitylevel)):
+                        isweighted = 1
+                    
+                    if isweighted == 1:
+                        completeprompt += " ("
 
-                #completeprompt = add_from_csv(completeprompt, "artists", 0, "art by ","")
-                if(step == minstep):
-                    # sometimes do this
-                    if(giventypeofimage=="" and imagetype == "all" and random.randint(0, 1) == 0):
-                        if(artiststyleselectormode == "normal"):
-                            completeprompt += artiststyleselector + " art "
-                        else:
-                            completeprompt += "-artiststyle- art "
-                    artistbylist = ["art by", "designed by", "stylized by", "by"]
-                else:
-                    artistbylist = [""]
-                completeprompt += random.choice(artistbylist) + " -artist-"
+                    #completeprompt = add_from_csv(completeprompt, "artists", 0, "art by ","")
+                    if(step == minstep):
+                        # sometimes do this
+                        if(giventypeofimage=="" and imagetype == "all" and random.randint(0, 1) == 0):
+                            if(artiststyleselectormode == "normal"):
+                                completeprompt += artiststyleselector + " art "
+                            else:
+                                completeprompt += "-artiststyle- art "
+                        artistbylist = ["art by", "designed by", "stylized by", "by"]
+                    else:
+                        artistbylist = [""]
+                    completeprompt += random.choice(artistbylist) + " -artist-"
+                    
+                    if isweighted == 1:
+                        completeprompt += ":" + str(1 + (random.randint(-3,3)/10)) + ")"       
+                    
+                    if artistmode in ["hybrid"] and not end - step == 1:
+                        completeprompt += "|"
+                    if artistmode in ["switching"] and not end - step == 1:
+                        completeprompt += ":"
                 
-                if isweighted == 1:
-                    completeprompt += ":" + str(1 + (random.randint(-3,3)/10)) + ")"       
-                
-                if artistmode in ["hybrid"] and not end - step == 1:
-                    completeprompt += "|"
-                if artistmode in ["switching"] and not end - step == 1:
-                    completeprompt += ":"
-            
-                if artistmode not in ["hybrid", "switching"]and not end - step == 1:
-                    completeprompt += ","
-                
-                isweighted = 0
-                
-                step = step + 1
+                    if artistmode not in ["hybrid", "switching"]and not end - step == 1:
+                        completeprompt += ","
+                    
+                    isweighted = 0
+                    
+                    step = step + 1
 
-            if artistmode in ["stopping"]:
-                completeprompt += "::"
-                completeprompt += str(random.randint(1,19))
-            
-            if artistmode in ["switching","adding"]:
-                completeprompt += ":" + str(random.randint(1,18))
-            if artistmode in ["hybrid", "stopping","adding", "switching"]:
-                completeprompt += "] "
-            # end of the artist stuff
+                if artistmode in ["stopping"]:
+                    completeprompt += "::"
+                    completeprompt += str(random.randint(1,19))
+                
+                if artistmode in ["switching","adding"]:
+                    completeprompt += ":" + str(random.randint(1,18))
+                if artistmode in ["hybrid", "stopping","adding", "switching"]:
+                    completeprompt += "] "
+                # end of the artist stuff
 
         
         
@@ -2612,9 +2635,10 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     "-oppositenonfictional-" in completeprompt or
     "-photoaddition-" in completeprompt or
     "-age-" in completeprompt or
-    "-agecalculator-" in completeprompt):
-        allwildcardslistnohybrid = [ "-color-","-object-", "-animal-", "-fictional-","-nonfictional-","-building-","-vehicle-","-location-","-conceptprefix-","-food-","-haircolor-","-hairstyle-","-job-", "-accessory-", "-humanoid-", "-manwoman-", "-human-", "-colorscheme-", "-mood-", "-genderdescription-", "-artmovement-", "-malefemale-", "-bodytype-", "-minilocation-", "-minilocationaddition-", "-pose-", "-season-", "-minioutfit-", "-elaborateoutfit-", "-minivomit-", "-vomit-", "-rpgclass-", "-subjectfromfile-","-subjectfromfile-", "-brand-", "-space-", "-artist-", "-imagetype-", "-othertype-", "-quality-", "-lighting-", "-camera-", "-lens-","-imagetypequality-", "-poemline-", "-songline-", "-greatwork-", "-artistfantasy-", "-artistpopular-", "-artistromanticism-", "-artistphotography-", "-emoji-", "-timeperiod-", "-shotsize-", "-musicgenre-", "-animaladdition-", "-addontolocationinside-", "-addontolocation-", "-objectaddition-", "-humanaddition-", "-overalladdition-", "-focus-", "-direction-", "-styletilora-", "-manwomanrelation-", "-waterlocation-", "-container-", "-firstname-", "-flora-", "-print-", "-miniactivity-", "-pattern-", "-animalsuffixaddition-", "-chair-", "-cardname-", "-covering-", "-heshe-", "-hisher-", "-himher-", "-outfitdescriptor-", "-hairdescriptor-", "-hairvomit-", "-humandescriptor-", "-manwomanmultiple-", "-facepart-", "-buildfacepart-", "-outfitvomit-", "-locationdescriptor-", "-basicbitchdescriptor-", "-animaldescriptor-", "-humanexpression-", "-humanvomit-", "-eyecolor-", "-fashiondesigner-", "-colorcombination-", "-materialcombination-", "-oppositefictional-", "-oppositenonfictional-", "-photoaddition-", "-age-", "-agecalculator-"]
-        allwildcardslistnohybridlists = [colorlist, objectlist, animallist, fictionallist, nonfictionallist, buildinglist, vehiclelist, locationlist,conceptprefixlist,foodlist,haircolorlist, hairstylelist,joblist, accessorielist, humanoidlist, manwomanlist, humanlist, colorschemelist, moodlist, genderdescriptionlist, artmovementlist, malefemalelist, bodytypelist, minilocationlist, minilocationadditionslist, poselist, seasonlist, minioutfitlist, elaborateoutfitlist, minivomitlist, vomitlist, rpgclasslist, customsubjectslist, customoutfitslist, brandlist, spacelist, artistlist, imagetypelist, othertypelist, qualitylist, lightinglist, cameralist, lenslist, imagetypequalitylist, poemlinelist, songlinelist, greatworklist, fantasyartistlist, popularartistlist, romanticismartistlist, photographyartistlist, emojilist, timeperiodlist, shotsizelist, musicgenrelist, animaladditionlist, addontolocationinsidelist, addontolocationlist, objectadditionslist, humanadditionlist, overalladditionlist, focuslist, directionlist, stylestiloralist, manwomanrelationlist, waterlocationlist, containerlist, firstnamelist, floralist, printlist, miniactivitylist, patternlist, animalsuffixadditionlist, chairlist, cardnamelist, coveringlist, heshelist, hisherlist, himherlist, outfitdescriptorlist, hairdescriptorlist, hairvomitlist, humandescriptorlist, manwomanmultiplelist, facepartlist, buildfacepartlist, outfitvomitlist, locationdescriptorlist, basicbitchdescriptorlist, animaldescriptorlist, humanexpressionlist, humanvomitlist, eyecolorlist, fashiondesignerlist, colorcombinationlist, materialcombinationlist, oppositefictionallist, oppositenonfictionallist, photoadditionlist, agelist, agecalculatorlist]
+    "-agecalculator-" in completeprompt or
+    "-gregmode-" in completeprompt):
+        allwildcardslistnohybrid = [ "-color-","-object-", "-animal-", "-fictional-","-nonfictional-","-building-","-vehicle-","-location-","-conceptprefix-","-food-","-haircolor-","-hairstyle-","-job-", "-accessory-", "-humanoid-", "-manwoman-", "-human-", "-colorscheme-", "-mood-", "-genderdescription-", "-artmovement-", "-malefemale-", "-bodytype-", "-minilocation-", "-minilocationaddition-", "-pose-", "-season-", "-minioutfit-", "-elaborateoutfit-", "-minivomit-", "-vomit-", "-rpgclass-", "-subjectfromfile-","-subjectfromfile-", "-brand-", "-space-", "-artist-", "-imagetype-", "-othertype-", "-quality-", "-lighting-", "-camera-", "-lens-","-imagetypequality-", "-poemline-", "-songline-", "-greatwork-", "-artistfantasy-", "-artistpopular-", "-artistromanticism-", "-artistphotography-", "-emoji-", "-timeperiod-", "-shotsize-", "-musicgenre-", "-animaladdition-", "-addontolocationinside-", "-addontolocation-", "-objectaddition-", "-humanaddition-", "-overalladdition-", "-focus-", "-direction-", "-styletilora-", "-manwomanrelation-", "-waterlocation-", "-container-", "-firstname-", "-flora-", "-print-", "-miniactivity-", "-pattern-", "-animalsuffixaddition-", "-chair-", "-cardname-", "-covering-", "-heshe-", "-hisher-", "-himher-", "-outfitdescriptor-", "-hairdescriptor-", "-hairvomit-", "-humandescriptor-", "-manwomanmultiple-", "-facepart-", "-buildfacepart-", "-outfitvomit-", "-locationdescriptor-", "-basicbitchdescriptor-", "-animaldescriptor-", "-humanexpression-", "-humanvomit-", "-eyecolor-", "-fashiondesigner-", "-colorcombination-", "-materialcombination-", "-oppositefictional-", "-oppositenonfictional-", "-photoaddition-", "-age-", "-agecalculator-", "-gregmode-"]
+        allwildcardslistnohybridlists = [colorlist, objectlist, animallist, fictionallist, nonfictionallist, buildinglist, vehiclelist, locationlist,conceptprefixlist,foodlist,haircolorlist, hairstylelist,joblist, accessorielist, humanoidlist, manwomanlist, humanlist, colorschemelist, moodlist, genderdescriptionlist, artmovementlist, malefemalelist, bodytypelist, minilocationlist, minilocationadditionslist, poselist, seasonlist, minioutfitlist, elaborateoutfitlist, minivomitlist, vomitlist, rpgclasslist, customsubjectslist, customoutfitslist, brandlist, spacelist, artistlist, imagetypelist, othertypelist, qualitylist, lightinglist, cameralist, lenslist, imagetypequalitylist, poemlinelist, songlinelist, greatworklist, fantasyartistlist, popularartistlist, romanticismartistlist, photographyartistlist, emojilist, timeperiodlist, shotsizelist, musicgenrelist, animaladditionlist, addontolocationinsidelist, addontolocationlist, objectadditionslist, humanadditionlist, overalladditionlist, focuslist, directionlist, stylestiloralist, manwomanrelationlist, waterlocationlist, containerlist, firstnamelist, floralist, printlist, miniactivitylist, patternlist, animalsuffixadditionlist, chairlist, cardnamelist, coveringlist, heshelist, hisherlist, himherlist, outfitdescriptorlist, hairdescriptorlist, hairvomitlist, humandescriptorlist, manwomanmultiplelist, facepartlist, buildfacepartlist, outfitvomitlist, locationdescriptorlist, basicbitchdescriptorlist, animaldescriptorlist, humanexpressionlist, humanvomitlist, eyecolorlist, fashiondesignerlist, colorcombinationlist, materialcombinationlist, oppositefictionallist, oppositenonfictionallist, photoadditionlist, agelist, agecalculatorlist, gregmodelist]
         
         allwildcardslistwithhybrid = ["-material-", "-descriptor-", "-outfit-", "-conceptsuffix-","-culture-", "-objecttotal-", "-outfitprinttotal-"]
         allwildcardslistwithhybridlists = [materiallist, descriptorlist,outfitlist,conceptsuffixlist,culturelist, objecttotallist, outfitprinttotallist]
@@ -2805,7 +2829,7 @@ def createpromptvariant(prompt = "", insanitylevel = 5, antivalues = "" , gender
     popularartistlist = artist_category_csv_to_list("artists_and_category","popular")
     romanticismartistlist = artist_category_csv_to_list("artists_and_category","romanticism")
     photographyartistlist = artist_category_csv_to_list("artists_and_category","photography")
-
+    gregmodelist = csv_to_list("gregmode", antilist)
 
     # add any other custom lists
     stylestiloralist = csv_to_list("styles_ti_lora",antilist,"./userfiles/")
@@ -2963,6 +2987,9 @@ def createpromptvariant(prompt = "", insanitylevel = 5, antivalues = "" , gender
 
                 if lowercase_combination in [x.lower() for x in agecalculatorlist] and chance_roll(insanitylevel, "uncommon"):
                     prompt = prompt.replace(combination," -agecalculator- ")
+
+                if lowercase_combination in [x.lower() for x in gregmodelist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -gregmode- ")
 
                 
                 #if lowercase_combination in [x.lower() for x in conceptprefixlist] and chance_roll(insanitylevel, "uncommon"):
@@ -3225,10 +3252,11 @@ def createpromptvariant(prompt = "", insanitylevel = 5, antivalues = "" , gender
         "-materialcombination-" in completeprompt or
         "-photoaddition-" in completeprompt or
         "-age-" in completeprompt or
-        "-agecalculator-" in completeprompt
+        "-agecalculator-" in completeprompt or
+        "-gregmode-" in completeprompt
         ):
-            allwildcardslistnohybrid = [ "-color-","-object-", "-animal-", "-fictional-","-nonfictional-","-building-","-vehicle-","-location-","-conceptprefix-","-food-","-haircolor-","-hairstyle-","-job-", "-accessory-", "-humanoid-", "-manwoman-", "-human-", "-colorscheme-", "-mood-", "-genderdescription-", "-artmovement-", "-malefemale-", "-bodytype-", "-minilocation-", "-minilocationaddition-", "-pose-", "-season-", "-minioutfit-", "-elaborateoutfit-", "-minivomit-", "-vomit-", "-rpgclass-", "-subjectfromfile-", "-subjectfromfile-", "-brand-", "-space-", "-artist-", "-imagetype-", "-othertype-", "-quality-", "-lighting-", "-camera-", "-lens-","-imagetypequality-", "-poemline-", "-songline-", "-greatwork-", "-artistfantasy-", "-artistpopular-", "-artistromanticism-", "-artistphotography-", "-emoji-", "-timeperiod-", "-shotsize-", "-musicgenre-", "-animaladdition-", "-objectaddition-", "-humanaddition-", "-overalladdition-", "-focus-", "-direction-", "-styletilora-", "-manwomanrelation-", "-waterlocation-", "-container-", "-firstname-", "-flora-", "-print-", "-miniactivity-", "-pattern-", "-chair-", "-cardname-", "-covering-", "-outfitdescriptor-", "-hairdescriptor-", "-hairvomit-", "-humandescriptor-", "-manwomanmultiple-", "-facepart-", "-locationdescriptor-", "-basicbitchdescriptor-", "-animaldescriptor-", "-humanexpression-", "-humanvomit-", "-eyecolor-", "-fashiondesigner-", "-colorcombination-", "-materialcombination-", "-photoaddition-", "-age-", "agecalculator-"]
-            allwildcardslistnohybridlists = [colorlist, objectlist, animallist, fictionallist, nonfictionallist, buildinglist, vehiclelist, locationlist,conceptprefixlist,foodlist,haircolorlist, hairstylelist,joblist, accessorielist, humanoidlist, manwomanlist, humanlist, colorschemelist, moodlist, genderdescriptionlist, artmovementlist, malefemalelist, bodytypelist, minilocationlist, minilocationadditionslist, poselist, seasonlist, minioutfitlist, elaborateoutfitlist, minivomitlist, vomitlist, rpgclasslist, customsubjectslist, customoutfitslist, brandlist, spacelist, artistlist, imagetypelist, othertypelist, qualitylist, lightinglist, cameralist, lenslist, imagetypequalitylist, poemlinelist, songlinelist, greatworklist, fantasyartistlist, popularartistlist, romanticismartistlist, photographyartistlist, emojilist, timeperiodlist, shotsizelist, musicgenrelist, animaladditionlist, objectadditionslist, humanadditionlist, overalladditionlist, focuslist, directionlist, stylestiloralist, manwomanrelationlist, waterlocationlist, containerlist, firstnamelist, floralist, printlist, miniactivitylist, patternlist, chairlist, cardnamelist, coveringlist, outfitdescriptorlist, hairdescriptorlist, hairvomitlist, humandescriptorlist, manwomanmultiplelist, facepartlist, locationdescriptorlist, basicbitchdescriptorlist, animaldescriptorlist, humanexpressionlist, humanvomitlist, eyecolorlist, fashiondesignerlist, colorcombinationlist, materialcombinationlist, photoadditionlist, agelist, agecalculatorlist]
+            allwildcardslistnohybrid = [ "-color-","-object-", "-animal-", "-fictional-","-nonfictional-","-building-","-vehicle-","-location-","-conceptprefix-","-food-","-haircolor-","-hairstyle-","-job-", "-accessory-", "-humanoid-", "-manwoman-", "-human-", "-colorscheme-", "-mood-", "-genderdescription-", "-artmovement-", "-malefemale-", "-bodytype-", "-minilocation-", "-minilocationaddition-", "-pose-", "-season-", "-minioutfit-", "-elaborateoutfit-", "-minivomit-", "-vomit-", "-rpgclass-", "-subjectfromfile-", "-subjectfromfile-", "-brand-", "-space-", "-artist-", "-imagetype-", "-othertype-", "-quality-", "-lighting-", "-camera-", "-lens-","-imagetypequality-", "-poemline-", "-songline-", "-greatwork-", "-artistfantasy-", "-artistpopular-", "-artistromanticism-", "-artistphotography-", "-emoji-", "-timeperiod-", "-shotsize-", "-musicgenre-", "-animaladdition-", "-objectaddition-", "-humanaddition-", "-overalladdition-", "-focus-", "-direction-", "-styletilora-", "-manwomanrelation-", "-waterlocation-", "-container-", "-firstname-", "-flora-", "-print-", "-miniactivity-", "-pattern-", "-chair-", "-cardname-", "-covering-", "-outfitdescriptor-", "-hairdescriptor-", "-hairvomit-", "-humandescriptor-", "-manwomanmultiple-", "-facepart-", "-locationdescriptor-", "-basicbitchdescriptor-", "-animaldescriptor-", "-humanexpression-", "-humanvomit-", "-eyecolor-", "-fashiondesigner-", "-colorcombination-", "-materialcombination-", "-photoaddition-", "-age-", "agecalculator-", "-gregmode-"]
+            allwildcardslistnohybridlists = [colorlist, objectlist, animallist, fictionallist, nonfictionallist, buildinglist, vehiclelist, locationlist,conceptprefixlist,foodlist,haircolorlist, hairstylelist,joblist, accessorielist, humanoidlist, manwomanlist, humanlist, colorschemelist, moodlist, genderdescriptionlist, artmovementlist, malefemalelist, bodytypelist, minilocationlist, minilocationadditionslist, poselist, seasonlist, minioutfitlist, elaborateoutfitlist, minivomitlist, vomitlist, rpgclasslist, customsubjectslist, customoutfitslist, brandlist, spacelist, artistlist, imagetypelist, othertypelist, qualitylist, lightinglist, cameralist, lenslist, imagetypequalitylist, poemlinelist, songlinelist, greatworklist, fantasyartistlist, popularartistlist, romanticismartistlist, photographyartistlist, emojilist, timeperiodlist, shotsizelist, musicgenrelist, animaladditionlist, objectadditionslist, humanadditionlist, overalladditionlist, focuslist, directionlist, stylestiloralist, manwomanrelationlist, waterlocationlist, containerlist, firstnamelist, floralist, printlist, miniactivitylist, patternlist, chairlist, cardnamelist, coveringlist, outfitdescriptorlist, hairdescriptorlist, hairvomitlist, humandescriptorlist, manwomanmultiplelist, facepartlist, locationdescriptorlist, basicbitchdescriptorlist, animaldescriptorlist, humanexpressionlist, humanvomitlist, eyecolorlist, fashiondesignerlist, colorcombinationlist, materialcombinationlist, photoadditionlist, agelist, agecalculatorlist, gregmodelist]
             
             allwildcardslistwithhybrid = ["-material-", "-descriptor-", "-outfit-", "-conceptsuffix-","-culture-", "-objecttotal-", "-outfitprinttotal-"]
             allwildcardslistwithhybridlists = [materiallist, descriptorlist,outfitlist,conceptsuffixlist,culturelist, objecttotallist, outfitprinttotallist]

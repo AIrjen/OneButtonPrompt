@@ -52,18 +52,18 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
     print("All done!")
 
 generateprompts(10,5
-                ,"all" # subject
+                ,"humanoid" # subject
                 ,"all" # artists
                 ,"all" # image type  "only other types", "only templates mode", "art blaster mode", "quality vomit mode", "color cannon mode", "unique art mode", "massive madness mode", "photo fantasy mode", "subject only mode", "fixed styles mode"
                 ,False,"","","PREFIXPROMPT" 
-                ,"SUFFIXPROMPT -material-"
+                ,"SUFFIXPROMPT"
                 ,"",1,""
                 ,"" # subject override
                 ,True,
                 "",20
                 , "all" # gender
                 , "all" # object types
-                , "all"  # humanoid types   --multiple humans
+                , "celebrities e.a."  # humanoid types   -- all,generic humans,generic human relations, multiple humans, celebrities e.a.,fictional,humanoids, based on job or title,based on first name
                 , "all" # concept types
                 , False, True, 0
                 , "" #outfit override

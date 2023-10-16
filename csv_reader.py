@@ -19,14 +19,18 @@ def add_from_csv(completeprompt, csvfilename, addcomma, prefix, suffix):
                 return ", ".join([completeprompt,addtoprompt])
         return " ".join([completeprompt,addtoprompt])
 
-def csv_to_list(csvfilename, antilist=[], directory="./csvfiles/", lowerandstrip=0, delimiter=";", listoflistmode = False, skipheader = False, gender = "all"):
+def csv_to_list(csvfilename, antilist=[], directory="./csvfiles/", lowerandstrip=0, delimiter=";", listoflistmode = False, skipheader = False, gender = "all", insanitylevel = -1):
+        replacing = False
         userfilesdirectory = "./userfiles/"
         userfileaddonname = csvfilename + "_addon.csv"
         userfilereplacename = csvfilename + "_replace.csv"
+        lightfilename = csvfilename + "_light.csv"
+        mediumfilename = csvfilename + "_medium.csv"
         csvlist = []
         script_dir = os.path.dirname(os.path.abspath(__file__))
         full_path = os.path.join(script_dir, directory )
         userfilesfolder = os.path.join(script_dir, userfilesdirectory )
+        directoryfilesfolder = os.path.join(script_dir, directory )
         # check if there is a replace file
         if(directory=="./csvfiles/" or directory=="./csvfiles/special_lists/" or directory=="./csvfiles/templates/"):      
                 for filename in os.listdir(userfilesfolder):
@@ -34,6 +38,26 @@ def csv_to_list(csvfilename, antilist=[], directory="./csvfiles/", lowerandstrip
                                 # Just override the parameters, and let it run normally
                                 full_path = os.path.join(script_dir, userfilesdirectory )
                                 csvfilename = csvfilename + "_replace"
+                                replacing = True
+
+
+                # Go check for light or medium files if there is no override and there is an insanitylevel
+                if(replacing == False and insanitylevel > 0):
+                        if(insanitylevel < 4):   
+                                for filename in os.listdir(directoryfilesfolder):
+                                        if(filename == mediumfilename):
+                                                # Just override the parameters, and let it run normally
+                                                full_path = os.path.join(script_dir, directory )
+                                                csvfilename = csvfilename + "_light"
+                                                replacing = True
+                        if(insanitylevel < 7 and random.randint(0,5) < 4 and replacing == False):   
+                                for filename in os.listdir(directoryfilesfolder):
+                                        if(filename == lightfilename):
+                                                # Just override the parameters, and let it run normally
+                                                full_path = os.path.join(script_dir, directory )
+                                                csvfilename = csvfilename + "_medium"
+                                                replacing = True
+                        
                         
 
         # return empty list if we can't find the file. Build for antilist.csv

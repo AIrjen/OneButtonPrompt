@@ -78,10 +78,10 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     culturelist = csv_to_list("cultures",antilist)
     descriptorlist = csv_to_list("descriptors",antilist)
     devmessagelist = csv_to_list("devmessages",antilist)
-    directionlist = csv_to_list("directions",antilist)
+    directionlist = csv_to_list(csvfilename="directions",antilist=antilist,insanitylevel=insanitylevel)
     emojilist = csv_to_list("emojis",antilist)
     eventlist = csv_to_list("events",antilist)
-    focuslist = csv_to_list("focus",antilist)
+    focuslist = csv_to_list(csvfilename="focus",antilist=antilist, insanitylevel=insanitylevel)
     greatworklist = csv_to_list("greatworks",antilist)
     haircolorlist = csv_to_list("haircolors",antilist)
     hairstylelist = csv_to_list("hairstyles",antilist)
@@ -89,19 +89,18 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     humanactivitylist = csv_to_list("human_activities",antilist)
     humanoidlist = csv_to_list("humanoids",antilist)
     imagetypelist = csv_to_list(csvfilename="imagetypes",antilist=antilist, insanitylevel=insanitylevel)
-    print(imagetypelist)
     joblist = csv_to_list(csvfilename="jobs",antilist=antilist,skipheader=True,gender=gender)
-    lenslist = csv_to_list("lenses",antilist)
-    lightinglist = csv_to_list("lighting",antilist)
+    lenslist = csv_to_list(csvfilename="lenses",antilist=antilist, insanitylevel=insanitylevel)
+    lightinglist = csv_to_list(csvfilename="lighting",antilist=antilist, insanitylevel=insanitylevel)
     malefemalelist = csv_to_list(csvfilename="malefemale",antilist=antilist,skipheader=True,gender=gender)
     manwomanlist = csv_to_list(csvfilename="manwoman",antilist=antilist,skipheader=True,gender=gender)
-    moodlist = csv_to_list("moods",antilist)
+    moodlist = csv_to_list(csvfilename="moods",antilist=antilist, insanitylevel=insanitylevel)
     othertypelist = csv_to_list("othertypes",antilist)
     poselist = csv_to_list("poses",antilist)
     qualitylist = csv_to_list("quality",antilist)
-    shotsizelist = csv_to_list("shotsizes",antilist)
+    shotsizelist = csv_to_list(csvfilename="shotsizes",antilist=antilist, insanitylevel=insanitylevel)
     timeperiodlist = csv_to_list("timeperiods",antilist)
-    vomitlist = csv_to_list("vomit",antilist)
+    vomitlist = csv_to_list(csvfilename="vomit",antilist=antilist, insanitylevel=insanitylevel)
     foodlist = csv_to_list("foods", antilist)
     genderdescriptionlist = csv_to_list(csvfilename="genderdescription",antilist=antilist,skipheader=True,gender=gender)
     minilocationlist = csv_to_list("minilocations", antilist)
@@ -1156,16 +1155,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                     subjectchooser = "cardname"
 
         # After we chose the subject, lets set all things ready for He/She/It etc
-        if(subjectchooser in ["human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation","firstname"]):
-            if(gender == "male"):
-                heshelist = ["he"]
-                hisherlist = ["his"]
-                himherlist = ["him"]
-            if(gender == "female"):
-                heshelist = ["she"]
-                hisherlist = ["her"]
-                himherlist = ["her"]
-        if(subjectchooser in ["manwomanmultiple"]):
+        
+        if(subjectchooser in ["manwomanmultiple"] and givensubject != "" and subtypehumanoid != "multiple humans"):
             heshelist = ["they"]
             hisherlist = ["their"]
             himherlist = ["them"]
@@ -1174,6 +1165,25 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 heshelist = ["one of them"]
                 hisherlist = ["one of their"]
                 himherlist = ["one of them"]
+        elif(subjectchooser in ["human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation","firstname","manwomanmultiple"]):
+            if(gender == "male"):
+                heshelist = ["he"]
+                hisherlist = ["his"]
+                himherlist = ["him"]
+            if(gender == "female"):
+                heshelist = ["she"]
+                hisherlist = ["her"]
+                himherlist = ["her"]
+        if(subjectchooser in ["manwomanmultiple"] and givensubject == ""):
+            heshelist = ["they"]
+            hisherlist = ["their"]
+            himherlist = ["them"]
+            # on rare occasions do "one of them"
+            if(random.randint(0,20) == 0):
+                heshelist = ["one of them"]
+                hisherlist = ["one of their"]
+                himherlist = ["one of them"]
+        
 
 
 
@@ -1757,7 +1767,10 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                     completeprompt += " "
 
                 else:
-                    completeprompt += " " + givensubject + " "  
+                    if(subjectchooser == "manwomanmultiple" and subtypehumanoid != "multiple humans"):
+                        completeprompt +=  " " + givensubject + " and a -manwomanmultiple- "
+                    else:
+                        completeprompt += " " + givensubject + " "  
  
             
              # sometimes add a suffix for more fun!
@@ -2079,7 +2092,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 # end of the artist stuff
 
         # others
-        if(chance_roll(insanitylevel, directionchance) and generatedirection == True):
+        if(chance_roll(max(1,insanitylevel -1), directionchance) and generatedirection == True):
             completeprompt += "-direction-, "
 
         if(chance_roll(insanitylevel, moodchance) and generatemood == True):
@@ -2424,7 +2437,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
         # Convert the list back to a string
         completeprompt = "".join(completeprompt_list)
-
+    
         # Sometimes change he/she to the actual subject
     if(mainchooser in  ["animal", "object"] and givensubject == ""):
         sameobjectreplacementlist = ["-heshe-","-heshe-","-heshe-","-heshe-","-heshe-", "-sameothersubject-", "-sameothersubject-", "-sameothersubject-", "-sameothersubject-", "-sameothersubject-"]
@@ -2470,6 +2483,10 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         completeprompt = completeprompt.replace("-outfit-", overrideoutfit,1)
         completeprompt = completeprompt.replace("-minioutfit-", overrideoutfit,1)
         completeprompt = completeprompt.replace("-overrideoutfit-", overrideoutfit)
+
+    if(givensubject != ""):
+        completeprompt = completeprompt.replace("-samehumansubject-", givensubject)
+        completeprompt = completeprompt.replace("-sameothersubject-", givensubject)
     
     # If we don't have an override outfit, then remove this part
     completeprompt = completeprompt.replace("-overrideoutfit-", "")
@@ -3508,6 +3525,13 @@ def cleanup(completeprompt, advancedprompting, insanitylevel = 5):
     # some space tricks
     completeprompt = re.sub('- shaped', '-shaped', completeprompt)
     completeprompt = re.sub('echa- ', 'echa-', completeprompt)
+    completeprompt = re.sub('style -', 'style-', completeprompt)
+
+    #small fix for multisubject thing
+    completeprompt = re.sub('a 2', '2', completeprompt)
+    completeprompt = re.sub('a 3', '3', completeprompt)
+    completeprompt = re.sub('a 4', '4', completeprompt)
+    completeprompt = re.sub('a 5', '5', completeprompt)
 
 
     # clean up some hacky multiples with adding a s to the end

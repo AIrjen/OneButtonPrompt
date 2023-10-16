@@ -52,6 +52,7 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
         resultnew = resultnew.replace("-of-", " of ")
         resultnew = resultnew.replace("-the-", " the ")
         resultnew = resultnew.replace("-up-", " up ")
+        resultnew = resultnew.replace("-in-", " in ")
         matches = re.findall(r'-\w+-', resultnew)
 
         # Filter out matches with commas and spaces
@@ -71,8 +72,8 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
     print("")
     print("All done!")
 
-generateprompts(10,3
-                ,"all" # subject
+generateprompts(10,5
+                ,"" # subject
                 ,"all" # artists
                 ,"all" # image type  "only other types", "only templates mode", "art blaster mode", "quality vomit mode", "color cannon mode", "unique art mode", "massive madness mode", "photo fantasy mode", "subject only mode", "fixed styles mode"
                 , False # only artists

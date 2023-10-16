@@ -50,7 +50,8 @@ def csv_to_list(csvfilename, antilist=[], directory="./csvfiles/", lowerandstrip
                                                 full_path = os.path.join(script_dir, directory )
                                                 csvfilename = csvfilename + "_light"
                                                 replacing = True
-                        if(insanitylevel < 7 and random.randint(0,5) < 4 and replacing == False):   
+                        # under 7, than only SOMETIMES take the full list
+                        if(insanitylevel < 7 and random.randint(0,13) < 12 and replacing == False):   
                                 for filename in os.listdir(directoryfilesfolder):
                                         if(filename == lightfilename):
                                                 # Just override the parameters, and let it run normally

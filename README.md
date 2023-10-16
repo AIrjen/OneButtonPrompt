@@ -6,7 +6,7 @@
 
 # Summary
 
-One Button Prompt is a tool/script for automatic1111/ComfyUI for beginners who have problems writing a good prompt, or advanced users who want to get inspired.
+One Button Prompt is a tool/script for Automatic1111/ComfyUI/RuinedFooocus for beginners who have problems writing a good prompt, or advanced users who want to get inspired.
 
 It generates an entire prompt from scratch. It is random, but controlled. You simply load up the script and press generate, and let it surprise you.
 
@@ -15,6 +15,8 @@ It is best used on all-purpose models, such as Stable Difussion 1.5 or those bas
 A simple user guide for first time use and settings is available [here](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/my_first_generation.md).
 
 It is also now available as a custom node for ComfyUI. [Check installation doc here](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/comfyui_integration.md)
+
+More of a Fooocus fan? Take a look at this excellent fork called [RuinedFooocus](https://github.com/runew0lf/RuinedFooocus) that has One Button Prompt built in.
 
 # Features
 - __Full prompt generation__ with the click of a button.                  ==> [guide to my first generation](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/my_first_generation.md) 
@@ -155,14 +157,9 @@ All with a single press of __One Button__.
 
 # roadmap
 Some ideas I'd like to implement:
-- The In Control update
-  - ~~Choose your own subject~~ Done
-  - ~~Split up subjects more, and pick more detailed subjects, such as food, female, building, etc~~ Done
-  - ~~Support for LoRA and textual inversions~~ Done
-  - Trigger word support
-- ~~Bring upscale automation to front-end~~ Done
-- ~~Better workflow management in workflow assist tab~~ Done
-- ~~Curated artist lists~~ Done
+- More consistency in prompts, while keep being wild
+  - More consistency in lower insanitylevels, more wildness on higher insanitylevels
+- Create dice/random buttons in front of override subject and override outfit
 - Ongoing: list refinements and new features in the prompt generation
 - Ongoing: Documentation and toturials
 

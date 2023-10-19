@@ -1,5 +1,5 @@
-, OR(wearing;dressed in;in;normal) OR(;a very;rare) OR(;-outfitdescriptor-;normal) OR(;-color-;uncommon) OR(;-culture-;uncommon) OR(;-material-;rare) -outfit-
-, OR(wearing;dressed in;in;normal) OR(;-outfitdescriptor-;normal) OR(;-outfitdescriptor-;uncommon) OR(;-color-;uncommon) -outfit-
+, OR(wearing;dressed in;in;normal) OR(;a very;rare) OR(;-outfitdescriptor-;normal) OR(;-color-;uncommon) OR(;-culture-;uncommon) OR(;-material-;rare) -outfit- OR(;from the OR(-age-;the -agecalculator-);rare)
+, OR(wearing;dressed in;in;normal) OR(;-outfitdescriptor-;normal) OR(;-outfitdescriptor-;uncommon) OR(;-color-;uncommon) -outfit- OR(;from the OR(-age-;the -agecalculator-);rare)
 , OR(wearing;dressed in;in;normal) OR(;-outfitdescriptor-;normal) OR(;-outfitdescriptor-;uncommon) OR(;-color-;uncommon) -outfit- OR(; and OR(;-outfitdescriptor-;uncommon) OR(;-color-;uncommon) -outfit-;rare)
 , OR(wearing;dressed in;in;normal) OR(-job-;-rpgclass-;-season-;-animal--style) OR(-minioutfit-;-outfit-;rare)
 , OR(wearing;dressed in;in;normal) OR(;-outfitdescriptor-;uncommon) OR(-minioutfit-;-outfit-;rare) OR(;OR(designed;made;inspired;forged) by OR(-brand-;-fashiondesigner-);uncommon)

@@ -2,13 +2,15 @@ manwomanmultiple?gender
 Twins?genderless
 Couple?genderless
 Triplets?genderless
-OR(Husband;Wife) and OR(Husband;Wife)?genderless
+Husband and OR(Husband;Wife)?male
+Wife and OR(Husband;Wife)?female
 a OR(group;couple;crowd;bunch) of OR(friends;people)?genderless
 OR(2;3;4;5) OR(women;girls)?female
 OR(2;3;4;5) OR(men;guys)?male
-OR(Mother;Father;Grandma;Grandpa) and OR(Daughter;Son)?genderless
+OR(Father;Grandpa) and OR(Daughter;Son)?male
+OR(Mother;Grandma) and OR(Daughter;Son)?female
 a OR(group;couple;crowd;bunch) of OR(women;girls)?female
 a OR(group;couple;crowd;bunch) of OR(men;guys)?male
-a OR(group;couple;crowd;bunch) of OR(-fictional-;-nonfictional-;-humanoid-)s?genderless
+a OR(group;couple;crowd;bunch;hundreds) of OR(-fictional-;-nonfictional-;-humanoid-)s?genderless
 Family?genderless
 -human- and -human-?genderless

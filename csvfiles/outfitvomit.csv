@@ -2,7 +2,7 @@ has OR(;large;small;giant;tiny;normal) OR(;-color-;normal) bowOR(;s;normal)
 has OR(;large;small;giant;tiny;normal) OR(;Leather;normal) OR(belt;strap)OR(;s;normal)
 has OR(Metal;Iron;Diamond;Steel;metallic;-materialcombination-) OR(plates;plating)
 has a crest on chest
-is OR(zipped up;unzipped;partially unzipped;zipper;buttons;buttoned up;partially unbuttoned;unbuttoned)
+OR(is zipped up;is unzipped;is partially unzipped;zipper;buttons;is buttoned up;is partially unbuttoned;is unbuttoned)
 has OR(;large;small;giant;tiny;normal) (zipper;button;buttons;zippers)
 is OR(off-the-shoulder;strapless;cropped;ruffled)
 is OR(;very;normal) OR(large;small;tight;loose;baggy;delicate;wet;-outfitdescriptor-)

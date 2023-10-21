@@ -3527,7 +3527,9 @@ def replacewildcard(completeprompt, insanitylevel, wildcard,listname, activatehy
             
             if(wildcard in ["-fictional-"
                             , "-nonfictional-"
-                            , "-firstname-"]
+                            , "-firstname-"
+                            , "-oppositefictional-"
+                            , "-oppositenonfictional-"]
                             and "-samehumansubject-" in completeprompt):
                             if(completeprompt.index(wildcard) < completeprompt.index("-samehumansubject-")):
                                 completeprompt = completeprompt.replace("-samehumansubject-", replacementvalueforoverrides)

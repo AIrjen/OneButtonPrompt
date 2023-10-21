@@ -1,3 +1,9 @@
+-element- Mage;both
+-element- Wizard;male
+-element- Witch;female
+-element- diety;both
+-element- god;male
+-element- goddess;female
 -musicgenre-mancer;both
 Abbot;both
 Abjurer;both
@@ -56,6 +62,7 @@ Bladesinger;both
 Blood mage;both
 Bohemian;both
 Bollywood Dancer;both
+Bond Girl;female
 Boss;both
 Bookbinder;both
 Botanist;both
@@ -131,6 +138,7 @@ Demon Hunter;both
 Designer;both
 Detective;both
 Diplomat;both
+Disney Princess;female
 DJ;both
 Dockworker;both
 Doctor;both
@@ -167,11 +175,11 @@ Explorer;both
 Falconer;both
 Fallen Paladin;both
 Farmer;both
-Farmer;both
 Farrier;both
 Fashion designer;both
 Fashion model;both
 Fashionista;female
+Fast Food Employee;both
 femme fatale;female
 Fencer;both
 Feudal lord;both
@@ -194,8 +202,8 @@ Frost mage;both
 Gallery owner;both
 Gangster;both
 Gardener;both
-Gardener;both
 Geek;both
+Geek Squad Employee;both
 Geisha;both
 Geisha;female
 General;both
@@ -400,7 +408,6 @@ Royalty;both
 Rune mage;both
 Safari Guide;both
 Sailor;both
-Sailor;both
 Salaryman;male
 Salesperson;both
 Salsa Dancer;both
@@ -412,6 +419,7 @@ Scribe;both
 Scuba diver;both
 Sculptor;both
 Second Lieutenant;both
+Secret Agent;both
 Secret lover;both
 Secretary;both
 Sentinel;both
@@ -435,6 +443,7 @@ Sith lord;both
 Sith;both
 Skateboarder;both
 Skydiver;both
+Spy;both
 Socialite;both
 Sociologist;both
 Soldier;both
@@ -443,6 +452,7 @@ Soul reaver;both
 Sound engineer;both
 Southern Belle;female
 Space Alien;both
+Spartan;both
 Spellblade;both
 Spice merchant;both
 Spinner;both
@@ -452,6 +462,7 @@ Staff Sergeant;both
 Star mage;both
 Starfleet captain;both
 Steeplejack;both
+Stormtrooper;both
 Student;both
 Sultan;both
 Summoner;both

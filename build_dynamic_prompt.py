@@ -1383,6 +1383,13 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                     completeprompt += random.choice(artistbylist) + " OR(-landscapeartist-;-architectartist-), OR(-landscapeartist-;-architectartist-) OR(;and OR(-fantasyartist-;-scifiartist-;-photographyartist-;-digitalartist-;-graphicdesignartist-);uncommon), "
                     doartistnormal = False
 
+                # else sometimes to something like this?
+                elif(random.randint(0,5) == 0):
+                    artistbylist = ["art by", "designed by", "stylized by", "by"]
+                    completeprompt += random.choice(artistbylist) + "OR(-portraitartist-;-characterartist-;-fantasyartist-;-scifiartist-;-photographyartist-;-digitalartist-;-graphicdesignartist-), OR(-portraitartist-;-characterartist-;-fantasyartist-;-scifiartist-;-photographyartist-;-digitalartist-;-graphicdesignartist-) and OR(-portraitartist-;-characterartist-;-fantasyartist-;-scifiartist-;-photographyartist-;-digitalartist-;-graphicdesignartist-)"
+                    doartistnormal = False
+
+
 
             if(doartistnormal):
                     

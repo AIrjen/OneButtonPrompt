@@ -1,15 +1,17 @@
-(-colorcombination-:0.7)
--colorcombination- details
--colorcombination- dust particles
--colorcombination- flakes
--colorcombination- fractal art
--colorcombination- splash
+-basicbitchdescriptor-
+-basicbitchdescriptor- and -basicbitchdescriptor-
+-color- and -color- details
+-color- and -color- dust particles
+-color- and -color- flakes
+-color- and -color- fractal art
+-color- and -color- splash
 -color- background
 -color- details
 -color- dust particles
 -color- explosions
 -color- flakes
 -color- lightning bolts
+-color- mist
 -color- outlines
 -color- paint splotches
 -color- palette
@@ -18,7 +20,9 @@
 -color- splash
 -colorcombination-
 -space-
+(-color- and -color-:0.7)
 arcane
+Batik
 behance
 behance HD
 biomorphic forms
@@ -32,18 +36,29 @@ Complex background
 concept art
 Concept artist
 cosmic energy
+Crepuscular Rays
 crisp lines
+Cross Processing
 de dia los muertos
+Decals
+Decoupage
 delicate
 Digital distortions
+Diorama
 Dota style
+Double Exposure
 dreamy
 dreamy magical atmosphere
 dripping -color-
 dripping -color- and -color-
 dripping with -color-
+Dufaycolor Photograph
 dynamic composition
+Ebru
 Elegant
+Embossing
+Embroidery
+Encaustic Paint
 epic fantasy
 ethereal magical atmosphere
 expressive brush strokes
@@ -54,24 +69,28 @@ Folded -material-
 full of -color-
 full of color
 geometric patterns
-glimmering transformation
-glittering
-glitter texture
+Gilded
 gilded technique
+glimmering transformation
+glitter texture
+glittering
+Gold Leafing
 Golden ratio
 halation
 halftone texture
 hearthstone artwork
 icon style
+Impasto
 Instagram
-intricate details
 intricate
+intricate details
 key visual
 Kintsugi
 layered textures
 League of Legends Splash Art
 Light sparkles
 Light streaks
+Liminal dream
 Luminous trails
 made of -material-
 Magic the gathering
@@ -99,9 +118,10 @@ rpg concept art
 Rule of Thirds
 sfumato
 sgraffito
-sloppy strokes
 silhouette
 Simplified style
+sloppy strokes
+Soutache
 Spirals
 stylized
 sunbeam
@@ -111,31 +131,13 @@ Swirling -color-
 Swirling -material-
 symbolism
 taiji
+Temari
 triadic
 under water
 underpainting
 vibrant
 vignette
 vintage
-Zentangle
-Liminal dream
--basicbitchdescriptor-
--color- mist
-Crepuscular Rays
-Cross Processing
-Decals
-Decoupage
-Diorama
-Double Exposure
-Dufaycolor Photograph
-Ebru
-Embossing
-Embroidery
-Encaustic Paint
-Gilded
-Gold Leafing
-Impasto
-Temari
-Soutache
 Vitrail
-Batik
+Zentangle
+-element- and -element-

@@ -13,11 +13,12 @@ from build_dynamic_prompt import *
 def generatepromptvariants(amount = 1,prompt="",insanitylevel="5"):
     loops = int(amount)  # amount of images to generate
     steps = 0
+    originalprompt = prompt
    
     insanitylevel = int(insanitylevel)
     while steps < loops:
         # build prompt
-        if(prompt == ""):
+        if(originalprompt == ""):
             prompt = build_dynamic_prompt(insanitylevel)
 
         result = createpromptvariant(prompt, insanitylevel)
@@ -35,4 +36,6 @@ def generatepromptvariants(amount = 1,prompt="",insanitylevel="5"):
     print("")
     print("All done!")
 
-generatepromptvariants(10,"purple (galaxy) in a (bottle:1.2), <bla:1>, background is a lush jungle and a woman wearing a summer dress, -artmovement-", 5)
+generatepromptvariants(10
+                       ,"" #purple (galaxy) in a (bottle:1.2), <bla:1>, background is a lush jungle and a woman wearing a summer dress, -artmovement-
+                       , 5)

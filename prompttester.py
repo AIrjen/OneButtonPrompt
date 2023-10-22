@@ -39,7 +39,7 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
             print(result)
             break
 
-        if(" OR " in result):
+        if(" OR " in result or ";" in result):
             print("There is a mistake in a OR statement")
             print("")
             print(result)
@@ -54,6 +54,9 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
         resultnew = resultnew.replace("-up-", " up ")
         resultnew = resultnew.replace("-in-", " in ")
         resultnew = resultnew.replace("-au-", " au ")
+        resultnew = resultnew.replace("-da-", " da ")
+        resultnew = resultnew.replace("-doo-", " doo ")
+        resultnew = resultnew.replace("-and-", " and ")
         matches = re.findall(r'-\w+-', resultnew)
 
         # Filter out matches with commas and spaces
@@ -66,7 +69,7 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
             print(result)
             break
 
-        #if("empire" in result):
+        #if("game" in result or "movie" in result):
         #    print("TEST THIS")
         #    print("")
         #    print(result)
@@ -79,7 +82,7 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
     print("")
     print("All done!")
 
-generateprompts(10000,5
+generateprompts(20000,5
                 ,"all" # subject
                 ,"all" # artists
                 ,"all" # image type  "only other types", "only templates mode", "art blaster mode", "quality vomit mode", "color cannon mode", "unique art mode", "massive madness mode", "photo fantasy mode", "subject only mode", "fixed styles mode"

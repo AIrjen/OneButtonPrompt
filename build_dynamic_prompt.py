@@ -197,9 +197,12 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         artists = artiststyleselector
     elif(artists == "all"):
         artiststyleselectormode = "custom"
+         # then else maybe do nothing??
+        if(random.randint(0,6) == 0 and onlyartists == False):
+            generateartist = False
         # go popular! Or even worse, we go full greg mode!
-        if(common_dist(max(3,insanitylevel))):
-            artists = "popular"
+        elif(common_dist(max(3,insanitylevel))):
+            artists = "popular" 
         # only on lower instanity levels anyway
         elif(insanitylevel < 6):
             artists = "greg mode"
@@ -1354,9 +1357,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
 
         # start artist part
-        # Sometimes turn off the artists, cause they can be too many?
-        if(random.randint(0,6) == 0):
-            generateartist = False
+
 
         artistsplacement = "front"
         # remove the artistsatbackchange to be depended on the insanitylevel, we would like this to be a set chance

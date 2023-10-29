@@ -1392,7 +1392,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 # else sometimes to something like this?
                 elif(random.randint(0,5) == 0):
                     artistbylist = ["art by", "designed by", "stylized by", "by"]
-                    completeprompt += random.choice(artistbylist) + "OR(-portraitartist-;-characterartist-;-fantasyartist-;-scifiartist-;-photographyartist-;-digitalartist-;-graphicdesignartist-), OR(-portraitartist-;-characterartist-;-fantasyartist-;-scifiartist-;-photographyartist-;-digitalartist-;-graphicdesignartist-) and OR(-portraitartist-;-characterartist-;-fantasyartist-;-scifiartist-;-photographyartist-;-digitalartist-;-graphicdesignartist-)"
+                    completeprompt += random.choice(artistbylist) + " OR(-portraitartist-;-characterartist-;-fantasyartist-;-scifiartist-;-photographyartist-;-digitalartist-;-graphicdesignartist-), OR(-portraitartist-;-characterartist-;-fantasyartist-;-scifiartist-;-photographyartist-;-digitalartist-;-graphicdesignartist-) and OR(-portraitartist-;-characterartist-;-fantasyartist-;-scifiartist-;-photographyartist-;-digitalartist-;-graphicdesignartist-)"
                     doartistnormal = False
 
 
@@ -1908,6 +1908,12 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
                     if(subjectchooser == "cardname"):
                         completeprompt += " \" -cardname- \" "
+                # making subject override work with X and Y concepts, much fun!
+                elif(givensubject != "" and subjectchooser == "concept"):
+                        if(random.randint(0,3) == 0):
+                            completeprompt += " \" The -conceptprefix- of " + givensubject + " \" "
+                        else:
+                            completeprompt += " \" The " + givensubject + " of -conceptsuffix- \" "
                 else:
                     completeprompt += " " + givensubject + " " 
 

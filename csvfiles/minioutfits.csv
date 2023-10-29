@@ -7,3 +7,4 @@ robe OR(;tailored by -fashiondesigner-;uncommon)?both
 costume OR(;tailored by -fashiondesigner-;uncommon)?both
 OR(;-materialcombination-;uncommon) tunic?both
 OR(-colorcombination-;-colorscheme-;-eyecolor-;uncommon) garb OR(;tailored by -fashiondesigner-;uncommon)?both
+OR(OR(armor;outfit) of -conceptsuffix-;-conceptsuffix- OR(armor;outfit);uncommon)?both

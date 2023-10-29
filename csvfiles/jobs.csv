@@ -90,6 +90,7 @@ Chancellor;both
 Chaos mage;both
 Chaplain;both
 Chauffeur;both
+Cheerleader;female
 Chef;both
 Chemist;both
 Chimney Sweep;both
@@ -479,7 +480,6 @@ Tanner;both
 Tax collector;both
 Taxi driver;both
 Teacher;both
-Teacher;both
 Technomancer;both
 Templar;both
 Theater director;both
@@ -502,6 +502,7 @@ Tribal Chief;both
 Trickster;both
 Troubadour;both
 Vagabond;both
+Valedictorian;both
 Valet;both
 Valkyrie;both
 Vampire hunter;both

@@ -90,13 +90,13 @@ generateprompts(10,5
                 ,"","","PREFIXPROMPT" 
                 ,"SUFFIXPROMPT"
                 ,"",1,""
-                ,"TEST" # subject override
+                ,"" # subject override
                 ,True,
                 "",20
                 , "all" # gender
                 , "all" # object types
                 , "all"  # humanoid types   -- all,generic humans,generic human relations, multiple humans, celebrities e.a.,fictional,humanoids, based on job or title,based on first name
-                , "the X of Y concepts" # concept types
+                , "episode titles from tv shows" # concept types
                 , False  # prompt switching
                 , True  # Turn off emojis
                 , 0  # seed

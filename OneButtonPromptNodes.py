@@ -65,6 +65,7 @@ generateconcepts = True
 generatepoemline = True
 generatesongline = True
 generatecardname = True
+generateepisodetitle = True
 
 
 for item in config:
@@ -115,6 +116,8 @@ for item in config:
             generatesongline = False
         if item[0] == 'subject_cardname' and item[1] != 'on':
             generatecardname = False
+        if item[0] == 'subject_episodetitle' and item[1] != 'on':
+            generateepisodetitle = False
 
 # build up all subjects we can choose based on the loaded config file
 if(generatevehicle or generateobject or generatefood or generatebuilding or generatespace):
@@ -125,7 +128,7 @@ if(generatemanwoman or generatemanwomanrelation or generatefictionalcharacter or
      subjects.append("humanoid")
 if(generatelandscape):
      subjects.append("landscape")
-if(generateevent or generateconcepts or generatepoemline or generatesongline or generatecardname):
+if(generateevent or generateconcepts or generatepoemline or generatesongline or generatecardname or generateepisodetitle):
      subjects.append("concept")
 
 
@@ -177,6 +180,9 @@ if(generatesongline):
      subjectsubtypesconcept.append("lines from songs")
 if(generatecardname):
      subjectsubtypesconcept.append("names from card based games")
+if(generateepisodetitle):
+     subjectsubtypesconcept.append("episode titles from tv shows")
+     
 
 class OneButtonPrompt:
 

@@ -16,10 +16,10 @@ Adventurer;both
 Air traffic controller;both
 Airbender;both
 Alchemist;both
-Alchemist;both
-Alchemist;both
 Amazone;female
 Android;both
+Angel;both
+Angel of -conceptsuffix- and -conceptsuffix-;both
 Anthropologist;both
 Apothecary;both
 Arcane trickster;both
@@ -90,6 +90,7 @@ Chancellor;both
 Chaos mage;both
 Chaplain;both
 Chauffeur;both
+Cheerleader;female
 Chef;both
 Chemist;both
 Chimney Sweep;both
@@ -205,11 +206,10 @@ Gangster;both
 Gardener;both
 Geek;both
 Geek Squad Employee;both
-Geisha;both
 Geisha;female
 General;both
+Gentleman;male
 Geographer;both
-Geologist;both
 Geologist;both
 Geomancer;both
 Ghost hunter;both
@@ -219,15 +219,15 @@ Glassblower;both
 Goldsmith;both
 Gondolier;both
 Grave robber;both
-Groom;both
 Groom;male
 Guardian;both
 Gunner;both
 Gunnery Sergeant;both
 Guru;both
 Gypsy;both
+Hacker;both
 Harbinger;both
-harajuku girl;female
+Harajuku Girl;female
 Harpist;both
 Healer;both
 Henchman;both
@@ -242,7 +242,6 @@ Hillbilly;both
 Hooded figure;both
 Humanitarian;both
 hunk;male
-Hunter;both
 Hunter;both
 Ice Cream Vendor;both
 Ice king;male
@@ -265,6 +264,7 @@ Jeweler;both
 Jock;both
 Journalist;both
 Judge;both
+Junkie;both
 K-pop star;both
 Khan;both
 King;male
@@ -287,11 +287,10 @@ Lifeguard;both
 Lord;male
 Loremaster;both
 Lumberjack;both
-Lumberjack;both
+Machinint;both
 Maffiosi;both
 Mage slayer;both
 Mage;both
-Magician;both
 Magician;both
 Maid;female
 Maiden;female
@@ -433,6 +432,7 @@ Shadowmage;both
 Shady figure;both
 Shaolinn Monk;both
 Shepherd;both
+Shieldmaiden;female
 Ship captain;both
 Shipbuilder;both
 Shoemaker;both
@@ -480,7 +480,6 @@ Tanner;both
 Tax collector;both
 Taxi driver;both
 Teacher;both
-Teacher;both
 Technomancer;both
 Templar;both
 Theater director;both
@@ -503,6 +502,7 @@ Tribal Chief;both
 Trickster;both
 Troubadour;both
 Vagabond;both
+Valedictorian;both
 Valet;both
 Valkyrie;both
 Vampire hunter;both

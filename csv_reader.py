@@ -86,7 +86,7 @@ def csv_to_list(csvfilename, antilist=[], directory="./csvfiles/", lowerandstrip
         if(directory=="./csvfiles/" or directory=="./csvfiles/special_lists/"):
                 if(os.path.isfile(userfilesfolder + csvfilename + "_addon" + ".csv")):
                         with open(userfilesfolder + csvfilename + "_addon" + ".csv", "r", newline="",encoding="utf8") as file:
-                                reader = csv.reader(file, delimiter=",")
+                                reader = csv.reader(file, delimiter=delimiter)
                                 if(skipheader==True):
                                         next(reader)
                                 if(listoflistmode==True):

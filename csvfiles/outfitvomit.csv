@@ -3,7 +3,7 @@ has OR(;large;small;giant;tiny;normal) OR(;Leather;normal) OR(belt;strap)OR(;s;n
 has OR(Metal;Iron;Diamond;Steel;metallic;-materialcombination-) OR(plates;plating)
 has a crest on chest
 OR(is zipped up;is unzipped;is partially unzipped;zipper;buttons;is buttoned up;is partially unbuttoned;is unbuttoned)
-has OR(;large;small;giant;tiny;normal) (zipper;button;buttons;zippers)
+has OR(;large;small;giant;tiny;normal) OR(zipper;button;buttons;zippers)
 is OR(off-the-shoulder;strapless;cropped;ruffled)
 is OR(;very;normal) OR(large;small;tight;loose;baggy;delicate;wet;-outfitdescriptor-)
 is made from OR(satin;curderoy;lace;cotton;metal;-materialcombination-)

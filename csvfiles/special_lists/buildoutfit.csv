@@ -11,3 +11,4 @@
 , OR(wearing;dressed in;in;normal) OR(;a very;rare) OR(;-outfitdescriptor-;normal) OR(-minioutfit-;-outfit-;uncommon), OR(-hisher-;The;normal) -sameoutfit- -outfitvomit-
 , -heshe- is OR(wearing a;dressed in) OR(;-hisher-;-hisher- -outfitdescriptor-;rare) -outfit-, OR(-hisher-;The;normal) -sameoutfit- OR(is tailored by -fashiondesigner- OR(; and -fashiondesigner-;uncommon);is inspired by the -charactertype- OR(;and -charactertype-;uncommon))
 , -heshe- is OR(wearing a;dressed in) OR(;-hisher-;-hisher- -outfitdescriptor-;rare) -artmovement- fashion style -outfit-
+, OR(wearing;dressed in;in;normal) OR(;a very;rare) OR(;-outfitdescriptor-;normal) -outfit-

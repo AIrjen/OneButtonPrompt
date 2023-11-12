@@ -39,7 +39,7 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
             print(result)
             break
 
-        if(overrideoutfit != "" and overrideoutfit not in result ):
+        if(overrideoutfit != "" and overrideoutfit not in result and onlyartists == False):
             print("The outfit override is not showing up!")
             print("")
             print(result)
@@ -89,14 +89,14 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
     print("All done!")
 
 generateprompts(100,5
-                ,"" # subject
+                ,"all" # subject
                 ,"all" # artists
                 ,"all" # image type  "only other types", "only templates mode", "art blaster mode", "quality vomit mode", "color cannon mode", "unique art mode", "massive madness mode", "photo fantasy mode", "subject only mode", "fixed styles mode"
                 , False # only artists
                 ,"","","PREFIXPROMPT" 
                 ,"SUFFIXPROMPT"
                 ,"",1,""
-                ,"" # subject override
+                ,"TESTSUBJECT" # subject override
                 ,True,
                 "",20
                 , "all" # gender
@@ -106,5 +106,5 @@ generateprompts(100,5
                 , False  # prompt switching
                 , True  # Turn off emojis
                 , 0  # seed
-                , "TEST" #outfit override
+                , "TESTOUTFIT" #outfit override
                 )

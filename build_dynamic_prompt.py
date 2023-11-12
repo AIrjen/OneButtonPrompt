@@ -719,7 +719,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
 
     # determine wether we have a special mode or not
-    if(random.randint(1,int(imagemodechance)) == 1 and imagetype == "all" and giventypeofimage == ""):
+    if(random.randint(1,int(imagemodechance)) == 1 and imagetype == "all" and giventypeofimage == "" and onlyartists == False):
         imagetype = random.choice(imagetypemodelist)  # override imagetype with a random "mode" value
 
 
@@ -1497,10 +1497,25 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
 
             if(onlyartists == True):
+                #Parse or statements
+                completeprompt = parse_custom_functions(completeprompt, insanitylevel)
 
                 # replace artist wildcards
                 completeprompt = replacewildcard(completeprompt, insanitylevel, "-artist-", artistlist, False, False)
                 completeprompt = replacewildcard(completeprompt, insanitylevel, "-gregmode-", gregmodelist, False, False)
+
+                completeprompt = replacewildcard(completeprompt, insanitylevel, "-fantasyartist-", fantasyartistlist, False, False)
+                completeprompt = replacewildcard(completeprompt, insanitylevel, "-popularartist-", popularartistlist, False, False)
+                completeprompt = replacewildcard(completeprompt, insanitylevel, "-romanticismartist-", romanticismartistlist, False, False)
+                completeprompt = replacewildcard(completeprompt, insanitylevel, "-photographyartist-", photographyartistlist, False, False)
+                completeprompt = replacewildcard(completeprompt, insanitylevel, "-portraitartist-", portraitartistlist, False, False)
+                completeprompt = replacewildcard(completeprompt, insanitylevel, "-characterartist-", characterartistlist, False, False)
+                completeprompt = replacewildcard(completeprompt, insanitylevel, "-landscapeartist-", landscapeartistlist, False, False)
+                completeprompt = replacewildcard(completeprompt, insanitylevel, "-scifiartist-", scifiartistlist, False, False)
+                completeprompt = replacewildcard(completeprompt, insanitylevel, "-graphicdesignartist-", graphicdesignartistlist, False, False)
+                completeprompt = replacewildcard(completeprompt, insanitylevel, "-digitalartist-", digitalartistlist, False, False)
+                completeprompt = replacewildcard(completeprompt, insanitylevel, "-architectartist-", architectartistlist, False, False)
+                completeprompt = replacewildcard(completeprompt, insanitylevel, "-cinemaartist-", cinemaartistlist, False, False)
                     
                 # clean it up
                 completeprompt = cleanup(completeprompt, advancedprompting, insanitylevel)
@@ -2009,7 +2024,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
         if(genjoboractivity and genjoboractivitylocation=="back"):
             joboractivitylist = [joblist,humanactivitylist]
-            completeprompt += random.choice(random.choice(joboractivitylist)) + ", "
+            completeprompt +=  ", " + random.choice(random.choice(joboractivitylist)) + ", "
 
 
         # if(subjectchooser in ["animal as human","human","job", "fictional", "non fictional", "humanoid"] and legendary_dist(insanitylevel)):
@@ -3753,6 +3768,9 @@ def cleanup(completeprompt, advancedprompting, insanitylevel = 5):
     completeprompt = re.sub('\(mans', '(men', completeprompt)
     completeprompt = re.sub('\(Womans', '(Women', completeprompt)
     completeprompt = re.sub('\(womans', '(women', completeprompt)
+
+    completeprompt = re.sub('-sameothersubject-', 'it', completeprompt)
+    completeprompt = re.sub('-samehumansubject-', 'the person', completeprompt)
 
     
     completeprompt = re.sub('(?<!\()\s?\(', ' (', completeprompt)

@@ -1093,14 +1093,20 @@ class Script(scripts.Script):
             print(" ")
             print(p.prompt)
 
-            # finally figured out how to do multiple batch sizes
             promptlist = []
-            for i in range(batchsize):
-                promptlist.append(p.prompt)
+            if(batchsize>1):
+            # finally figured out how to do multiple batch sizes
+            
+                for i in range(batchsize):
+                    promptlist.append(p.prompt)
 
-            p.prompt = promptlist
-            p.batch_size = batchsize
-            p.hr_prompt = promptlist
+                p.prompt = promptlist
+                p.batch_size = batchsize
+                p.hr_prompt = promptlist
+            else:
+                p.batch_size = batchsize
+                p.hr_prompt = p.prompt
+                
             processed = process_images(p)
             images += processed.images
             infotexts += processed.infotexts

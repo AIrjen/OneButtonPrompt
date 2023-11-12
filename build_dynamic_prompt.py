@@ -2024,7 +2024,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
         if(genjoboractivity and genjoboractivitylocation=="back"):
             joboractivitylist = [joblist,humanactivitylist]
-            completeprompt += random.choice(random.choice(joboractivitylist)) + ", "
+            completeprompt +=  ", " + random.choice(random.choice(joboractivitylist)) + ", "
 
 
         # if(subjectchooser in ["animal as human","human","job", "fictional", "non fictional", "humanoid"] and legendary_dist(insanitylevel)):
@@ -3768,6 +3768,9 @@ def cleanup(completeprompt, advancedprompting, insanitylevel = 5):
     completeprompt = re.sub('\(mans', '(men', completeprompt)
     completeprompt = re.sub('\(Womans', '(Women', completeprompt)
     completeprompt = re.sub('\(womans', '(women', completeprompt)
+
+    completeprompt = re.sub('-sameothersubject-', 'it', completeprompt)
+    completeprompt = re.sub('-samehumansubject-', 'the person', completeprompt)
 
     
     completeprompt = re.sub('(?<!\()\s?\(', ' (', completeprompt)

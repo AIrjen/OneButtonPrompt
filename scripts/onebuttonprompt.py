@@ -697,10 +697,10 @@ class Script(scripts.Script):
                                     sizelist, label="Size to generate", value="all")
                     basesize = gr.Dropdown(
                                     basesizelist, label="base size", value="512")
-                    with gr.Row(scale=1):
+                    with gr.Row():
                         samplingsteps = gr.Slider(1, 100, value="20", step=1, label="Sampling steps")
                         cfg = gr.Slider(1,20, value="6.0", step=0.1, label="CFG")
-                    with gr.Row(scale=1):                              
+                    with gr.Row():                              
                         hiresfix = gr.Checkbox(label="hires. fix", value=True)
                         hiressteps = gr.Slider(0, 100, value = "0", step=1, label="Hires steps")
                         hiresscale = gr.Slider(1, 4, value = "2", step=0.05, label="Scale")

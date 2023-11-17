@@ -4,10 +4,15 @@ One Button Prompt is now also a ComfyUI extension.
 There are 3 nodes currently availabe, with One Button Prompt node being the main one.
 You can slam it in every workflow, where you replace it with the Positive Prompt node.
 
-![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/a9c6b449-772b-495c-b39d-eda0be38a203)
-
+![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/bc7231b5-345c-4069-862d-2afdf733a526)
 
 ## Installing in ComfyUI
+One Button Prompt is available in ComfyUI manager.
+
+![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/54825420-ae69-4a9b-9dce-dad6baef8875)
+
+
+If you want to do a manual install, do the following steps:
 
 Navigate to your ComfyUI\custom_nodes\ directory, and run the following command:
 ```
@@ -16,13 +21,22 @@ git clone https://github.com/AIrjen/OneButtonPrompt
 
 This should create a OneButtonPrompt directory in the ComfyUI\custom_nodes\ folder.
 
-It could like something like this
+It could look something like this
 
-![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/50f9d8b4-dd0a-4c87-b8c4-25a159c71d75)
+![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/88faa548-62c7-4059-9d5e-2a74e17678f4)
 
 After that, restart ComfyUI, and you are ready to go.
 
-It should be available in ComfyUI manager soonish as well.
+### included workflows
+
+In this project, there are some example workflows included.
+
+[SDXL with refiner](https://github.com/AIrjen/OneButtonPrompt/blob/main/comfyui_workflow_examples/SDXL_OBP_Refiner.json)
+
+[SDXL without refiner](https://github.com/AIrjen/OneButtonPrompt/blob/main/comfyui_workflow_examples/SDXL_OBP_NoRefiner.json)
+
+[SDXL insanity variants](https://github.com/AIrjen/OneButtonPrompt/blob/main/comfyui_workflow_examples/SDXL_Insanity_Variants.json)
+
 
 ## Custom nodes
 
@@ -36,7 +50,7 @@ It will generate a prompt from scratch, or based on several of your inputs and s
 
 Please refer to the other documentation to see what each setting does.
 
-### Create Prompt Variant
+## Create Prompt Variant
 You can use the "Create Prompt Variant" node, to create variants based on a prompt you input. The strength of the variant is set with the "insanity level" slider. Simply connect it between the positive prompt and the CLIP encoder module.
 
 #### How it works

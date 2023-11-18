@@ -270,30 +270,30 @@ class Script(scripts.Script):
                             </font>
                             """)
             with gr.Row():
-                insanitylevel = gr.Slider(1, 10, value=5, step=1, label="Higher levels increases complexity and randomness of generated prompt")
+                insanitylevel = gr.Slider(1, 10, value=5, step=1, label="🎲⬅️❔➡️🎲🎲🎲 Higher levels increases complexity and randomness of generated prompt")
             with gr.Row():
                 with gr.Column(scale=1, variant="compact"):
                     subject = gr.Dropdown(
-                                    subjects, label="Subject Types", value="all")                   
+                                    subjects, label="📸 Subject Types", value="all")                   
                 with gr.Column(scale=1, variant="compact"):
                     artist = gr.Dropdown(
-                                    artists, label="Artists", value="all")
+                                    artists, label="🎨 Artists", value="all")
             with gr.Row():
                  chosensubjectsubtypeobject = gr.Dropdown(
-                                    subjectsubtypesobject, label="Type of object", value="all", visible=False)
+                                    subjectsubtypesobject, label="🏺 Type of object", value="all", visible=False)
                  chosensubjectsubtypehumanoid = gr.Dropdown(
-                                    subjectsubtypeshumanoid, label="Type of humanoids", value="all", visible=False)
+                                    subjectsubtypeshumanoid, label="👨‍👩‍👧 Type of humanoids", value="all", visible=False)
                  chosensubjectsubtypeconcept = gr.Dropdown(
-                                    subjectsubtypesconcept, label="Type of concept", value="all", visible=False)
+                                    subjectsubtypesconcept, label="💡🧠💭 Type of concept", value="all", visible=False)
                  chosengender = gr.Dropdown(
-                                    genders, label="gender", value="all", visible=False)
+                                    genders, label="🚻 gender", value="all", visible=False)
             with gr.Row():
                 with gr.Column(scale=2, variant="compact"):
                     imagetype = gr.Dropdown(
-                                    imagetypes, label="type of image", value="all")
+                                    imagetypes, label="🖼️ type of image", value="all")
                 with gr.Column(scale=2, variant="compact"):
                     imagemodechance = gr.Slider(
-                                    1, 100, value="20", step=1, label="One in X chance to use special image type mode")
+                                    1, 100, value="20", step=1, label="🎲🖼️ One in X chance to use special image type mode")
             with gr.Row():
                  gr.Markdown("""
                             <font size="2">
@@ -302,10 +302,10 @@ class Script(scripts.Script):
                             """
                  )
             with gr.Row():
-                 givensubject = gr.Textbox(label="Overwrite subject: ", value="")
-                 smartsubject = gr.Checkbox(label="Smart subject", value = True)
+                 givensubject = gr.Textbox(label="🔃📸 Overwrite subject: ", value="")
+                 smartsubject = gr.Checkbox(label="🧠📸 Smart subject", value = True)
             with gr.Row():
-                 givenoutfit = gr.Textbox(label="Overwrite outfit: ", value="")
+                 givenoutfit = gr.Textbox(label="🔃👗 Overwrite outfit: ", value="")
             with gr.Row():
                 gr.Markdown("""
                             <font size="2">
@@ -315,9 +315,9 @@ class Script(scripts.Script):
                 )
             with gr.Row():
                 with gr.Column():
-                    prefixprompt = gr.Textbox(label="Place this in front of generated prompt (prefix)",value="")
-                    suffixprompt = gr.Textbox(label="Place this at back of generated prompt (suffix)",value="")
-                    negativeprompt = gr.Textbox(label="Use this negative prompt",value="")
+                    prefixprompt = gr.Textbox(label="⬅️💬 Place this in front of generated prompt (prefix)",value="")
+                    suffixprompt = gr.Textbox(label="➡️💬 Place this at back of generated prompt (suffix)",value="")
+                    negativeprompt = gr.Textbox(label="🚫💬 Use this negative prompt",value="")
             with gr.Row():
                 gr.Markdown("""
                             <font size="2">
@@ -326,11 +326,11 @@ class Script(scripts.Script):
                             """
                 )
             with gr.Row():
-                 giventypeofimage = gr.Textbox(label="Overwrite type of image: ", value="")
+                 giventypeofimage = gr.Textbox(label="🔃🖼️ Overwrite type of image: ", value="")
             with gr.Row():
                 with gr.Column():
-                    antistring = gr.Textbox(label="Filter out following properties (comma seperated). Example ""film grain, purple, cat"" ")
-            with gr.Row():
+                    antistring = gr.Textbox(label="❌📝 Filter out following properties (comma seperated). Example ""film grain, purple, cat"" ")
+            with gr.Accordion("Help", open=False):
                     gr.Markdown(
                         """
                         ### Description
@@ -346,7 +346,7 @@ class Script(scripts.Script):
                         Add additional prompting to the prefix, suffix and negative prompt in this screen. The actual prompt fields are ignored. 
                         </font>
                         
-                        ### Subject Types
+                        ### 📸 Subject Types
                         
                         <font size="2">
                         You can choose a certain subject type, if you want to generate something more specific. It has the following types:  
@@ -363,7 +363,7 @@ class Script(scripts.Script):
 
                         After choosing object, humanoid or concept a subselection menu will show. You can pick further details here. When choosing humanoid, you can also select the gender you wish to generate.
 
-                        Type of Object:
+                        🏺 Type of Object:
 
                         1. all - selects randomly (default)
 
@@ -379,7 +379,7 @@ class Script(scripts.Script):
 
                         7. flora - Flowers and trees.
 
-                        Type of humanoid:
+                        👨‍👩‍👧 Type of humanoid:
 
                         1. all - selects randomly (default)
 
@@ -397,7 +397,7 @@ class Script(scripts.Script):
 
                         8. based on first name - Examples are Anna, James, Emma etc.
 
-                        gender:
+                        🚻 gender:
 
                         1. all - selects randomly
 
@@ -405,7 +405,7 @@ class Script(scripts.Script):
 
                         3. female
 
-                        Type of concept:
+                        💡🧠💭 Type of concept:
 
                         1. all - selects randomly (default)
 
@@ -421,21 +421,23 @@ class Script(scripts.Script):
 
                         </font>
                         
-                        ### Artists
+                        ### 🎨 Artists
                         
                         <font size="2">
                         Artists have a major impact on the result.
                         
                         1. all - it will cohesivly add about between 0-3 artists and style description. 
                         
-                        2. all (wild) - it will randomly select between 0-3 artists out of 3483 artists for your prompt. 
+                        2. all (wild) - it will randomly select between 0-3 artists out of 3483 artists for your prompt.
+
+                        3. greg mode - Will add greg, or many other popular artists into your prompt. Will also add a lot of quality statements. 
 
                         Others will select within that artist category
                         
                         You can turn it off and maybe add your own in the prefix or suffix prompt fields
                         </font>
 
-                        ### type of image
+                        ### 🖼️ type of image
 
                         <font size="2">
                         There are an immense number of image types, not only paintings and photo's, but also isometric renders and funko pops.
@@ -484,7 +486,7 @@ class Script(scripts.Script):
 
                         17. fixed styles mode --> Generate a subject on top of a fixed style.
 
-                        ### One in X chance to use special image type mode
+                        ### 🎲🖼️ One in X chance to use special image type mode
 
                         <font size="2">
                         This controls how often it will pick a special generation mode. It is a 1 in X chance. So lower means more often. This will only be applied of "type of image" is set to "all" and there is no Overwrite type of image set.
@@ -492,17 +494,17 @@ class Script(scripts.Script):
                         When set to 1, it will always pick a random special generation mode. When set to 20, it is a 1 in 20 chance this will happen.
                         </font>
                         
-                        ### Overwrite subject
+                        ### 🔃📸 Overwrite subject
 
                         When you fill in the Overwrite subject field, that subject will be used to build the dynamic prompt around. It is best, if you set the subject type to match the subject. For example, set it to humanoid if you place a person in the override subject field.
                         
                         This way, you can create unlimited variants of a subject.
 
-                        Smart subject tries to determine what to and not to generate based on your subject. Example, if your Overwrite subject is formed like this: Obese man wearing a kimono
+                        🧠📸 Smart subject tries to determine what to and not to generate based on your subject. Example, if your Overwrite subject is formed like this: Obese man wearing a kimono
                         
                         It will then recognize the body type and not generate it. It also recognizes the keyword wearing, and will not generate an outfit.
 
-                        ### Overwrite outfit
+                        ### 🔃👗 Overwrite outfit
 
                         When you fill in the override outfit field, it will generate an outfit in the prompt based on the given value. It can be used in combination with override subject, but does not have to be. It works best with smaller descriptions of the outfit.
 
@@ -538,18 +540,18 @@ class Script(scripts.Script):
         with gr.Tab("Workflow assist"):
             with gr.Row():
                     silentmode = gr.Checkbox(
-                        label="Workflow mode, turns off prompt generation and uses below Workflow prompt instead.")
+                        label="🛠️ Workflow mode, turns off prompt generation and uses below Workflow prompt instead.")
             with gr.Row():
-                workprompt = gr.Textbox(label="Workflow prompt")
+                workprompt = gr.Textbox(label="🛠️💬 Workflow prompt")
             with gr.Row():
-                promptvariantinsanitylevel = gr.Slider(0, 10, value=0, step=1, label="Prompt variant. Strength of variation of workflow prompt. 0 = no variance.")
-            with gr.Row():
+                promptvariantinsanitylevel = gr.Slider(0, 10, value=0, step=1, label="🎲🔃 🛠️💬 Prompt variant. Strength of variation of workflow prompt. 0 = no variance.")
+            with gr.Accordion("Help", open=False):
                 gr.Markdown(
                      """
                      <font size="2"> 
                      Workflow assist, suggestions by redditor Woisek.
 
-                     With Workflow mode, you turn off the automatic generation of new prompts on 'generate', and it will use the Workflow prompt field instead. So you can work and finetune any fun prompts without turning of the script.
+                     With 🛠️ Workflow mode, you turn off the automatic generation of new prompts on 'generate', and it will use the Workflow prompt field instead. So you can work and finetune any fun prompts without turning of the script.
 
                      You can use One Button Prompt wildcards in the workflow prompt. For example -outfit- .
 
@@ -559,48 +561,48 @@ class Script(scripts.Script):
                      </font>
                      """)
             with gr.Row():
-                genprom = gr.Button("Generate me some prompts!")
+                genprom = gr.Button("🔄💬 Generate me some prompts!")
             with gr.Row():
                     with gr.Column(scale=4):
                         prompt1 = gr.Textbox(label="prompt 1")
                     with gr.Column(scale=1, variant="compact"):
-                        prompt1toworkflow = gr.Button("Send prompt up")
+                        prompt1toworkflow = gr.Button("⬆️🛠️💬")
             with gr.Row():
                     with gr.Column(scale=4):
                         prompt2 = gr.Textbox(label="prompt 2")
                     with gr.Column(scale=1, variant="compact"):
-                        prompt2toworkflow = gr.Button("Send prompt up")
+                        prompt2toworkflow = gr.Button("⬆️🛠️💬")
             with gr.Row():
                     with gr.Column(scale=4):
                         prompt3 = gr.Textbox(label="prompt 3")
                     with gr.Column(scale=1, variant="compact"):
-                        prompt3toworkflow = gr.Button("Send prompt up")
+                        prompt3toworkflow = gr.Button("⬆️🛠️💬")
             with gr.Row():
                     with gr.Column(scale=4):
                         prompt4 = gr.Textbox(label="prompt 4")
                     with gr.Column(scale=1, variant="compact"):
-                        prompt4toworkflow = gr.Button("Send prompt up")
+                        prompt4toworkflow = gr.Button("⬆️🛠️💬")
             with gr.Row():
                     with gr.Column(scale=4):
                         prompt5 = gr.Textbox(label="prompt 5")
                     with gr.Column(scale=1, variant="compact"):
-                        prompt5toworkflow = gr.Button("Send prompt up")
+                        prompt5toworkflow = gr.Button("⬆️🛠️💬")
         with gr.Tab("Advanced"):
             with gr.Row():
                 with gr.Column(scale=1):
                     promptcompounderlevel = gr.Dropdown(
-                        promptcompounder, label="Prompt compounder", value="1")
+                        promptcompounder, label="🔂💬 Prompt compounder", value="1")
             with gr.Row():
                 with gr.Column(scale=1):
                     seperator = gr.Dropdown(
-                        seperatorlist, label="Prompt seperator", value="comma")    
+                        seperatorlist, label="🚧 Prompt seperator", value="comma")    
                 with gr.Column(scale=2):
                     ANDtoggle = gr.Dropdown(
-                        ANDtogglemode, label="Prompt seperator mode", value="none")
-            with gr.Row():
+                        ANDtogglemode, label="🚧🔧 Prompt seperator mode", value="none")
+            with gr.Accordion("Help", open=False):
                 gr.Markdown(
                     """
-                    ### Prompt compounder
+                    ### 🔂💬 Prompt compounder
                     
                     <font size="2">
                     Normally, it creates a single random prompt. With prompt compounder, it will generate multiple prompts and compound them together. 
@@ -623,11 +625,11 @@ class Script(scripts.Script):
                     
                     In the prefix prompt field then add for example: Art by artistname, 2 people
                     
-                    Set the prompt compounder to: 2
+                    Set the 🔂💬 prompt compounder to: 2
                     
-                    Set the Prompt seperator to: AND
+                    Set the 🚧 Prompt seperator to: AND
 
-                    Set the Prompt Seperator mode to: prefix AND prompt + suffix
+                    Set the 🚧🔧 Prompt Seperator mode to: prefix AND prompt + suffix
 
                     "automatic" is entirely build around Latent Couple. It will pass artists and the amount of people/animals/objects to generate in the prompt automatically. Set the prompt compounder equal to the amount of areas defined in Laten Couple.
                     
@@ -639,11 +641,11 @@ class Script(scripts.Script):
                     
                     Leave the prompt field empty
                     
-                    Set the prompt compounder to: 2
+                    Set the 🔂💬 prompt compounder to: 2
 
-                    Set the Prompt seperator to: AND
+                    Set the 🚧 Prompt seperator to: AND
 
-                    Set the Prompt Seperator mode to: automatic
+                    Set the 🚧🔧 Prompt Seperator mode to: automatic
 
 
                     </font>
@@ -669,26 +671,23 @@ class Script(scripts.Script):
                         startmain = gr.Button("Start generating and upscaling!")
                         interrupt = gr.Button("Interrupt current")
                         automatedoutputsfolderbutton = gr.Button(folder_symbol)
-                        apiurl = gr.Textbox(label="URL", value="http://127.0.0.1:7860")
                     with gr.Column(scale=1):
+                        apiurl = gr.Textbox(label="URL", value="http://127.0.0.1:7860")
                         onlyupscale = gr.Checkbox(label="Don't generate, only upscale", value=False)
-                        gr.Markdown(
-                                """
-                                <font size="2">
-                                Only upscale will not use txt2img to generate an image.
-
-                                Instead it will pick up all files in the \\upscale_me\\ folder and upscale them with below settings.
-                                </font>
-                                """
-                                )
                         increasestability = gr.Checkbox(label="Increase stability", value=False)
+            with gr.Row():
+                    with gr.Accordion("help", open=False):
                         gr.Markdown(
-                                """
-                                <font size="2">
-                                If you get NaN's or memory issues, turn this on.
-                                </font>
-                                """
-                                )   
+                            """
+                            <font size="2">
+                            Only upscale will not use txt2img to generate an image.
+
+                            Instead it will pick up all files in the \\upscale_me\\ folder and upscale them with below settings.
+
+                            Increase stability: If you get NaN's or memory issues, turn this on. It will unload and load the base checkpoint.
+                            </font>
+                            """
+                            ) 
             with gr.Row():
                 with gr.Column(scale=1):
                     
@@ -718,6 +717,11 @@ class Script(scripts.Script):
                 gr.Markdown(
                         """
                         ### Quality Gate
+                        """)
+            with gr.Row():
+                with gr.Accordion("quality gate help", open=False):
+                    gr.Markdown(
+                        """
                         <font size="2">
                         Uses aesthetic image scorer extension to check the quality of the image.
                         

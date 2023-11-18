@@ -10,13 +10,15 @@ One Button Prompt is a tool/script for Automatic1111/ComfyUI/RuinedFooocus for b
 
 It generates an entire prompt from scratch. It is random, but controlled. You simply load up the script and press generate, and let it surprise you.
 
-It is best used on all-purpose models, such as Stable Difussion 1.5 or those based on 1.5. Such as [deliberate](https://civitai.com/models/4823/deliberate) and [dreamlike diffusion](https://civitai.com/models/1274/dreamlike-diffusion-10). However, feel free to use it on your personal favorite models.
+It is a full AI prompt generator for Stable Diffusion.
+
+It is best used on all-purpose models, such as Stable Difussion 1.5 or those based on 1.5. It also works great on SDXL. Models such as [deliberate](https://civitai.com/models/4823/deliberate) and [dreamlike diffusion](https://civitai.com/models/1274/dreamlike-diffusion-10). However, feel free to use it on your personal favorite models.
 
 A simple user guide for first time use and settings is available [here](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/my_first_generation.md).
 
 It is also now available as a custom node for ComfyUI. [Check installation doc here](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/comfyui_integration.md)
 
-More of a Fooocus fan? Take a look at this excellent fork called [RuinedFooocus](https://github.com/runew0lf/RuinedFooocus) that has One Button Prompt built in.
+More of a Fooocus fan? Take a look at this excellent fork called [RuinedFooocus](https://github.com/runew0lf/RuinedFooocus) that has One Button Prompt built in. [Check some options available here](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/ruinedfooocus_integration.md)
 
 # Features
 - __Full prompt generation__ with the click of a button.                  ==> [guide to my first generation](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/my_first_generation.md) 

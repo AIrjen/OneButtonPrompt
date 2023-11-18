@@ -261,7 +261,7 @@ class Script(scripts.Script):
             
 
         with gr.Tab("Main"):
-            with gr.Row():
+            with gr.Row(variant="compact"):
                 gr.Markdown("""
                             <font size="2">
                             One Button Prompt is now active. Just press the normal Generate button to start generating images.
@@ -269,16 +269,16 @@ class Script(scripts.Script):
                             The settings below give you more control over what you wish to generate.
                             </font>
                             """)
-            with gr.Row():
+            with gr.Row(variant="compact"):
                 insanitylevel = gr.Slider(1, 10, value=5, step=1, label="🎲⬅️❔➡️🎲🎲🎲 Higher levels increases complexity and randomness of generated prompt")
-            with gr.Row():
-                with gr.Column(scale=1, variant="compact"):
+            with gr.Row(variant="compact"):
+                with gr.Column(variant="compact"):
                     subject = gr.Dropdown(
                                     subjects, label="📸 Subject Types", value="all")                   
-                with gr.Column(scale=1, variant="compact"):
+                with gr.Column(variant="compact"):
                     artist = gr.Dropdown(
                                     artists, label="🎨 Artists", value="all")
-            with gr.Row():
+            with gr.Row(variant="compact"):
                  chosensubjectsubtypeobject = gr.Dropdown(
                                     subjectsubtypesobject, label="🏺 Type of object", value="all", visible=False)
                  chosensubjectsubtypehumanoid = gr.Dropdown(
@@ -287,48 +287,48 @@ class Script(scripts.Script):
                                     subjectsubtypesconcept, label="💡🧠💭 Type of concept", value="all", visible=False)
                  chosengender = gr.Dropdown(
                                     genders, label="🚻 gender", value="all", visible=False)
-            with gr.Row():
-                with gr.Column(scale=2, variant="compact"):
+            with gr.Row(variant="compact"):
+                with gr.Column(variant="compact"):
                     imagetype = gr.Dropdown(
                                     imagetypes, label="🖼️ type of image", value="all")
-                with gr.Column(scale=2, variant="compact"):
+                with gr.Column(variant="compact"):
                     imagemodechance = gr.Slider(
                                     1, 100, value="20", step=1, label="🎲🖼️ One in X chance to use special image type mode")
-            with gr.Row():
+            with gr.Row(variant="compact"):
                  gr.Markdown("""
                             <font size="2">
                             Override options (choose the related subject type first for better results)
                             </font>
                             """
                  )
-            with gr.Row():
+            with gr.Row(variant="compact"):
                  givensubject = gr.Textbox(label="🔃📸 Overwrite subject: ", value="")
                  smartsubject = gr.Checkbox(label="🧠📸 Smart subject", value = True)
-            with gr.Row():
+            with gr.Row(variant="compact"):
                  givenoutfit = gr.Textbox(label="🔃👗 Overwrite outfit: ", value="")
-            with gr.Row():
+            with gr.Row(variant="compact"):
                 gr.Markdown("""
                             <font size="2">
                             Prompt fields
                             </font>
                             """
                 )
-            with gr.Row():
-                with gr.Column():
+            with gr.Row(variant="compact"):
+                with gr.Column(variant="compact"):
                     prefixprompt = gr.Textbox(label="⬅️💬 Place this in front of generated prompt (prefix)",value="")
                     suffixprompt = gr.Textbox(label="➡️💬 Place this at back of generated prompt (suffix)",value="")
                     negativeprompt = gr.Textbox(label="🚫💬 Use this negative prompt",value="")
-            with gr.Row():
+            with gr.Row(variant="compact"):
                 gr.Markdown("""
                             <font size="2">
                             Additional options
                             </font>
                             """
                 )
-            with gr.Row():
+            with gr.Row(variant="compact"):
                  giventypeofimage = gr.Textbox(label="🔃🖼️ Overwrite type of image: ", value="")
-            with gr.Row():
-                with gr.Column():
+            with gr.Row(variant="compact"):
+                with gr.Column(variant="compact"):
                     antistring = gr.Textbox(label="❌📝 Filter out following properties (comma seperated). Example ""film grain, purple, cat"" ")
             with gr.Accordion("Help", open=False):
                     gr.Markdown(
@@ -538,12 +538,12 @@ class Script(scripts.Script):
                         """
                         )
         with gr.Tab("Workflow assist"):
-            with gr.Row():
+            with gr.Row(variant="compact"):
                     silentmode = gr.Checkbox(
                         label="🛠️ Workflow mode, turns off prompt generation and uses below Workflow prompt instead.")
-            with gr.Row():
+            with gr.Row(variant="compact"):
                 workprompt = gr.Textbox(label="🛠️💬 Workflow prompt")
-            with gr.Row():
+            with gr.Row(variant="compact"):
                 promptvariantinsanitylevel = gr.Slider(0, 10, value=0, step=1, label="🎲🔃 🛠️💬 Prompt variant. Strength of variation of workflow prompt. 0 = no variance.")
             with gr.Accordion("Help", open=False):
                 gr.Markdown(
@@ -560,43 +560,43 @@ class Script(scripts.Script):
                      Below here, you can generate a set of random prompts, and send them to the Workflow prompt field. The generation of the prompt uses the settings in the Main tab.
                      </font>
                      """)
-            with gr.Row():
+            with gr.Row(variant="compact"):
                 genprom = gr.Button("🔄💬 Generate me some prompts!")
-            with gr.Row():
-                    with gr.Column(scale=4):
+            with gr.Row(variant="compact"):
+                    with gr.Column(scale=4, variant="compact"):
                         prompt1 = gr.Textbox(label="prompt 1")
-                    with gr.Column(scale=1, variant="compact"):
+                    with gr.Column(variant="compact"):
                         prompt1toworkflow = gr.Button("⬆️🛠️💬")
-            with gr.Row():
-                    with gr.Column(scale=4):
+            with gr.Row(variant="compact"):
+                    with gr.Column(scale=4, variant="compact"):
                         prompt2 = gr.Textbox(label="prompt 2")
-                    with gr.Column(scale=1, variant="compact"):
+                    with gr.Column(variant="compact"):
                         prompt2toworkflow = gr.Button("⬆️🛠️💬")
-            with gr.Row():
-                    with gr.Column(scale=4):
+            with gr.Row(variant="compact"):
+                    with gr.Column(scale=4, variant="compact"):
                         prompt3 = gr.Textbox(label="prompt 3")
-                    with gr.Column(scale=1, variant="compact"):
+                    with gr.Column(variant="compact"):
                         prompt3toworkflow = gr.Button("⬆️🛠️💬")
-            with gr.Row():
-                    with gr.Column(scale=4):
+            with gr.Row(variant="compact"):
+                    with gr.Column(scale=4, variant="compact"):
                         prompt4 = gr.Textbox(label="prompt 4")
-                    with gr.Column(scale=1, variant="compact"):
+                    with gr.Column(variant="compact"):
                         prompt4toworkflow = gr.Button("⬆️🛠️💬")
-            with gr.Row():
-                    with gr.Column(scale=4):
+            with gr.Row(variant="compact"):
+                    with gr.Column(scale=4, variant="compact"):
                         prompt5 = gr.Textbox(label="prompt 5")
-                    with gr.Column(scale=1, variant="compact"):
+                    with gr.Column(variant="compact"):
                         prompt5toworkflow = gr.Button("⬆️🛠️💬")
         with gr.Tab("Advanced"):
-            with gr.Row():
-                with gr.Column(scale=1):
+            with gr.Row(variant="compact"):
+                with gr.Column(variant="compact"):
                     promptcompounderlevel = gr.Dropdown(
                         promptcompounder, label="🔂💬 Prompt compounder", value="1")
-            with gr.Row():
-                with gr.Column(scale=1):
+            with gr.Row(variant="compact"):
+                with gr.Column(variant="compact"):
                     seperator = gr.Dropdown(
                         seperatorlist, label="🚧 Prompt seperator", value="comma")    
-                with gr.Column(scale=2):
+                with gr.Column(variant="compact"):
                     ANDtoggle = gr.Dropdown(
                         ANDtogglemode, label="🚧🔧 Prompt seperator mode", value="none")
             with gr.Accordion("Help", open=False):
@@ -653,7 +653,7 @@ class Script(scripts.Script):
                     """
                     )
         with gr.Tab("One Button Run and Upscale"):
-            with gr.Row():
+            with gr.Row(variant="compact"):
                     gr.Markdown(
                             """
                             ### TXT2IMG
@@ -666,16 +666,16 @@ class Script(scripts.Script):
                             </font>
                             """
                             )                         
-            with gr.Row():
-                    with gr.Column(scale=1):
+            with gr.Row(variant="compact"):
+                    with gr.Column(variant="compact"):
                         startmain = gr.Button("Start generating and upscaling!")
                         interrupt = gr.Button("Interrupt current")
                         automatedoutputsfolderbutton = gr.Button(folder_symbol)
-                    with gr.Column(scale=1):
+                    with gr.Column(variant="compact"):
                         apiurl = gr.Textbox(label="URL", value="http://127.0.0.1:7860")
                         onlyupscale = gr.Checkbox(label="Don't generate, only upscale", value=False)
                         increasestability = gr.Checkbox(label="Increase stability", value=False)
-            with gr.Row():
+            with gr.Row(variant="compact"):
                     with gr.Accordion("help", open=False):
                         gr.Markdown(
                             """
@@ -688,37 +688,37 @@ class Script(scripts.Script):
                             </font>
                             """
                             ) 
-            with gr.Row():
-                with gr.Column(scale=1):
+            with gr.Row(variant="compact"):
+                with gr.Column(variant="compact"):
                     
                     amountofimages = gr.Slider(1, 50, value="20", step=1, label="Amount of images to generate")
                     size = gr.Dropdown(
                                     sizelist, label="Size to generate", value="all")
                     basesize = gr.Dropdown(
                                     basesizelist, label="base size", value="512")
-                    with gr.Row():
+                    with gr.Row(variant="compact"):
                         samplingsteps = gr.Slider(1, 100, value="20", step=1, label="Sampling steps")
                         cfg = gr.Slider(1,20, value="6.0", step=0.1, label="CFG")
-                    with gr.Row():                              
+                    with gr.Row(variant="compact"):                              
                         hiresfix = gr.Checkbox(label="hires. fix", value=True)
                         hiressteps = gr.Slider(0, 100, value = "0", step=1, label="Hires steps")
                         hiresscale = gr.Slider(1, 4, value = "2", step=0.05, label="Scale")
                         denoisestrength = gr.Slider(0, 1, value="0.60", step=0.01, label="Denoise strength")
-                with gr.Column(scale=1):
+                with gr.Column(variant="compact"):
                     
                     model = gr.Dropdown(
                                     modellist, label="model to use", value="currently selected model")
-                    with gr.Column(scale=1):
+                    with gr.Column(variant="compact"):
                         samplingmethod = gr.Dropdown(
                                         samplerlist, label= "Sampler", value="all")
                         upscaler = gr.Dropdown(
                                         upscalerlist, label="hires upscaler", value="all")
-            with gr.Row():
+            with gr.Row(variant="compact"):
                 gr.Markdown(
                         """
                         ### Quality Gate
                         """)
-            with gr.Row():
+            with gr.Row(variant="compact"):
                 with gr.Accordion("quality gate help", open=False):
                     gr.Markdown(
                         """
@@ -733,42 +733,42 @@ class Script(scripts.Script):
                         </font>
                         """
                         )    
-            with gr.Row():
+            with gr.Row(variant="compact"):
                     qualitygate = gr.Checkbox(label="Quality Gate", value=False)
                     quality = gr.Slider(1, 10, value = "7.2", step=0.1, label="Quality", visible = False)
                     runs = gr.Slider(1, 50, value = "5", step=1, label="Amount of tries", visible = False)
-            with gr.Row():
+            with gr.Row(variant="compact"):
                     qualityhiresfix = gr.Checkbox(label="Move Hires fix afterwards", value=False, visible = False)
                     qualitymode = gr.Dropdown(
                                         qualitymodelist, label= "Mode of operation", value="highest", visible = False)
                     qualitykeep = gr.Dropdown(
                                         qualitykeeplist, label= "Images", value="keep used", visible = False)
-            with gr.Row():
+            with gr.Row(variant="compact"):
                     gr.Markdown(
                         """
                         ### IMG2IMG upscale
                         """
                         )
-            with gr.Row():
+            with gr.Row(variant="compact"):
                     img2imgactivate = gr.Checkbox(label="Upscale image with IMG2IMG", value=True)
-            with gr.Row():
-                    with gr.Column(scale=1):
+            with gr.Row(variant="compact"):
+                    with gr.Column(variant="compact"):
                         img2imgbatch = gr.Slider(1, 5, value="1", step=1, label="Amount times to repeat upscaling with IMG2IMG (loopback)")
                         img2imgsamplingsteps = gr.Slider(1, 100, value="20", step=1, label="img2img Sampling steps")
                         img2imgcfg = gr.Slider(1,20, value="6", step=0.1, label="img2img CFG")
                         img2imgdenoisestrength = gr.Slider(0, 1, value="0.30", step=0.01, label="img2img denoise strength")
                         img2imgdenoisestrengthmod = gr.Slider(-1,1, value = "-0.05", step=0.01, label="adjust denoise each img2img batch")
-                    with gr.Column(scale=1):
+                    with gr.Column(variant="compact"):
                         img2imgmodel = gr.Dropdown(
                                     modellist, label="img2img model to use", value="currently selected model")
                         img2imgsamplingmethod = gr.Dropdown(
                                         img2imgsamplerlist, label= "img2img sampler", value="all")   
                         img2imgupscaler = gr.Dropdown(
                                         img2imgupscalerlist, label="img2img upscaler", value="all")
-                    with gr.Row():
+                    with gr.Row(variant="compact"):
                         img2imgscale = gr.Slider(1, 4, value="2", step=0.05, label="img2img scale")
                         img2imgpadding = gr.Slider(32, 256, value="64", step=12, label="img2img padding")
-            with gr.Row():
+            with gr.Row(variant="compact"):
                     ultimatesdupscale = gr.Checkbox(label="Use Ultimate SD Upscale script instead", value=False)
                     gr.Markdown(
                         """
@@ -777,7 +777,7 @@ class Script(scripts.Script):
                         </font>
                         """
                         )
-            with gr.Row():
+            with gr.Row(variant="compact"):
                     with gr.Column(scale = 1):
                         #usdutilewidth, usdutileheight, usdumaskblur, usduredraw, usduSeamsfix, usdusdenoise, usduswidth, usduspadding, usdusmaskblur
                         #usdutilewidth = "512", usdutileheight = "0", usdumaskblur = "8", usduredraw ="Linear", usduSeamsfix = "None", usdusdenoise = "0.35", usduswidth = "64", usduspadding ="32", usdusmaskblur = "8"
@@ -793,13 +793,13 @@ class Script(scripts.Script):
                         usduswidth = gr.Slider(0, 128, value="64", step=12, label="Seams Width", visible = False)
                         usduspadding = gr.Slider(0, 128, value="32", step=12, label="Seams padding", visible = False)
                         usdusmaskblur = gr.Slider(0, 64, value="8", step=1, label="Seams Mask blur (offset pass only)", visible = False)
-            with gr.Row():
+            with gr.Row(variant="compact"):
                     with gr.Column(scale = 1):
                         controlnetenabled = gr.Checkbox(label="Enable controlnet tile resample", value=False)
                         controlnetblockymode = gr.Checkbox(label="also enable wierd blocky upscale mode", value=False)
                     with gr.Column(scale = 1):
                         controlnetmodel = gr.Textbox(label="Controlnet tile model name", value = "control_v11f1e_sd15_tile [a371b31b]")
-            with gr.Row():
+            with gr.Row(variant="compact"):
                  gr.Markdown(
                                 """
                                 <font size="2">
@@ -810,10 +810,10 @@ class Script(scripts.Script):
                                 </font>
                                 """
                                 )
-            with gr.Row():
+            with gr.Row(variant="compact"):
                  with gr.Column(scale = 1):
                             enableextraupscale = gr.Checkbox(label="Enable upscale with extras", value=False)
-            with gr.Row():
+            with gr.Row(variant="compact"):
                  with gr.Column(scale = 1):
                             extrasresize = gr.Slider(0, 8, value="2", step=0.05, label="Upscale resize", visible = False)
                             extrasupscaler1 = gr.Dropdown(

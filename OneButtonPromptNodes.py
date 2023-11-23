@@ -230,8 +230,8 @@ class OneButtonPrompt:
             },
         }
 
-    RETURN_TYPES = ("STRING",)
-    RETURN_NAMES = ("prompt",)
+    RETURN_TYPES = ("STRING","STRING", "STRING")
+    RETURN_NAMES = ("prompt","prompt_g", "prompt_l")
 
     FUNCTION = "Comfy_OBP"
 
@@ -240,9 +240,13 @@ class OneButtonPrompt:
     CATEGORY = "OneButtonPrompt"
     
     def Comfy_OBP(self, insanitylevel, custom_subject, seed, artist, imagetype, subject, imagemodechance, humanoids_gender, subject_subtype_objects, subject_subtypes_humanoids, subject_subtypes_concepts, emojis, custom_outfit):
-        generatedprompt = build_dynamic_prompt(insanitylevel,subject,artist,imagetype,False,"","","",1,"",custom_subject,True,"",imagemodechance, humanoids_gender, subject_subtype_objects, subject_subtypes_humanoids, subject_subtypes_concepts, False, emojis, seed, custom_outfit)
+        generatedpromptlist = build_dynamic_prompt(insanitylevel,subject,artist,imagetype,False,"","","",1,"",custom_subject,True,"",imagemodechance, humanoids_gender, subject_subtype_objects, subject_subtypes_humanoids, subject_subtypes_concepts, False, emojis, seed, custom_outfit, True)
         #print(generatedprompt)
-        return (generatedprompt,)
+        generatedprompt = generatedpromptlist[0]
+        prompt_g = generatedpromptlist[1]
+        prompt_l = generatedpromptlist[2]
+
+        return (generatedprompt, prompt_g, prompt_l)
 
 
 class CreatePromptVariant:
@@ -300,6 +304,10 @@ class SavePromptToFile:
                 "positive_prompt": ("STRING",{"multiline": True}),
                 "negative_prompt": ("STRING",{"multiline": True}),
             },
+            "optional": {
+                "prompt_g": ("STRING",{"multiline": True}),
+                "prompt_l": ("STRING",{"multiline": True}),
+            },
         }
 
     OUTPUT_NODE = True
@@ -308,7 +316,7 @@ class SavePromptToFile:
 
     CATEGORY = "OneButtonPrompt"
 
-    def saveprompttofile(self, positive_prompt, negative_prompt, filename_prefix):
+    def saveprompttofile(self, positive_prompt, prompt_g, prompt_l, negative_prompt, filename_prefix):
         # Some stuff for the prefix
         filename_prefix += self.prefix_append
 
@@ -415,6 +423,12 @@ class SavePromptToFile:
 
         with open(directoryandfilename, 'w', encoding="utf-8") as file:
             file.write("prompt: " + positive_prompt + "\n")
+            
+            if(len(prompt_g) > 0):
+                file.write("prompt_g: " + prompt_g + "\n")
+            if(len(prompt_l) > 0):
+                file.write("prompt_l: " + prompt_l + "\n")
+            
             file.write("negative prompt: " + negative_prompt + "\n")
 
 

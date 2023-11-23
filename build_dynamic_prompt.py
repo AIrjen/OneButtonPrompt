@@ -10,7 +10,7 @@ from random_functions import *
 # insanity level controls randomness of propmt 0-10
 # forcesubject van be used to force a certain type of subject
 # Set artistmode to none, to exclude artists 
-def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", givensubject="",smartsubject = True,giventypeofimage="", imagemodechance = 20, gender = "all", subtypeobject="all", subtypehumanoid="all", subtypeconcept="all", advancedprompting=True, hardturnoffemojis=False, seed=-1, overrideoutfit=""):
+def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", givensubject="",smartsubject = True,giventypeofimage="", imagemodechance = 20, gender = "all", subtypeobject="all", subtypehumanoid="all", subtypeconcept="all", advancedprompting=True, hardturnoffemojis=False, seed=-1, overrideoutfit="", prompt_g_and_l = False):
 
     # set seed
     # For use in ComfyUI (might bring to Automatic1111 as well)
@@ -1535,6 +1535,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             if artistmode in ["enhancing"]:
                 completeprompt += " ["
         
+
+        
         # start image type
 
         if(giventypeofimage=="" and generatetype == True):
@@ -1597,6 +1599,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         if(chance_roll(insanitylevel, minivomitprefix2chance) and generateminivomit == True):
             completeprompt += " -minivomit-, "
 
+
+        
         # start shot size
 
         if(mainchooser in ["object", "animal", "humanoid", "concept"] and othertype == 0 and "portrait" not in completeprompt and generateshot == True and chance_roll(insanitylevel,shotsizechance)):
@@ -1610,6 +1614,10 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     
         genjoboractivity = False
         # start subject building
+
+        # divider between subject and everything else
+        completeprompt += " @ "
+
         if(generatesubject == True):
         # start with descriptive qualities
 
@@ -2035,6 +2043,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         if(subjectchooser in ["human", "humanoid", "manwomanrelation","firstname"] and chance_roll(insanitylevel, buildfacechance) and generateface== True):
             completeprompt += random.choice(buildfacelist) + ", "
 
+
+
+
         # custom mid list
         for i in range(custominputmidrepeats):
             if(chance_roll(insanitylevel, custominputmidchance) and generatecustominputmid == True):
@@ -2080,6 +2091,11 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             
         if(chance_roll(insanitylevel, generalminilocationchance) and generateminilocationaddition == True):
             completeprompt += " -minilocationaddition-, "
+
+
+        # divider between subject and everything else
+        completeprompt += " @ "
+        
 
         # Add more quality while in greg mode lol
         if(originalartistchoice == "greg mode" and generatequality == True):
@@ -2875,6 +2891,21 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     # clean it up
     completeprompt = cleanup(completeprompt, advancedprompting, insanitylevel)
 
+    # Split it up for support for prompt_g (subject) and prompt_l (style)
+    if("@" in completeprompt and prompt_g_and_l == True):
+        promptlist = completeprompt.split("@")
+        prompt_g = cleanup(promptlist[1], advancedprompting, insanitylevel)
+        prompt_l = cleanup((promptlist[0] + ", " + promptlist[2]).replace("of a",""), advancedprompting, insanitylevel)
+    elif(prompt_g_and_l == True):
+        prompt_g = completeprompt
+        prompt_l = completeprompt
+
+    completeprompt = completeprompt.replace(" @ ", " ")
+    completeprompt = completeprompt.replace("@ ", " ")
+    completeprompt = completeprompt.replace(" @", " ")
+    completeprompt = completeprompt.replace("@", " ")
+    completeprompt = cleanup(completeprompt, advancedprompting, insanitylevel)
+
     #just for me, some fun with posting fake dev messages (ala old sim games)
     if(random.randint(1, 50)==1):
         print("")
@@ -2882,7 +2913,10 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         print("")
 
     print(completeprompt)
-    return completeprompt
+    if(prompt_g_and_l == False):
+        return completeprompt
+    else:
+        return completeprompt, prompt_g, prompt_l
 
 
 # function that takes an existing prompt and tries to create a variant out of it

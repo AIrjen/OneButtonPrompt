@@ -10,16 +10,23 @@ from build_dynamic_prompt import *
 
 
 
-def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", imagetype="all",onlyartists=False, workprompt="", antistring="",prefixprompt="", suffixprompt="", negativeprompt="",promptcompounderlevel = "1", seperator="comma",givensubject="",smartsubject=True,giventypeofimage="",imagemodechance=20, gender = "all", subtypeobject = "all", subtypehumanoid = "all", subtypeconcept = "all", advancedprompting = True, hardturnoffemojis=False, seed=0, overrideoutfit=""):
+def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", imagetype="all",onlyartists=False, workprompt="", antistring="",prefixprompt="", suffixprompt="", negativeprompt="",promptcompounderlevel = "1", seperator="comma",givensubject="",smartsubject=True,giventypeofimage="",imagemodechance=20, gender = "all", subtypeobject = "all", subtypehumanoid = "all", subtypeconcept = "all", advancedprompting = True, hardturnoffemojis=False, seed=0, overrideoutfit="", prompt_g_and_l = False):
     loops = int(amount)  # amount of images to generate
     steps = 0
    
     insanitylevel = int(insanitylevel)
     while steps < loops:
         # build prompt
-    
-        result = build_dynamic_prompt(insanitylevel,subject,artist,imagetype, onlyartists,antistring,prefixprompt,suffixprompt,promptcompounderlevel, seperator,givensubject,smartsubject,giventypeofimage,imagemodechance, gender, subtypeobject, subtypehumanoid, subtypeconcept, advancedprompting, hardturnoffemojis, seed, overrideoutfit)
+        if(prompt_g_and_l == True):
+            resultlist = build_dynamic_prompt(insanitylevel,subject,artist,imagetype, onlyartists,antistring,prefixprompt,suffixprompt,promptcompounderlevel, seperator,givensubject,smartsubject,giventypeofimage,imagemodechance, gender, subtypeobject, subtypehumanoid, subtypeconcept, advancedprompting, hardturnoffemojis, seed, overrideoutfit, prompt_g_and_l)
+            result = resultlist[0]
+            print("prompt_g")
+            print(resultlist[1])
+            print("prompt_l")
+            print(resultlist[2])
 
+        else:
+            result = build_dynamic_prompt(insanitylevel,subject,artist,imagetype, onlyartists,antistring,prefixprompt,suffixprompt,promptcompounderlevel, seperator,givensubject,smartsubject,giventypeofimage,imagemodechance, gender, subtypeobject, subtypehumanoid, subtypeconcept, advancedprompting, hardturnoffemojis, seed, overrideoutfit, prompt_g_and_l)
         print("")
         print("loop " + str(steps))
         print("")
@@ -88,7 +95,7 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
     print("")
     print("All done!")
 
-generateprompts(100,5
+generateprompts(10,5
                 ,"all" # subject
                 ,"all" # artists
                 ,"all" # image type  "only other types", "only templates mode", "art blaster mode", "quality vomit mode", "color cannon mode", "unique art mode", "massive madness mode", "photo fantasy mode", "subject only mode", "fixed styles mode"
@@ -107,4 +114,5 @@ generateprompts(100,5
                 , True  # Turn off emojis
                 , 0  # seed
                 , "TESTOUTFIT" #outfit override
+                , True #prompt_g_and_l
                 )

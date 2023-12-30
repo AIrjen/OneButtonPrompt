@@ -17,7 +17,10 @@ def generateprompts(amount = 1,positive_prompt = "",insanitylevel="5"):
     insanitylevel = int(insanitylevel)
     while steps < loops:
         # build prompt
+        if positive_prompt == "":
+                    positive_prompt = build_dynamic_prompt()
         result = build_dynamic_negative(postive_prompt=positive_prompt, insanitylevel=insanitylevel)
+        print(result)
         print("")
         print("loop " + str(steps))
         print("")
@@ -29,4 +32,4 @@ def generateprompts(amount = 1,positive_prompt = "",insanitylevel="5"):
     print("")
     print("All done!")
 
-generateprompts(1,"",5)
+generateprompts(1,"",1)

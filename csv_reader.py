@@ -158,4 +158,22 @@ def load_config_csv():
                 reader = csv.DictReader(file, delimiter=";")
                 csvlist = [list(row.values()) for row in reader if not any(value.startswith('#') for value in row.values())]
         return csvlist
+
+def load_negative_list():
+        primerlist = []
+        negativelist = []
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        
+        full_path_default_negative_file = os.path.join(script_dir, "./csvfiles/special_lists/" )
+        negative_file = full_path_default_negative_file + 'negativewords.csv'
+
+        with open(negative_file, "r", newline="",encoding="utf8") as file:
+                reader = csv.DictReader(file, delimiter=";")
+                primerlist = [row["primer"] for row in reader]
+        with open(negative_file, "r", newline="",encoding="utf8") as file:
+                reader = csv.DictReader(file, delimiter=";")
+                negativelist = [row["negative"] for row in reader]
+
+        return primerlist, negativelist
+
         

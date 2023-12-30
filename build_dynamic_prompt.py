@@ -846,32 +846,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         # Remove any list/logic with keywords, such as:
         # wearing, bodytype, pose, location, hair, background
 
-        # first get all the words
-
-        # Split the string by commas and spaces
-        words = re.split(r'[,\s]+', givensubject)
-        # Remove leading/trailing whitespaces from each word
-        words = [word.strip() for word in words]
-
-        # Filter out empty words
-        words = [word for word in words if word]
-
-        # Convert the list to a set to remove duplicates, then convert it back to a list
-        givensubjectlistsinglewords = list(set(words))
-
-        # now get all words clumped together by commas
-        if ',' in givensubject:
-            allwords = givensubject.split(',')
-        else:
-            allwords = [givensubject]
-        # Remove leading/trailing whitespaces from each word and convert to lowercase
-        words = [word.strip().lower() for word in allwords]
-
-        # Filter out empty words and duplicates
-        givensubjectlistwords = list(set(filter(None, words)))
-
-        givensubjectlist = givensubjectlistsinglewords + givensubjectlistwords
-
+        # use function to split up the words
+        givensubjectlist = split_prompt_to_words(givensubject)
 
         # Check only for the lists that make sense?
         
@@ -884,14 +860,14 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         
         # bodytype
         foundinlist = any(word.lower() in [item.lower() for item in bodytypelist] for word in givensubjectlist)
-        keywordslist = ["bodytype","body type"]
+        keywordslist = ["bodytype","body type","model"]
         keywordsinstring = any(word.lower() in givensubject.lower() for word in keywordslist)
         if(foundinlist == True or keywordsinstring == True):
             generatebodytype = False
 
         # hair
         foundinlist = any(word.lower() in [item.lower() for item in hairstylelist] for word in givensubjectlist)
-        keywordslist = ["hair"]
+        keywordslist = ["hair","hairstyle"]
         keywordsinstring = any(word.lower() in givensubject.lower() for word in keywordslist)
         if(foundinlist == True or keywordsinstring == True):
             generatehairstyle = False
@@ -905,7 +881,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         # background
         foundinlist = any(word.lower() in [item.lower() for item in locationlist] for word in givensubjectlist)
         foundinlist2 = any(word.lower() in [item.lower() for item in buildinglist] for word in givensubjectlist)
-        keywordslist = ["location","background", "inside"]
+        keywordslist = ["location","background", "inside", "at the", "in a"]
         keywordsinstring = any(word.lower() in givensubject.lower() for word in keywordslist)
         if(foundinlist == True or foundinlist2 == True or keywordsinstring == True):
             generatebackground = False
@@ -3711,22 +3687,57 @@ def replacewildcard(completeprompt, insanitylevel, wildcard,listname, activatehy
     return completeprompt
 
 def build_dynamic_negative(postive_prompt = "", insanitylevel = 5):
-    negativewordsfulllist = csv_to_list(csvfilename="negativewords", directory="./csvfiles/special_lists/", delimiter=";")
-    print(negativewordsfulllist)
+
 
     negative_primer = []
     negative_result = []
+    all_negative_words_list = []
+    
+    # negavite_primer, all words that should trigger a negative result
+    # the negative words to put in the negative prompt
+    negative_primer, negative_result = load_negative_list()
 
-    for i, item in enumerate(negativewordsfulllist):
-        values = [val.strip() for val in item.split(',')]
-        
-        if i == 0:
-            negative_primer = values
-        elif i == 1:
-            negative_result = values
+    allwords = split_prompt_to_words(postive_prompt)
+    
+    for word in allwords:
+        if(word in negative_primer):
+            index_of_word = negative_primer.index(word)
+            all_negative_words_list.append(negative_result[index_of_word])
+    
+    all_negative_words = ", ".join(all_negative_words_list)
+    all_negative_words_list = all_negative_words.split(",")
+    all_negative_words_list = [elem.strip().lower() for elem in all_negative_words_list]
+    
 
-    print(negative_primer)
-    print(negative_result)
+    # new lets remove some based on the reverse insanitylevel
+    removalchance = int((insanitylevel) * 10)
+
+    for i in range(len(all_negative_words_list)):
+        if(random.randint(1, 100)<removalchance):
+            all_negative_words_list.pop(random.randint(0, len(all_negative_words_list)-1))
+
+    # Now compound it, and use the (word:1.3) type syntax:
+    # Use a dictionary to count occurrences
+    word_count = {}
+    for word in all_negative_words_list:
+        if word in word_count:
+            word_count[word] += 1
+        else:
+            word_count[word] = 1
+
+    # Convert the list to unique values or (word:count) format
+    unique_words = []
+    for word, count in word_count.items():
+        if(count > 2):
+            counttotal = int(count/2)
+            if(counttotal > 3):
+                counttotal = 3
+            unique_words.append(f"({word}:1.{counttotal})")
+        else:
+            unique_words.append(word)
+
+    negative_result = ", ".join(unique_words)
+
     return negative_result
 
 def replace_match(match):
@@ -3928,3 +3939,34 @@ def parse_custom_functions(completeprompt, insanitylevel = 5):
     
 
     return completeprompt
+
+def split_prompt_to_words(text):
+        # first get all the words
+
+        # Split the string by commas and spaces
+        words = re.split(r'[,\s]+', text)
+        # Remove leading/trailing whitespaces from each word
+        words = [word.strip() for word in words]
+
+        # Filter out empty words
+        words = [word for word in words if word]
+
+        # Convert the list to a set to remove duplicates, then convert it back to a list
+        listsinglewords = list(set(words))
+
+        # now get all words clumped together by commas
+        if ',' in text:
+            allwords = text.split(',')
+        else:
+            allwords = [text]
+        # Remove leading/trailing whitespaces from each word and convert to lowercase
+        words = [word.strip().lower() for word in allwords]
+
+        # Filter out empty words and duplicates
+        listwords = list(set(filter(None, words)))
+
+        totallist = listsinglewords + listwords
+
+        totallist = list(set(filter(None, totallist)))
+
+        return totallist

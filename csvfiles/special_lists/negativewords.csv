@@ -1,2 +1,110 @@
-manga, anime;photograph, realism, realistic
-architecture; painting, illustration
+primer;negative
+photo;painting,abstract,camera,anime,cartoon,sketch,3d,render,illustration
+photograph;painting,abstract,camera,anime,cartoon,sketch,3d,render,illustration
+photographic;painting,abstract,camera,anime,cartoon,sketch,3d,render,illustration
+cinematic;painting,surrealism,camera,anime,cartoon,abstract,illustration
+film grain;painting,surrealism,camera,anime,cartoon,abstract,illustration
+sharp;bokeh,blurry,blur
+abstract;photograph, realism, photorealism,plain, simple, monochrome
+expressionism;photograph, photorealism, low contrast
+manga;photograph, realism, photorealism, worst quality, low quality, western
+anime;photograph, realism, photorealism, worst quality, low quality, western
+architecture;painting, illustration
+3D;photograph, realism, photorealism, low contrast, low poly
+render;photograph, realism, photorealism, low contrast, low poly
+kawaii;gothic, dark, moody, monochromatic, ugly, western
+adorable;gothic, dark, moody, monochromatic, ugly
+cute;gothic, dark, moody, monochromatic, ugly
+art deco;low contrast, photorealism, modernist, minimalist
+art nouveau;low contrast, industrial, mechanical, photorealism, modernist, minimalist
+renaissance;low contrast, photorealism, modernist, minimalist
+baroque;low contrast, photorealism, modernist, minimalist
+caricature;realism
+dark fantasy;bright, sunny, light, vibrant, colorful
+dark;bright, sunny, light, vibrant, colorful
+darkness;bright, sunny, light, vibrant, colorful
+moody;bright, sunny, light, vibrant, colorful
+goth;bright, sunny, light, vibrant, colorful
+gothic;bright, sunny, light, vibrant, colorful
+macabre;bright, sunny, light, vibrant, colorful
+grim;bright, sunny, light, vibrant, colorful
+faded;bright, sunny, light, vibrant, colorful
+noir;bright, sunny, light, vibrant, colorful
+horror;bright, sunny, light, vibrant, colorful
+fortnite;photograph, realism, photorealism
+ink;bright, sunny, light, vibrant, colorful
+light;dark, moody, night, monochromatic, washed out
+happy;dark, moody, night, monochromatic, washed out
+joy;dark, moody, night, monochromatic, washed out
+vibrant;dark, moody, night, monochromatic, washed out
+neon;moody, monochromatic, washed out
+monochrome;colorful, vibrant
+drawing;photograph, photorealism
+graffiti;photograph, photorealism
+impressionism;photograph, photorealism,anime
+impressionist;photograph, photorealism,anime
+pop art;photograph, photorealism
+vector;photograph, photorealism
+surrealism;photograph, realism, photorealism
+surrealist;photograph, realism, photorealism
+suprematism;realism
+watercolor;photograph, photorealism
+watercolour;photograph, photorealism
+whymsical;drab, boring, moody
+masterpiece;cropped, worst quality, low quality, poorly drawn, low resolution
+quality;cropped, worst quality, low quality, poorly drawn, low resolution
+sketch;photograph, realism, photorealism
+artistic;insignificant, flawed, made by bad artist, low quality, low resolution
+dynamic;still life,static, still, slow, boring, standing still, calm, peaceful
+undead;alive
+painting;drawing,sketch,frame,watermark
+comic;photograph, realism, photorealism,frame,watermark
+illustration;photograph, realism, photorealism,frame,watermark
+clay;photograph, realism, photorealism,sloppy, messy
+digital;photograph, photorealism
+fantasy;photograph, realism, photorealism, modern, ordinary, mundane
+fairy tale;photograph, realism, photorealism, modern, ordinary, mundane
+magical realism;modern, ordinary, mundane
+magical;modern, ordinary, mundane
+magic;modern, ordinary, mundane
+isometric;photograph, realism, photorealism
+line art;painting,abstract,camera,anime,cartoon,sketch,3d,render
+pixel;photograph, realism, photorealism, painting,abstract,camera,anime,cartoon,sketch,3d,render
+pixel-art;photograph, realism, photorealism, painting,abstract,camera,anime,cartoon,sketch,3d,render
+professional;amateurish, sloppy, unattractive
+advertisement;amateurish, sloppy, unattractive
+advertising;amateurish, sloppy, unattractive
+commercial;amateurish, sloppy, unattractive
+corporate;amateurish, sloppy, unattractive
+fashion;amateurish, sloppy, unattractive, baggy, cheap, trash
+luxury;amateurish, sloppy, unattractive, baggy, cheap, trash
+hyperrealistic;simple, plain, abstract, unrealistic, impressionistic, low resolution,surrealism
+hyperrealism;simple, plain, abstract, unrealistic, impressionistic, low resolution,surrealism
+pointillism;line drawing, smooth shading, large color fields, simplistic
+psychedelic;photograph, realism, photorealism,plain, simple, monochrome
+biomechanical;natural, rustic, primitive, organic, simplistic
+futuristic;natural, rustic, primitive, organic, simplistic
+cybernetic;natural, rustic, primitive, organic, simplistic
+cyberpunk;natural, rustic, primitive, organic, simplistic
+technology;natural, rustic, primitive, organic, simplistic
+retro;modern
+vintage;modern
+modern;retro, vintage
+sci-fi;historical
+sci fi;historical
+scifi;historical
+science fiction;historical
+game art;photograph, photorealism, low contrast
+dream;ordinary, mundane
+dreamy;ordinary, mundane
+minimalist;ornate, complicated, highly detailed, cluttered, disordered, messy, noisy, maximalism
+minimalism;ornate, complicated, highly detailed, cluttered, disordered, messy, noisy, maximalism
+detailed;simplistic,minimalism, plain, simple
+papercut;3D, high detail, painting, drawing, photo
+paper;3D, high detail, painting, drawing, photo
+kirigami;3D, high detail, painting, drawing, photo
+alien;earthly, mundane, common, realistic, simple
+winter;summer
+summer;winter
+industrial;organic
+bokeh;sharp,focus

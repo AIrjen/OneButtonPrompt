@@ -32,4 +32,4 @@ def generateprompts(amount = 1,positive_prompt = "",insanitylevel="0",enhance=Fa
     print("")
     print("All done!")
 
-generateprompts(1,"",1,False,"")
+generateprompts(1,"anime assassin",0,False,"")

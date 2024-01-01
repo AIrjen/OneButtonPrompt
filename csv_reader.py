@@ -162,10 +162,23 @@ def load_config_csv():
 def load_negative_list():
         primerlist = []
         negativelist = []
+        primeraddonlist = []
+        negativeaddonlist = []
+
         script_dir = os.path.dirname(os.path.abspath(__file__))
         
         full_path_default_negative_file = os.path.join(script_dir, "./csvfiles/special_lists/" )
         negative_file = full_path_default_negative_file + 'negativewords.csv'
+
+        full_path_replace_negative_file = os.path.join(script_dir, "./userfiles/" )
+        replace_negative_file = full_path_replace_negative_file + 'negativewords_replace.csv'
+
+        full_path_addon_negative_file = os.path.join(script_dir, "./userfiles/" )
+        addon_negative_file = full_path_addon_negative_file + 'negativewords_addon.csv'
+
+
+        if(os.path.isfile(replace_negative_file)):
+                negative_file = replace_negative_file
 
         with open(negative_file, "r", newline="",encoding="utf8") as file:
                 reader = csv.DictReader(file, delimiter=";")
@@ -173,6 +186,19 @@ def load_negative_list():
         with open(negative_file, "r", newline="",encoding="utf8") as file:
                 reader = csv.DictReader(file, delimiter=";")
                 negativelist = [row["negative"] for row in reader]
+
+
+        if(os.path.isfile(addon_negative_file)):
+                with open(addon_negative_file, "r", newline="",encoding="utf8") as file:
+                        reader = csv.DictReader(file, delimiter=";")
+                        primeraddonlist = [row["primer"] for row in reader]
+                with open(addon_negative_file, "r", newline="",encoding="utf8") as file:
+                        reader = csv.DictReader(file, delimiter=";")
+                        negativeaddonlist = [row["negative"] for row in reader]
+        
+        primerlist += primeraddonlist
+        negativelist += negativeaddonlist
+
 
         return primerlist, negativelist
 

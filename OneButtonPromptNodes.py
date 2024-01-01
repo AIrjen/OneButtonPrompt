@@ -454,7 +454,7 @@ class AutoNegativePrompt:
                     "default": "text, watermark"
                 }),
                 "enhancenegative": ("INT", {
-                    "default": 1, 
+                    "default": 0, 
                     "min": 0, #Minimum value
                     "max": 1, #Maximum value
                     "step": 1, #Slider's step
@@ -501,5 +501,6 @@ NODE_CLASS_MAPPINGS = {
 NODE_DISPLAY_NAME_MAPPINGS = {
     "OneButtonPrompt": "One Button Prompt",
     "CreatePromptVariant": "Create Prompt Variant",
-    "SavePromptToFile": "Save Prompt To File"
+    "SavePromptToFile": "Save Prompt To File",
+    "AutoNegativePrompt": "Auto Negative Prompt",
 }

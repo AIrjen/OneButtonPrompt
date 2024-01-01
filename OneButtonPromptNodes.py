@@ -449,12 +449,6 @@ class AutoNegativePrompt:
                 "postive_prompt": ("STRING", {"default": '', "multiline": True}),
             },
             "optional": {
-                "insanitylevel": ("INT", {
-                    "default": 0,
-                    "min": 0, #Minimum value
-                    "max": 10, #Maximum value
-                    "step": 1 #Slider's step
-                }),
                 "base_negative": ("STRING", {
                     "multiline": True, #True if you want the field to look like the one on the ClipTextEncode node
                     "default": "text, watermark"
@@ -464,6 +458,12 @@ class AutoNegativePrompt:
                     "min": 0, #Minimum value
                     "max": 1, #Maximum value
                     "step": 1, #Slider's step
+                }),
+                "insanitylevel": ("INT", {
+                    "default": 0,
+                    "min": 0, #Minimum value
+                    "max": 10, #Maximum value
+                    "step": 1 #Slider's step
                 }),
                 
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF}),

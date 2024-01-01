@@ -103,8 +103,8 @@ generateprompts(10,5
                 ,"","","PREFIXPROMPT" 
                 ,"SUFFIXPROMPT"
                 ,"",1,""
-                ,"TESTSUBJECT" # subject override
-                ,True,
+                ,"" # subject override
+                ,True, # smart subject
                 "",20
                 , "all" # gender
                 , "all" # object types
@@ -113,6 +113,6 @@ generateprompts(10,5
                 , False  # prompt switching
                 , True  # Turn off emojis
                 , 0  # seed
-                , "TESTOUTFIT" #outfit override
-                , True #prompt_g_and_l
+                , "" #outfit override
+                , False #prompt_g_and_l
                 )

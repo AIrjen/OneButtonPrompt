@@ -435,17 +435,72 @@ class SavePromptToFile:
 
         return ("done")
 
+class AutoNegativePrompt:
+
+
+    def __init__(self):
+        pass
+    
+    @classmethod
+    def INPUT_TYPES(s):
+               
+        return {
+            "required": {
+                "postive_prompt": ("STRING", {"default": '', "multiline": True}),
+            },
+            "optional": {
+                "base_negative": ("STRING", {
+                    "multiline": True, #True if you want the field to look like the one on the ClipTextEncode node
+                    "default": "text, watermark"
+                }),
+                "enhancenegative": ("INT", {
+                    "default": 0, 
+                    "min": 0, #Minimum value
+                    "max": 1, #Maximum value
+                    "step": 1, #Slider's step
+                }),
+                "insanitylevel": ("INT", {
+                    "default": 0,
+                    "min": 0, #Minimum value
+                    "max": 10, #Maximum value
+                    "step": 1 #Slider's step
+                }),
+                
+                "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF}),
+            },
+        }
+
+    RETURN_TYPES = ("STRING",)
+    RETURN_NAMES = ("negative_prompt",)
+
+    FUNCTION = "Comfy_OBP_AutoNegativePrompt"
+
+    #OUTPUT_NODE = False
+
+    CATEGORY = "OneButtonPrompt"
+    
+    def Comfy_OBP_AutoNegativePrompt(self, postive_prompt, insanitylevel, enhancenegative,base_negative, seed):
+        generatedprompt = build_dynamic_negative(postive_prompt, insanitylevel, enhancenegative, base_negative)
+        
+        print("Generated negative prompt: " + generatedprompt)
+        
+        return (generatedprompt,)
+
+
+
 # A dictionary that contains all nodes you want to export with their names
 # NOTE: names should be globally unique
 NODE_CLASS_MAPPINGS = {
     "OneButtonPrompt": OneButtonPrompt,
     "CreatePromptVariant": CreatePromptVariant,
-    "SavePromptToFile": SavePromptToFile
+    "SavePromptToFile": SavePromptToFile,
+    "AutoNegativePrompt": AutoNegativePrompt,
 }
 
 # A dictionary that contains the friendly/humanly readable titles for the nodes
 NODE_DISPLAY_NAME_MAPPINGS = {
     "OneButtonPrompt": "One Button Prompt",
     "CreatePromptVariant": "Create Prompt Variant",
-    "SavePromptToFile": "Save Prompt To File"
+    "SavePromptToFile": "Save Prompt To File",
+    "AutoNegativePrompt": "Auto Negative Prompt",
 }

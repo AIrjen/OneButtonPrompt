@@ -1,10 +1,11 @@
 # ComfyUI integration
 One Button Prompt is now also a ComfyUI extension.
 
-There are 3 nodes currently availabe, with One Button Prompt node being the main one.
+There are 4 nodes currently availabe, with One Button Prompt node being the main one.
 You can slam it in every workflow, where you replace it with the Positive Prompt node.
 
-![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/bc7231b5-345c-4069-862d-2afdf733a526)
+![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/342bd715-9b7e-4e1a-a3ba-ff3b557b89cc)
+
 
 ## Installing in ComfyUI
 One Button Prompt is available in ComfyUI manager.
@@ -78,7 +79,20 @@ You can also use other extension for this. But I thought it was nice to include 
 
 Just simply also connect the output of One Button Prompt to the Postive Prompt node.
 
-![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/1557546d-36f3-4ce0-9532-cf5a8386297d)
+![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/edaf7cec-7e95-46a9-84dc-00da4aaf2c4e)
+
+### Auto Negative Prompt
+
+The Auto Negative Prompt node, generates a negative prompt, based on the positive input. It can be used stand-alone as well, with any prompt field. It will try to enhance what was in the positive prompt. For example "anime" in the positive prompt, will add "photorealistic" in the negative prompt.
+
+The following options are available:
+
+base_negative --> Will be added onto the negative prompt
+
+enhancenegative --> Will push a lot of quality enhancing terms into the negative prompt. Default value = 0
+
+insanitylevel --> Larger numbers will randomly lower the amount of things in the negative prompt. Default value = 0
+
 
 
 ### Known issues

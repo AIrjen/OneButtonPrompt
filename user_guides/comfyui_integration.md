@@ -88,7 +88,9 @@ The Auto Negative Prompt node, generates a negative prompt, based on the positiv
 The following options are available:
 
 base_negative --> Will be added onto the negative prompt
+
 enhancenegative --> Will push a lot of quality enhancing terms into the negative prompt. Default value = 0
+
 insanitylevel --> Larger numbers will randomly lower the amount of things in the negative prompt. Default value = 0
 
 

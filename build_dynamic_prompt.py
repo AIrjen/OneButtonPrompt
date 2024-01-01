@@ -3686,7 +3686,7 @@ def replacewildcard(completeprompt, insanitylevel, wildcard,listname, activatehy
 
     return completeprompt
 
-def build_dynamic_negative(postive_prompt = "", insanitylevel = 5):
+def build_dynamic_negative(positive_prompt = "", insanitylevel = 0, enhance = False, existing_negative_prompt = ""):
 
 
     negative_primer = []
@@ -3697,16 +3697,38 @@ def build_dynamic_negative(postive_prompt = "", insanitylevel = 5):
     # the negative words to put in the negative prompt
     negative_primer, negative_result = load_negative_list()
 
-    allwords = split_prompt_to_words(postive_prompt)
+    # do a trick for artists, replace with their tags instead
+    artistlist, categorylist = load_all_artist_and_category()
+    # lower them
+    artist_names = [artist.strip().lower() for artist in artistlist]
+
+    # note, should we find a trick for some shorthands of artists??
+
+    for artist_name, category in zip(artist_names, categorylist):
+        positive_prompt = positive_prompt.lower().replace(artist_name, category)
+
+
+    allwords = split_prompt_to_words(positive_prompt)
+
+    
+    #lower all!
     
     for word in allwords:
-        if(word in negative_primer):
-            index_of_word = negative_primer.index(word)
+        if(word.lower() in negative_primer):
+            index_of_word = negative_primer.index(word.lower())
             all_negative_words_list.append(negative_result[index_of_word])
     
     all_negative_words = ", ".join(all_negative_words_list)
     all_negative_words_list = all_negative_words.split(",")
     all_negative_words_list = [elem.strip().lower() for elem in all_negative_words_list]
+
+    
+
+            
+
+    if enhance == True:
+        enhancelist = ["worst quality", "low quality", "normal quality", "lowres", "low details", "oversaturated", "undersaturated", "overexposed", "underexposed", "grayscale", "bw", "bad photo", "bad photography", "bad art", "watermark", "signature", "text font", "username", "error", "logo", "words", "letters", "digits", "autograph", "trademark", "name", "blur", "blurry", "grainy", "ugly", "asymmetrical", "poorly lit", "bad shadow", "draft", "cropped", "out of frame", "cut off", "censored", "jpeg artifacts", "out of focus", "glitch", "duplicate"]
+        all_negative_words_list += enhancelist
     
 
     # new lets remove some based on the reverse insanitylevel
@@ -3716,6 +3738,10 @@ def build_dynamic_negative(postive_prompt = "", insanitylevel = 5):
         if(random.randint(1, 100)<removalchance):
             all_negative_words_list.pop(random.randint(0, len(all_negative_words_list)-1))
 
+    # remove anything that is in the prompt itself, so no conflict of words!
+            
+    all_negative_words_list = [word for word in all_negative_words_list if word not in allwords]
+    
     # Now compound it, and use the (word:1.3) type syntax:
     # Use a dictionary to count occurrences
     word_count = {}
@@ -3729,7 +3755,8 @@ def build_dynamic_negative(postive_prompt = "", insanitylevel = 5):
     unique_words = []
     for word, count in word_count.items():
         if(count > 2):
-            counttotal = int(count/2)
+            #counttotal = int(count/2)
+            counttotal = count
             if(counttotal > 3):
                 counttotal = 3
             unique_words.append(f"({word}:1.{counttotal})")
@@ -3737,6 +3764,8 @@ def build_dynamic_negative(postive_prompt = "", insanitylevel = 5):
             unique_words.append(word)
 
     negative_result = ", ".join(unique_words)
+
+    negative_result += ", " + existing_negative_prompt
 
     return negative_result
 
@@ -3942,6 +3971,9 @@ def parse_custom_functions(completeprompt, insanitylevel = 5):
 
 def split_prompt_to_words(text):
         # first get all the words
+
+        # Use a regular expression to replace non-alphabetic characters with spaces
+        text = re.sub(r'[^a-zA-Z,-]', ' ', text)
 
         # Split the string by commas and spaces
         words = re.split(r'[,\s]+', text)

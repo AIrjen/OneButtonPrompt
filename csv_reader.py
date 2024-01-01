@@ -176,4 +176,21 @@ def load_negative_list():
 
         return primerlist, negativelist
 
+def load_all_artist_and_category():
+        artistlist = []
+        categorylist = []
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        
+        full_path_default_artist_file = os.path.join(script_dir, "./csvfiles/" )
+        artist_file = full_path_default_artist_file + 'artists_and_category.csv'
+
+        with open(artist_file, "r", newline="",encoding="utf8") as file:
+                reader = csv.DictReader(file, delimiter=",")
+                artistlist = [row["Artist"] for row in reader]
+        with open(artist_file, "r", newline="",encoding="utf8") as file:
+                reader = csv.DictReader(file, delimiter=",")
+                categorylist = [row["Tags"] for row in reader]
+
+        return artistlist, categorylist
+
         

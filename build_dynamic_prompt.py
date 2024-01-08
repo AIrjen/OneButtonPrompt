@@ -25,6 +25,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
     originalartistchoice = artists
     doartistnormal = True
+
+    partlystylemode = False
     # load the config file
     config = load_config_csv()
 
@@ -1556,8 +1558,17 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                #         or "landscape" in artists):
                #     completeprompt += " landscape, "
 
-               # woops, never to this as wildcards. We need to know as early as possible wether something is a photo. Lets put it back!
+               
+                    
+                if(amountofimagetypes < 2 and random.randint(0,int(imagemodechance/3)) == 0):
+                    partlystylemode = True
+                    chosenstyle = random.choice(styleslist)
+                    chosenstyleprefix = chosenstyle.split("-subject-")[0]
+                    chosenstylesuffix = chosenstyle.split("-subject-")[1]
+
+                    completeprompt += " " + chosenstyleprefix + ", "
                 elif(random.randint(0,5) < 5):
+                    # woops, never to this as wildcards. We need to know as early as possible wether something is a photo. Lets put it back!
                     completeprompt += " " + random.choice(imagetypelist) + ", "
                 else:
                     othertype = 1
@@ -1593,9 +1604,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
         if(mainchooser in ["object", "animal", "humanoid", "concept"] and othertype == 0 and "portrait" not in completeprompt and generateshot == True and chance_roll(insanitylevel,shotsizechance)):
             completeprompt += "-shotsize- of a "
-        elif("portrait" in completeprompt and generateshot == True):
+        elif("portrait" in completeprompt and generateshot == True and partlystylemode == False):
             completeprompt += " ,close up of a "
-        elif(mainchooser in ["landscape"] and generateshot == True):
+        elif(mainchooser in ["landscape"] and generateshot == True and partlystylemode == False):
             completeprompt += " landscape of a "
         elif(generateshot == True): 
             completeprompt += ", "
@@ -2545,6 +2556,19 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
         
         
+        
+        if(partlystylemode == True):
+            # add a part of the style to the back
+            chosenstylesuffixlist = chosenstylesuffix.split(",")
+            for i in range(len(chosenstylesuffixlist)):
+                if(random.randint(3, 10)<insanitylevel):
+                    chosenstylesuffixlist.pop(random.randint(0, len(chosenstylesuffixlist)-1))
+            chosenstylesuffixcomplete = ", ".join(chosenstylesuffixlist)
+            
+
+            completeprompt += ", " + chosenstylesuffixcomplete
+            
+
         
         completeprompt += ", "
         completeprompt += suffixprompt

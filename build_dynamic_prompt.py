@@ -144,6 +144,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     charactertypelist = csv_to_list("charactertypes", antilist)
     objectstoholdlist = csv_to_list("objectstohold", antilist)
     episodetitlelist = csv_to_list(csvfilename="episodetitles",antilist=antilist,skipheader=True)
+    tokenlist = csv_to_list(csvfilename="tokens",antilist=antilist,skipheader=True)
     
 
     # additional descriptor lists
@@ -737,6 +738,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     massivemadnessmode = False
     onlysubjectmode = False
     stylesmode = False
+    thetokinatormode = False
 
     # determine wether we should go for a template or not. Not hooked up to insanitylevel
     if(imagetype == "only templates mode"):
@@ -785,13 +787,23 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         stylesmode = True
         print("Running with a randomized style instead of a randomized prompt")
 
+    if(imagetype == "the tokinator"):
+        specialmode = True
+        thetokinatormode = True
+        print("Running with a completely random set of words")
+        print("All safety and logic is turned off")
+
 
     # main stuff
     generatetype = not specialmode
     generatesubject = not templatemode
+    if(thetokinatormode):
+        generatesubject = False
 
     # normals
     generateartist = bool(artistlist) and not specialmode
+    if(thetokinatormode):
+        generateartist = bool(artistlist)
     generateoutfit = bool(outfitlist) and not templatemode
     generatebodytype = bool(bodytypelist) and not templatemode
     generateaccessorie = bool(accessorielist) and not specialmode
@@ -1526,7 +1538,11 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 completeprompt += " ["
         
 
-        
+        # start tokinator here
+        if(thetokinatormode == True):
+            completeprompt += "-token-, -token-, -token-, -token-, -token-"
+
+
         # start image type
 
         if(giventypeofimage=="" and generatetype == True):
@@ -1536,8 +1552,17 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             elif(imagetype == "all - force multiple" or unique_dist(insanitylevel)):
                 amountofimagetypes = random.randint(2,3)
             elif(imagetype == "only other types"):
-                othertype = 1
-                completeprompt += random.choice(othertypelist)
+                if(amountofimagetypes < 2 and random.randint(0,2) == 0):
+                        partlystylemode = True
+                        print("Ohhh! Adding some secret sauce to this prompt")
+                        chosenstyle = random.choice(styleslist)
+                        chosenstyleprefix = chosenstyle.split("-subject-")[0]
+                        chosenstylesuffix = chosenstyle.split("-subject-")[1]
+
+                        completeprompt += " " + chosenstyleprefix + ", "
+                else:
+                    othertype = 1
+                    completeprompt += random.choice(othertypelist)
             
             if(imagetype == "all" and chance_roll(insanitylevel, imagetypechance) and amountofimagetypes <= 1):
                 amountofimagetypes = 1
@@ -1560,19 +1585,21 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
                
                     
-                if(amountofimagetypes < 2 and random.randint(0,int(imagemodechance/3)) == 0):
-                    partlystylemode = True
-                    chosenstyle = random.choice(styleslist)
-                    chosenstyleprefix = chosenstyle.split("-subject-")[0]
-                    chosenstylesuffix = chosenstyle.split("-subject-")[1]
-
-                    completeprompt += " " + chosenstyleprefix + ", "
-                elif(random.randint(0,5) < 5):
+                if(random.randint(0,4) < 4):
                     # woops, never to this as wildcards. We need to know as early as possible wether something is a photo. Lets put it back!
                     completeprompt += " " + random.choice(imagetypelist) + ", "
                 else:
-                    othertype = 1
-                    completeprompt += " " + random.choice(othertypelist) + ", "
+                    if(amountofimagetypes < 2 and random.randint(0,1) == 0):
+                        partlystylemode = True
+                        print("Ohhh! Adding some secret sauce to this prompt")
+                        chosenstyle = random.choice(styleslist)
+                        chosenstyleprefix = chosenstyle.split("-subject-")[0]
+                        chosenstylesuffix = chosenstyle.split("-subject-")[1]
+
+                        completeprompt += " " + chosenstyleprefix + ", "
+                    else:
+                        othertype = 1
+                        completeprompt += " " + random.choice(othertypelist) + ", "
             
             if(othertype==1):
                 completeprompt += " of a "
@@ -2001,123 +2028,124 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                             completeprompt += " and -descriptor- "
                 completeprompt += ", "
 
-        # object additions
-        for i in range(objectadditionsrepeats):
-            if(mainchooser == "object" and chance_roll(insanitylevel, objectadditionschance) and generateobjectaddition == True):
-                completeprompt += ", -objectaddition- , "
-        
-        
-        # riding an animal, holding an object or driving a vehicle, rare
-        if(subjectchooser in ["animal as human,","human","fictional", "non fictional", "humanoid", "manwomanrelation","manwomanmultiple","firstname"] and chance_roll(insanitylevel, humanadditionchance) and generatehumanaddition == True):
-            humanspecial = 1
-            completeprompt += "-humanaddition- "
+        if(thetokinatormode == False):
+            # object additions
+            for i in range(objectadditionsrepeats):
+                if(mainchooser == "object" and chance_roll(insanitylevel, objectadditionschance) and generateobjectaddition == True):
+                    completeprompt += ", -objectaddition- , "
             
-        completeprompt += ", "
+            
+            # riding an animal, holding an object or driving a vehicle, rare
+            if(subjectchooser in ["animal as human,","human","fictional", "non fictional", "humanoid", "manwomanrelation","manwomanmultiple","firstname"] and chance_roll(insanitylevel, humanadditionchance) and generatehumanaddition == True):
+                humanspecial = 1
+                completeprompt += "-humanaddition- "
+                
+            completeprompt += ", "
 
-        # unique additions for all types:
-        if(chance_roll(insanitylevel, overalladditionchance) and generateoveralladdition == True):
-            completeprompt += "-overalladdition- "
+            # unique additions for all types:
+            if(chance_roll(insanitylevel, overalladditionchance) and generateoveralladdition == True):
+                completeprompt += "-overalladdition- "
 
 
 
 
 
-        # SD understands emoji's. Can be used to manipulate facial expressions.
-        # emoji, legendary
-        if(subjectchooser in ["animal as human,","human","fictional", "non fictional", "humanoid", "manwomanrelation","manwomanmultiple","firstname"] and chance_roll(insanitylevel, emojichance) and generateemoji== True):
-            completeprompt += "-emoji-, "
+            # SD understands emoji's. Can be used to manipulate facial expressions.
+            # emoji, legendary
+            if(subjectchooser in ["animal as human,","human","fictional", "non fictional", "humanoid", "manwomanrelation","manwomanmultiple","firstname"] and chance_roll(insanitylevel, emojichance) and generateemoji== True):
+                completeprompt += "-emoji-, "
 
-        # human expressions
-        if(subjectchooser in ["animal as human,","human","fictional", "non fictional", "humanoid", "manwomanrelation","manwomanmultiple","firstname"] and chance_roll(insanitylevel, humanexpressionchance) and generatehumanexpression== True):
-            completeprompt += "-humanexpression-, "
+            # human expressions
+            if(subjectchooser in ["animal as human,","human","fictional", "non fictional", "humanoid", "manwomanrelation","manwomanmultiple","firstname"] and chance_roll(insanitylevel, humanexpressionchance) and generatehumanexpression== True):
+                completeprompt += "-humanexpression-, "
+                
+
+            # cosplaying
+            #if(subjectchooser in ["animal as human", "non fictional", "humanoid"] and rare_dist(insanitylevel) and humanspecial != 1):
+            #    completeprompt += "cosplaying as " + random.choice(fictionallist) + ", "
+
+            # Job 
+            # either go job or activity, not both
+
+            if(genjoboractivity and genjoboractivitylocation=="back"):
+                joboractivitylist = [joblist,humanactivitylist]
+                completeprompt +=  ", " + random.choice(random.choice(joboractivitylist)) + ", "
+
+
+            # if(subjectchooser in ["animal as human","human","job", "fictional", "non fictional", "humanoid"] and legendary_dist(insanitylevel)):
+            #    skintypelist = ["-color-", "-material-"]
+            #    completeprompt += ", with " + random.choice(skintypelist) + " skin, "
+
+            # add face builder sometimes on generic humans
+            if(subjectchooser in ["human", "humanoid", "manwomanrelation","firstname"] and chance_roll(insanitylevel, buildfacechance) and generateface== True):
+                completeprompt += random.choice(buildfacelist) + ", "
+
+
+
+
+            # custom mid list
+            for i in range(custominputmidrepeats):
+                if(chance_roll(insanitylevel, custominputmidchance) and generatecustominputmid == True):
+                    completeprompt += random.choice(custominputmidlist) + ", "
+            
+            # add in some more mini vomits
+            if(chance_roll(insanitylevel, minivomitmidchance) and generateminivomit == True):
+                completeprompt += " -minivomit-, "
+            
+            # outfit builder
+            if(subjectchooser in ["animal as human","human","fictional", "non fictional", "humanoid", "manwomanrelation","manwomanmultiple", "firstname"]  and chance_roll(insanitylevel, outfitchance) and generateoutfit == True and humanspecial != 1):
+                completeprompt += " " + random.choice(buildoutfitlist) + ", "
+                if(extraordinary_dist(insanitylevel)):
+                    completeprompt += " -outfitvomit-, "
+            elif(overrideoutfit != "" and imagetype != "only templates mode"):
+                completeprompt += " " + random.choice(buildoutfitlist) + ", "
+                if(extraordinary_dist(insanitylevel)):
+                    completeprompt += " -outfitvomit-, "
             
 
-        # cosplaying
-        #if(subjectchooser in ["animal as human", "non fictional", "humanoid"] and rare_dist(insanitylevel) and humanspecial != 1):
-        #    completeprompt += "cosplaying as " + random.choice(fictionallist) + ", "
-
-        # Job 
-        # either go job or activity, not both
-
-        if(genjoboractivity and genjoboractivitylocation=="back"):
-            joboractivitylist = [joblist,humanactivitylist]
-            completeprompt +=  ", " + random.choice(random.choice(joboractivitylist)) + ", "
-
-
-        # if(subjectchooser in ["animal as human","human","job", "fictional", "non fictional", "humanoid"] and legendary_dist(insanitylevel)):
-        #    skintypelist = ["-color-", "-material-"]
-        #    completeprompt += ", with " + random.choice(skintypelist) + " skin, "
-
-        # add face builder sometimes on generic humans
-        if(subjectchooser in ["human", "humanoid", "manwomanrelation","firstname"] and chance_roll(insanitylevel, buildfacechance) and generateface== True):
-            completeprompt += random.choice(buildfacelist) + ", "
-
-
-
-
-        # custom mid list
-        for i in range(custominputmidrepeats):
-            if(chance_roll(insanitylevel, custominputmidchance) and generatecustominputmid == True):
-                completeprompt += random.choice(custominputmidlist) + ", "
-        
-        # add in some more mini vomits
-        if(chance_roll(insanitylevel, minivomitmidchance) and generateminivomit == True):
-            completeprompt += " -minivomit-, "
-        
-        # outfit builder
-        if(subjectchooser in ["animal as human","human","fictional", "non fictional", "humanoid", "manwomanrelation","manwomanmultiple", "firstname"]  and chance_roll(insanitylevel, outfitchance) and generateoutfit == True and humanspecial != 1):
-            completeprompt += " " + random.choice(buildoutfitlist) + ", "
-            if(extraordinary_dist(insanitylevel)):
-                completeprompt += " -outfitvomit-, "
-        elif(overrideoutfit != "" and imagetype != "only templates mode"):
-            completeprompt += " " + random.choice(buildoutfitlist) + ", "
-            if(extraordinary_dist(insanitylevel)):
-                completeprompt += " -outfitvomit-, "
-        
-
-        
-        if(subjectchooser in ["animal as human","human","fictional", "non fictional", "humanoid", "manwomanrelation","manwomanmultiple", "firstname"]  and chance_roll(insanitylevel, posechance) and humanspecial != 1 and generatepose == True):
-            completeprompt += random.choice(poselist) + ", "
-        
-        if(subjectchooser in ["human","job","fictional", "non fictional", "humanoid", "manwomanrelation","manwomanmultiple", "firstname"]  and chance_roll(insanitylevel, hairchance) and generatehairstyle == True):
-            completeprompt += random.choice(buildhairlist) + ", "
-            if(unique_dist(insanitylevel)):
-                completeprompt += " -hairvomit-, "
-
-        if(subjectchooser in ["animal as human,","human","fictional", "non fictional", "humanoid", "manwomanrelation","manwomanmultiple", "firstname"]  and chance_roll(insanitylevel, accessorychance) and generateaccessorie == True and generateaccessories == True):
-            completeprompt += random.choice(buildaccessorielist) + ", "
-
-        if(chance_roll(insanitylevel, humanoidinsideshotchance) and subjectchooser not in ["landscape", "concept"] and generateinsideshot == True):
-            insideshot = 1
-            completeprompt += random.choice(insideshotlist) + ", "
-        
-        if(subjectchooser not in ["landscape", "concept"] and humanspecial != 1 and insideshot == 0 and chance_roll(insanitylevel, humanoidbackgroundchance) and generatebackground == True):
-            completeprompt += random.choice(backgroundtypelist) + ", "
-
-        # minilocation bit
-        if(subjectchooser in ["landscape"] and chance_roll(insanitylevel, landscapeminilocationchance) and generateminilocationaddition == True):
-            completeprompt += " -minilocationaddition-, "
             
-        if(chance_roll(insanitylevel, generalminilocationchance) and generateminilocationaddition == True):
-            completeprompt += " -minilocationaddition-, "
-
-
-        # divider between subject and everything else
-        completeprompt += " @ "
-        
-
-        # Add more quality while in greg mode lol
-        if(originalartistchoice == "greg mode" and generatequality == True):
-            completeprompt += "-quality-, "
-
-        # landscapes it is nice to always have a time period
-        if(chance_roll(insanitylevel, timperiodchance) or subjectchooser=="landscape"):
-            if(generatetimeperiod == True):
-                completeprompt += "-timeperiod-, "
-
-        if(mainchooser not in ["landscape"]  and chance_roll(insanitylevel, focuschance) and generatefocus == True):
-            completeprompt += "-focus-, "
+            if(subjectchooser in ["animal as human","human","fictional", "non fictional", "humanoid", "manwomanrelation","manwomanmultiple", "firstname"]  and chance_roll(insanitylevel, posechance) and humanspecial != 1 and generatepose == True):
+                completeprompt += random.choice(poselist) + ", "
             
+            if(subjectchooser in ["human","job","fictional", "non fictional", "humanoid", "manwomanrelation","manwomanmultiple", "firstname"]  and chance_roll(insanitylevel, hairchance) and generatehairstyle == True):
+                completeprompt += random.choice(buildhairlist) + ", "
+                if(unique_dist(insanitylevel)):
+                    completeprompt += " -hairvomit-, "
+
+            if(subjectchooser in ["animal as human,","human","fictional", "non fictional", "humanoid", "manwomanrelation","manwomanmultiple", "firstname"]  and chance_roll(insanitylevel, accessorychance) and generateaccessorie == True and generateaccessories == True):
+                completeprompt += random.choice(buildaccessorielist) + ", "
+
+            if(chance_roll(insanitylevel, humanoidinsideshotchance) and subjectchooser not in ["landscape", "concept"] and generateinsideshot == True):
+                insideshot = 1
+                completeprompt += random.choice(insideshotlist) + ", "
+            
+            if(subjectchooser not in ["landscape", "concept"] and humanspecial != 1 and insideshot == 0 and chance_roll(insanitylevel, humanoidbackgroundchance) and generatebackground == True):
+                completeprompt += random.choice(backgroundtypelist) + ", "
+
+            # minilocation bit
+            if(subjectchooser in ["landscape"] and chance_roll(insanitylevel, landscapeminilocationchance) and generateminilocationaddition == True):
+                completeprompt += " -minilocationaddition-, "
+                
+            if(chance_roll(insanitylevel, generalminilocationchance) and generateminilocationaddition == True):
+                completeprompt += " -minilocationaddition-, "
+
+
+            # divider between subject and everything else
+            completeprompt += " @ "
+            
+
+            # Add more quality while in greg mode lol
+            if(originalartistchoice == "greg mode" and generatequality == True):
+                completeprompt += "-quality-, "
+
+            # landscapes it is nice to always have a time period
+            if(chance_roll(insanitylevel, timperiodchance) or subjectchooser=="landscape"):
+                if(generatetimeperiod == True):
+                    completeprompt += "-timeperiod-, "
+
+            if(mainchooser not in ["landscape"]  and chance_roll(insanitylevel, focuschance) and generatefocus == True):
+                completeprompt += "-focus-, "
+                
 
         # artists in the middle, can happen as well:
 
@@ -2229,74 +2257,74 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 
                 completeprompt += ", "
                 # end of the artist stuff
+        if(thetokinatormode == False):
+                # Add more quality while in greg mode lol
+                if(originalartistchoice == "greg mode" and generatequality == True):
+                    completeprompt += "-quality-, "
 
-        # Add more quality while in greg mode lol
-        if(originalartistchoice == "greg mode" and generatequality == True):
-            completeprompt += "-quality-, "
+                # others
+                if(chance_roll(max(1,insanitylevel -1), directionchance) and generatedirection == True):
+                    completeprompt += "-direction-, "
 
-        # others
-        if(chance_roll(max(1,insanitylevel -1), directionchance) and generatedirection == True):
-            completeprompt += "-direction-, "
+                if(chance_roll(insanitylevel, moodchance) and generatemood == True):
+                    completeprompt += "-mood-, " 
 
-        if(chance_roll(insanitylevel, moodchance) and generatemood == True):
-            completeprompt += "-mood-, " 
-
-        # add in some more mini vomits
-        if(chance_roll(insanitylevel, minivomitsuffixchance) and generateminivomit == True):
-            completeprompt += " -minivomit-, "
-       
-        if(chance_roll(insanitylevel, artmovementchance) and generateartmovement == True):
-            completeprompt += "-artmovement-, "  
-        
-        if(chance_roll(insanitylevel, lightingchance) and generatelighting == True):
-            completeprompt += "-lighting-, "  
-
-        # determine wether we have a photo or not
-        if("photo" in completeprompt.lower()):
-            isphoto = 1
+                # add in some more mini vomits
+                if(chance_roll(insanitylevel, minivomitsuffixchance) and generateminivomit == True):
+                    completeprompt += " -minivomit-, "
             
-        if(chance_roll(insanitylevel, photoadditionchance) and isphoto == 1 and generatephotoaddition == True):
-            completeprompt += random.choice(photoadditionlist) + ", "
+                if(chance_roll(insanitylevel, artmovementchance) and generateartmovement == True):
+                    completeprompt += "-artmovement-, "  
                 
-        if(isphoto == 1 and generatecamera == True):
-            completeprompt += "-camera-, "  
+                if(chance_roll(insanitylevel, lightingchance) and generatelighting == True):
+                    completeprompt += "-lighting-, "  
 
-        if(chance_roll(insanitylevel, lenschance) or isphoto == 1):
-            if(generatelens == True):
-                completeprompt += "-lens-, "
+                # determine wether we have a photo or not
+                if("photo" in completeprompt.lower()):
+                    isphoto = 1
+                    
+                if(chance_roll(insanitylevel, photoadditionchance) and isphoto == 1 and generatephotoaddition == True):
+                    completeprompt += random.choice(photoadditionlist) + ", "
+                        
+                if(isphoto == 1 and generatecamera == True):
+                    completeprompt += "-camera-, "  
 
-        if(chance_roll(insanitylevel, colorschemechance) and generatecolorscheme == True):
-            completeprompt += "-colorscheme-, "
+                if(chance_roll(insanitylevel, lenschance) or isphoto == 1):
+                    if(generatelens == True):
+                        completeprompt += "-lens-, "
 
-        # vomit some cool/wierd things into the prompt
-        if(chance_roll(insanitylevel, vomit1chance) and generatevomit == True):
-            completeprompt += "-vomit-, "
-            if(chance_roll(insanitylevel, vomit2chance)):
-                completeprompt += "-vomit-, "
+                if(chance_roll(insanitylevel, colorschemechance) and generatecolorscheme == True):
+                    completeprompt += "-colorscheme-, "
 
-        # human specfic vomit
-        if(mainchooser == "humanoid" and chance_roll(insanitylevel, humanvomitchance) and generatehumanvomit == True):
-            completeprompt += "-humanvomit-, "
-            if(chance_roll(insanitylevel, humanvomitchance)):
-                completeprompt += "-humanvomit-, "
+                # vomit some cool/wierd things into the prompt
+                if(chance_roll(insanitylevel, vomit1chance) and generatevomit == True):
+                    completeprompt += "-vomit-, "
+                    if(chance_roll(insanitylevel, vomit2chance)):
+                        completeprompt += "-vomit-, "
 
-        #adding a great work of art, like starry night has cool effects. But this should happen only very rarely.
-        if(chance_roll(insanitylevel, greatworkchance) and generategreatwork == True):
-            completeprompt += " in the style of -greatwork-, "
+                # human specfic vomit
+                if(mainchooser == "humanoid" and chance_roll(insanitylevel, humanvomitchance) and generatehumanvomit == True):
+                    completeprompt += "-humanvomit-, "
+                    if(chance_roll(insanitylevel, humanvomitchance)):
+                        completeprompt += "-humanvomit-, "
 
-        #adding a poemline. But this should happen only very rarely.
-        if(chance_roll(insanitylevel, poemlinechance) and generatepoemline == True):
-            completeprompt += " \"-poemline-\", "
+                #adding a great work of art, like starry night has cool effects. But this should happen only very rarely.
+                if(chance_roll(insanitylevel, greatworkchance) and generategreatwork == True):
+                    completeprompt += " in the style of -greatwork-, "
 
-        #adding a songline. But this should happen only very rarely.
-        if(chance_roll(insanitylevel, songlinechance) and generatesongline == True):
-            completeprompt += " \"-songline-\", "
+                #adding a poemline. But this should happen only very rarely.
+                if(chance_roll(insanitylevel, poemlinechance) and generatepoemline == True):
+                    completeprompt += " \"-poemline-\", "
 
-        # everyone loves the adding quality. The better models don't need this, but lets add it anyway
-        if((chance_roll(insanitylevel, quality1chance) or originalartistchoice == "greg mode") and generatequality == True):
-            completeprompt += "-quality-, "
-            if((chance_roll(insanitylevel, quality2chance) or originalartistchoice == "greg mode")):
-                completeprompt += "-quality-, "
+                #adding a songline. But this should happen only very rarely.
+                if(chance_roll(insanitylevel, songlinechance) and generatesongline == True):
+                    completeprompt += " \"-songline-\", "
+
+                # everyone loves the adding quality. The better models don't need this, but lets add it anyway
+                if((chance_roll(insanitylevel, quality1chance) or originalartistchoice == "greg mode") and generatequality == True):
+                    completeprompt += "-quality-, "
+                    if((chance_roll(insanitylevel, quality2chance) or originalartistchoice == "greg mode")):
+                        completeprompt += "-quality-, "
 
         
         
@@ -2851,11 +2879,12 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     "-setting-" in completeprompt or
     "-charactertype-" in completeprompt or
     "-objectstohold-" in completeprompt or
-    "-episodetitle-" in completeprompt):
+    "-episodetitle-" in completeprompt or
+    "-token-" in completeprompt):
         allwildcardslistnohybrid = [ "-color-","-object-", "-animal-", "-fictional-","-nonfictional-","-building-","-vehicle-","-location-","-conceptprefix-","-food-","-haircolor-","-hairstyle-","-job-", "-accessory-", "-humanoid-", "-manwoman-", "-human-", "-colorscheme-", "-mood-", "-genderdescription-", "-artmovement-", "-malefemale-", "-bodytype-", "-minilocation-", "-minilocationaddition-", "-pose-", "-season-", "-minioutfit-", "-elaborateoutfit-", "-minivomit-", "-vomit-", "-rpgclass-", "-subjectfromfile-","-subjectfromfile-", "-brand-", "-space-", "-artist-", "-imagetype-", "-othertype-", "-quality-", "-lighting-", "-camera-", "-lens-","-imagetypequality-", "-poemline-", "-songline-", "-greatwork-", "-fantasyartist-", "-popularartist-", "-romanticismartist-", "-photographyartist-", "-emoji-", "-timeperiod-", "-shotsize-", "-musicgenre-", "-animaladdition-", "-addontolocationinside-", "-addontolocation-", "-objectaddition-", "-humanaddition-", "-overalladdition-", "-focus-", "-direction-", "-styletilora-", "-manwomanrelation-", "-waterlocation-", "-container-", "-firstname-", "-flora-", "-print-", "-miniactivity-", "-pattern-", "-animalsuffixaddition-", "-chair-", "-cardname-", "-covering-", "-heshe-", "-hisher-", "-himher-", "-outfitdescriptor-", "-hairdescriptor-", "-hairvomit-", "-humandescriptor-", "-manwomanmultiple-", "-facepart-", "-buildfacepart-", "-outfitvomit-", "-locationdescriptor-", "-basicbitchdescriptor-", "-animaldescriptor-", "-humanexpression-", "-humanvomit-", "-eyecolor-", "-fashiondesigner-", "-colorcombination-", "-materialcombination-", "-oppositefictional-", "-oppositenonfictional-", "-photoaddition-", "-age-", "-agecalculator-", "-gregmode-"
-                                    ,"-portraitartist-", "-characterartist-" , "-landscapeartist-", "-scifiartist-", "-graphicdesignartist-", "-digitalartist-", "-architectartist-", "-cinemaartist-", "-setting-", "-charactertype-", "-objectstohold-", "-episodetitle-"]
+                                    ,"-portraitartist-", "-characterartist-" , "-landscapeartist-", "-scifiartist-", "-graphicdesignartist-", "-digitalartist-", "-architectartist-", "-cinemaartist-", "-setting-", "-charactertype-", "-objectstohold-", "-episodetitle-", "-token-"]
         allwildcardslistnohybridlists = [colorlist, objectlist, animallist, fictionallist, nonfictionallist, buildinglist, vehiclelist, locationlist,conceptprefixlist,foodlist,haircolorlist, hairstylelist,joblist, accessorielist, humanoidlist, manwomanlist, humanlist, colorschemelist, moodlist, genderdescriptionlist, artmovementlist, malefemalelist, bodytypelist, minilocationlist, minilocationadditionslist, poselist, seasonlist, minioutfitlist, elaborateoutfitlist, minivomitlist, vomitlist, rpgclasslist, customsubjectslist, customoutfitslist, brandlist, spacelist, artistlist, imagetypelist, othertypelist, qualitylist, lightinglist, cameralist, lenslist, imagetypequalitylist, poemlinelist, songlinelist, greatworklist, fantasyartistlist, popularartistlist, romanticismartistlist, photographyartistlist, emojilist, timeperiodlist, shotsizelist, musicgenrelist, animaladditionlist, addontolocationinsidelist, addontolocationlist, objectadditionslist, humanadditionlist, overalladditionlist, focuslist, directionlist, stylestiloralist, manwomanrelationlist, waterlocationlist, containerlist, firstnamelist, floralist, printlist, miniactivitylist, patternlist, animalsuffixadditionlist, chairlist, cardnamelist, coveringlist, heshelist, hisherlist, himherlist, outfitdescriptorlist, hairdescriptorlist, hairvomitlist, humandescriptorlist, manwomanmultiplelist, facepartlist, buildfacepartlist, outfitvomitlist, locationdescriptorlist, basicbitchdescriptorlist, animaldescriptorlist, humanexpressionlist, humanvomitlist, eyecolorlist, fashiondesignerlist, colorcombinationlist, materialcombinationlist, oppositefictionallist, oppositenonfictionallist, photoadditionlist, agelist, agecalculatorlist, gregmodelist
-                                         , portraitartistlist, characterartistlist, landscapeartistlist, scifiartistlist, graphicdesignartistlist, digitalartistlist, architectartistlist, cinemaartistlist, settinglist, charactertypelist, objectstoholdlist, episodetitlelist]
+                                         , portraitartistlist, characterartistlist, landscapeartistlist, scifiartistlist, graphicdesignartistlist, digitalartistlist, architectartistlist, cinemaartistlist, settinglist, charactertypelist, objectstoholdlist, episodetitlelist, tokenlist]
         
         allwildcardslistwithhybrid = ["-material-", "-descriptor-", "-outfit-", "-conceptsuffix-","-culture-", "-objecttotal-", "-outfitprinttotal-", "-element-"]
         allwildcardslistwithhybridlists = [materiallist, descriptorlist,outfitlist,conceptsuffixlist,culturelist, objecttotallist, outfitprinttotallist, elementlist]

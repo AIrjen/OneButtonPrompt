@@ -144,7 +144,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     charactertypelist = csv_to_list("charactertypes", antilist)
     objectstoholdlist = csv_to_list("objectstohold", antilist)
     episodetitlelist = csv_to_list(csvfilename="episodetitles",antilist=antilist,skipheader=True)
-    tokenlist = csv_to_list(csvfilename="tokens",antilist=antilist,skipheader=True)
+    tokenlist = []
     
 
     # additional descriptor lists
@@ -282,6 +282,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     buildfacepartlist = csv_to_list("buildfaceparts", antilist,"./csvfiles/special_lists/",0,"?")
     buildfacelist = csv_to_list("buildface", antilist,"./csvfiles/special_lists/",0,"?")
     
+    tokinatorlist = csv_to_list("tokinator", antilist,"./csvfiles/templates/",0,"?")
     styleslist = csv_to_list("styles", antilist,"./csvfiles/templates/",0,"?")
 
 
@@ -790,6 +791,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     if(imagetype == "the tokinator"):
         specialmode = True
         thetokinatormode = True
+        # for performance, load the list here
+        tokenlist = csv_to_list(csvfilename="tokens",antilist=antilist,skipheader=True)
         print("Running with a completely random set of words")
         print("All safety and logic is turned off")
 
@@ -1540,7 +1543,28 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
         # start tokinator here
         if(thetokinatormode == True):
-            completeprompt += "-token-, -token-, -token-, -token-, -token-"
+            if(chance_roll(insanitylevel,"normal")):
+                if(chance_roll(insanitylevel,"normal")):
+                    completeprompt += "(OR(;-imagetypequality-;uncommon) OR(-imagetype-;-othertype-;rare):1.3) "
+                else:
+                    completeprompt += "OR(;-imagetypequality-;uncommon) OR(-imagetype-;-othertype-;rare) "
+            completeprompt += random.choice(tokinatorlist)
+
+            if(givensubject == "" and overrideoutfit == ""):
+                completeprompt = completeprompt.replace("-subject-", "-token-")
+            elif(givensubject == "" and overrideoutfit != "" and "-outfit-" not in completeprompt):
+                completeprompt = completeprompt.replace("-subject-", "-token- wearing a OR(-token-;;normal) -outfit-")
+            elif(givensubject != "" and overrideoutfit != "" and "-outfit-" not in completeprompt):
+                completeprompt = completeprompt.replace("-subject-", givensubject + " wearing a OR(-token-;;normal) -outfit-")
+            else:
+                completeprompt = completeprompt.replace("-subject-", givensubject)
+            
+            if(overrideoutfit == ""):
+                completeprompt = completeprompt.replace("-outfit-", "-token-")
+            else:
+                completeprompt = completeprompt.replace("-outfit-", overrideoutfit)
+
+            
 
 
         # start image type

@@ -25,6 +25,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
     originalartistchoice = artists
     doartistnormal = True
+    outfitmode = 0
 
     partlystylemode = False
     # load the config file
@@ -1543,12 +1544,17 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
         # start tokinator here
         if(thetokinatormode == True):
+            tokinatorsubtype = ["personification", "human form", "object", "landscape", "OR(creature;beast;animal;myth;concept;world;planet)", "building", "location", "shape", "-token-"]
             if(chance_roll(insanitylevel,"normal")):
                 if(chance_roll(insanitylevel,"normal")):
                     completeprompt += "(OR(;-imagetypequality-;uncommon) OR(-imagetype-;-othertype-;rare):1.3) "
                 else:
                     completeprompt += "OR(;-imagetypequality-;uncommon) OR(-imagetype-;-othertype-;rare) "
             completeprompt += random.choice(tokinatorlist)
+            completeprompt = completeprompt.replace("-tokensubtype-", random.choice(tokinatorsubtype))
+
+            if("subject" in givensubject and smartsubject):
+                givensubject = givensubject.replace("subject", "-token-")
 
             if(givensubject == "" and overrideoutfit == ""):
                 completeprompt = completeprompt.replace("-subject-", "-token-")
@@ -1668,10 +1674,28 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         # divider between subject and everything else
         completeprompt += " @ "
 
+ 
         if(generatesubject == True):
         # start with descriptive qualities
             
+            # outfit in front mode?
+            # outfitmode = 0 = NO
+            # outfitmode = 1 IN FRONT
+            # outfitmode = 2 IS NORMAL
+            if(overrideoutfit!=""):
+                outfitmode = 2
+            if(subjectchooser in ["animal as human","human","fictional", "non fictional", "humanoid", "manwomanrelation","manwomanmultiple", "firstname"]  and chance_roll(insanitylevel, outfitchance) and generateoutfit == True and humanspecial != 1):
+                if(random.randint(0,10)==0):
+                    outfitmode = 1
+                else:
+                    outfitmode = 2
             
+            if(outfitmode == 1):
+                completeprompt += "OR(wearing;dressed in;in;normal) OR(;OR(;a very;rare) -outfitdescriptor-;normal) OR(;-color-;uncommon) OR(;-culture-;uncommon) OR(;-material-;rare) -outfit-, "
+                if(extraordinary_dist(insanitylevel)):
+                    completeprompt += " -outfitvomit-, "
+            
+
 
             if(subjectingivensubject):
                 completeprompt += " " + givensubjectpromptlist[0] + " "
@@ -2117,11 +2141,12 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 completeprompt += " -minivomit-, "
             
             # outfit builder
-            if(subjectchooser in ["animal as human","human","fictional", "non fictional", "humanoid", "manwomanrelation","manwomanmultiple", "firstname"]  and chance_roll(insanitylevel, outfitchance) and generateoutfit == True and humanspecial != 1):
+            #if(subjectchooser in ["animal as human","human","fictional", "non fictional", "humanoid", "manwomanrelation","manwomanmultiple", "firstname"]  and chance_roll(insanitylevel, outfitchance) and generateoutfit == True and humanspecial != 1):
+            if(outfitmode == 2):
                 completeprompt += " " + random.choice(buildoutfitlist) + ", "
                 if(extraordinary_dist(insanitylevel)):
                     completeprompt += " -outfitvomit-, "
-            elif(overrideoutfit != "" and imagetype != "only templates mode"):
+            elif(outfitmode == 2 and overrideoutfit != "" and imagetype != "only templates mode"):
                 completeprompt += " " + random.choice(buildoutfitlist) + ", "
                 if(extraordinary_dist(insanitylevel)):
                     completeprompt += " -outfitvomit-, "

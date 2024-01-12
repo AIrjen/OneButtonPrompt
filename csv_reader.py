@@ -219,4 +219,28 @@ def load_all_artist_and_category():
 
         return artistlist, categorylist
 
+def sort_and_dedupe_csv_file():
+        tokenlist = csv_to_list(csvfilename="tokens",skipheader=False)
+        tokenlist = sorted(set(tokenlist))
+        newlist = []
+        for i in tokenlist:
+                j = i.lower()
+                result = all(c == i[0] for c in i)
+                if result:
+                        print("String {} have all characters same".format(i))
+                else:
+                        newlist.append(j)
         
+        
+        newlist = sorted(set(newlist))
+
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        
+        full_path = os.path.join(script_dir, "./csvfiles/special_lists/tokenwriter.csv" )
+        with open(full_path, 'w', encoding="utf8") as fp:
+                for item in newlist:
+                        # write each item on a new line
+                        fp.write("%s\n" % item)
+
+
+sort_and_dedupe_csv_file()

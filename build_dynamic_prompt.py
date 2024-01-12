@@ -1544,7 +1544,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
         # start tokinator here
         if(thetokinatormode == True):
-            tokinatorsubtype = ["personification", "human form", "object", "landscape", "OR(creature;beast;animal;myth;concept;world;planet)", "building", "location", "shape", "-token-"]
+            tokinatorsubtype = ["personification", "human form", "object", "landscape", "OR(creature;beast;animal;myth;concept;world;planet)", "building", "location", "shape", "being", "-token-"]
             if(chance_roll(insanitylevel,"normal")):
                 if(chance_roll(insanitylevel,"normal")):
                     completeprompt += "(OR(;-imagetypequality-;uncommon) OR(-imagetype-;-othertype-;rare):1.3) "
@@ -1596,6 +1596,15 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             
             if(imagetype == "all" and chance_roll(insanitylevel, imagetypechance) and amountofimagetypes <= 1):
                 amountofimagetypes = 1
+
+            # on lower insanity levels, almost force this
+            if(imagetype == "all" and insanitylevel <= 3 and amountofimagetypes <= 1 and random.randint(0,1)== 0):
+                amountofimagetypes = 1
+
+            if(imagetype == "all" and insanitylevel <= 2 and amountofimagetypes <= 1):
+                amountofimagetypes = 1
+
+
             
             
 
@@ -1615,8 +1624,10 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
                
                     
-                if(random.randint(0,4) < 4):
+                if(random.randint(0,4) < 4 and insanitylevel > 3 ):
                     # woops, never to this as wildcards. We need to know as early as possible wether something is a photo. Lets put it back!
+                    completeprompt += " " + random.choice(imagetypelist) + ", "
+                elif(random.randint(0,1) == 0 and insanitylevel <= 3):
                     completeprompt += " " + random.choice(imagetypelist) + ", "
                 else:
                     if(amountofimagetypes < 2 and random.randint(0,1) == 0):
@@ -3805,6 +3816,12 @@ def build_dynamic_negative(positive_prompt = "", insanitylevel = 0, enhance = Fa
     artist_names = [artist.strip().lower() for artist in artistlist]
 
     # note, should we find a trick for some shorthands of artists??
+    artistshorthands = csv_to_list(csvfilename="artistshorthands",directory="./csvfiles/special_lists/",delimiter="?")
+    for shorthand in artistshorthands:
+        parts = shorthand.split(';')
+        if parts[0] in positive_prompt:
+            positive_prompt = positive_prompt.lower().replace(parts[0].lower(), parts[1].lower())
+
 
     for artist_name, category in zip(artist_names, categorylist):
         positive_prompt = positive_prompt.lower().replace(artist_name, category)

@@ -147,6 +147,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     episodetitlelist = csv_to_list(csvfilename="episodetitles",antilist=antilist,skipheader=True)
     tokenlist = []
     
+    
 
     # additional descriptor lists
     outfitdescriptorlist = csv_to_list("outfitdescriptors",antilist)
@@ -286,8 +287,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     tokinatorlist = csv_to_list("tokinator", antilist,"./csvfiles/templates/",0,"?")
     styleslist = csv_to_list("styles", antilist,"./csvfiles/templates/",0,"?")
 
-
-    
+       
     # subjects
     mainchooserlist = []
     objectwildcardlist = []
@@ -1673,7 +1673,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         if(mainchooser in ["object", "animal", "humanoid", "concept"] and othertype == 0 and "portrait" not in completeprompt and generateshot == True and chance_roll(insanitylevel,shotsizechance)):
             completeprompt += "-shotsize- of a "
         elif("portrait" in completeprompt and generateshot == True and partlystylemode == False):
-            completeprompt += " ,close up of a "
+            completeprompt += " , close up of a "
         elif(mainchooser in ["landscape"] and generateshot == True and partlystylemode == False):
             completeprompt += " landscape of a "
         elif(generateshot == True): 
@@ -2658,6 +2658,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             
 
         
+        # prompt enhancer!
+        print("hello?")
+        completeprompt = enhance_positive(completeprompt, insanitylevel)
         completeprompt += ", "
         completeprompt += suffixprompt
 
@@ -3887,6 +3890,53 @@ def build_dynamic_negative(positive_prompt = "", insanitylevel = 0, enhance = Fa
     negative_result += ", " + existing_negative_prompt
 
     return negative_result
+
+def enhance_positive(positive_prompt = "", insanitylevel = 5):
+
+ 
+    wordcombilist = csv_to_list(csvfilename="wordcombis", directory="./csvfiles/special_lists/",delimiter="?")
+
+    allwords = split_prompt_to_words(positive_prompt)
+    allwords = [elem.strip().lower() for elem in allwords] # lower them
+
+    newwordlist = []
+    addwords = ""
+    wordsfound = 0
+   
+    #lower all!
+
+    for combiset in wordcombilist:
+
+        combiwords = set(combiset.split(', '))
+        for combiword in combiwords:
+            for word in allwords:
+                if(word.lower() == combiword.lower()):
+
+                    wordsfound += 1
+                    combiwords2 = set(combiset.split(', '))
+                    for combiword2 in combiwords2:
+                        newwordlist.append(combiword2)
+                    
+    
+    newprompt = "bla"
+    
+    newwordlist = [word for word in newwordlist if word not in allwords]
+    newwordlist = list(set(newwordlist)) # make unique
+    
+    insanitylevel = max(0,insanitylevel - 6)
+    
+    j = 0
+    for i in range(0,wordsfound):
+        if(random.randint(0,insanitylevel + j) == 0 and len(newwordlist) > 0):
+               addwords += ", " + newwordlist.pop(random.randrange(len(newwordlist)))
+               print(addwords)
+               j += 1
+               
+               
+           
+    positive_prompt += addwords
+
+    return positive_prompt
 
 def replace_match(match):
     # Extract the first word from the match

@@ -16,9 +16,17 @@ You can also for example, set something LoRA specific in the subject field, and 
 ### Smart Subject
 Smart Subject is standardly activated, and this will try to interpret your prompt, and turn off any related lists.
 
-For example, if you set the subject to: "Obese man wearing a kimono", it will see that "obese" is an existing body type, so it won't generate another.
+For example, if you set the subject to: __"Obese man with red hair, hard light"__, it will see that "obese" is an existing body type, so it won't generate another. The same goes for the lighting.
 
-"wearing" is a keyword that turns off outfit generation. Other keywords such as "hair" and "pose" are also in.
+"hair" is a keyword that turns off outfit generation. Other keywords such as "wearing" and "pose" are also in.
+
+It also has a feature called __subject magic__. You can use the magic word __"subject"__ in the override subject field. The subject value is replace by the actual generation process. It is like a wildcard, that does a little bit more. It puts the intended subejct in its place.
+
+This then allows for subjet overrides like this: __"scandanavian subject with platinum hair, soft light"__. In the example below, you can see it transforms into "scandanavian elegant Woman of Paradox with platinum hair, soft light"
+
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/7b865b1e-56d0-430f-a209-108c5297c512).png" alt="Override subject with subject magic" width="60%" height="60%">
+
+> Concept art, scandanavian elegant Woman of Paradox with platinum hair, soft light, very bored, Geass, Earring, Summer, shallow depth of field, Cel shaded, Kodak Ektar, sfumato, Liminal dream
 
 Basically, leave this on. Especially if you are trying to do something more specific.
 

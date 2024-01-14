@@ -2658,9 +2658,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             
 
         
-        # prompt enhancer!
-        print("hello?")
-        completeprompt = enhance_positive(completeprompt, insanitylevel)
+        completeprompt += " -tempnewwords- "
         completeprompt += ", "
         completeprompt += suffixprompt
 
@@ -3003,7 +3001,18 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     
     
     completeprompt = parse_custom_functions(completeprompt, insanitylevel)
-    
+
+    # prompt enhancer!
+    if(templatemode == False and specialmode == False):
+        # how insane do we want it?
+        print(insanitylevel)
+        amountofwords = max(0, -8 + random.randint(0,10),6 - insanitylevel)
+
+        if(amountofwords > 0):
+            enhance_positive_words = enhance_positive(completeprompt, amountofwords)
+            completeprompt = completeprompt.replace("-tempnewwords-", enhance_positive_words)
+    completeprompt = completeprompt.replace("-tempnewwords-", "")
+       
     # clean it up
     completeprompt = cleanup(completeprompt, advancedprompting, insanitylevel)
 
@@ -3221,6 +3230,26 @@ def createpromptvariant(prompt = "", insanitylevel = 5, antivalues = "" , gender
 
     words = prompt.split()
     num_words = len(words)
+    if(num_words < 15 and common_dist(insanitylevel)):
+        # add some random words maybe?
+        if(common_dist(insanitylevel)):
+            basicenhance = ", OR(-vomit-;-imagetype-;-basicbitchdescriptor-;-mood-;-lighting-;-descriptor-), "
+            if(random.randint(0,1)== 0):
+                prompt += basicenhance
+            else:
+                prompt = basicenhance + prompt
+            if(common_dist(insanitylevel)):
+                prompt += basicenhance
+            prompt = parse_custom_functions(prompt, insanitylevel)
+
+        # then add some enhanced words
+        amountofwords = random.randint(0,3)
+        if(amountofwords > 0):
+            enhance_positive_words = enhance_positive(prompt, amountofwords)
+            prompt += enhance_positive_words
+
+
+        originalprompt = prompt
     
     combinations_list = []
     
@@ -3891,10 +3920,26 @@ def build_dynamic_negative(positive_prompt = "", insanitylevel = 0, enhance = Fa
 
     return negative_result
 
-def enhance_positive(positive_prompt = "", insanitylevel = 5):
+def enhance_positive(positive_prompt = "", amountofwords = 3):
 
  
     wordcombilist = csv_to_list(csvfilename="wordcombis", directory="./csvfiles/special_lists/",delimiter="?")
+
+    # do a trick for artists, replace with their tags instead
+    artistlist, categorylist = load_all_artist_and_category()
+    # lower them
+    artist_names = [artist.strip().lower() for artist in artistlist]
+
+    # note, should we find a trick for some shorthands of artists??
+    artistshorthands = csv_to_list(csvfilename="artistshorthands",directory="./csvfiles/special_lists/",delimiter="?")
+    for shorthand in artistshorthands:
+        parts = shorthand.split(';')
+        if parts[0] in positive_prompt:
+            positive_prompt = positive_prompt.lower().replace(parts[0].lower(), parts[1].lower())
+
+
+    for artist_name, category in zip(artist_names, categorylist):
+        positive_prompt = positive_prompt.lower().replace(artist_name, category)
 
     allwords = split_prompt_to_words(positive_prompt)
     allwords = [elem.strip().lower() for elem in allwords] # lower them
@@ -3918,25 +3963,18 @@ def enhance_positive(positive_prompt = "", insanitylevel = 5):
                         newwordlist.append(combiword2)
                     
     
-    newprompt = "bla"
     
     newwordlist = [word for word in newwordlist if word not in allwords]
     newwordlist = list(set(newwordlist)) # make unique
     
-    insanitylevel = max(0,insanitylevel - 6)
     
-    j = 0
-    for i in range(0,wordsfound):
-        if(random.randint(0,insanitylevel + j) == 0 and len(newwordlist) > 0):
+    for i in range(0,amountofwords):
+        if(len(newwordlist) > 0):
                addwords += ", " + newwordlist.pop(random.randrange(len(newwordlist)))
-               print(addwords)
-               j += 1
-               
-               
-           
-    positive_prompt += addwords
+               #print(addwords)
+    
 
-    return positive_prompt
+    return addwords
 
 def replace_match(match):
     # Extract the first word from the match

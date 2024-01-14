@@ -10,17 +10,17 @@ from build_dynamic_prompt import *
 
 
 
-def generateprompts(amount = 1,positive_prompt = "",insanitylevel="0",enhance=False,existing_negative_prompt=""):
+def generateprompts(amount = 1,positive_prompt = "",amountofwords="3"):
     loops = int(amount)  # amount of images to generate
     steps = 0
     originalpositiveprompt = positive_prompt
-   
-    insanitylevel = int(insanitylevel)
+  
     while steps < loops:
         # build prompt
         if originalpositiveprompt == "":
-                    positive_prompt = build_dynamic_prompt(insanitylevel=insanitylevel)
-        result = enhance_positive(positive_prompt=positive_prompt, insanitylevel=insanitylevel)
+            result = build_dynamic_prompt(insanitylevel=2)
+        else: 
+            result = enhance_positive(positive_prompt=positive_prompt, amountofwords=amountofwords)
         print("enhanced prompt: " + result)
         print("")
         print("loop " + str(steps))
@@ -33,4 +33,4 @@ def generateprompts(amount = 1,positive_prompt = "",insanitylevel="0",enhance=Fa
     print("")
     print("All done!")
 
-generateprompts(10,"",5,False,"")
+generateprompts(10,"",5)

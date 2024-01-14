@@ -30,6 +30,7 @@ kawaii;gothic, dark, moody, monochromatic, ugly, gritty, western cartoon
 chibi;gothic, dark, moody, monochromatic, ugly, gritty, western cartoon
 adorable;gothic, dark, moody, monochromatic, ugly, gritty
 cute;gothic, dark, moody, monochromatic, ugly, gritty
+pretty;gothic, dark, moody, monochromatic, ugly, gritty
 cutecore;gothic, dark, moody, monochromatic, ugly, gritty
 art deco;low contrast, photorealism, modernist, minimalist
 art nouveau;low contrast, industrial, mechanical, photorealism, modernist, minimalist
@@ -208,8 +209,8 @@ aestheticism;ugly, gritty, asymetrical, low contrast
 aesthetic;ugly, gritty, asymetrical, low contrast
 ugly;beautiful, cute
 gritty;beautiful, cute
+grim;beautiful, cute
 visual novel;photograph, photorealism, low contrast
-landscape;portrait,people
 cloudscape;portrait,people
 streetscape;portrait
 portrait;full body shot

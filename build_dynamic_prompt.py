@@ -3228,6 +3228,10 @@ def createpromptvariant(prompt = "", insanitylevel = 5, antivalues = "" , gender
     prompt = " " + prompt
     # store the (sort of) original prompt
     originalprompt = prompt
+    originaloriginalprompt = prompt
+    
+    basicenhance = ", OR(-vomit-;-imagetype-;-basicbitchdescriptor-;-mood-;-lighting-;-descriptor-), "
+    
     ### Get all combinations of 1 to 4 consecutive words
 
 
@@ -3236,7 +3240,7 @@ def createpromptvariant(prompt = "", insanitylevel = 5, antivalues = "" , gender
     if(num_words < 15 and common_dist(insanitylevel)):
         # add some random words maybe?
         if(common_dist(insanitylevel)):
-            basicenhance = ", OR(-vomit-;-imagetype-;-basicbitchdescriptor-;-mood-;-lighting-;-descriptor-), "
+            
             if(random.randint(0,1)== 0):
                 prompt += basicenhance
             else:
@@ -3546,8 +3550,23 @@ def createpromptvariant(prompt = "", insanitylevel = 5, antivalues = "" , gender
                     prompt = prompt.replace(combination," -waterlocation- ")
 
             runs += 1
-         
-        
+    
+    # If nothing changed...  Lets do at least something
+    if(prompt == originaloriginalprompt):
+        if(random.randint(0,1)==0):
+            prompt += basicenhance
+        else:
+            prompt = basicenhance + ", " + prompt
+
+        if(chance_roll(insanitylevel, "common")):
+            prompt += basicenhance
+
+        if(chance_roll(insanitylevel, "common")):
+            enhance_positive_words = enhance_positive(prompt, 1)
+            prompt += enhance_positive_words
+
+        prompt = parse_custom_functions(prompt, insanitylevel)
+
 
     prompt = prompt.replace(" :", ":")
     prompt = prompt.replace(": ", ":")
@@ -3976,7 +3995,7 @@ def enhance_positive(positive_prompt = "", amountofwords = 3):
     for i in range(0,amountofwords):
         if(len(newwordlist) > 0):
                addwords += ", " + newwordlist.pop(random.randrange(len(newwordlist)))
-               print(addwords)
+               #print(addwords)
     
 
     return addwords

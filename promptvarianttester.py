@@ -37,5 +37,5 @@ def generatepromptvariants(amount = 1,prompt="",insanitylevel="5"):
     print("All done!")
 
 generatepromptvariants(10
-                       ,"a cute girl" #purple (galaxy) in a (bottle:1.2), <bla:1>, background is a lush jungle and a woman wearing a summer dress, -artmovement-
+                       ,"" #purple (galaxy) in a (bottle:1.2), <bla:1>, background is a lush jungle and a woman wearing a summer dress, -artmovement-
                        , 5)

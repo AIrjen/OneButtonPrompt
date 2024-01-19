@@ -2127,8 +2127,10 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             # either go job or activity, not both
 
             if(genjoboractivity and genjoboractivitylocation=="back"):
-                joboractivitylist = [joblist,humanactivitylist]
-                completeprompt +=  ", " + random.choice(random.choice(joboractivitylist)) + ", "
+                if(random.randint(0,1)==0):
+                    completeprompt +=  ", " + random.choice(humanactivitylist)+ ", "
+                else:
+                    completeprompt +=  "OR(,; as a;rare) -job-, "
 
 
             # if(subjectchooser in ["animal as human","human","job", "fictional", "non fictional", "humanoid"] and legendary_dist(insanitylevel)):
@@ -3005,8 +3007,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     # prompt enhancer!
     if(templatemode == False and specialmode == False):
         # how insane do we want it?
-        print(insanitylevel)
-        amountofwords = max(0, -8 + random.randint(0,10),6 - insanitylevel)
+
+        maxamountofwords = max(0, -1 + random.randint(0,4),6 - insanitylevel)
+        amountofwords = random.randint(0,maxamountofwords)
 
         if(amountofwords > 0):
             enhance_positive_words = enhance_positive(completeprompt, amountofwords)
@@ -3959,8 +3962,10 @@ def enhance_positive(positive_prompt = "", amountofwords = 3):
 
                     wordsfound += 1
                     combiwords2 = set(combiset.split(', '))
-                    for combiword2 in combiwords2:
-                        newwordlist.append(combiword2)
+                    # remove and only take one
+                    combiwords2 = [word for word in combiwords2 if word not in allwords]
+                    #for combiword2 in combiwords2:
+                    newwordlist.append(random.choice(combiwords2))
                     
     
     
@@ -3971,7 +3976,7 @@ def enhance_positive(positive_prompt = "", amountofwords = 3):
     for i in range(0,amountofwords):
         if(len(newwordlist) > 0):
                addwords += ", " + newwordlist.pop(random.randrange(len(newwordlist)))
-               #print(addwords)
+               print(addwords)
     
 
     return addwords
@@ -4073,6 +4078,8 @@ def cleanup(completeprompt, advancedprompting, insanitylevel = 5):
     completeprompt = re.sub('- shaped', '-shaped', completeprompt)
     completeprompt = re.sub('echa- ', 'echa-', completeprompt)
     completeprompt = re.sub('style -', 'style-', completeprompt)
+    completeprompt = re.sub(', as a', ' as a', completeprompt)
+
 
     #small fix for multisubject thing
     completeprompt = re.sub('a 2', '2', completeprompt)

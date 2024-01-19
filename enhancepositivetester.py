@@ -18,7 +18,7 @@ def generateprompts(amount = 1,positive_prompt = "",amountofwords="3"):
     while steps < loops:
         # build prompt
         if originalpositiveprompt == "":
-            result = build_dynamic_prompt(insanitylevel=2)
+            result = build_dynamic_prompt(insanitylevel=3)
         else: 
             result = enhance_positive(positive_prompt=positive_prompt, amountofwords=amountofwords)
         print("enhanced prompt: " + result)

@@ -1,7 +1,7 @@
 OR(;elegant;casual;uncommon) outfit?both
 OR(;-materialcombination-;uncommon) clothes OR(;tailored by -fashiondesigner-;uncommon)?both
 OR(;heavy;medium;light;battle;iron;steel;-materialcombination-;plate;-age-;-charactertype-;uncommon) armor?both
-OR(;A-line;maxi;formal;Halter;Midi;mini;Off-the-shoulder;Peplum;Ruffled;Sheath;Strapless;wedding;gala;uncommon) dress?female
+OR(;A-line;maxi;formal;Halter;Midi;mini;Off-the-shoulder;Peplum;Ruffled;Sheath;Strapless;wedding;gala;uncommon) dress OR(;with a OR(asymetrical;bateau;grecian;collar;cowl;halter;illusion;jewel;keyhole;off-the-shoulder;one-shoulder;plunging;queen anne;round neck;scalloped;scoop;spaghetti strap;split crew;square;strapless;surplice;sweethearth;tie bow;turtleneck;U-shape;V-neck) neckline;rare)?female
 OR(;business;formal;uncommon) suit?both
 robe OR(;tailored by -fashiondesigner-;uncommon)?both
 costume OR(;tailored by -fashiondesigner-;uncommon)?both

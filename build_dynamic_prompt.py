@@ -3052,6 +3052,9 @@ def createpromptvariant(prompt = "", insanitylevel = 5, antivalues = "" , gender
     # first load the lists, all copied from above (can that be done better?)
     # do we want to use the same settings or keep it open??
 
+    # strip the prompt, for EVO in ruinedfooocus:
+    prompt = prompt.strip()
+
     # first build up a complete anti list. Those values are removing during list building
     # this uses the antivalues string AND the antilist.csv
     emptylist = []
@@ -3552,7 +3555,7 @@ def createpromptvariant(prompt = "", insanitylevel = 5, antivalues = "" , gender
             runs += 1
     
     # If nothing changed...  Lets do at least something
-    if(prompt == originaloriginalprompt):
+    if(prompt.lower().strip() == originaloriginalprompt.lower().strip()):
         if(random.randint(0,1)==0):
             prompt += basicenhance
         else:

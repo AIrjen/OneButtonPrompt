@@ -342,7 +342,7 @@ class Script(scripts.Script):
 
                         There are a lot of special things build in, based on various research papers. Just try it, and let it surprise you.
 
-                        Add additional prompting to the prefix, suffix and negative prompt in this screen. The actual prompt fields are ignored. 
+                        Add additional prompting to the prefix, suffix in this screen. The actual prompt fields are ignored. Negative prompt is in the respective tab.
                         </font>
                         
                         ### 📸 Subject Types
@@ -517,7 +517,7 @@ class Script(scripts.Script):
 
                         The existing prompt and negative prompt fields are ignored.
                         
-                        Add a prompt prefix, suffix and the negative prompt in the respective fields. They will be automatically added during processing.
+                        Add a prompt prefix, suffix in the respective fields. Add negative prompt in the negative prompt tab. They will be automatically added during processing.
 
                         These can be used to add textual inversion and LoRA's to always apply. They can also be used to add your models trigger words.
 

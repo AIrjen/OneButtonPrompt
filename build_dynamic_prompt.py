@@ -3987,7 +3987,8 @@ def enhance_positive(positive_prompt = "", amountofwords = 3):
                     # remove and only take one
                     combiwords2 = [word for word in combiwords2 if word not in allwords]
                     #for combiword2 in combiwords2:
-                    newwordlist.append(random.choice(combiwords2))
+                    if(combiwords2):
+                        newwordlist.append(random.choice(combiwords2))
                     
     
     

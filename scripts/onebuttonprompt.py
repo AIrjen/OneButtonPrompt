@@ -15,6 +15,8 @@ from main import *
 from model_lists import *
 from csv_reader import *
 
+from one_button_presets import OneButtonPresets
+OBPresets = OneButtonPresets()
 
 #subjects = ["all","object","animal","humanoid", "landscape", "concept"]
 subjects =["all"]
@@ -267,277 +269,314 @@ class Script(scripts.Script):
                             One Button Prompt is now active. Just press the normal Generate button to start generating images.
 
                             The settings below give you more control over what you wish to generate.
+
+                            Presets can be used to store and load settings.
                             </font>
                             """)
-            with gr.Row(variant="compact"):
-                insanitylevel = gr.Slider(1, 10, value=5, step=1, label="🎲⬅️❔➡️🎲🎲🎲 Higher levels increases complexity and randomness of generated prompt")
-            with gr.Row(variant="compact"):
-                with gr.Column(variant="compact"):
-                    subject = gr.Dropdown(
-                                    subjects, label="📸 Subject Types", value="all")                   
-                with gr.Column(variant="compact"):
-                    artist = gr.Dropdown(
-                                    artists, label="🎨 Artists", value="all")
-            with gr.Row(variant="compact"):
-                 chosensubjectsubtypeobject = gr.Dropdown(
-                                    subjectsubtypesobject, label="🏺 Type of object", value="all", visible=False)
-                 chosensubjectsubtypehumanoid = gr.Dropdown(
-                                    subjectsubtypeshumanoid, label="👨‍👩‍👧 Type of humanoids", value="all", visible=False)
-                 chosensubjectsubtypeconcept = gr.Dropdown(
-                                    subjectsubtypesconcept, label="💡🧠💭 Type of concept", value="all", visible=False)
-                 chosengender = gr.Dropdown(
-                                    genders, label="🚻 gender", value="all", visible=False)
-            with gr.Row(variant="compact"):
-                with gr.Column(variant="compact"):
-                    imagetype = gr.Dropdown(
-                                    imagetypes, label="🖼️ type of image", value="all")
-                with gr.Column(variant="compact"):
-                    imagemodechance = gr.Slider(
-                                    1, 100, value="20", step=1, label="🎲🖼️ One in X chance to use special image type mode")
-            with gr.Row(variant="compact"):
-                 gr.Markdown("""
-                            <font size="2">
-                            Override options (choose the related subject type first for better results)
-                            </font>
-                            """
-                 )
-            with gr.Row(variant="compact"):
-                 givensubject = gr.Textbox(label="🔃📸 Overwrite subject: ", value="")
-                 smartsubject = gr.Checkbox(label="🧠📸 Smart subject", value = True)
-            with gr.Row(variant="compact"):
-                 givenoutfit = gr.Textbox(label="🔃👗 Overwrite outfit: ", value="")
-            with gr.Row(variant="compact"):
+                # Part of presets
+            with gr.Row():
+                    OBP_preset = gr.Dropdown(
+                        label="One Button Preset",
+                        choices=[OBPresets.CUSTOM_OBP] + list(OBPresets.opb_presets.keys()),
+                        value="Custom...",
+                    )
+           
+                                
+            with gr.Group(visible=False) as maingroup:
                 gr.Markdown("""
                             <font size="2">
-                            Prompt fields
+                            Type a name and press "Save as Preset" to store the generation settings.
                             </font>
-                            """
-                )
-            with gr.Row(variant="compact"):
-                with gr.Column(variant="compact"):
-                    prefixprompt = gr.Textbox(label="⬅️💬 Place this in front of generated prompt (prefix)",value="")
-                    suffixprompt = gr.Textbox(label="➡️💬 Place this at back of generated prompt (suffix)",value="")
-            with gr.Row(variant="compact"):
-                gr.Markdown("""
-                            <font size="2">
-                            Additional options
-                            </font>
-                            """
-                )
-            with gr.Row(variant="compact"):
-                 giventypeofimage = gr.Textbox(label="🔃🖼️ Overwrite type of image: ", value="")
-            with gr.Row(variant="compact"):
-                with gr.Column(variant="compact"):
-                    antistring = gr.Textbox(label="❌📝 Filter out following properties (comma seperated). Example ""film grain, purple, cat"" ")
-            with gr.Accordion("Help", open=False):
-                    gr.Markdown(
-                        """
-                        ### Description
-                        
-                        <font size="2">
-                        Just press the normal Generate button.
-
-                        This generator will generate a complete full prompt for you and generate the image, based on randomness. You can increase the slider, to include more things to put into the prompt. 
-                        Recommended is keeping it around 3-7. Use 10 at your own risk.
-
-                        There are a lot of special things build in, based on various research papers. Just try it, and let it surprise you.
-
-                        Add additional prompting to the prefix, suffix in this screen. The actual prompt fields are ignored. Negative prompt is in the respective tab.
-                        </font>
-                        
-                        ### 📸 Subject Types
-                        
-                        <font size="2">
-                        You can choose a certain subject type, if you want to generate something more specific. It has the following types:  
-                        
-                        1. object - Can be a random object, a building or a vehicle.  
-                        
-                        2. animal - A random (fictional) animal. Has a chance to have human characteristics, such as clothing added.  
-                        
-                        3. humanoid - A random humanoid, males, females, fantasy types, fictional and non-fictional characters. Can add clothing, features and a bunch of other things.  
-                        
-                        4. landscape - A landscape or a landscape with a building.  
-                        
-                        5. concept - Can be a concept, such as "a X of Y", or an historical event such as "The Trojan War". It can also generate a line from a poem or a song. 
-
-                        After choosing object, humanoid or concept a subselection menu will show. You can pick further details here. When choosing humanoid, you can also select the gender you wish to generate.
-
-                        🏺 Type of Object:
-
-                        1. all - selects randomly (default)
-
-                        2. generic objects - Hodgepodge of objects, can be household items, weapons or any other general object.
-
-                        3. vehicles - Cars, but also planes, trains and boats.
-
-                        4. food - Meals, fruits and others.
-
-                        5. buildings - From churches to libraries to castles.
-
-                        6. space - Some bigger objects, nebula's, black holes and constellations
-
-                        7. flora - Flowers and trees.
-
-                        👨‍👩‍👧 Type of humanoid:
-
-                        1. all - selects randomly (default)
-
-                        2. generic humans - Generic human descriptions. Example values would be Man, Woman, Male, etc
-
-                        3. generic human relations - Human relations, example values would be Grandpa, Sister, Father, etc
-
-                        4. celebrities e.a. - Known people, usually celebrities.
-
-                        5. fictional characters - Movie and videogame characters, such as Mario and Peach.
-
-                        6. humanoids - Humanoid type races, think Elves, Orcs, Dwarves, etc
-
-                        7. based on job or title - Examples are Queen, Carpenter, Vampire hunter
-
-                        8. based on first name - Examples are Anna, James, Emma etc.
-
-                        🚻 gender:
-
-                        1. all - selects randomly
-
-                        2. male
-
-                        3. female
-
-                        💡🧠💭 Type of concept:
-
-                        1. all - selects randomly (default)
-
-                        2. event - an historical event, or even mythological event. Example The fall of Rome
-
-                        3. the X of Y concepts - Randomly creates a small sentence, example The Ocean of Thought or The Fortress of Flame, etc
-
-                        4. lines from poems - Picks a line from a poem
-
-                        5. lines from songs - Picks a line from a song
-
-                        6. names from card based games - Picks a card name from various card games, such as magic the gathering, yugioh and many others.
-
-                        </font>
-                        
-                        ### 🎨 Artists
-                        
-                        <font size="2">
-                        Artists have a major impact on the result.
-                        
-                        1. all - it will cohesivly add about between 0-3 artists and style description. 
-                        
-                        2. all (wild) - it will randomly select between 0-3 artists out of 3483 artists for your prompt.
-
-                        3. greg mode - Will add greg, or many other popular artists into your prompt. Will also add a lot of quality statements. 
-
-                        Others will select within that artist category
-                        
-                        You can turn it off and maybe add your own in the prefix or suffix prompt fields
-                        </font>
-
-                        ### 🖼️ type of image
-
-                        <font size="2">
-                        There are an immense number of image types, not only paintings and photo's, but also isometric renders and funko pops.
-                        You can however, overwrite it with the most popular ones.
-
-
-                        1. all --> normally picks a image type as random. Can choose a 'other' more unique type.
-
-                        2. all - force multiple  --> idea by redditor WestWordHoeDown, it forces to choose between 2 and 3 image types
-                        
-                        3. photograph
-
-                        4. octane render
-
-                        5. digital art
-
-                        6. concept art
-
-                        7. painting
-
-                        6. portrait
-
-                        7. anime key visual
-                        
-                        8. only other types --> Will pick only from the more unique types, such as stained glass window or a funko pop
-
-                        All modes below are considered a special image type mode.
-
-                        9. only templates mode --> Will only choose from a set of wildcarded prompt templates. Templates have been gathered from various sources, such as CivitAI, prompthero, promptbook, etc.
-
-                        only templates mode is perfect for beginners, who want to see some good results fast.
-
-                        10. art blaster mode --> Special generation mode that focusses on art movements, stylings and artists.
-
-                        11. quality vomit mode --> Special generation mode that focusses on qualifiers and stylings.
-
-                        12. color cannon mode --> Special generation mode that focusses on color scheme's and moods.
-
-                        13. unique art mode --> Special generation mode that focusses on other image types, art movements, stylings and lighting.
-
-                        14. massive madness mode --> Special generation mode, creates prompt soup. Almost pure randomness.
-
-                        15. photo fantasy mode --> Special generation mode that focusses on photographs, cameras, lenses and lighting.
-
-                        16. subject only mode --> Will only generate a subject, with no additional frills.
-
-                        17. fixed styles mode --> Generate a subject on top of a fixed style.
-
-                        18. the tokinator --> Complete random word gibberish mode, use at own risk
-
-                        ### 🎲🖼️ One in X chance to use special image type mode
-
-                        <font size="2">
-                        This controls how often it will pick a special generation mode. It is a 1 in X chance. So lower means more often. This will only be applied of "type of image" is set to "all" and there is no Overwrite type of image set.
-
-                        When set to 1, it will always pick a random special generation mode. When set to 20, it is a 1 in 20 chance this will happen.
-                        </font>
-                        
-                        ### 🔃📸 Overwrite subject
-
-                        When you fill in the Overwrite subject field, that subject will be used to build the dynamic prompt around. It is best, if you set the subject type to match the subject. For example, set it to humanoid if you place a person in the override subject field.
-                        
-                        This way, you can create unlimited variants of a subject.
-
-                        🧠📸 Smart subject tries to determine what to and not to generate based on your subject. Example, if your Overwrite subject is formed like this: Obese man wearing a kimono
-                        
-                        It will then recognize the body type and not generate it. It also recognizes the keyword wearing, and will not generate an outfit.
-
-                        ### 🔃👗 Overwrite outfit
-
-                        When you fill in the override outfit field, it will generate an outfit in the prompt based on the given value. It can be used in combination with override subject, but does not have to be. It works best with smaller descriptions of the outfit.
-
-                        An example would be: space suit, red dress, cloak.
-
-                        Works best when you set the subjects to to humanoid.
-                        
-                        ### Other prompt fields
-
-                        The existing prompt and negative prompt fields are ignored.
-                        
-                        Add a prompt prefix, suffix in the respective fields. Add negative prompt in the negative prompt tab. They will be automatically added during processing.
-
-                        These can be used to add textual inversion and LoRA's to always apply. They can also be used to add your models trigger words.
-
-                        Please read the custom_files documentation on how to apply random textual inversion and LoRA's.
-
-                        </font>
-
-                        ### Filter values
-                        <font size="2">
-                        You can put comma seperated values here, those will be ignored from any list processing. For example, adding ""film grain, sepia"", will make these values not appear during generation.
-
-                        For advanced users, you can create a permanent file in \\OneButtonPrompt\\userfiles\\ called antilist.csv
-                        
-                        This way, you don't ever have to add it manually again. This file won't be overwritten during upgrades.
-
-                        Idea by redditor jonesaid.
-
-                        </font>
-                        """
+                            """)
+                with gr.Row():
+                        obp_preset_name = gr.Textbox(
+                            show_label=False,
+                            placeholder="Name of new preset",
+                            interactive=True,
+                            visible=True,
                         )
+                        obp_preset_save = gr.Button(
+                            value="Save as preset",
+                            visible=True,
+                        )
+                gr.Markdown("""
+                            <font size="2">
+                            
+                            Generation settings:
+                            </font>
+                            """)
+            
+            # End of this part of presets
+                
+                with gr.Row(variant="compact"):
+                    insanitylevel = gr.Slider(1, 10, value=5, step=1, label="🎲⬅️❔➡️🎲🎲🎲 Higher levels increases complexity and randomness of generated prompt")
+                with gr.Row(variant="compact"):
+                    with gr.Column(variant="compact"):
+                        subject = gr.Dropdown(
+                                        subjects, label="📸 Subject Types", value="all")                   
+                    with gr.Column(variant="compact"):
+                        artist = gr.Dropdown(
+                                        artists, label="🎨 Artists", value="all")
+                with gr.Row(variant="compact"):
+                    chosensubjectsubtypeobject = gr.Dropdown(
+                                        subjectsubtypesobject, label="🏺 Type of object", value="all", visible=False)
+                    chosensubjectsubtypehumanoid = gr.Dropdown(
+                                        subjectsubtypeshumanoid, label="👨‍👩‍👧 Type of humanoids", value="all", visible=False)
+                    chosensubjectsubtypeconcept = gr.Dropdown(
+                                        subjectsubtypesconcept, label="💡🧠💭 Type of concept", value="all", visible=False)
+                    chosengender = gr.Dropdown(
+                                        genders, label="🚻 gender", value="all", visible=False)
+                with gr.Row(variant="compact"):
+                    with gr.Column(variant="compact"):
+                        imagetype = gr.Dropdown(
+                                        imagetypes, label="🖼️ type of image", value="all")
+                    with gr.Column(variant="compact"):
+                        imagemodechance = gr.Slider(
+                                        1, 100, value="20", step=1, label="🎲🖼️ One in X chance to use special image type mode")
+                with gr.Row(variant="compact"):
+                    gr.Markdown("""
+                                <font size="2">
+                                Override options (choose the related subject type first for better results)
+                                </font>
+                                """
+                    )
+                with gr.Row(variant="compact"):
+                    givensubject = gr.Textbox(label="🔃📸 Overwrite subject: ", value="")
+                    smartsubject = gr.Checkbox(label="🧠📸 Smart subject", value = True)
+                with gr.Row(variant="compact"):
+                    givenoutfit = gr.Textbox(label="🔃👗 Overwrite outfit: ", value="")
+                with gr.Row(variant="compact"):
+                    gr.Markdown("""
+                                <font size="2">
+                                Prompt fields
+                                </font>
+                                """
+                    )
+                with gr.Row(variant="compact"):
+                    with gr.Column(variant="compact"):
+                        prefixprompt = gr.Textbox(label="⬅️💬 Place this in front of generated prompt (prefix)",value="")
+                        suffixprompt = gr.Textbox(label="➡️💬 Place this at back of generated prompt (suffix)",value="")
+                with gr.Row(variant="compact"):
+                    gr.Markdown("""
+                                <font size="2">
+                                Additional options
+                                </font>
+                                """
+                    )
+                with gr.Row(variant="compact"):
+                    giventypeofimage = gr.Textbox(label="🔃🖼️ Overwrite type of image: ", value="")
+                with gr.Row(variant="compact"):
+                    with gr.Column(variant="compact"):
+                        antistring = gr.Textbox(label="❌📝 Filter out following properties (comma seperated). Example ""film grain, purple, cat"" ")
+                with gr.Accordion("Help", open=False):
+                        gr.Markdown(
+                            """
+                            ### Description
+                            
+                            <font size="2">
+                            Just press the normal Generate button.
+
+                            This generator will generate a complete full prompt for you and generate the image, based on randomness. You can increase the slider, to include more things to put into the prompt. 
+                            Recommended is keeping it around 3-7. Use 10 at your own risk.
+
+                            There are a lot of special things build in, based on various research papers. Just try it, and let it surprise you.
+
+                            Add additional prompting to the prefix, suffix in this screen. The actual prompt fields are ignored. Negative prompt is in the respective tab.
+                            </font>
+                            
+                            ### 📸 Subject Types
+                            
+                            <font size="2">
+                            You can choose a certain subject type, if you want to generate something more specific. It has the following types:  
+                            
+                            1. object - Can be a random object, a building or a vehicle.  
+                            
+                            2. animal - A random (fictional) animal. Has a chance to have human characteristics, such as clothing added.  
+                            
+                            3. humanoid - A random humanoid, males, females, fantasy types, fictional and non-fictional characters. Can add clothing, features and a bunch of other things.  
+                            
+                            4. landscape - A landscape or a landscape with a building.  
+                            
+                            5. concept - Can be a concept, such as "a X of Y", or an historical event such as "The Trojan War". It can also generate a line from a poem or a song. 
+
+                            After choosing object, humanoid or concept a subselection menu will show. You can pick further details here. When choosing humanoid, you can also select the gender you wish to generate.
+
+                            🏺 Type of Object:
+
+                            1. all - selects randomly (default)
+
+                            2. generic objects - Hodgepodge of objects, can be household items, weapons or any other general object.
+
+                            3. vehicles - Cars, but also planes, trains and boats.
+
+                            4. food - Meals, fruits and others.
+
+                            5. buildings - From churches to libraries to castles.
+
+                            6. space - Some bigger objects, nebula's, black holes and constellations
+
+                            7. flora - Flowers and trees.
+
+                            👨‍👩‍👧 Type of humanoid:
+
+                            1. all - selects randomly (default)
+
+                            2. generic humans - Generic human descriptions. Example values would be Man, Woman, Male, etc
+
+                            3. generic human relations - Human relations, example values would be Grandpa, Sister, Father, etc
+
+                            4. celebrities e.a. - Known people, usually celebrities.
+
+                            5. fictional characters - Movie and videogame characters, such as Mario and Peach.
+
+                            6. humanoids - Humanoid type races, think Elves, Orcs, Dwarves, etc
+
+                            7. based on job or title - Examples are Queen, Carpenter, Vampire hunter
+
+                            8. based on first name - Examples are Anna, James, Emma etc.
+
+                            🚻 gender:
+
+                            1. all - selects randomly
+
+                            2. male
+
+                            3. female
+
+                            💡🧠💭 Type of concept:
+
+                            1. all - selects randomly (default)
+
+                            2. event - an historical event, or even mythological event. Example The fall of Rome
+
+                            3. the X of Y concepts - Randomly creates a small sentence, example The Ocean of Thought or The Fortress of Flame, etc
+
+                            4. lines from poems - Picks a line from a poem
+
+                            5. lines from songs - Picks a line from a song
+
+                            6. names from card based games - Picks a card name from various card games, such as magic the gathering, yugioh and many others.
+
+                            </font>
+                            
+                            ### 🎨 Artists
+                            
+                            <font size="2">
+                            Artists have a major impact on the result.
+                            
+                            1. all - it will cohesivly add about between 0-3 artists and style description. 
+                            
+                            2. all (wild) - it will randomly select between 0-3 artists out of 3483 artists for your prompt.
+
+                            3. greg mode - Will add greg, or many other popular artists into your prompt. Will also add a lot of quality statements. 
+
+                            Others will select within that artist category
+                            
+                            You can turn it off and maybe add your own in the prefix or suffix prompt fields
+                            </font>
+
+                            ### 🖼️ type of image
+
+                            <font size="2">
+                            There are an immense number of image types, not only paintings and photo's, but also isometric renders and funko pops.
+                            You can however, overwrite it with the most popular ones.
+
+
+                            1. all --> normally picks a image type as random. Can choose a 'other' more unique type.
+
+                            2. all - force multiple  --> idea by redditor WestWordHoeDown, it forces to choose between 2 and 3 image types
+                            
+                            3. photograph
+
+                            4. octane render
+
+                            5. digital art
+
+                            6. concept art
+
+                            7. painting
+
+                            6. portrait
+
+                            7. anime key visual
+                            
+                            8. only other types --> Will pick only from the more unique types, such as stained glass window or a funko pop
+
+                            All modes below are considered a special image type mode.
+
+                            9. only templates mode --> Will only choose from a set of wildcarded prompt templates. Templates have been gathered from various sources, such as CivitAI, prompthero, promptbook, etc.
+
+                            only templates mode is perfect for beginners, who want to see some good results fast.
+
+                            10. art blaster mode --> Special generation mode that focusses on art movements, stylings and artists.
+
+                            11. quality vomit mode --> Special generation mode that focusses on qualifiers and stylings.
+
+                            12. color cannon mode --> Special generation mode that focusses on color scheme's and moods.
+
+                            13. unique art mode --> Special generation mode that focusses on other image types, art movements, stylings and lighting.
+
+                            14. massive madness mode --> Special generation mode, creates prompt soup. Almost pure randomness.
+
+                            15. photo fantasy mode --> Special generation mode that focusses on photographs, cameras, lenses and lighting.
+
+                            16. subject only mode --> Will only generate a subject, with no additional frills.
+
+                            17. fixed styles mode --> Generate a subject on top of a fixed style.
+
+                            18. the tokinator --> Complete random word gibberish mode, use at own risk
+
+                            ### 🎲🖼️ One in X chance to use special image type mode
+
+                            <font size="2">
+                            This controls how often it will pick a special generation mode. It is a 1 in X chance. So lower means more often. This will only be applied of "type of image" is set to "all" and there is no Overwrite type of image set.
+
+                            When set to 1, it will always pick a random special generation mode. When set to 20, it is a 1 in 20 chance this will happen.
+                            </font>
+                            
+                            ### 🔃📸 Overwrite subject
+
+                            When you fill in the Overwrite subject field, that subject will be used to build the dynamic prompt around. It is best, if you set the subject type to match the subject. For example, set it to humanoid if you place a person in the override subject field.
+                            
+                            This way, you can create unlimited variants of a subject.
+
+                            🧠📸 Smart subject tries to determine what to and not to generate based on your subject. Example, if your Overwrite subject is formed like this: Obese man wearing a kimono
+                            
+                            It will then recognize the body type and not generate it. It also recognizes the keyword wearing, and will not generate an outfit.
+
+                            ### 🔃👗 Overwrite outfit
+
+                            When you fill in the override outfit field, it will generate an outfit in the prompt based on the given value. It can be used in combination with override subject, but does not have to be. It works best with smaller descriptions of the outfit.
+
+                            An example would be: space suit, red dress, cloak.
+
+                            Works best when you set the subjects to to humanoid.
+                            
+                            ### Other prompt fields
+
+                            The existing prompt and negative prompt fields are ignored.
+                            
+                            Add a prompt prefix, suffix in the respective fields. Add negative prompt in the negative prompt tab. They will be automatically added during processing.
+
+                            These can be used to add textual inversion and LoRA's to always apply. They can also be used to add your models trigger words.
+
+                            Please read the custom_files documentation on how to apply random textual inversion and LoRA's.
+
+                            </font>
+
+                            ### Filter values
+                            <font size="2">
+                            You can put comma seperated values here, those will be ignored from any list processing. For example, adding ""film grain, sepia"", will make these values not appear during generation.
+
+                            For advanced users, you can create a permanent file in \\OneButtonPrompt\\userfiles\\ called antilist.csv
+                            
+                            This way, you don't ever have to add it manually again. This file won't be overwritten during upgrades.
+
+                            Idea by redditor jonesaid.
+
+                            </font>
+                            """
+                            )
         with gr.Tab("Workflow assist"):
             with gr.Row(variant="compact"):
                     silentmode = gr.Checkbox(
@@ -862,6 +901,148 @@ class Script(scripts.Script):
         interrupt.click(tryinterrupt, inputs=[apiurl])
         
         automatedoutputsfolderbutton.click(openfolder)
+
+        obp_outputs = [
+                    obp_preset_name,
+                    obp_preset_save,
+                    insanitylevel,
+                    subject,
+                    artist,
+                    chosensubjectsubtypeobject,
+                    chosensubjectsubtypehumanoid,
+                    chosensubjectsubtypeconcept,
+                    chosengender,
+                    imagetype,
+                    imagemodechance,
+                    givensubject,
+                    smartsubject,
+                    givenoutfit,
+                    prefixprompt,
+                    suffixprompt,
+                    giventypeofimage,
+                    antistring,
+                ]
+
+                
+        def act_obp_preset_save(
+                    obp_preset_name,
+                    obp_preset_save,
+                    insanitylevel,
+                    subject,
+                    artist,
+                    chosensubjectsubtypeobject,
+                    chosensubjectsubtypehumanoid,
+                    chosensubjectsubtypeconcept,
+                    chosengender,
+                    imagetype,
+                    imagemodechance,
+                    givensubject,
+                    smartsubject,
+                    givenoutfit,
+                    prefixprompt,
+                    suffixprompt,
+                    giventypeofimage,
+                    antistring,
+                ):
+                    if obp_preset_name != "":
+                        obp_options = OBPresets.load_obp_presets()
+                        opts = {
+                            "insanitylevel": insanitylevel,
+                            "subject": subject,
+                            "artist": artist,
+                            "chosensubjectsubtypeobject": chosensubjectsubtypeobject,
+                            "chosensubjectsubtypehumanoid": chosensubjectsubtypehumanoid,
+                            "chosensubjectsubtypeconcept": chosensubjectsubtypeconcept,
+                            "chosengender": chosengender,
+                            "imagetype": imagetype,
+                            "imagemodechance": imagemodechance,
+                            "givensubject": givensubject,
+                            "smartsubject": smartsubject,
+                            "givenoutfit": givenoutfit,
+                            "prefixprompt": prefixprompt,
+                            "suffixprompt": suffixprompt,
+                            "giventypeofimage": giventypeofimage,
+                            "antistring": antistring
+                        }
+                        obp_options[obp_preset_name] = opts
+                        OBPresets.save_obp_preset(obp_options)
+                        choices = list(obp_options.keys()) + [
+                            OBPresets.CUSTOM_OBP
+                        ]
+                        return gr.update(choices=choices, value=obp_preset_name)
+                    else:
+                        return gr.update()
+
+        obp_preset_save.click(act_obp_preset_save,
+                    inputs=obp_outputs,
+                    outputs=[OBP_preset],
+                )
+        
+        
+        def obppreset_changed(selection):
+                if selection == OBPresets.CUSTOM_OBP:
+                    return (
+                        [obp_preset_name.update(value="", visible=True)]
+                        + [maingroup.update(visible=True)]
+                    )
+    
+                else:
+                    return (
+                        [obp_preset_name.update(visible=False)]
+                        + [maingroup.update(visible=False)]
+                    )
+        OBP_preset.change(obppreset_changed,
+                inputs=[OBP_preset],
+                outputs=[obp_preset_name] + [maingroup]
+            )
+        
+        
+        
+        
+        def OBPPreset_changed_update_custom(selection):
+                # Skip if Custom was selected
+                if selection == OBPresets.CUSTOM_OBP:
+                    return [gr.update()] * 16
+
+                # Update Custom values based on selected One Button preset
+                selected_opb_preset = OBPresets.get_obp_preset(selection)
+                return [
+                    insanitylevel.update(value=selected_opb_preset["insanitylevel"]),
+                    subject.update(value=selected_opb_preset["subject"]),
+                    artist.update(value=selected_opb_preset["artist"]),
+                    chosensubjectsubtypeobject.update(value=selected_opb_preset["chosensubjectsubtypeobject"]),
+                    chosensubjectsubtypehumanoid.update(value=selected_opb_preset["chosensubjectsubtypehumanoid"]),
+                    chosensubjectsubtypeconcept.update(value=selected_opb_preset["chosensubjectsubtypeconcept"]),
+                    chosengender.update(value=selected_opb_preset["chosengender"]),
+                    imagetype.update(value=selected_opb_preset["imagetype"]),
+                    imagemodechance.update(value=selected_opb_preset["imagemodechance"]),
+                    givensubject.update(value=selected_opb_preset["givensubject"]),
+                    smartsubject.update(value=selected_opb_preset["smartsubject"]),
+                    givenoutfit.update(value=selected_opb_preset["givenoutfit"]),
+                    prefixprompt.update(value=selected_opb_preset["prefixprompt"]),
+                    suffixprompt.update(value=selected_opb_preset["suffixprompt"]),
+                    giventypeofimage.update(value=selected_opb_preset["giventypeofimage"]),
+                    antistring.update(value=selected_opb_preset["antistring"]),
+                ]
+        OBP_preset.change(OBPPreset_changed_update_custom,
+                inputs=[OBP_preset],
+                outputs=[insanitylevel] + 
+                [subject] + 
+                [artist] + 
+                [chosensubjectsubtypeobject] + 
+                [chosensubjectsubtypehumanoid] + 
+                [chosensubjectsubtypeconcept] + 
+                [chosengender] + 
+                [imagetype] + 
+                [imagemodechance] + 
+                [givensubject] + 
+                [smartsubject] + 
+                [givenoutfit] +
+                [prefixprompt] +
+                [suffixprompt] +
+                [giventypeofimage] +
+                [antistring], 
+        )
 
         # turn things on and off for gender
         def subjectsvalue(subject):

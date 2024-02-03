@@ -268,9 +268,9 @@ class Script(scripts.Script):
                             <font size="2">
                             One Button Prompt is now active. Just press the normal Generate button to start generating images.
 
-                            Presets can be used to store and load settings. 
+                            Presets can be used to store and load settings.
 
-                            Set the One Button Preset to "Custom..." to show all settings. The settings below give you more control over what you wish to generate. 
+                            Set the One Button Preset to __"Custom..."__ to show all settings. The settings will give you more control over what you wish to generate.
                             </font>
                             """)
                 # Part of presets
@@ -285,7 +285,7 @@ class Script(scripts.Script):
             with gr.Group(visible=False) as maingroup:
                 gr.Markdown("""
                             <font size="2">
-                            Type a name and press "Save as Preset" to store the generation settings.
+                            Type a name and press "Save as Preset" to store the current generation settings.
                             </font>
                             """)
                 with gr.Row():
@@ -300,8 +300,7 @@ class Script(scripts.Script):
                             visible=True,
                         )
                 gr.Markdown("""
-                            <font size="2">
-                            
+                            <font size="4">
                             Generation settings:
                             </font>
                             """)

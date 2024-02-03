@@ -23,6 +23,7 @@ More of a Fooocus fan? Take a look at this excellent fork called [RuinedFooocus]
 # Features
 - __Full prompt generation__ with the click of a button.                  ==> [guide to my first generation](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/my_first_generation.md) 
 - Supports __TXT2IMG, IMG2IMG, ControlNET, inpainting and latent couple__.  ==> [guide to IMG2IMG and ControlNET](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/the_next_generation_img2img_and_controlnet.md)
+- Save your favorite generation settings with __presets__. ==>  [One Button Presets](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/one_butten_presets.md)
 - __Workflow assist__, generate multiple prompts with One Button. Create __prompt variants__ with ease. ==> [guide to workflow assist and prompt variant mode](workflow_assist_and_prompt_variant_mode.md)
 - Create __infinite variations__ of a __chosen subject__.                     ==> [guide to override subject](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/override_subject_and_infinite_variations.md)
 - Fully __automated generation, classification and upscaling__.           ==> [guide to one_button_run_and_upscale](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/one_button_run_and_upscale.md)
@@ -33,10 +34,18 @@ More of a Fooocus fan? Take a look at this excellent fork called [RuinedFooocus]
 - Has multiple __prompt generation modes__ to choose from ==> [guide to prompt generation modes](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/prompt_generation_modes.md)
 - Stay in control, and fine-tune One Button Prompt with a __config__ file ==> [config file](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/config_file.md)
 
-## How to use in automatic1111
+## Important Notice
+
+One Button Prompt had a recent large change in the UI when Presets were introduced. This might be confusing for long time users.
+
+If you are not finding the settings, change the __"One Button Preset"__ to __"Custom..."__.
+
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/6d821c82-edf9-4496-867f-ac01dda994cd.png" width="50%" height="50%">
+
+## How to use in automatic1111/SD.next
 In TXT2IMG or IMG2IMG, select the script "One Button Prompt".
 
-<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/b4b7a81b-094f-4bb8-bf9d-6ef45bbfa14d.png" width="50%" height="50%">
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/b43f7bef-533d-4139-a477-562a0b2d39ca.png" width="50%" height="50%">
 
 Leave the prompts empty:
 
@@ -55,6 +64,8 @@ Please be aware, that not each picture will be awesome due to the randomness of 
 You might get an epic landscape, or a photo of an Aggregavated Trout. In my experience, about 1 in 5 is good. Everyone of them is interesting.
 
 Don't get overwhelmed by the options, they will become more clear once you use it more.
+
+For first time users, play around with the set presets.
 
 Some more examples below. And check the first time user guide [here](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/my_first_generation.md).
 
@@ -100,14 +111,28 @@ You can also download the files from github directly, and place them under your 
 
 # Main tab
 
-Guide your prompt here. You can increase the slider, to include more things to put into the prompt. Recommended is keeping it around 3-7. Use 10 at your own risk. I usually run it between 5 and 7.
+The main tab will show preset options, which are preset generation settings which will help achieve good results. On default, it is set to __Standard__, which was the previous default setting of One Button Prompt. It is quite random and give some wild results.
+
+If you are looking for more guided results, choose a different preset. Some good first choices are:
+
+- Standard -> One Button Prompts default. Wild and unpredictable. Good for prompt exploration.
+- Unique People Portraits -> Will focus on generating photographic people
+- D&D Style Portraits -> Will focus on generating fantasy style portraits
+- Consistent Results -> Running on a large set of build in styles, to get consistent results in prompts. Works best on SDXL.
+- Greg Mode - The Preset -> Focusses on creating characters, mixed with popular artists (like Greg Rutkowski). Works best on SD 1.5 models.
+
+
+If you want to change the settings yourself, please change the One Button Preset to __"Custom..."__. This will load in all the settings to be adjusted.
+
+
+Insanity level. You can increase the slider, to include more things to put into the prompt. Recommended is keeping it around 3-7. Use 10 at your own risk. I usually run it between 5 and 7.
 
 You an use the Subject Types filter to select on main subject types to generate. Maybe you want only Landscapes, maybe you want only people. Select it here.
 
 Artists have a major impact on the result. Automatically, it will select between 0-3 artists out of 3483 artists for your prompt.
 You can turn it off. Add your own artists to the prompt, and they will be added to the end of the prompt.
 
-Type of image can be used to force a certian direction. For example when using Realistic Vision, it might be a good idea to set it to photograph. For an anime model, you might want to use "Anime key visual"
+Type of image can be used to force a certain direction. For example when using Realistic Vision, it might be a good idea to set it to photograph. For an anime model, you might want to use "Anime key visual"
 
 Special image type modes have chance to trigger. Those follow different rules of prompt generation.
 
@@ -124,18 +149,20 @@ Add a prompt prefix, suffix and the negative prompt in the respective fields. Th
 
 These can be used to add textual inversion and LoRA's. They can also be used to add your models trigger words.
 
-![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/bc501393-4080-4dc9-9883-50dddcba793f)
+![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/90ac4999-b5f8-4919-bbae-3efe287bc21e)
+
 
 
 
 # Workflow assist tab
-I've added a Workflow assist tab in a recent update.
-
 This tab is designed to help with the workflow of adjusting and maintaining prompts without turning the extension off.
 "Workflow mode" turns off the generated script, and uses the Workflow prompt instead.
 
+Use the prompt variant slider to create variants of the Workflow prompt.
+
 It also has the options to generate a few prompts with a click and send them to the workflow prompt. This way you can search or combine interesting ideas together.
-![image](https://user-images.githubusercontent.com/130234949/233644374-22e2bf6e-da4c-46b7-a248-9c623adc0b99.png)
+![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/b06833a4-6de5-4baf-85d6-8a945b8b26e9)
+
 
 # One Button Run and Upscale
 Using the API feature of WebUI, this allows you to:
@@ -159,9 +186,6 @@ All with a single press of __One Button__.
 
 # roadmap
 Some ideas I'd like to implement:
-- More consistency in prompts, while keep being wild
-  - More consistency in lower insanitylevels, more wildness on higher insanitylevels
-- Create dice/random buttons in front of override subject and override outfit
 - Ongoing: list refinements and new features in the prompt generation
 - Ongoing: Documentation and toturials
 

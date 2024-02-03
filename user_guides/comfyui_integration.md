@@ -51,6 +51,15 @@ It will generate a prompt from scratch, or based on several of your inputs and s
 
 Please refer to the other documentation to see what each setting does.
 
+## One Button Preset
+
+Preset settings of One Button Prompt. Refer to [One Button Presets](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/one_butten_presets.md) for more information regarding the presets.
+
+Has a simple prompt output and a preset selector. You can add new presets by manual adjusting the /userfiles/obp_presets.json JSON file.
+
+![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/33392e25-d24e-4cc7-a90f-95722e7e8e06)
+
+
 ## Create Prompt Variant
 You can use the "Create Prompt Variant" node, to create variants based on a prompt you input. The strength of the variant is set with the "insanity level" slider. Simply connect it between the positive prompt and the CLIP encoder module.
 

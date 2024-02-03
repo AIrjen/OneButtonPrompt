@@ -13,6 +13,10 @@ sys.path.append(onebuttonprompt_path)
 from build_dynamic_prompt import *
 from csv_reader import *
 
+from one_button_presets import OneButtonPresets
+OBPresets = OneButtonPresets()
+allpresets = list(OBPresets.opb_presets.keys())
+
 artists = ["all", "all (wild)", "none", "popular", "greg mode", "3D",	"abstract",	"angular", "anime"	,"architecture",	"art nouveau",	"art deco",	"baroque",	"bauhaus", 	"cartoon",	"character",	"children's illustration", 	"cityscape", "cinema", 	"clean",	"cloudscape",	"collage",	"colorful",	"comics",	"cubism",	"dark",	"detailed", 	"digital",	"expressionism",	"fantasy",	"fashion",	"fauvism",	"figurativism",	"gore",	"graffiti",	"graphic design",	"high contrast",	"horror",	"impressionism",	"installation",	"landscape",	"light",	"line drawing",	"low contrast",	"luminism",	"magical realism",	"manga",	"melanin",	"messy",	"monochromatic",	"nature",	"nudity",	"photography",	"pop art",	"portrait",	"primitivism",	"psychedelic",	"realism",	"renaissance",	"romanticism",	"scene",	"sci-fi",	"sculpture",	"seascape",	"space",	"stained glass",	"still life",	"storybook realism",	"street art",	"streetscape",	"surrealism",	"symbolism",	"textile",	"ukiyo-e",	"vibrant",	"watercolor",	"whimsical"]
 imagetypes = ["all", "all - force multiple",  "photograph", "octane render","digital art","concept art", "painting", "portrait", "anime key visual", "only other types", "only templates mode", "art blaster mode", "quality vomit mode", "color cannon mode", "unique art mode", "massive madness mode", "photo fantasy mode", "subject only mode", "fixed styles mode", "the tokinator"]
 subjects =["all", "object", "animal", "humanoid", "landscape", "concept"]
@@ -435,6 +439,78 @@ class SavePromptToFile:
 
         return ("done")
 
+class OneButtonPreset:
+
+    def __init__(self):
+        pass
+    
+    @classmethod
+    def INPUT_TYPES(s):
+               
+        return {
+            "required": {
+                "OneButtonPreset": (allpresets, {"default": "Standard"}),
+            },
+            "optional": {    
+                "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF}),
+            },
+        }
+
+
+    RETURN_TYPES = ("STRING",)
+    RETURN_NAMES = ("prompt",)
+
+    FUNCTION = "Comfy_OBP_OneButtonPreset"
+
+    #OUTPUT_NODE = False
+
+    CATEGORY = "OneButtonPrompt"
+    
+    def Comfy_OBP_OneButtonPreset(self, OneButtonPreset, seed):
+        # load the stuff
+        selected_opb_preset = OBPresets.get_obp_preset(OneButtonPreset)
+        
+        insanitylevel=selected_opb_preset["insanitylevel"]
+        subject=selected_opb_preset["subject"]
+        artist=selected_opb_preset["artist"]
+        chosensubjectsubtypeobject=selected_opb_preset["chosensubjectsubtypeobject"]
+        chosensubjectsubtypehumanoid=selected_opb_preset["chosensubjectsubtypehumanoid"]
+        chosensubjectsubtypeconcept=selected_opb_preset["chosensubjectsubtypeconcept"]
+        chosengender=selected_opb_preset["chosengender"]
+        imagetype=selected_opb_preset["imagetype"]
+        imagemodechance=selected_opb_preset["imagemodechance"]
+        givensubject=selected_opb_preset["givensubject"]
+        smartsubject=selected_opb_preset["smartsubject"]
+        givenoutfit=selected_opb_preset["givenoutfit"]
+        prefixprompt=selected_opb_preset["prefixprompt"]
+        suffixprompt=selected_opb_preset["suffixprompt"]
+        giventypeofimage=selected_opb_preset["giventypeofimage"]
+        antistring=selected_opb_preset["antistring"]
+        
+        generatedprompt = build_dynamic_prompt(insanitylevel=insanitylevel,
+                                               forcesubject=subject,
+                                               artists=artist,
+                                               subtypeobject=chosensubjectsubtypeobject,
+                                               subtypehumanoid=chosensubjectsubtypehumanoid,
+                                               subtypeconcept=chosensubjectsubtypeconcept,
+                                               gender=chosengender,
+                                               imagetype=imagetype,
+                                               imagemodechance=imagemodechance,
+                                               givensubject=givensubject,
+                                               smartsubject=smartsubject,
+                                               overrideoutfit=givenoutfit,
+                                               prefixprompt=prefixprompt,
+                                               suffixprompt=suffixprompt,
+                                               giventypeofimage=giventypeofimage,
+                                               antivalues=antistring,
+                                               advancedprompting=False,
+                                               hardturnoffemojis=True,
+                                               seed=seed
+                                               )
+        
+        
+        return (generatedprompt,)
+
 class AutoNegativePrompt:
 
 
@@ -486,20 +562,21 @@ class AutoNegativePrompt:
         
         return (generatedprompt,)
 
-
-
 # A dictionary that contains all nodes you want to export with their names
 # NOTE: names should be globally unique
 NODE_CLASS_MAPPINGS = {
     "OneButtonPrompt": OneButtonPrompt,
+    "OneButtonPreset": OneButtonPreset,
     "CreatePromptVariant": CreatePromptVariant,
     "SavePromptToFile": SavePromptToFile,
     "AutoNegativePrompt": AutoNegativePrompt,
+    
 }
 
 # A dictionary that contains the friendly/humanly readable titles for the nodes
 NODE_DISPLAY_NAME_MAPPINGS = {
     "OneButtonPrompt": "One Button Prompt",
+    "OneButtonPreset": "One Button Preset",
     "CreatePromptVariant": "Create Prompt Variant",
     "SavePromptToFile": "Save Prompt To File",
     "AutoNegativePrompt": "Auto Negative Prompt",

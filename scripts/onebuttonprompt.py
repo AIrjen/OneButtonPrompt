@@ -268,9 +268,9 @@ class Script(scripts.Script):
                             <font size="2">
                             One Button Prompt is now active. Just press the normal Generate button to start generating images.
 
-                            The settings below give you more control over what you wish to generate.
+                            Presets can be used to store and load settings. 
 
-                            Presets can be used to store and load settings.
+                            Set the One Button Preset to "Custom..." to show all settings. The settings below give you more control over what you wish to generate. 
                             </font>
                             """)
                 # Part of presets
@@ -278,7 +278,7 @@ class Script(scripts.Script):
                     OBP_preset = gr.Dropdown(
                         label="One Button Preset",
                         choices=[OBPresets.CUSTOM_OBP] + list(OBPresets.opb_presets.keys()),
-                        value="Custom...",
+                        value="Standard",
                     )
            
                                 

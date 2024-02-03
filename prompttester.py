@@ -46,7 +46,7 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
             print(result)
             break
 
-        if(overrideoutfit != "" and overrideoutfit not in result and onlyartists == False):
+        if(overrideoutfit != "" and overrideoutfit not in result and onlyartists == False and "-outfit-" not in overrideoutfit):
             print("The outfit override is not showing up!")
             print("")
             print(result)

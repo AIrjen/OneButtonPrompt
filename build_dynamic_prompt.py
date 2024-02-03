@@ -2749,6 +2749,13 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         completeprompt = completeprompt.replace("-outfit-", "-minioutfit-",1)
     if(rare_dist(insanitylevel)): # Use base outfit descriptor, until we are not.
         completeprompt = completeprompt.replace("-outfitdescriptor-", "-descriptor-")
+    
+    # if -outfit- is in the override, we want a consistent result
+    if("-outfit-" in overrideoutfit):
+        if(chance_roll(insanitylevel, "common")):
+            overrideoutfit = overrideoutfit.replace("-outfit-", random.choice(outfitlist))
+        else:
+            overrideoutfit = overrideoutfit.replace("-outfit-", random.choice(minioutfitlist))
 
     if(overrideoutfit != ""):
         completeprompt = completeprompt.replace("-sameoutfit-", overrideoutfit)

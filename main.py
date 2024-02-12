@@ -160,7 +160,7 @@ def generateimages(amount = 1, size = "all",model = "currently selected model",s
                 # extract the desired substring using slicing
                 filename = randomprompt[start_index:end_index]
             else:
-                filename = randomsubject
+                filename = randomsubject[0:128] # Fix for too long filenames
 
             # cleanup some unsafe things in the filename
             filename = filename.replace("\"", "")

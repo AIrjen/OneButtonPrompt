@@ -1683,7 +1683,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         # start subject building
 
         # divider between subject and everything else
-        completeprompt += " @ "
+        completeprompt += " @@@ "
 
  
         if(generatesubject == True):
@@ -2193,7 +2193,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
 
             # divider between subject and everything else
-            completeprompt += " @ "
+            completeprompt += " @@@ "
             
 
             # Add more quality while in greg mode lol
@@ -3027,18 +3027,18 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     completeprompt = cleanup(completeprompt, advancedprompting, insanitylevel)
 
     # Split it up for support for prompt_g (subject) and prompt_l (style)
-    if("@" in completeprompt and prompt_g_and_l == True):
-        promptlist = completeprompt.split("@")
+    if("@@@" in completeprompt and prompt_g_and_l == True):
+        promptlist = completeprompt.split("@@@")
         prompt_g = cleanup(promptlist[1], advancedprompting, insanitylevel)
         prompt_l = cleanup((promptlist[0] + ", " + promptlist[2]).replace("of a",""), advancedprompting, insanitylevel)
     elif(prompt_g_and_l == True):
         prompt_g = completeprompt
         prompt_l = completeprompt
 
-    completeprompt = completeprompt.replace(" @ ", " ")
-    completeprompt = completeprompt.replace("@ ", " ")
-    completeprompt = completeprompt.replace(" @", " ")
-    completeprompt = completeprompt.replace("@", " ")
+    completeprompt = completeprompt.replace(" @@@ ", " ")
+    completeprompt = completeprompt.replace("@@@ ", " ")
+    completeprompt = completeprompt.replace(" @@@", " ")
+    completeprompt = completeprompt.replace("@@@", " ")
     completeprompt = cleanup(completeprompt, advancedprompting, insanitylevel)
 
     #just for me, some fun with posting fake dev messages (ala old sim games)

@@ -4245,7 +4245,7 @@ def custom_or(values, insanitylevel = 5):
     return selected_value
 
 def parse_custom_functions(completeprompt, insanitylevel = 5):
-    print(completeprompt)
+    #print(completeprompt)
 
     # Regular expression pattern to match 'or()' function calls and their arguments
     ORpattern = r'OR\((.*?)\)'

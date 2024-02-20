@@ -18,6 +18,7 @@ from csv_reader import *
 from one_button_presets import OneButtonPresets
 OBPresets = OneButtonPresets()
 
+basemodelslist = ["SD1.5", "SDXL", "Stable Cascade"]
 #subjects = ["all","object","animal","humanoid", "landscape", "concept"]
 subjects =["all"]
 subjectsubtypesobject = ["all"]
@@ -233,12 +234,12 @@ class Script(scripts.Script):
 
         
     def ui(self, is_img2img):
-        def gen_prompt(insanitylevel, subject, artist, imagetype, antistring, prefixprompt, suffixprompt, promptcompounderlevel, seperator,givensubject,smartsubject,giventypeofimage, imagemodechance,chosengender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept,givenoutfit):
+        def gen_prompt(insanitylevel, subject, artist, imagetype, antistring, prefixprompt, suffixprompt, promptcompounderlevel, seperator,givensubject,smartsubject,giventypeofimage, imagemodechance,chosengender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept,givenoutfit, base_model):
 
             promptlist = []
 
             for i in range(5):
-                promptlist.append(build_dynamic_prompt(insanitylevel,subject,artist, imagetype, False, antistring,prefixprompt,suffixprompt,promptcompounderlevel,seperator,givensubject,smartsubject, giventypeofimage, imagemodechance,chosengender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept,True,False,-1,givenoutfit))
+                promptlist.append(build_dynamic_prompt(insanitylevel,subject,artist, imagetype, False, antistring,prefixprompt,suffixprompt,promptcompounderlevel,seperator,givensubject,smartsubject, giventypeofimage, imagemodechance,chosengender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept,True,False,-1,givenoutfit,False,base_model))
 
             return promptlist
         
@@ -627,6 +628,15 @@ class Script(scripts.Script):
                     with gr.Column(variant="compact"):
                         prompt5toworkflow = gr.Button("⬆️🛠️💬")
         with gr.Tab("Advanced"):
+            with gr.Row(variant="compact"):
+                gr.Markdown("""
+                                <font size="2">
+                                Base model will try and generate prompts fitting the selected model.
+                                </font>
+                                """
+                    )
+                base_model = gr.Dropdown(
+                     basemodelslist, label=" Base model", value="SD1.5")
             with gr.Row(variant="compact"):
                 with gr.Column(variant="compact"):
                     promptcompounderlevel = gr.Dropdown(
@@ -1201,12 +1211,12 @@ class Script(scripts.Script):
 
       
 
-        return [insanitylevel,subject, artist, imagetype, prefixprompt,suffixprompt,negativeprompt, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring, seperator, givensubject, smartsubject, giventypeofimage, imagemodechance, chosengender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept, promptvariantinsanitylevel, givenoutfit, autonegativeprompt, autonegativepromptstrength, autonegativepromptenhance]
+        return [insanitylevel,subject, artist, imagetype, prefixprompt,suffixprompt,negativeprompt, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring, seperator, givensubject, smartsubject, giventypeofimage, imagemodechance, chosengender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept, promptvariantinsanitylevel, givenoutfit, autonegativeprompt, autonegativepromptstrength, autonegativepromptenhance, base_model]
             
     
 
     
-    def run(self, p, insanitylevel, subject, artist, imagetype, prefixprompt,suffixprompt,negativeprompt, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring,seperator, givensubject, smartsubject, giventypeofimage, imagemodechance, chosengender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept, promptvariantinsanitylevel, givenoutfit, autonegativeprompt, autonegativepromptstrength, autonegativepromptenhance):
+    def run(self, p, insanitylevel, subject, artist, imagetype, prefixprompt,suffixprompt,negativeprompt, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring,seperator, givensubject, smartsubject, giventypeofimage, imagemodechance, chosengender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept, promptvariantinsanitylevel, givenoutfit, autonegativeprompt, autonegativepromptstrength, autonegativepromptenhance, base_model):
         
         images = []
         infotexts = []
@@ -1253,7 +1263,7 @@ class Script(scripts.Script):
                 
                 if(ANDtoggle == "automatic"):
                     if(artist != "none"):
-                        preppedprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype, True, antistring) 
+                        preppedprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype, True, antistring, base_model=base_model) 
                     if(subject == "humanoid"):
                         preppedprompt += ", " + promptcompounderlevel + " people"
                     if(subject == "landscape"):
@@ -1280,7 +1290,7 @@ class Script(scripts.Script):
 
 
                 #Here is where we build a "normal" prompt
-                preppedprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype, False, antistring, prefixprompt, suffixprompt,promptcompounderlevel, seperator,givensubject,smartsubject,giventypeofimage,imagemodechance,chosengender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept,True,False,-1,givenoutfit)
+                preppedprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype, False, antistring, prefixprompt, suffixprompt,promptcompounderlevel, seperator,givensubject,smartsubject,giventypeofimage,imagemodechance,chosengender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept,True,False,-1,givenoutfit, False, base_model)
 
                 # set the artist mode back when done (for automatic mode)
                 artist = artistcopy
@@ -1301,7 +1311,7 @@ class Script(scripts.Script):
             print(p.prompt)
 
             if(autonegativeprompt):
-                 p.negative_prompt = build_dynamic_negative(positive_prompt=p.prompt, insanitylevel=autonegativepromptstrength,enhance=autonegativepromptenhance, existing_negative_prompt=p.negative_prompt)
+                 p.negative_prompt = build_dynamic_negative(positive_prompt=p.prompt, insanitylevel=autonegativepromptstrength,enhance=autonegativepromptenhance, existing_negative_prompt=p.negative_prompt, base_model=base_model)
                  
 
             promptlist = []

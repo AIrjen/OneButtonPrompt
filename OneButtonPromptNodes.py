@@ -23,6 +23,7 @@ subjects =["all", "object", "animal", "humanoid", "landscape", "concept"]
 genders = ["all", "male", "female"]
 emojis = [False, True]
 
+models = ["SD1.5", "SDXL", "Stable Cascade"]
 subjects =["all"]
 subjectsubtypesobject = ["all"]
 subjectsubtypeshumanoid = ["all"]
@@ -229,6 +230,7 @@ class OneButtonPrompt:
                 "humanoids_gender": (genders, {"default": "all"}),
                 "subject_subtypes_concepts": (subjectsubtypesconcept, {"default": "all"}),
                 "emojis":(emojis, {"default": False}),
+                "base_model":(models, {"default": "SD1.5"}),
                 
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF}),
             },
@@ -243,8 +245,8 @@ class OneButtonPrompt:
 
     CATEGORY = "OneButtonPrompt"
     
-    def Comfy_OBP(self, insanitylevel, custom_subject, seed, artist, imagetype, subject, imagemodechance, humanoids_gender, subject_subtype_objects, subject_subtypes_humanoids, subject_subtypes_concepts, emojis, custom_outfit):
-        generatedpromptlist = build_dynamic_prompt(insanitylevel,subject,artist,imagetype,False,"","","",1,"",custom_subject,True,"",imagemodechance, humanoids_gender, subject_subtype_objects, subject_subtypes_humanoids, subject_subtypes_concepts, False, emojis, seed, custom_outfit, True)
+    def Comfy_OBP(self, insanitylevel, custom_subject, seed, artist, imagetype, subject, imagemodechance, humanoids_gender, subject_subtype_objects, subject_subtypes_humanoids, subject_subtypes_concepts, emojis, custom_outfit, base_model):
+        generatedpromptlist = build_dynamic_prompt(insanitylevel,subject,artist,imagetype,False,"","","",1,"",custom_subject,True,"",imagemodechance, humanoids_gender, subject_subtype_objects, subject_subtypes_humanoids, subject_subtypes_concepts, False, emojis, seed, custom_outfit, True, base_model)
         #print(generatedprompt)
         generatedprompt = generatedpromptlist[0]
         prompt_g = generatedpromptlist[1]
@@ -451,7 +453,8 @@ class OneButtonPreset:
             "required": {
                 "OneButtonPreset": (allpresets, {"default": "Standard"}),
             },
-            "optional": {    
+            "optional": {
+                "base_model":(models, {"default": "SD1.5"}),    
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF}),
             },
         }
@@ -466,7 +469,7 @@ class OneButtonPreset:
 
     CATEGORY = "OneButtonPrompt"
     
-    def Comfy_OBP_OneButtonPreset(self, OneButtonPreset, seed):
+    def Comfy_OBP_OneButtonPreset(self, OneButtonPreset, seed, base_model):
         # load the stuff
         selected_opb_preset = OBPresets.get_obp_preset(OneButtonPreset)
         
@@ -505,7 +508,8 @@ class OneButtonPreset:
                                                antivalues=antistring,
                                                advancedprompting=False,
                                                hardturnoffemojis=True,
-                                               seed=seed
+                                               seed=seed,
+                                               base_model=base_model,
                                                )
         
         
@@ -541,6 +545,7 @@ class AutoNegativePrompt:
                     "max": 10, #Maximum value
                     "step": 1 #Slider's step
                 }),
+                "base_model":(models, {"default": "SD1.5"}),
                 
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF}),
             },
@@ -555,8 +560,8 @@ class AutoNegativePrompt:
 
     CATEGORY = "OneButtonPrompt"
     
-    def Comfy_OBP_AutoNegativePrompt(self, postive_prompt, insanitylevel, enhancenegative,base_negative, seed):
-        generatedprompt = build_dynamic_negative(postive_prompt, insanitylevel, enhancenegative, base_negative)
+    def Comfy_OBP_AutoNegativePrompt(self, postive_prompt, insanitylevel, enhancenegative,base_negative, seed, base_model):
+        generatedprompt = build_dynamic_negative(postive_prompt, insanitylevel, enhancenegative, base_negative, base_model=base_model)
         
         print("Generated negative prompt: " + generatedprompt)
         

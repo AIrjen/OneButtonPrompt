@@ -10,7 +10,10 @@ from random_functions import *
 # insanity level controls randomness of propmt 0-10
 # forcesubject van be used to force a certain type of subject
 # Set artistmode to none, to exclude artists 
-def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", givensubject="",smartsubject = True,giventypeofimage="", imagemodechance = 20, gender = "all", subtypeobject="all", subtypehumanoid="all", subtypeconcept="all", advancedprompting=True, hardturnoffemojis=False, seed=-1, overrideoutfit="", prompt_g_and_l = False):
+def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", givensubject="",smartsubject = True,giventypeofimage="", imagemodechance = 20, gender = "all", subtypeobject="all", subtypehumanoid="all", subtypeconcept="all", advancedprompting=True, hardturnoffemojis=False, seed=-1, overrideoutfit="", prompt_g_and_l = False, base_model = "SD1.5"):
+
+    remove_weights =  False
+   
 
     # set seed
     # For use in ComfyUI (might bring to Automatic1111 as well)
@@ -44,6 +47,16 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
     # clean up antivalue list:
     antilist = [s.strip().lower() for s in antilist]
+
+    # Base model options, used to change things in prompt generation. Might be able to extend to different forms like animatediff as well?
+    base_model_options = ["SD1.5", "SDXL", "Stable Cascade"]
+    if base_model not in base_model_options:
+        base_model = "SD1.5" # Just in case there is no option here.
+    # "SD1.5" -- Standard, future: More original style prompting
+    # "SDXL" -- Standard (for now), future: More natural language
+    # "Stable Cascade" -- Remove weights
+    if base_model == "Stable Cascade":
+        remove_weights = True
 
     # Some tricks for gender to make sure we can choose Him/Her/It etc on the right time.
     if(gender=="all"):
@@ -1456,7 +1469,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                     completeprompt += " ["
                     
                 while step < end: 
-                    if(normal_dist(insanitylevel)):
+                    if(normal_dist(insanitylevel) and remove_weights == False):
                         isweighted = 1
                     
                     if isweighted == 1:
@@ -1546,7 +1559,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         if(thetokinatormode == True):
             tokinatorsubtype = ["personification", "human form", "object", "landscape", "OR(creature;beast;animal;myth;concept;world;planet)", "building", "location", "shape", "being", "-token-"]
             if(chance_roll(insanitylevel,"normal")):
-                if(chance_roll(insanitylevel,"normal")):
+                if(chance_roll(insanitylevel,"normal") and remove_weights == False):
                     completeprompt += "(OR(;-imagetypequality-;uncommon) OR(-imagetype-;-othertype-;rare):1.3) "
                 else:
                     completeprompt += "OR(;-imagetypequality-;uncommon) OR(-imagetype-;-othertype-;rare) "
@@ -2274,7 +2287,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                     completeprompt += " ["
                     
                 while step < end: 
-                    if(normal_dist(insanitylevel)):
+                    if(normal_dist(insanitylevel) and remove_weights == False):
                         isweighted = 1
                     
                     if isweighted == 1:
@@ -2600,7 +2613,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                     completeprompt += " ["
                     
                 while step < end: 
-                    if(normal_dist(insanitylevel)):
+                    if(normal_dist(insanitylevel) and remove_weights == False):
                         isweighted = 1
                     
                     if isweighted == 1:
@@ -2984,7 +2997,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         matches = re.findall(pattern, givensubject)
 
 
-    if(len(completeprompt) > 325 and matches == []):
+    if(len(completeprompt) > 325 and matches == [] and remove_weights == False):
         if(len(completeprompt) < 375):
             strenght = "1.1"  
         elif(len(completeprompt) < 450):
@@ -3863,12 +3876,23 @@ def replacewildcard(completeprompt, insanitylevel, wildcard,listname, activatehy
 
     return completeprompt
 
-def build_dynamic_negative(positive_prompt = "", insanitylevel = 0, enhance = False, existing_negative_prompt = ""):
+def build_dynamic_negative(positive_prompt = "", insanitylevel = 0, enhance = False, existing_negative_prompt = "", base_model="SD1.5"):
 
 
     negative_primer = []
     negative_result = []
     all_negative_words_list = []
+    remove_weights = False
+
+    # Base model options, used to change things in prompt generation. Might be able to extend to different forms like animatediff as well?
+    base_model_options = ["SD1.5", "SDXL", "Stable Cascade"]
+    if base_model not in base_model_options:
+        base_model = "SD1.5" # Just in case there is no option here.
+    # "SD1.5" -- Standard, future: More original style prompting
+    # "SDXL" -- Standard (for now), future: More natural language
+    # "Stable Cascade" -- Remove weights
+    if base_model == "Stable Cascade":
+        remove_weights = True
     
     # negavite_primer, all words that should trigger a negative result
     # the negative words to put in the negative prompt
@@ -3937,7 +3961,7 @@ def build_dynamic_negative(positive_prompt = "", insanitylevel = 0, enhance = Fa
     # Convert the list to unique values or (word:count) format
     unique_words = []
     for word, count in word_count.items():
-        if(count > 2):
+        if(count > 2 and remove_weights == False):
             #counttotal = int(count/2)
             counttotal = count
             if(counttotal > 3):

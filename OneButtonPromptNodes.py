@@ -230,7 +230,7 @@ class OneButtonPrompt:
                 "humanoids_gender": (genders, {"default": "all"}),
                 "subject_subtypes_concepts": (subjectsubtypesconcept, {"default": "all"}),
                 "emojis":(emojis, {"default": False}),
-                "base_model":(models, {"default": "SD1.5"}),
+                "base_model":(models, {"default": "SDXL"}),
                 
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF}),
             },
@@ -454,7 +454,7 @@ class OneButtonPreset:
                 "OneButtonPreset": (allpresets, {"default": "Standard"}),
             },
             "optional": {
-                "base_model":(models, {"default": "SD1.5"}),    
+                "base_model":(models, {"default": "SDXL"}),    
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF}),
             },
         }
@@ -545,7 +545,7 @@ class AutoNegativePrompt:
                     "max": 10, #Maximum value
                     "step": 1 #Slider's step
                 }),
-                "base_model":(models, {"default": "SD1.5"}),
+                "base_model":(models, {"default": "SDXL"}),
                 
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF}),
             },

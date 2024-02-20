@@ -13,6 +13,7 @@ from random_functions import *
 def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", givensubject="",smartsubject = True,giventypeofimage="", imagemodechance = 20, gender = "all", subtypeobject="all", subtypehumanoid="all", subtypeconcept="all", advancedprompting=True, hardturnoffemojis=False, seed=-1, overrideoutfit="", prompt_g_and_l = False, base_model = "SD1.5"):
 
     remove_weights =  False
+    less_verbose = False
    
 
     # set seed
@@ -55,8 +56,10 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     # "SD1.5" -- Standard, future: More original style prompting
     # "SDXL" -- Standard (for now), future: More natural language
     # "Stable Cascade" -- Remove weights
-    if base_model == "Stable Cascade":
+    if(base_model == "Stable Cascade"):
         remove_weights = True
+    if(base_model == "SD1.5"):
+        less_verbose = True
 
     # Some tricks for gender to make sure we can choose Him/Her/It etc on the right time.
     if(gender=="all"):
@@ -103,7 +106,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     haircolorlist = csv_to_list("haircolors",antilist)
     hairstylelist = csv_to_list("hairstyles",antilist)
     hairvomitlist = csv_to_list("hairvomit",antilist,"./csvfiles/",0,"?",False,False)
-    humanactivitylist = csv_to_list("human_activities",antilist,"./csvfiles/",0,"?",False,False)
+    
     humanoidlist = csv_to_list("humanoids",antilist)
     imagetypelist = csv_to_list(csvfilename="imagetypes",antilist=antilist, insanitylevel=insanitylevel)
     joblist = csv_to_list(csvfilename="jobs",antilist=antilist,skipheader=True,gender=gender)
@@ -187,15 +190,23 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     humanlist = fictionallist + nonfictionallist + humanoidlist
     objecttotallist = objectlist + buildinglist + vehiclelist + foodlist + spacelist + floralist + containerlist
     outfitprinttotallist = objecttotallist + locationlist + colorlist + musicgenrelist + seasonlist + animallist + patternlist
-
-    humanactivitycheatinglist = ["OR(;, -heshe- is;uncommon) -miniactivity- OR(in;at) a OR(-location-;-building-;-waterlocation-)",
+    if(less_verbose):
+        humanactivitycheatinglist = ["-miniactivity- OR(in;at) a OR(-location-;-building-;-waterlocation-)",
+                                 "-miniactivity- OR(in;at) a OR(-location-;-building-;-waterlocation-)",
+                                 "-miniactivity- OR(in;at) a OR(-location-;-building-;-waterlocation-)",
+                                 "-miniactivity- OR(in;at) a OR(-location-;-building-;-waterlocation-)",
+                                 "-miniactivity- OR(in;at) a OR(-location-;-building-;-waterlocation-)",
+                                 "-miniactivity- OR(in;at) a OR(-location-;-building-;-waterlocation-)",
+                                 "-miniactivity- OR(in;at) a OR(-location-;-building-;-waterlocation-)"]
+    else:
+        humanactivitycheatinglist = ["OR(;, -heshe- is;uncommon) -miniactivity- OR(in;at) a OR(-location-;-building-;-waterlocation-)",
                                  "OR(;, -heshe- is;uncommon) -miniactivity- OR(in;at) a OR(-location-;-building-;-waterlocation-)",
                                  "OR(;, -heshe- is;uncommon) -miniactivity- OR(in;at) a OR(-location-;-building-;-waterlocation-)",
                                  "OR(;, -heshe- is;uncommon) -miniactivity- OR(in;at) a OR(-location-;-building-;-waterlocation-)",
                                  "OR(;, -heshe- is;uncommon) -miniactivity- OR(in;at) a OR(-location-;-building-;-waterlocation-)",
                                  "OR(;, -heshe- is;uncommon) -miniactivity- OR(in;at) a OR(-location-;-building-;-waterlocation-)",
                                  "OR(;, -heshe- is;uncommon) -miniactivity- OR(in;at) a OR(-location-;-building-;-waterlocation-)"]
-    humanactivitylist = humanactivitylist + humanactivitycheatinglist
+    
     # build artists list
     if artists == "wild":
         artists = "all (wild)"
@@ -283,19 +294,34 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     backgroundtypelist = csv_to_list("backgroundtypes", antilist,"./csvfiles/special_lists/",0,"?")
     insideshotlist =  csv_to_list("insideshots", antilist,"./csvfiles/special_lists/",0,"?")
     photoadditionlist = csv_to_list("photoadditions", antilist,"./csvfiles/special_lists/",0,"?")
-    buildhairlist = csv_to_list("buildhair", antilist,"./csvfiles/special_lists/",0,"?")
-    buildoutfitlist = csv_to_list("buildoutfit", antilist,"./csvfiles/special_lists/",0,"?")
-    objectadditionslist = csv_to_list("objectadditions", antilist,"./csvfiles/special_lists/",0,"?")
-    humanadditionlist = csv_to_list("humanadditions", antilist,"./csvfiles/special_lists/",0,"?")
+    if(less_verbose):
+        buildhairlist = csv_to_list("buildhair_less_verbose", antilist,"./csvfiles/special_lists/",0,"?")
+        buildoutfitlist = csv_to_list("buildoutfit_less_verbose", antilist,"./csvfiles/special_lists/",0,"?")
+        humanadditionlist = csv_to_list("humanadditions_less_verbose", antilist,"./csvfiles/special_lists/",0,"?")
+        objectadditionslist = csv_to_list("objectadditions_less_verbose", antilist,"./csvfiles/special_lists/",0,"?")
+        buildfacelist = csv_to_list("buildface_less_verbose", antilist,"./csvfiles/special_lists/",0,"?")
+        buildaccessorielist = csv_to_list("buildaccessorie_less_verbose", antilist,"./csvfiles/special_lists/",0,"?")
+        humanactivitylist = csv_to_list("human_activities_less_verbose",antilist,"./csvfiles/",0,"?",False,False)
+    else:
+        buildhairlist = csv_to_list("buildhair", antilist,"./csvfiles/special_lists/",0,"?")
+        buildoutfitlist = csv_to_list("buildoutfit", antilist,"./csvfiles/special_lists/",0,"?")
+        humanadditionlist = csv_to_list("humanadditions", antilist,"./csvfiles/special_lists/",0,"?")
+        objectadditionslist = csv_to_list("objectadditions", antilist,"./csvfiles/special_lists/",0,"?")
+        buildfacelist = csv_to_list("buildface", antilist,"./csvfiles/special_lists/",0,"?")
+        buildaccessorielist = csv_to_list("buildaccessorie", antilist,"./csvfiles/special_lists/",0,"?")
+        humanactivitylist = csv_to_list("human_activities",antilist,"./csvfiles/",0,"?",False,False)
+
+    humanactivitylist = humanactivitylist + humanactivitycheatinglist
+
     animaladditionlist = csv_to_list("animaladditions", antilist,"./csvfiles/special_lists/",0,"?")
-    buildaccessorielist = csv_to_list("buildaccessorie", antilist,"./csvfiles/special_lists/",0,"?")
+    
     minilocationadditionslist = csv_to_list("minilocationadditions", antilist,"./csvfiles/special_lists/",0,"?")
     overalladditionlist = csv_to_list("overalladditions", antilist,"./csvfiles/special_lists/",0,"?")
     imagetypemodelist = csv_to_list("imagetypemodes", antilist,"./csvfiles/special_lists/",0,"?")
     miniactivitylist = csv_to_list("miniactivity", antilist,"./csvfiles/special_lists/",0,"?")
     animalsuffixadditionlist = csv_to_list("animalsuffixadditions", antilist,"./csvfiles/special_lists/",0,"?")
     buildfacepartlist = csv_to_list("buildfaceparts", antilist,"./csvfiles/special_lists/",0,"?")
-    buildfacelist = csv_to_list("buildface", antilist,"./csvfiles/special_lists/",0,"?")
+    
     
     tokinatorlist = csv_to_list("tokinator", antilist,"./csvfiles/templates/",0,"?")
     styleslist = csv_to_list("styles", antilist,"./csvfiles/templates/",0,"?")
@@ -2076,28 +2102,51 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 # Common to have 1 description, uncommon to have 2
                 if(chance_roll(insanitylevel, subjectdescriptor1chance) and generatedescriptors == True):
                     if(subjectchooser in ["animal as human,","human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation","manwomanmultiple", "firstname"]):
-                        if(random.randint(0,3) > 0):
+                        if(less_verbose):
+                            completeprompt += ", -humandescriptor- "
+                        elif(random.randint(0,3) > 0):
                             completeprompt += ", OR(;-heshe- is;normal) OR(;very;rare) -humandescriptor- "
                         elif(subjectchooser == "manwomanmultiple"):
                             completeprompt += ", the -samehumansubject- are OR(;very;rare) -humandescriptor-"
                         else:
                             completeprompt += ", OR(the -manwoman-;-samehumansubject-) is OR(;very;rare) -humandescriptor-"
                     elif(mainchooser == "landscape"):
-                        completeprompt += ", OR(;-heshe- is;normal) OR(;very;rare) -locationdescriptor- "
+                        if(less_verbose):
+                            completeprompt += ", -locationdescriptor- "
+                        else:
+                            completeprompt += ", OR(;-heshe- is;normal) OR(;very;rare) -locationdescriptor- "
                     elif(mainchooser == "animal"):
-                        completeprompt += ", OR(;-heshe- is;normal) OR(;very;rare) -animaldescriptor- "
+                        if(less_verbose):
+                            completeprompt += ", -animaldescriptor- "
+                        else:
+                            completeprompt += ", OR(;-heshe- is;normal) OR(;very;rare) -animaldescriptor- "
                     else:
-                        completeprompt += ", OR(;-heshe- is;normal) OR(;very;rare) -descriptor- "
+                        if(less_verbose):
+                            completeprompt += ", -descriptor- "
+                        else:
+                            completeprompt += ", OR(;-heshe- is;normal) OR(;very;rare) -descriptor- "
 
                     if(chance_roll(insanitylevel, subjectdescriptor2chance) and generatedescriptors == True):
                         if(subjectchooser in ["animal as human,","human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation","manwomanmultiple","firstname"]):
-                            completeprompt += " and -humandescriptor- "
+                            if(less_verbose):
+                                completeprompt += ", -humandescriptor- "
+                            else:
+                                completeprompt += " and -humandescriptor- "
                         elif(mainchooser == "landscape"):
-                            completeprompt += " and -locationdescriptor- "
+                            if(less_verbose):
+                                completeprompt += ", -locationdescriptor- "
+                            else:
+                                completeprompt += " and -locationdescriptor- "
                         elif(mainchooser == "animal"):
-                            completeprompt += " and -animaldescriptor- "
+                            if(less_verbose):
+                                completeprompt += ", -animaldescriptor- "
+                            else:
+                                completeprompt += " and -animaldescriptor- "
                         else:
-                            completeprompt += " and -descriptor- "
+                            if(less_verbose):
+                                completeprompt += ", -descriptor- "
+                            else:
+                                completeprompt += " and -descriptor- "
                 completeprompt += ", "
 
         if(thetokinatormode == False):
@@ -4094,6 +4143,8 @@ def cleanup(completeprompt, advancedprompting, insanitylevel = 5):
     completeprompt = re.sub(', ,', ',', completeprompt)
     completeprompt = re.sub(' , ', ', ', completeprompt)
     completeprompt = re.sub(' ,', ',', completeprompt)
+    completeprompt = re.sub(' ,', ',', completeprompt)
+    completeprompt = re.sub(' ,', ',', completeprompt)
     completeprompt = re.sub(',\(', ', (', completeprompt)
 
     while "  " in completeprompt:
@@ -4194,6 +4245,7 @@ def custom_or(values, insanitylevel = 5):
     return selected_value
 
 def parse_custom_functions(completeprompt, insanitylevel = 5):
+    print(completeprompt)
 
     # Regular expression pattern to match 'or()' function calls and their arguments
     ORpattern = r'OR\((.*?)\)'

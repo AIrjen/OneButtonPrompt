@@ -1,0 +1,5 @@
+combination of OR(-nonfictional-;-fictional-;legendary) OR(;, OR(-nonfictional-;-fictional-;legendary);rare) and OR(-nonfictional-;-fictional-;legendary)
+-facepart- of OR(-nonfictional-;-fictional-;legendary), -facepart- of OR(-nonfictional-;-fictional-;legendary)
+OR(;very;legendary) -buildfacepart- OR(; OR(,;and) -buildfacepart-;normal) OR(; and -buildfacepart-;legendary)
+OR(;very;legendary) -humandescriptor- -facepart- OR(; and -humandescriptor- -facepart-;uncommon)
+-facepart- of OR(-conceptsuffix-;-basicbitchdescriptor-;uncommon) OR(; and -facepart- of OR(-conceptsuffix-;-basicbitchdescriptor-;uncommon);uncommon)

@@ -1,0 +1,14 @@
+, OR(;-outfitdescriptor-;normal) OR(;-color-;uncommon) OR(;-culture-;uncommon) OR(;-material-;rare) -outfit- OR(;from the OR(-age-;the -agecalculator-);rare)
+, OR(;-outfitdescriptor-;normal) OR(;-outfitdescriptor-;uncommon) OR(;-color-;uncommon) -outfit- OR(;from the OR(-age-;the -agecalculator-);rare)
+, OR(;-outfitdescriptor-;normal) OR(;-outfitdescriptor-;uncommon) OR(;-color-;uncommon) -outfit- OR(; and OR(;-outfitdescriptor-;uncommon) OR(;-color-;uncommon) -outfit-;rare)
+, OR(-job-;-rpgclass-;-season-;-animal--style) OR(-minioutfit-;-outfit-;rare)
+, OR(;-outfitdescriptor-;uncommon) OR(-minioutfit-;-outfit-;rare) OR(;OR(designed;made;inspired;forged) by OR(-brand-;-fashiondesigner-);rare)
+, OR(-material-;-color-;-element-;uncommon) -overrideoutfit-
+, OR(;-outfitdescriptor-;-material-;-color-;uncommon) OR(-outfit-;-minioutfit-;rare), OR(-pattern-;-outfitprinttotal-;-material-;uncommon) -print-,
+, OR(;-outfitdescriptor-;normal) -outfit-, OR(-outfitdescriptor-;-color-), OR(-pattern-;-outfitprinttotal-;-material-;uncommon) -print- OR(;-material-;rare)
+, -culture- -outfit-, OR(;OR(-outfitdescriptor-;-color-),;normal) 
+, OR(;-outfitdescriptor-;normal) OR(;-color-;uncommon) OR(;-culture-;uncommon) OR(;-material-;rare) -outfit- that was OR(designed;made;inspired;forged) by -brand-
+, OR(;-outfitdescriptor-;normal) OR(-minioutfit-;-outfit-;uncommon), -outfitvomit-
+, OR(;-outfitdescriptor-;normal) -outfit-, OR(is tailored by -fashiondesigner- OR(; and -fashiondesigner-;uncommon);-charactertype- OR(;and -charactertype-;rare))
+, OR(;-outfitdescriptor-;normal) -artmovement- fashion style -outfit-
+, OR(;-outfitdescriptor-;normal) -outfit-

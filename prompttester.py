@@ -114,5 +114,5 @@ generateprompts(10,5
                 , 0  # seed
                 , "" #outfit override
                 , False #prompt_g_and_l
-                , "SD1.5" #base model
+                , "SDXL" #base model
                 )

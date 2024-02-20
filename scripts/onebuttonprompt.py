@@ -631,12 +631,19 @@ class Script(scripts.Script):
             with gr.Row(variant="compact"):
                 gr.Markdown("""
                                 <font size="2">
-                                Base model will try and generate prompts fitting the selected model.
+                                ✨Base model will try and generate prompts fitting the selected model.
+                                
+                                SD1.5 --> Less natural language
+                                
+                                SDXL --> More natural language (default)
+                                
+                                Stable Cascade --> More natural language and no prompt weights
                                 </font>
                                 """
                     )
+            with gr.Row(variant="compact"):
                 base_model = gr.Dropdown(
-                     basemodelslist, label=" Base model", value="SDXL")
+                     basemodelslist, label="✨ Base model", value="SDXL")
             with gr.Row(variant="compact"):
                 with gr.Column(variant="compact"):
                     promptcompounderlevel = gr.Dropdown(

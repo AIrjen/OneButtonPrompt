@@ -1,6 +1,7 @@
 import json
 import os
 import shutil
+import random
 
 
 class OneButtonPresets:
@@ -8,6 +9,7 @@ class OneButtonPresets:
     DEFAULT_OBP_FILE = os.path.join(script_dir, "./presets/obp_presets.default")
     OBP_FILE = os.path.join(script_dir, "./userfiles/obp_presets.json")
     CUSTOM_OBP = "Custom..."
+    RANDOM_PRESET_OBP = "All (random)..."
 
     def __init__(self):
         self.opb_presets = self.load_obp_presets()

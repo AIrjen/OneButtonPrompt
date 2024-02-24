@@ -471,7 +471,7 @@ class OneButtonPreset:
     
     def Comfy_OBP_OneButtonPreset(self, OneButtonPreset, seed, base_model):
         # load the stuff
-        if(OneButtonPreset == OBPresets.OneButtonPreset):
+        if(OneButtonPreset == OBPresets.RANDOM_PRESET_OBP):
             selected_opb_preset = OBPresets.get_obp_preset("Standard")
         else:
             selected_opb_preset = OBPresets.get_obp_preset(OneButtonPreset)

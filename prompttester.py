@@ -114,6 +114,6 @@ generateprompts(10,5
                 , 0  # seed
                 , "" #outfit override
                 , False #prompt_g_and_l
-                , "SDXL" #base model
+                , "Stable Cascade" #base model
                 , "All (random)..." #preset  "All (random)..."
                 )

@@ -3100,7 +3100,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     completeprompt = parse_custom_functions(completeprompt, insanitylevel)
 
     # prompt enhancer!
-    if(templatemode == False and specialmode == False):
+    if(templatemode == False and specialmode == False and base_model != "Stable Cascade"):
         # how insane do we want it?
 
         maxamountofwords = max(0, -1 + random.randint(0,4),6 - insanitylevel)

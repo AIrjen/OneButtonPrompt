@@ -15,7 +15,7 @@ from csv_reader import *
 
 from one_button_presets import OneButtonPresets
 OBPresets = OneButtonPresets()
-allpresets = list(OBPresets.opb_presets.keys())
+allpresets = [OBPresets.RANDOM_PRESET_OBP] + list(OBPresets.opb_presets.keys())
 
 artists = ["all", "all (wild)", "none", "popular", "greg mode", "3D",	"abstract",	"angular", "anime"	,"architecture",	"art nouveau",	"art deco",	"baroque",	"bauhaus", 	"cartoon",	"character",	"children's illustration", 	"cityscape", "cinema", 	"clean",	"cloudscape",	"collage",	"colorful",	"comics",	"cubism",	"dark",	"detailed", 	"digital",	"expressionism",	"fantasy",	"fashion",	"fauvism",	"figurativism",	"gore",	"graffiti",	"graphic design",	"high contrast",	"horror",	"impressionism",	"installation",	"landscape",	"light",	"line drawing",	"low contrast",	"luminism",	"magical realism",	"manga",	"melanin",	"messy",	"monochromatic",	"nature",	"nudity",	"photography",	"pop art",	"portrait",	"primitivism",	"psychedelic",	"realism",	"renaissance",	"romanticism",	"scene",	"sci-fi",	"sculpture",	"seascape",	"space",	"stained glass",	"still life",	"storybook realism",	"street art",	"streetscape",	"surrealism",	"symbolism",	"textile",	"ukiyo-e",	"vibrant",	"watercolor",	"whimsical"]
 imagetypes = ["all", "all - force multiple",  "photograph", "octane render","digital art","concept art", "painting", "portrait", "anime key visual", "only other types", "only templates mode", "art blaster mode", "quality vomit mode", "color cannon mode", "unique art mode", "massive madness mode", "photo fantasy mode", "subject only mode", "fixed styles mode", "the tokinator"]
@@ -471,7 +471,10 @@ class OneButtonPreset:
     
     def Comfy_OBP_OneButtonPreset(self, OneButtonPreset, seed, base_model):
         # load the stuff
-        selected_opb_preset = OBPresets.get_obp_preset(OneButtonPreset)
+        if(OneButtonPreset == OBPresets.RANDOM_PRESET_OBP):
+            selected_opb_preset = OBPresets.get_obp_preset("Standard")
+        else:
+            selected_opb_preset = OBPresets.get_obp_preset(OneButtonPreset)
         
         insanitylevel=selected_opb_preset["insanitylevel"]
         subject=selected_opb_preset["subject"]
@@ -510,6 +513,7 @@ class OneButtonPreset:
                                                hardturnoffemojis=True,
                                                seed=seed,
                                                base_model=base_model,
+                                               OBP_preset=OneButtonPreset,
                                                )
         
         

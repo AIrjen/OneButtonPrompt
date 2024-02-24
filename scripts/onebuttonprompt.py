@@ -234,12 +234,12 @@ class Script(scripts.Script):
 
         
     def ui(self, is_img2img):
-        def gen_prompt(insanitylevel, subject, artist, imagetype, antistring, prefixprompt, suffixprompt, promptcompounderlevel, seperator,givensubject,smartsubject,giventypeofimage, imagemodechance,chosengender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept,givenoutfit, base_model):
+        def gen_prompt(insanitylevel, subject, artist, imagetype, antistring, prefixprompt, suffixprompt, promptcompounderlevel, seperator,givensubject,smartsubject,giventypeofimage, imagemodechance,chosengender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept,givenoutfit, base_model, OBP_preset):
 
             promptlist = []
 
             for i in range(5):
-                promptlist.append(build_dynamic_prompt(insanitylevel,subject,artist, imagetype, False, antistring,prefixprompt,suffixprompt,promptcompounderlevel,seperator,givensubject,smartsubject, giventypeofimage, imagemodechance,chosengender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept,True,False,-1,givenoutfit,False,base_model))
+                promptlist.append(build_dynamic_prompt(insanitylevel,subject,artist, imagetype, False, antistring,prefixprompt,suffixprompt,promptcompounderlevel,seperator,givensubject,smartsubject, giventypeofimage, imagemodechance,chosengender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept,True,False,-1,givenoutfit,False,base_model, OBP_preset))
 
             return promptlist
         
@@ -272,13 +272,15 @@ class Script(scripts.Script):
                             Presets can be used to store and load settings.
 
                             Set the One Button Preset to __"Custom..."__ to show all settings. The settings will give you more control over what you wish to generate.
+
+                            Choose __"All (random)..."__ to get a random preset each prompt generation.
                             </font>
                             """)
                 # Part of presets
             with gr.Row():
                     OBP_preset = gr.Dropdown(
                         label="One Button Preset",
-                        choices=[OBPresets.CUSTOM_OBP] + list(OBPresets.opb_presets.keys()),
+                        choices=[OBPresets.RANDOM_PRESET_OBP] + [OBPresets.CUSTOM_OBP] + list(OBPresets.opb_presets.keys()),
                         value="Standard",
                     )
            
@@ -905,7 +907,7 @@ class Script(scripts.Script):
                             extrasupscaler2codeformerweight = gr.Slider(0, 1, value="0.1", step=0.05, label="CodeFormer weight", visible = False)
                     
 
-        genprom.click(gen_prompt, inputs=[insanitylevel,subject, artist, imagetype, antistring,prefixprompt, suffixprompt,promptcompounderlevel, seperator, givensubject,smartsubject,giventypeofimage,imagemodechance, chosengender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept, givenoutfit, base_model], outputs=[prompt1, prompt2, prompt3,prompt4,prompt5])
+        genprom.click(gen_prompt, inputs=[insanitylevel,subject, artist, imagetype, antistring,prefixprompt, suffixprompt,promptcompounderlevel, seperator, givensubject,smartsubject,giventypeofimage,imagemodechance, chosengender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept, givenoutfit, base_model, OBP_preset], outputs=[prompt1, prompt2, prompt3,prompt4,prompt5])
 
         prompt1toworkflow.click(prompttoworkflowprompt, inputs=prompt1, outputs=workprompt)
         prompt2toworkflow.click(prompttoworkflowprompt, inputs=prompt2, outputs=workprompt)
@@ -913,7 +915,7 @@ class Script(scripts.Script):
         prompt4toworkflow.click(prompttoworkflowprompt, inputs=prompt4, outputs=workprompt)
         prompt5toworkflow.click(prompttoworkflowprompt, inputs=prompt5, outputs=workprompt)
 
-        startmain.click(generateimages, inputs=[amountofimages,size,model,samplingsteps,cfg,hiresfix,hiressteps,denoisestrength,samplingmethod, upscaler,hiresscale, apiurl, qualitygate, quality, runs,insanitylevel,subject, artist, imagetype, silentmode, workprompt, antistring, prefixprompt, suffixprompt,negativeprompt,promptcompounderlevel, seperator, img2imgbatch, img2imgsamplingsteps, img2imgcfg, img2imgsamplingmethod, img2imgupscaler, img2imgmodel,img2imgactivate, img2imgscale, img2imgpadding,img2imgdenoisestrength,ultimatesdupscale,usdutilewidth, usdutileheight, usdumaskblur, usduredraw, usduSeamsfix, usdusdenoise, usduswidth, usduspadding, usdusmaskblur, controlnetenabled, controlnetmodel,img2imgdenoisestrengthmod,enableextraupscale,controlnetblockymode,extrasupscaler1,extrasupscaler2,extrasupscaler2visiblity,extrasupscaler2gfpgan,extrasupscaler2codeformer,extrasupscaler2codeformerweight,extrasresize,onlyupscale,givensubject,smartsubject,giventypeofimage,imagemodechance, chosengender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept, increasestability, qualityhiresfix, qualitymode, qualitykeep, basesize, promptvariantinsanitylevel, givenoutfit, autonegativeprompt, autonegativepromptstrength, autonegativepromptenhance, base_model])
+        startmain.click(generateimages, inputs=[amountofimages,size,model,samplingsteps,cfg,hiresfix,hiressteps,denoisestrength,samplingmethod, upscaler,hiresscale, apiurl, qualitygate, quality, runs,insanitylevel,subject, artist, imagetype, silentmode, workprompt, antistring, prefixprompt, suffixprompt,negativeprompt,promptcompounderlevel, seperator, img2imgbatch, img2imgsamplingsteps, img2imgcfg, img2imgsamplingmethod, img2imgupscaler, img2imgmodel,img2imgactivate, img2imgscale, img2imgpadding,img2imgdenoisestrength,ultimatesdupscale,usdutilewidth, usdutileheight, usdumaskblur, usduredraw, usduSeamsfix, usdusdenoise, usduswidth, usduspadding, usdusmaskblur, controlnetenabled, controlnetmodel,img2imgdenoisestrengthmod,enableextraupscale,controlnetblockymode,extrasupscaler1,extrasupscaler2,extrasupscaler2visiblity,extrasupscaler2gfpgan,extrasupscaler2codeformer,extrasupscaler2codeformerweight,extrasresize,onlyupscale,givensubject,smartsubject,giventypeofimage,imagemodechance, chosengender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept, increasestability, qualityhiresfix, qualitymode, qualitykeep, basesize, promptvariantinsanitylevel, givenoutfit, autonegativeprompt, autonegativepromptstrength, autonegativepromptenhance, base_model, OBP_preset])
         interrupt.click(tryinterrupt, inputs=[apiurl])
         
         automatedoutputsfolderbutton.click(openfolder)
@@ -982,9 +984,7 @@ class Script(scripts.Script):
                         }
                         obp_options[obp_preset_name] = opts
                         OBPresets.save_obp_preset(obp_options)
-                        choices = list(obp_options.keys()) + [
-                            OBPresets.CUSTOM_OBP
-                        ]
+                        choices = [OBPresets.RANDOM_PRESET_OBP] + list(obp_options.keys()) + [OBPresets.CUSTOM_OBP]
                         return gr.update(choices=choices, value=obp_preset_name)
                     else:
                         return gr.update()
@@ -1019,9 +1019,12 @@ class Script(scripts.Script):
                 # Skip if Custom was selected
                 if selection == OBPresets.CUSTOM_OBP:
                     return [gr.update()] * 16
-
+                
                 # Update Custom values based on selected One Button preset
-                selected_opb_preset = OBPresets.get_obp_preset(selection)
+                if selection == OBPresets.RANDOM_PRESET_OBP:
+                    selected_opb_preset = OBPresets.get_obp_preset("Standard")
+                else:     
+                    selected_opb_preset = OBPresets.get_obp_preset(selection)
                 return [
                     insanitylevel.update(value=selected_opb_preset["insanitylevel"]),
                     subject.update(value=selected_opb_preset["subject"]),
@@ -1218,12 +1221,12 @@ class Script(scripts.Script):
 
       
 
-        return [insanitylevel,subject, artist, imagetype, prefixprompt,suffixprompt,negativeprompt, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring, seperator, givensubject, smartsubject, giventypeofimage, imagemodechance, chosengender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept, promptvariantinsanitylevel, givenoutfit, autonegativeprompt, autonegativepromptstrength, autonegativepromptenhance, base_model]
+        return [insanitylevel,subject, artist, imagetype, prefixprompt,suffixprompt,negativeprompt, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring, seperator, givensubject, smartsubject, giventypeofimage, imagemodechance, chosengender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept, promptvariantinsanitylevel, givenoutfit, autonegativeprompt, autonegativepromptstrength, autonegativepromptenhance, base_model, OBP_preset]
             
     
 
     
-    def run(self, p, insanitylevel, subject, artist, imagetype, prefixprompt,suffixprompt,negativeprompt, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring,seperator, givensubject, smartsubject, giventypeofimage, imagemodechance, chosengender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept, promptvariantinsanitylevel, givenoutfit, autonegativeprompt, autonegativepromptstrength, autonegativepromptenhance, base_model):
+    def run(self, p, insanitylevel, subject, artist, imagetype, prefixprompt,suffixprompt,negativeprompt, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring,seperator, givensubject, smartsubject, giventypeofimage, imagemodechance, chosengender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept, promptvariantinsanitylevel, givenoutfit, autonegativeprompt, autonegativepromptstrength, autonegativepromptenhance, base_model, OBP_preset):
         
         images = []
         infotexts = []
@@ -1297,7 +1300,7 @@ class Script(scripts.Script):
 
 
                 #Here is where we build a "normal" prompt
-                preppedprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype, False, antistring, prefixprompt, suffixprompt,promptcompounderlevel, seperator,givensubject,smartsubject,giventypeofimage,imagemodechance,chosengender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept,True,False,-1,givenoutfit, False, base_model)
+                preppedprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype, False, antistring, prefixprompt, suffixprompt,promptcompounderlevel, seperator,givensubject,smartsubject,giventypeofimage,imagemodechance,chosengender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept,True,False,-1,givenoutfit, False, base_model, OBP_preset)
 
                 # set the artist mode back when done (for automatic mode)
                 artist = artistcopy

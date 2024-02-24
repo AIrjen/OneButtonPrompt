@@ -2,6 +2,8 @@ import random
 import re
 from csv_reader import *
 from random_functions import *
+from one_button_presets import OneButtonPresets
+OBPresets = OneButtonPresets()
 
 
 
@@ -10,7 +12,7 @@ from random_functions import *
 # insanity level controls randomness of propmt 0-10
 # forcesubject van be used to force a certain type of subject
 # Set artistmode to none, to exclude artists 
-def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", givensubject="",smartsubject = True,giventypeofimage="", imagemodechance = 20, gender = "all", subtypeobject="all", subtypehumanoid="all", subtypeconcept="all", advancedprompting=True, hardturnoffemojis=False, seed=-1, overrideoutfit="", prompt_g_and_l = False, base_model = "SD1.5"):
+def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", givensubject="",smartsubject = True,giventypeofimage="", imagemodechance = 20, gender = "all", subtypeobject="all", subtypehumanoid="all", subtypeconcept="all", advancedprompting=True, hardturnoffemojis=False, seed=-1, overrideoutfit="", prompt_g_and_l = False, base_model = "SD1.5", OBP_preset = ""):
 
     remove_weights =  False
     less_verbose = False
@@ -27,6 +29,30 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     if(advancedprompting != False and random.randint(0,max(0, insanitylevel - 2)) <= 0):
         advancedprompting == False
 
+    
+    if(OBP_preset == OBPresets.RANDOM_PRESET_OBP):
+        obp_options = OBPresets.load_obp_presets()
+        random_preset = random.choice(list(obp_options.keys()))
+        print("Engaging randomized presets, locking on to: " + random_preset)
+
+        selected_opb_preset = OBPresets.get_obp_preset(random_preset)
+        insanitylevel = selected_opb_preset["insanitylevel"]
+        forcesubject = selected_opb_preset["subject"]
+        artists = selected_opb_preset["artist"]
+        subtypeobject = selected_opb_preset["chosensubjectsubtypeobject"]
+        subtypehumanoid = selected_opb_preset["chosensubjectsubtypehumanoid"]
+        subtypeconcept = selected_opb_preset["chosensubjectsubtypeconcept"]
+        gender = selected_opb_preset["chosengender"]
+        imagetype = selected_opb_preset["imagetype"]
+        imagemodechance = selected_opb_preset["imagemodechance"]
+        givensubject = selected_opb_preset["givensubject"]
+        smartsubject = selected_opb_preset["smartsubject"]
+        overrideoutfit = selected_opb_preset["givenoutfit"]
+        prefixprompt = selected_opb_preset["prefixprompt"]
+        suffixprompt = selected_opb_preset["suffixprompt"]
+        giventypeofimage = selected_opb_preset["giventypeofimage"]
+        antistring = selected_opb_preset["antistring"]
+    
     originalartistchoice = artists
     doartistnormal = True
     outfitmode = 0
@@ -3074,7 +3100,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     completeprompt = parse_custom_functions(completeprompt, insanitylevel)
 
     # prompt enhancer!
-    if(templatemode == False and specialmode == False):
+    if(templatemode == False and specialmode == False and base_model != "Stable Cascade"):
         # how insane do we want it?
 
         maxamountofwords = max(0, -1 + random.randint(0,4),6 - insanitylevel)

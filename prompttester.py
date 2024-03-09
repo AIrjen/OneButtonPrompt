@@ -97,7 +97,7 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
 generateprompts(10,5
                 ,"all" # subject
                 ,"all" # artists
-                ,"all" # image type  "only other types", "only templates mode", "art blaster mode", "quality vomit mode", "color cannon mode", "unique art mode", "massive madness mode", "photo fantasy mode", "subject only mode", "fixed styles mode"
+                ,"dynamic templates mode" # image type  "only other types", "only templates mode", "art blaster mode", "quality vomit mode", "color cannon mode", "unique art mode", "massive madness mode", "photo fantasy mode", "subject only mode", "fixed styles mode"
                 , False # only artists
                 ,"","","PREFIXPROMPT" 
                 ,"SUFFIXPROMPT"
@@ -115,5 +115,5 @@ generateprompts(10,5
                 , "" #outfit override
                 , False #prompt_g_and_l
                 , "Stable Cascade" #base model
-                , "All (random)..." #preset  "All (random)..."
+                , "" #preset  "All (random)..."
                 )

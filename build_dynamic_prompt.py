@@ -16,6 +16,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
     remove_weights =  False
     less_verbose = False
+    add_vomit = True
+    add_quality = True
    
 
     # set seed
@@ -84,6 +86,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     # "Stable Cascade" -- Remove weights
     if(base_model == "Stable Cascade"):
         remove_weights = True
+        add_vomit = False
+        add_quality = False
     if(base_model == "SD1.5"):
         less_verbose = True
 
@@ -134,7 +138,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     hairvomitlist = csv_to_list("hairvomit",antilist,"./csvfiles/",0,"?",False,False)
     
     humanoidlist = csv_to_list("humanoids",antilist)
-    imagetypelist = csv_to_list(csvfilename="imagetypes",antilist=antilist, insanitylevel=insanitylevel)
+    imagetypelist = csv_to_list(csvfilename="imagetypes",antilist=antilist, insanitylevel=insanitylevel, delimiter="?")
     joblist = csv_to_list(csvfilename="jobs",antilist=antilist,skipheader=True,gender=gender)
     lenslist = csv_to_list(csvfilename="lenses",antilist=antilist, insanitylevel=insanitylevel)
     lightinglist = csv_to_list(csvfilename="lighting",antilist=antilist, insanitylevel=insanitylevel)
@@ -351,6 +355,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     
     tokinatorlist = csv_to_list("tokinator", antilist,"./csvfiles/templates/",0,"?")
     styleslist = csv_to_list("styles", antilist,"./csvfiles/templates/",0,"?")
+    dynamictemplatesprefixlist = csv_to_list("dynamic_templates_prefix", antilist,"./csvfiles/templates/",0,"?")
+    dynamictemplatessuffixlist = csv_to_list("dynamic_templates_suffix", antilist,"./csvfiles/templates/",0,"?")
 
        
     # subjects
@@ -806,6 +812,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     onlysubjectmode = False
     stylesmode = False
     thetokinatormode = False
+    dynamictemplatesmode = False
 
     # determine wether we should go for a template or not. Not hooked up to insanitylevel
     if(imagetype == "only templates mode"):
@@ -862,6 +869,10 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         print("Running with a completely random set of words")
         print("All safety and logic is turned off")
 
+    if(imagetype == "dynamic templates mode"):
+        specialmode = True
+        dynamictemplatesmode = True
+        print("Running with dynamic templates mode")
 
     # main stuff
     generatetype = not specialmode
@@ -887,8 +898,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     generatelighting = bool(lightinglist) and not specialmode
     generatemood = bool(moodlist) and not specialmode
     generatepose = bool(poselist) and not templatemode
-    generatevomit = bool(vomitlist) and not specialmode
-    generatequality = bool(qualitylist) and not specialmode
+    generatevomit = bool(vomitlist) and not specialmode and add_vomit
+    generatequality = bool(qualitylist) and not specialmode and add_quality
     generateshot = bool(shotsizelist) and not specialmode
     generatetimeperiod = bool(timeperiodlist) and not specialmode
     generateemoji = bool(emojilist) and not templatemode
@@ -913,8 +924,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     generateepisodetitle = bool(episodetitlelist) and not specialmode
     
     generateminilocationaddition = bool(minilocationadditionslist) and not specialmode
-    generateminivomit = bool(minivomitlist) and not specialmode
-    generateimagetypequality = bool(imagetypequalitylist) and not specialmode and generateimagetypequality
+    generateminivomit = bool(minivomitlist) and not specialmode and add_vomit
+    generateimagetypequality = bool(imagetypequalitylist) and not specialmode and generateimagetypequality 
     generateoveralladdition = bool(overalladditionlist) and not specialmode
     generateimagetype = bool(imagetypelist) and not specialmode and generateimagetype
 
@@ -1430,13 +1441,20 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             
 
 
-         # start styles mode here
+        # start styles mode here
         if(stylesmode == True):
             chosenstyle = random.choice(styleslist)
             chosenstyleprefix = chosenstyle.split("-subject-")[0]
             chosenstylesuffix= chosenstyle.split("-subject-")[1]
             completeprompt += chosenstyleprefix
 
+        if(dynamictemplatesmode == True):
+            chosenstyleprefix = random.choice(dynamictemplatesprefixlist)
+            completeprompt += chosenstyleprefix
+            if(chosenstyleprefix[-1] == "."):
+                completeprompt += " OR(Capturing a; Describing a;Portraying a;Featuring a)"
+            else:
+                completeprompt += " OR(with a;capturing a; describing a;portraying a;of a;featuring a)"
 
 
         # start artist part
@@ -2609,6 +2627,28 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         # start styles mode here
         if(stylesmode == True):
             completeprompt += chosenstylesuffix
+        
+        if(dynamictemplatesmode == True):
+            if("-artist-" in completeprompt):
+                dynamictemplatessuffixlist = [sentence for sentence in dynamictemplatessuffixlist if "-artist-" not in sentence.lower()]
+            if("-lighting-" in completeprompt):
+                dynamictemplatessuffixlist = [sentence for sentence in dynamictemplatessuffixlist if "-lighting-" not in sentence.lower()]
+            if("-shotsize-" in completeprompt):
+                dynamictemplatessuffixlist = [sentence for sentence in dynamictemplatessuffixlist if "-shotsize-" not in sentence.lower()]
+            if("-artmovement-" in completeprompt):
+                dynamictemplatessuffixlist = [sentence for sentence in dynamictemplatessuffixlist if "-artmovement-" not in sentence.lower()]
+            if("-imagetype-" in completeprompt or "-othertype-" in completeprompt ):
+                dynamictemplatessuffixlist = [sentence for sentence in dynamictemplatessuffixlist if "-imagetype-" not in sentence.lower()]
+                dynamictemplatessuffixlist = [sentence for sentence in dynamictemplatessuffixlist if "-othertype-" not in sentence.lower()]
+            if("-colorcombination-" in completeprompt or "-colorscheme" in completeprompt ):
+                dynamictemplatessuffixlist = [sentence for sentence in dynamictemplatessuffixlist if "-colorcombination-" not in sentence.lower()]
+                dynamictemplatessuffixlist = [sentence for sentence in dynamictemplatessuffixlist if "-colorscheme-" not in sentence.lower()]
+            if("-mood-" in completeprompt or "-humanexpression" in completeprompt ):
+                dynamictemplatessuffixlist = [sentence for sentence in dynamictemplatessuffixlist if "-mood-" not in sentence.lower()]
+                dynamictemplatessuffixlist = [sentence for sentence in dynamictemplatessuffixlist if "-humanexpression-" not in sentence.lower()]
+
+            chosenstylesuffix = random.choice(dynamictemplatessuffixlist)
+            completeprompt += ". " + chosenstylesuffix
 
         
         # custom style list
@@ -2773,7 +2813,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
 
     # In front and the back?
-    completeprompt = parse_custom_functions(completeprompt, insanitylevel)
+    if(dynamictemplatesmode == False):
+        completeprompt = parse_custom_functions(completeprompt, insanitylevel)
     
     # Sometimes change he/she to the actual subject
     # Doesnt work if someone puts in a manual subject
@@ -4173,6 +4214,8 @@ def cleanup(completeprompt, advancedprompting, insanitylevel = 5):
     completeprompt = re.sub(' ,', ',', completeprompt)
     completeprompt = re.sub(',\(', ', (', completeprompt)
 
+
+
     while "  " in completeprompt:
         completeprompt = re.sub('  ', ' ', completeprompt)
     completeprompt = re.sub('a The', 'The', completeprompt)
@@ -4194,10 +4237,15 @@ def cleanup(completeprompt, advancedprompting, insanitylevel = 5):
 
 
     completeprompt = re.sub('art art', 'art', completeprompt)
+    completeprompt = re.sub('Art art', 'art', completeprompt)
+    completeprompt = re.sub('lighting lighting', 'lighting', completeprompt)
+    completeprompt = re.sub('light lighting', 'light', completeprompt)
     completeprompt = re.sub('-artiststyle- art,', '', completeprompt)
     completeprompt = re.sub('-artiststyle- art', '', completeprompt)
     completeprompt = re.sub('-artiststyle-', '', completeprompt)
     completeprompt = re.sub('- art ', '', completeprompt)
+
+    completeprompt = re.sub('shot shot', 'shot', completeprompt)
     
 
     completeprompt = re.sub('a his', 'his', completeprompt)
@@ -4242,6 +4290,12 @@ def cleanup(completeprompt, advancedprompting, insanitylevel = 5):
 
     # Move the extracted LoRA's to the end of completeprompt
     #completeprompt += " " + " ".join(allLoRA)   
+
+    completeprompt = completeprompt.replace(' . ', '. ')
+    completeprompt = completeprompt.replace(', . ', '. ')
+    completeprompt = completeprompt.replace(',. ', '. ')
+    completeprompt = completeprompt.replace('., ', '. ')
+    completeprompt = completeprompt.replace('. . ', '. ')
 
     completeprompt = completeprompt.strip(", ")
 

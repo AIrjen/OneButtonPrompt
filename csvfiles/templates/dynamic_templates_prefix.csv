@@ -1,0 +1,11 @@
+a OR(-imagetype-;-artiststyle-;OR(-imagetype-;-artiststyle-;-othertype-;-artmovement-;OR(-colorscheme-;-colorcombination-))) OR(artwork;art) OR(by;designed by;stylized by;uncommon) -artist-, a OR(-artiststyle-;-imagetypequality-) OR(art;work;artwork) OR(with a OR(touch;splash;hint) of OR(-colorcombination- colors;-color-;-colorscheme-);reminiscent of -artmovement-;inspired by -artmovement-;taking influence from -artmovement-).
+a OR(-imagetype-;-artiststyle-;OR(-imagetype-;-artiststyle-;-othertype-;-artmovement-;OR(-colorscheme-;-colorcombination-))) OR(artwork;art) OR(by;designed by;stylized by;uncommon) -artist-, a OR(-artiststyle-;-imagetypequality-) OR(art;work;artwork)
+a OR(;-imagetypequality-;uncommon) a OR(;-imagetype-;uncommon) artwork in OR(;-imagetypequality-;uncommon) -artmovement- style
+a OR(;-shotsize- shot;uncommon) -descriptor- -imagetype- artwork inspired by OR(-setting- setting;-culture- setting).
+a OR(-colorscheme-;-colorcombination-) OR(;-basicbitchdescriptor-;-imagetypequality-;uncommon) OR(OR(;gradient;uncommon)background;art;artwork;image)
+a OR(-imagetype-;-othertype-) OR(artwork;art)
+a OR(;-shotsize- shot;uncommon) OR(;-photoaddition-;uncommon) photograph OR(;shot with a -camera-;shot with a -lens- lens;uncommon)
+Combining the styles of -artist- OR(;, -artist-;rare) and -artist-, this OR(;-artiststyle-;uncommon) OR(;-imagetypequality-;uncommon) image
+OR(Unique;one of a kind;-basicbitchdescriptor-) art in the form of a -othertype-.
+Capturing the OR(;feeling of;uncommon) -mood- OR(atmosphere;mood;ambience;energy;vibes), this -direction- OR(work;scene;image;art;artwork)
+The very -descriptor- OR(artwork;art;image;scene) is inspired by OR(-imagetype-;-othertype-;-artmovement-;OR(-colorscheme-;-colorcombination-))

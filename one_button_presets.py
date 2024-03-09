@@ -1,7 +1,6 @@
 import json
 import os
 import shutil
-import random
 
 
 class OneButtonPresets:

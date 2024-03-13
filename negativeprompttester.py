@@ -32,4 +32,5 @@ def generateprompts(amount = 1,positive_prompt = "",insanitylevel="0",enhance=Fa
     print("")
     print("All done!")
 
-generateprompts(1,"photo, photograph, realism",0,False,"", base_model="Stable Cascade")
+if __name__ == "__main__":
+    generateprompts(1,"photo, photograph, realism",0,False,"", base_model="Stable Cascade")

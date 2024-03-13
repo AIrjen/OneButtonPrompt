@@ -33,4 +33,5 @@ def generateprompts(amount = 1,positive_prompt = "",amountofwords="3"):
     print("")
     print("All done!")
 
-generateprompts(10,"",5)
+if __name__ == "__main__":
+    generateprompts(10,"",5)

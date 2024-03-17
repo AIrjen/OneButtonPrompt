@@ -360,6 +360,12 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     allstylessuffixlist = [value for sublist in breakstylessuffix for value in sublist]
     allstylessuffixlist = list(set(allstylessuffixlist))
 
+    artistsuffix = artist_descriptions_csv_to_list("artists_and_category")
+    breakartiststylessuffix = [item.split(',') for item in artistsuffix]
+    artiststylessuffixlist = [value for sublist in breakartiststylessuffix for value in sublist]
+    artiststylessuffixlist = list(set(artiststylessuffixlist))
+    allstylessuffixlist += artiststylessuffixlist
+
 
     
     dynamictemplatesprefixlist = csv_to_list("dynamic_templates_prefix", antilist,"./csvfiles/templates/",0,"?")
@@ -2433,73 +2439,94 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 completeprompt += ", "
                 # end of the artist stuff
         if(thetokinatormode == False):
-                # Add more quality while in greg mode lol
-                if(originalartistchoice == "greg mode" and generatequality == True):
-                    completeprompt += "-quality-, "
-
-                # others
-                if(chance_roll(max(1,insanitylevel -1), directionchance) and generatedirection == True):
-                    completeprompt += "-direction-, "
-
-                if(chance_roll(insanitylevel, moodchance) and generatemood == True):
-                    completeprompt += "-mood-, " 
-
-                # add in some more mini vomits
-                if(chance_roll(insanitylevel, minivomitsuffixchance) and generateminivomit == True):
-                    completeprompt += " -minivomit-, "
-            
-                if(chance_roll(insanitylevel, artmovementchance) and generateartmovement == True):
-                    completeprompt += "-artmovement-, "  
                 
-                if(chance_roll(insanitylevel, lightingchance) and generatelighting == True):
-                    completeprompt += "-lighting-, "  
+                descriptivemode = False
+                # if we have artists, maybe go in artists descriptor mode
+                if("-artist-" in completeprompt and chance_roll(max(8 - insanitylevel,3),"common")):
+                    for i in range(random.randint(1,3)):
+                        print("adding artist stuff")
+                        completeprompt += ", -artistdescription-"
+                        descriptivemode = True
 
-                # determine wether we have a photo or not
-                if("photo" in completeprompt.lower()):
-                    isphoto = 1
                     
-                if(chance_roll(insanitylevel, photoadditionchance) and isphoto == 1 and generatephotoaddition == True):
-                    completeprompt += random.choice(photoadditionlist) + ", "
-                        
-                if(isphoto == 1 and generatecamera == True):
-                    completeprompt += "-camera-, "  
 
-                if(chance_roll(insanitylevel, lenschance) or isphoto == 1):
-                    if(generatelens == True):
-                        completeprompt += "-lens-, "
+                # if not, we could go in random styles descriptor mode
+                elif(chance_roll(10 - insanitylevel,"rare")):
+                    for i in range(random.randint(1,max(7,insanitylevel + 2))):
+                        print("adding random crap")
+                        completeprompt += ", -allstylessuffix-"
+                        descriptivemode = True
 
-                if(chance_roll(insanitylevel, colorschemechance) and generatecolorscheme == True):
-                    completeprompt += "-colorscheme-, "
+                # and on high levels, DO EVERYTHING :D
+                if(descriptivemode == False or insanitylevel >= 9):
 
-                # vomit some cool/wierd things into the prompt
-                if(chance_roll(insanitylevel, vomit1chance) and generatevomit == True):
-                    completeprompt += "-vomit-, "
-                    if(chance_roll(insanitylevel, vomit2chance)):
-                        completeprompt += "-vomit-, "
-
-                # human specfic vomit
-                if(mainchooser == "humanoid" and chance_roll(insanitylevel, humanvomitchance) and generatehumanvomit == True):
-                    completeprompt += "-humanvomit-, "
-                    if(chance_roll(insanitylevel, humanvomitchance)):
-                        completeprompt += "-humanvomit-, "
-
-                #adding a great work of art, like starry night has cool effects. But this should happen only very rarely.
-                if(chance_roll(insanitylevel, greatworkchance) and generategreatwork == True):
-                    completeprompt += " in the style of -greatwork-, "
-
-                #adding a poemline. But this should happen only very rarely.
-                if(chance_roll(insanitylevel, poemlinechance) and generatepoemline == True):
-                    completeprompt += " \"-poemline-\", "
-
-                #adding a songline. But this should happen only very rarely.
-                if(chance_roll(insanitylevel, songlinechance) and generatesongline == True):
-                    completeprompt += " \"-songline-\", "
-
-                # everyone loves the adding quality. The better models don't need this, but lets add it anyway
-                if((chance_roll(insanitylevel, quality1chance) or originalartistchoice == "greg mode") and generatequality == True):
-                    completeprompt += "-quality-, "
-                    if((chance_roll(insanitylevel, quality2chance) or originalartistchoice == "greg mode")):
+                    # Add more quality while in greg mode lol
+                    if(originalartistchoice == "greg mode" and generatequality == True):
                         completeprompt += "-quality-, "
+
+                    # others
+                    if(chance_roll(max(1,insanitylevel -1), directionchance) and generatedirection == True):
+                        completeprompt += "-direction-, "
+
+                    if(chance_roll(insanitylevel, moodchance) and generatemood == True):
+                        completeprompt += "-mood-, " 
+
+                    # add in some more mini vomits
+                    if(chance_roll(insanitylevel, minivomitsuffixchance) and generateminivomit == True):
+                        completeprompt += " -minivomit-, "
+                
+                    if(chance_roll(insanitylevel, artmovementchance) and generateartmovement == True):
+                        completeprompt += "-artmovement-, "  
+                    
+                    if(chance_roll(insanitylevel, lightingchance) and generatelighting == True):
+                        completeprompt += "-lighting-, "  
+
+                    # determine wether we have a photo or not
+                    if("photo" in completeprompt.lower()):
+                        isphoto = 1
+                        
+                    if(chance_roll(insanitylevel, photoadditionchance) and isphoto == 1 and generatephotoaddition == True):
+                        completeprompt += random.choice(photoadditionlist) + ", "
+                            
+                    if(isphoto == 1 and generatecamera == True):
+                        completeprompt += "-camera-, "  
+
+                    if(chance_roll(insanitylevel, lenschance) or isphoto == 1):
+                        if(generatelens == True):
+                            completeprompt += "-lens-, "
+
+                    if(chance_roll(insanitylevel, colorschemechance) and generatecolorscheme == True):
+                        completeprompt += "-colorscheme-, "
+
+                    # vomit some cool/wierd things into the prompt
+                    if(chance_roll(insanitylevel, vomit1chance) and generatevomit == True):
+                        completeprompt += "-vomit-, "
+                        if(chance_roll(insanitylevel, vomit2chance)):
+                            completeprompt += "-vomit-, "
+
+                    # human specfic vomit
+                    if(mainchooser == "humanoid" and chance_roll(insanitylevel, humanvomitchance) and generatehumanvomit == True):
+                        completeprompt += "-humanvomit-, "
+                        if(chance_roll(insanitylevel, humanvomitchance)):
+                            completeprompt += "-humanvomit-, "
+
+                    #adding a great work of art, like starry night has cool effects. But this should happen only very rarely.
+                    if(chance_roll(insanitylevel, greatworkchance) and generategreatwork == True):
+                        completeprompt += " in the style of -greatwork-, "
+
+                    #adding a poemline. But this should happen only very rarely.
+                    if(chance_roll(insanitylevel, poemlinechance) and generatepoemline == True):
+                        completeprompt += " \"-poemline-\", "
+
+                    #adding a songline. But this should happen only very rarely.
+                    if(chance_roll(insanitylevel, songlinechance) and generatesongline == True):
+                        completeprompt += " \"-songline-\", "
+
+                    # everyone loves the adding quality. The better models don't need this, but lets add it anyway
+                    if((chance_roll(insanitylevel, quality1chance) or originalartistchoice == "greg mode") and generatequality == True):
+                        completeprompt += "-quality-, "
+                        if((chance_roll(insanitylevel, quality2chance) or originalartistchoice == "greg mode")):
+                            completeprompt += "-quality-, "
 
         
         
@@ -3945,11 +3972,14 @@ def replacewildcard(completeprompt, insanitylevel, wildcard,listname, activatehy
                 replacementvalue = ""
 
             # override for artist and artiststyle, only for first artist
-            if(wildcard == "-artist-" and "-artiststyle-" in completeprompt):
+            if(wildcard == "-artist-" and ("-artiststyle-" in completeprompt or "-artistmedium-" in completeprompt or "-artistdescription-" in completeprompt)):
                 artiststyles = []
                 artiststyle = []
                 chosenartiststyle = ""
-                artiststyles = artist_category_by_category_csv_to_list("artists_and_category",replacementvalue)
+                artistscomplete = artist_category_by_category_csv_to_list("artists_and_category",replacementvalue)
+                artiststyles = artistscomplete[0]
+                artistmediums = artistscomplete[1]
+                artistdescriptions = artistscomplete[2]
                 artiststyle = [x.strip() for x in artiststyles[0].split(",")]
 
                 artiststyle = list(filter(lambda x: len(x) > 0, artiststyle)) # remove empty values
@@ -3963,6 +3993,18 @@ def replacewildcard(completeprompt, insanitylevel, wildcard,listname, activatehy
 
                 # keep on looping until we have no more wildcards or no more styles to choose from
                 # leftovers will be removed in the cleaning step
+                while bool(artiststyle) and "-artiststyle-" in completeprompt:
+                
+                    chosenartiststyle = random.choice(artiststyle)
+                    completeprompt = completeprompt.replace("-artiststyle-",chosenartiststyle ,1)
+                    artiststyle.remove(chosenartiststyle)
+
+                if("-artistmedium-" in completeprompt):
+                    completeprompt = completeprompt.replace("-artistmedium-",artistmediums[0] ,1)
+
+                if("-artistdescription-" in completeprompt):
+                    completeprompt = completeprompt.replace("-artistdescription-",artistdescriptions[0] ,1)
+                
                 while bool(artiststyle) and "-artiststyle-" in completeprompt:
                 
                     chosenartiststyle = random.choice(artiststyle)
@@ -4292,6 +4334,8 @@ def cleanup(completeprompt, advancedprompting, insanitylevel = 5):
     completeprompt = re.sub('-artiststyle- art,', '', completeprompt)
     completeprompt = re.sub('-artiststyle- art', '', completeprompt)
     completeprompt = re.sub('-artiststyle-', '', completeprompt)
+    completeprompt = re.sub('-artistmedium-', '', completeprompt)
+    completeprompt = re.sub('-artistdescription-', '', completeprompt)
     completeprompt = re.sub('- art ', '', completeprompt)
 
     completeprompt = re.sub('shot shot', 'shot', completeprompt)

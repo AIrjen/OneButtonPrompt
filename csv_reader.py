@@ -121,6 +121,8 @@ def csv_to_list(csvfilename, antilist=[], directory="./csvfiles/", lowerandstrip
 
 def artist_category_by_category_csv_to_list(csvfilename,artist):
         csvlist = []
+        mediumlist = []
+        descriptionlist = []
         script_dir = os.path.dirname(os.path.abspath(__file__))
         full_path = os.path.join(script_dir, "./csvfiles/" )
         with open(full_path + csvfilename + ".csv", "r", newline="",encoding="utf8") as file:
@@ -128,7 +130,9 @@ def artist_category_by_category_csv_to_list(csvfilename,artist):
                 for row in reader:
                         if(row["Artist"] == artist):
                                 csvlist.append(row["Tags"])
-        return csvlist
+                                mediumlist.append(row["Medium"])
+                                descriptionlist.append(row["Description"])
+        return csvlist, mediumlist, descriptionlist
 
 def artist_category_csv_to_list(csvfilename,category):
         csvlist = []
@@ -139,6 +143,16 @@ def artist_category_csv_to_list(csvfilename,category):
                 for row in reader:
                         if(row[category] == "1"):
                                 csvlist.append(row["Artist"])
+        return csvlist
+
+def artist_descriptions_csv_to_list(csvfilename):
+        csvlist = []
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        full_path = os.path.join(script_dir, "./csvfiles/" )
+        with open(full_path + csvfilename + ".csv", "r", newline="",encoding="utf8") as file:
+                reader = csv.DictReader(file, delimiter=",")
+                for row in reader:
+                        csvlist.append(row["Description"])
         return csvlist
 
 def load_config_csv():
@@ -243,4 +257,4 @@ def sort_and_dedupe_csv_file():
                         fp.write("%s\n" % item)
 
 
-sort_and_dedupe_csv_file()
+#sort_and_dedupe_csv_file()

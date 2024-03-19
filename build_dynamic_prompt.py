@@ -2440,25 +2440,28 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 # end of the artist stuff
         if(thetokinatormode == False):
                 
+                # todo
                 descriptivemode = False
                 # if we have artists, maybe go in artists descriptor mode
-                if("-artist-" in completeprompt and chance_roll(max(8 - insanitylevel,3),"common")):
+                if(templatemode == False and specialmode == False and "-artist-" in completeprompt and common_dist(max(8 - insanitylevel,3))):
                     for i in range(random.randint(1,3)):
                         print("adding artist stuff")
                         completeprompt += ", -artistdescription-"
                         descriptivemode = True
+                    completeprompt += ", "
 
                     
 
                 # if not, we could go in random styles descriptor mode
-                elif(chance_roll(10 - insanitylevel,"rare")):
+                elif(templatemode == False and specialmode == False and uncommon_dist(10 - insanitylevel)):
                     for i in range(random.randint(1,max(7,insanitylevel + 2))):
                         print("adding random crap")
                         completeprompt += ", -allstylessuffix-"
                         descriptivemode = True
+                    completeprompt += ", "
 
                 # and on high levels, DO EVERYTHING :D
-                if(descriptivemode == False or insanitylevel >= 9):
+                if(descriptivemode == False or rare_dist(insanitylevel)):
 
                     # Add more quality while in greg mode lol
                     if(originalartistchoice == "greg mode" and generatequality == True):
@@ -4240,6 +4243,61 @@ def enhance_positive(positive_prompt = "", amountofwords = 3):
     
 
     return addwords
+
+def artify_prompt(prompt = "", artists = "all", amountofartists = "1", mode="standard"):
+    intamountofartists = int(amountofartists)
+    # first build up a complete anti list. Those values are removing during list building
+    # this uses the antivalues string AND the antilist.csv
+    emptylist = []
+    antilist = csv_to_list("antilist",emptylist , "./userfiles/",1)
+    
+    # clean up antivalue list:
+    antilist = [s.strip().lower() for s in antilist]
+
+     # build artists list
+    if artists == "wild":
+        artists = "all (wild)"
+
+    # we want to create more cohorence, so we are adding all (wild) mode for the old logic
+    
+    artisttypes = ["popular", "3D",	"abstract",	"angular", "anime"	,"architecture",	"art nouveau",	"art deco",	"baroque",	"bauhaus", 	"cartoon",	"character",	"children's illustration", 	"cityscape", "cinema",	"clean",	"cloudscape",	"collage",	"colorful",	"comics",	"cubism",	"dark",	"detailed", 	"digital",	"expressionism",	"fantasy",	"fashion",	"fauvism",	"figurativism",	"graffiti",	"graphic design",	"high contrast",	"horror",	"impressionism",	"installation",	"landscape",	"light",	"line drawing",	"low contrast",	"luminism",	"magical realism",	"manga",	"melanin",	"messy",	"monochromatic",	"nature",	"photography",	"pop art",	"portrait",	"primitivism",	"psychedelic",	"realism",	"renaissance",	"romanticism",	"scene",	"sci-fi",	"sculpture",	"seascape",	"space",	"stained glass",	"still life",	"storybook realism",	"street art",	"streetscape",	"surrealism",	"symbolism",	"textile",	"ukiyo-e",	"vibrant",	"watercolor",	"whimsical"]
+    artiststyleselector = ""
+    artiststyleselectormode = "normal"
+    artiststyleselector = random.choice(artisttypes)
+
+    artistlist = []
+    # create artist list to use in the code, maybe based on category  or personal lists
+    if(artists != "all (wild)" and artists != "all" and artists != "none" and artists.startswith("personal_artists") == False and artists.startswith("personal artists") == False and artists in artisttypes):
+        artistlist = artist_category_csv_to_list("artists_and_category",artists)
+    elif(artists.startswith("personal_artists") == True or artists.startswith("personal artists") == True):
+        artists = artists.replace(" ","_",-1) # add underscores back in
+        artistlist = csv_to_list(artists,antilist,"./userfiles/")
+    elif(artists != "none"):
+        artistlist = csv_to_list("artists",antilist)
+    
+
+    completeprompt = "art by "
+    #Lets go effing artify this MF'er
+        
+    for i in range(0,intamountofartists):
+        if(intamountofartists > 1 and i == intamountofartists - 2):
+            completeprompt += "-artist- and "
+        else:
+            completeprompt += "-artist-, "
+    
+    # now add the prompt in
+    completeprompt += prompt
+
+    for i in range(0,intamountofartists):
+        completeprompt += ", -artistdescription-"
+    
+    while ("-artist-" in completeprompt):
+
+        completeprompt = replacewildcard(completeprompt,5,"-artist-", artistlist,"","",artiststyleselector)
+
+
+    return completeprompt
+
 
 def replace_match(match):
     # Extract the first word from the match

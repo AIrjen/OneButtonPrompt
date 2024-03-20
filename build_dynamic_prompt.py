@@ -826,6 +826,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     stylesmode = False
     thetokinatormode = False
     dynamictemplatesmode = False
+    artifymode = False
 
     # determine wether we should go for a template or not. Not hooked up to insanitylevel
     if(imagetype == "only templates mode"):
@@ -886,6 +887,12 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         specialmode = True
         dynamictemplatesmode = True
         print("Running with dynamic templates mode")
+
+    if(imagetype == "artify mode"):
+        specialmode = True
+        onlysubjectmode = True
+        artifymode = True
+        print("Running with artify mode")
 
     # main stuff
     generatetype = not specialmode
@@ -1104,7 +1111,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         subjectchooser = ""
         mainchooser = ""
       
-        completeprompt += prefixprompt
+        #completeprompt += prefixprompt
 
         completeprompt += ", "
 
@@ -2853,10 +2860,20 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
             completeprompt += ", " + chosenstylesuffixcomplete
             
-
+        if(artifymode == True):
+            amountofartists = "random"
+            if(unique_dist(insanitylevel)):
+               mode = "super remix turbo"
+            elif(legendary_dist(insanitylevel)):
+                 mode = "remix"
+            else:
+                mode = "standard"
+            completeprompt = artify_prompt(insanitylevel=insanitylevel,prompt=completeprompt, artists=artists, amountofartists=amountofartists, mode=mode, seed=seed)
         
         completeprompt += " -tempnewwords- "
         completeprompt += ", "
+
+        completeprompt = prefixprompt + ", " + completeprompt
         completeprompt += suffixprompt
 
         # and then up the compounding stuff
@@ -4003,7 +4020,8 @@ def replacewildcard(completeprompt, insanitylevel, wildcard,listname, activatehy
                     artiststyle.remove(chosenartiststyle)
 
                 if("-artistmedium-" in completeprompt):
-                    completeprompt = completeprompt.replace("-artistmedium-",artistmediums[0] ,1)
+                    if(artistmediums[0].lower() not in completeprompt.lower()):
+                        completeprompt = completeprompt.replace("-artistmedium-",artistmediums[0] ,1)
 
                 if("-artistdescription-" in completeprompt):
                     completeprompt = completeprompt.replace("-artistdescription-",artistdescriptions[0] ,1)
@@ -4244,8 +4262,21 @@ def enhance_positive(positive_prompt = "", amountofwords = 3):
 
     return addwords
 
-def artify_prompt(prompt = "", artists = "all", amountofartists = "1", mode="standard"):
-    intamountofartists = int(amountofartists)
+def artify_prompt(insanitylevel = 5, prompt = "", artists = "all", amountofartists = "1", mode="standard", seed = -1):
+    if(amountofartists=="random"):
+        intamountofartists = random.randint(1,int((insanitylevel/3) + 1.20))
+    else:    
+        intamountofartists = int(amountofartists)
+
+
+    # set seed
+    # For use in ComfyUI (might bring to Automatic1111 as well)
+    # lets do it when its larger than 0
+    # Otherwise, just do nothing and it will keep on working based on an earlier set seed
+    if(seed > 0):
+        random.seed(seed)
+
+
     # first build up a complete anti list. Those values are removing during list building
     # this uses the antivalues string AND the antilist.csv
     emptylist = []
@@ -4276,7 +4307,23 @@ def artify_prompt(prompt = "", artists = "all", amountofartists = "1", mode="sta
         artistlist = csv_to_list("artists",antilist)
     
 
-    completeprompt = "art by "
+    # load up the styles list for the other modes
+    styleslist = csv_to_list("styles", antilist,"./csvfiles/templates/",0,"?")
+    stylessuffix = [item.split('-subject-')[1] for item in styleslist]
+    breakstylessuffix = [item.split(',') for item in stylessuffix]
+    allstylessuffixlist = [value for sublist in breakstylessuffix for value in sublist]
+    allstylessuffixlist = list(set(allstylessuffixlist))
+
+    artistsuffix = artist_descriptions_csv_to_list("artists_and_category")
+    breakartiststylessuffix = [item.split(',') for item in artistsuffix]
+    artiststylessuffixlist = [value for sublist in breakartiststylessuffix for value in sublist]
+    artiststylessuffixlist = list(set(artiststylessuffixlist))
+    allstylessuffixlist += artiststylessuffixlist
+
+    completeprompt = ""
+    if(common_dist(insanitylevel)):
+        completeprompt += "-artiststyle- "
+    completeprompt += "art by "
     #Lets go effing artify this MF'er
         
     for i in range(0,intamountofartists):
@@ -4285,11 +4332,27 @@ def artify_prompt(prompt = "", artists = "all", amountofartists = "1", mode="sta
         else:
             completeprompt += "-artist-, "
     
+    if(uncommon_dist(insanitylevel)):
+        completeprompt += "-artistmedium-, " 
+            
     # now add the prompt in
     completeprompt += prompt
 
-    for i in range(0,intamountofartists):
-        completeprompt += ", -artistdescription-"
+    if(mode.lower() == "remix"):
+        for i in range(0,intamountofartists):
+            completeprompt += ", " + artistsuffix.pop(artistsuffix.index(random.choice(artistsuffix)))
+
+    elif(mode.lower() == "super remix turbo"):
+        for i in range(0,intamountofartists*4):
+            completeprompt += ", " + allstylessuffixlist.pop(allstylessuffixlist.index(random.choice(allstylessuffixlist)))
+
+    else:
+        # else just go standard
+        for i in range(0,intamountofartists):
+            completeprompt += ", -artistdescription-"
+    
+    
+    
     
     while ("-artist-" in completeprompt):
 
@@ -4298,6 +4361,49 @@ def artify_prompt(prompt = "", artists = "all", amountofartists = "1", mode="sta
 
     return completeprompt
 
+
+def flufferizer(prompt = "", amountoffluff = "dynamic", seed = -1, reverse_polarity = False):
+    # set seed
+    # For use in ComfyUI (might bring to Automatic1111 as well)
+    # lets do it when its larger than 0
+    # Otherwise, just do nothing and it will keep on working based on an earlier set seed
+    if(seed > 0):
+        random.seed(seed)
+    
+    if(reverse_polarity):
+        flufferlist = csv_to_list("antifluff") # all negative words
+    else:
+        flufferlist = csv_to_list("fluff")
+
+    # dynamic = based on prompt length + insanitylevel
+    minfluff = 4
+    maxfluff = 6
+    # short = 4-6
+    # medium = 5-8
+    # long = 8-12
+    if(amountoffluff == "dynamic"):
+        
+        if(len(prompt) < 150):
+            amountoffluff = "long"
+        elif(len(prompt) < 250):
+            amountoffluff = "medium"
+        else:
+            amountoffluff = "short"
+
+    if(amountoffluff == "long"):
+        minfluff = 8
+        maxfluff = 12
+    if(amountoffluff == "medium"):
+        minfluff = 5
+        maxfluff = 8
+    
+    for i in range(0,random.randint(minfluff, maxfluff)):
+        prompt += ", " + flufferlist.pop(flufferlist.index(random.choice(flufferlist)))
+    
+    return prompt
+
+
+    
 
 def replace_match(match):
     # Extract the first word from the match

@@ -21,6 +21,7 @@ def generateprompts(amount = 1,prompt = "",artists="all",amountofartists = "1", 
             result = build_dynamic_prompt(insanitylevel=3)
         else: 
             result = artify_prompt(prompt=prompt, artists=artists, amountofartists=amountofartists, mode=mode)
+            result = flufferizer(prompt=result, reverse_polarity=True)
         print("ARTIFY COMPLETE: " + result)
         print("")
         print("loop " + str(steps))
@@ -33,4 +34,4 @@ def generateprompts(amount = 1,prompt = "",artists="all",amountofartists = "1", 
     print("")
     print("All done!")
 
-generateprompts(10,"a norwegian forest cat", "popular","3", "standard")
+generateprompts(10,"a norwegian forest cat", "all","random", "standard")

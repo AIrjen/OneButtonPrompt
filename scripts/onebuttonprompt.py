@@ -25,7 +25,7 @@ subjectsubtypesobject = ["all"]
 subjectsubtypeshumanoid = ["all"]
 subjectsubtypesconcept = ["all"]
 artists = ["all", "all (wild)", "none", "popular", "greg mode", "3D",	"abstract",	"angular", "anime"	,"architecture",	"art nouveau",	"art deco",	"baroque",	"bauhaus", 	"cartoon",	"character",	"children's illustration", 	"cityscape", "cinema",	"clean",	"cloudscape",	"collage",	"colorful",	"comics",	"cubism",	"dark",	"detailed", 	"digital",	"expressionism",	"fantasy",	"fashion",	"fauvism",	"figurativism",	"gore",	"graffiti",	"graphic design",	"high contrast",	"horror",	"impressionism",	"installation",	"landscape",	"light",	"line drawing",	"low contrast",	"luminism",	"magical realism",	"manga",	"melanin",	"messy",	"monochromatic",	"nature",	"nudity",	"photography",	"pop art",	"portrait",	"primitivism",	"psychedelic",	"realism",	"renaissance",	"romanticism",	"scene",	"sci-fi",	"sculpture",	"seascape",	"space",	"stained glass",	"still life",	"storybook realism",	"street art",	"streetscape",	"surrealism",	"symbolism",	"textile",	"ukiyo-e",	"vibrant",	"watercolor",	"whimsical"]
-imagetypes = ["all", "all - force multiple",  "photograph", "octane render","digital art","concept art", "painting", "portrait", "anime key visual", "only other types", "only templates mode", "art blaster mode", "quality vomit mode", "color cannon mode", "unique art mode", "massive madness mode", "photo fantasy mode", "subject only mode", "fixed styles mode", "the tokinator"]
+imagetypes = ["all", "all - force multiple",  "photograph", "octane render","digital art","concept art", "painting", "portrait", "anime key visual", "only other types", "only templates mode", "dynamic templates mode", "art blaster mode", "quality vomit mode", "color cannon mode", "unique art mode", "massive madness mode", "photo fantasy mode", "subject only mode", "fixed styles mode", "the tokinator"]
 promptmode = ["at the back", "in the front"]
 promptcompounder = ["1", "2", "3", "4", "5"]
 ANDtogglemode = ["none", "automatic", "prefix AND prompt + suffix", "prefix + prefix + prompt + suffix"]
@@ -34,6 +34,8 @@ genders = ["all", "male", "female"]
 
 qualitymodelist = ["highest", "gated"]
 qualitykeeplist = ["keep used","keep all"]
+
+amountofflufflist = ["none", "dynamic", "short", "medium", "long"]
 
 #for autorun and upscale
 sizelist = ["all", "portrait", "wide", "square", "ultrawide", "ultraheight", "wild"]
@@ -234,12 +236,15 @@ class Script(scripts.Script):
 
         
     def ui(self, is_img2img):
-        def gen_prompt(insanitylevel, subject, artist, imagetype, antistring, prefixprompt, suffixprompt, promptcompounderlevel, seperator,givensubject,smartsubject,giventypeofimage, imagemodechance,chosengender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept,givenoutfit, base_model, OBP_preset):
+        def gen_prompt(insanitylevel, subject, artist, imagetype, antistring, prefixprompt, suffixprompt, promptcompounderlevel, seperator,givensubject,smartsubject,giventypeofimage, imagemodechance,chosengender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept,givenoutfit, base_model, OBP_preset, amountoffluff):
 
             promptlist = []
 
             for i in range(5):
-                promptlist.append(build_dynamic_prompt(insanitylevel,subject,artist, imagetype, False, antistring,prefixprompt,suffixprompt,promptcompounderlevel,seperator,givensubject,smartsubject, giventypeofimage, imagemodechance,chosengender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept,True,False,-1,givenoutfit,False,base_model, OBP_preset))
+                base_prompt = build_dynamic_prompt(insanitylevel,subject,artist, imagetype, False, antistring,prefixprompt,suffixprompt,promptcompounderlevel,seperator,givensubject,smartsubject, giventypeofimage, imagemodechance,chosengender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept,True,False,-1,givenoutfit,False,base_model, OBP_preset)
+                fluffed_prompt = flufferizer(prompt=base_prompt, amountoffluff=amountoffluff)
+                promptlist.append(fluffed_prompt)
+
 
             return promptlist
         
@@ -510,23 +515,25 @@ class Script(scripts.Script):
 
                             only templates mode is perfect for beginners, who want to see some good results fast.
 
-                            10. art blaster mode --> Special generation mode that focusses on art movements, stylings and artists.
+                            10. dynamic templates mode --> A method that uses prompts in a more natural language.
 
-                            11. quality vomit mode --> Special generation mode that focusses on qualifiers and stylings.
+                            11. art blaster mode --> Special generation mode that focusses on art movements, stylings and artists.
 
-                            12. color cannon mode --> Special generation mode that focusses on color scheme's and moods.
+                            12. quality vomit mode --> Special generation mode that focusses on qualifiers and stylings.
 
-                            13. unique art mode --> Special generation mode that focusses on other image types, art movements, stylings and lighting.
+                            13. color cannon mode --> Special generation mode that focusses on color scheme's and moods.
 
-                            14. massive madness mode --> Special generation mode, creates prompt soup. Almost pure randomness.
+                            14. unique art mode --> Special generation mode that focusses on other image types, art movements, stylings and lighting.
 
-                            15. photo fantasy mode --> Special generation mode that focusses on photographs, cameras, lenses and lighting.
+                            15. massive madness mode --> Special generation mode, creates prompt soup. Almost pure randomness.
 
-                            16. subject only mode --> Will only generate a subject, with no additional frills.
+                            16. photo fantasy mode --> Special generation mode that focusses on photographs, cameras, lenses and lighting.
 
-                            17. fixed styles mode --> Generate a subject on top of a fixed style.
+                            17. subject only mode --> Will only generate a subject, with no additional frills.
 
-                            18. the tokinator --> Complete random word gibberish mode, use at own risk
+                            18. fixed styles mode --> Generate a subject on top of a fixed style.
+
+                            19. the tokinator --> Complete random word gibberish mode, use at own risk
 
                             ### 🎲🖼️ One in X chance to use special image type mode
 
@@ -640,12 +647,20 @@ class Script(scripts.Script):
                                 SDXL --> More natural language (default)
                                 
                                 Stable Cascade --> More natural language and no prompt weights
+                            
+                                ⭐ Flufferizer
+
+                                A simple and quick implementiation of Fooocus prompt magic
+
                                 </font>
                                 """
                     )
             with gr.Row(variant="compact"):
                 base_model = gr.Dropdown(
                      basemodelslist, label="✨ Base model", value="SDXL")
+            with gr.Row(variant="compact"):
+                amountoffluff = gr.Dropdown(
+                     amountofflufflist, label="⭐ Flufferizer", value="dynamic")
             with gr.Row(variant="compact"):
                 with gr.Column(variant="compact"):
                     promptcompounderlevel = gr.Dropdown(
@@ -907,7 +922,7 @@ class Script(scripts.Script):
                             extrasupscaler2codeformerweight = gr.Slider(0, 1, value="0.1", step=0.05, label="CodeFormer weight", visible = False)
                     
 
-        genprom.click(gen_prompt, inputs=[insanitylevel,subject, artist, imagetype, antistring,prefixprompt, suffixprompt,promptcompounderlevel, seperator, givensubject,smartsubject,giventypeofimage,imagemodechance, chosengender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept, givenoutfit, base_model, OBP_preset], outputs=[prompt1, prompt2, prompt3,prompt4,prompt5])
+        genprom.click(gen_prompt, inputs=[insanitylevel,subject, artist, imagetype, antistring,prefixprompt, suffixprompt,promptcompounderlevel, seperator, givensubject,smartsubject,giventypeofimage,imagemodechance, chosengender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept, givenoutfit, base_model, OBP_preset, amountoffluff], outputs=[prompt1, prompt2, prompt3,prompt4,prompt5])
 
         prompt1toworkflow.click(prompttoworkflowprompt, inputs=prompt1, outputs=workprompt)
         prompt2toworkflow.click(prompttoworkflowprompt, inputs=prompt2, outputs=workprompt)
@@ -915,7 +930,7 @@ class Script(scripts.Script):
         prompt4toworkflow.click(prompttoworkflowprompt, inputs=prompt4, outputs=workprompt)
         prompt5toworkflow.click(prompttoworkflowprompt, inputs=prompt5, outputs=workprompt)
 
-        startmain.click(generateimages, inputs=[amountofimages,size,model,samplingsteps,cfg,hiresfix,hiressteps,denoisestrength,samplingmethod, upscaler,hiresscale, apiurl, qualitygate, quality, runs,insanitylevel,subject, artist, imagetype, silentmode, workprompt, antistring, prefixprompt, suffixprompt,negativeprompt,promptcompounderlevel, seperator, img2imgbatch, img2imgsamplingsteps, img2imgcfg, img2imgsamplingmethod, img2imgupscaler, img2imgmodel,img2imgactivate, img2imgscale, img2imgpadding,img2imgdenoisestrength,ultimatesdupscale,usdutilewidth, usdutileheight, usdumaskblur, usduredraw, usduSeamsfix, usdusdenoise, usduswidth, usduspadding, usdusmaskblur, controlnetenabled, controlnetmodel,img2imgdenoisestrengthmod,enableextraupscale,controlnetblockymode,extrasupscaler1,extrasupscaler2,extrasupscaler2visiblity,extrasupscaler2gfpgan,extrasupscaler2codeformer,extrasupscaler2codeformerweight,extrasresize,onlyupscale,givensubject,smartsubject,giventypeofimage,imagemodechance, chosengender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept, increasestability, qualityhiresfix, qualitymode, qualitykeep, basesize, promptvariantinsanitylevel, givenoutfit, autonegativeprompt, autonegativepromptstrength, autonegativepromptenhance, base_model, OBP_preset])
+        startmain.click(generateimages, inputs=[amountofimages,size,model,samplingsteps,cfg,hiresfix,hiressteps,denoisestrength,samplingmethod, upscaler,hiresscale, apiurl, qualitygate, quality, runs,insanitylevel,subject, artist, imagetype, silentmode, workprompt, antistring, prefixprompt, suffixprompt,negativeprompt,promptcompounderlevel, seperator, img2imgbatch, img2imgsamplingsteps, img2imgcfg, img2imgsamplingmethod, img2imgupscaler, img2imgmodel,img2imgactivate, img2imgscale, img2imgpadding,img2imgdenoisestrength,ultimatesdupscale,usdutilewidth, usdutileheight, usdumaskblur, usduredraw, usduSeamsfix, usdusdenoise, usduswidth, usduspadding, usdusmaskblur, controlnetenabled, controlnetmodel,img2imgdenoisestrengthmod,enableextraupscale,controlnetblockymode,extrasupscaler1,extrasupscaler2,extrasupscaler2visiblity,extrasupscaler2gfpgan,extrasupscaler2codeformer,extrasupscaler2codeformerweight,extrasresize,onlyupscale,givensubject,smartsubject,giventypeofimage,imagemodechance, chosengender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept, increasestability, qualityhiresfix, qualitymode, qualitykeep, basesize, promptvariantinsanitylevel, givenoutfit, autonegativeprompt, autonegativepromptstrength, autonegativepromptenhance, base_model, OBP_preset, amountoffluff])
         interrupt.click(tryinterrupt, inputs=[apiurl])
         
         automatedoutputsfolderbutton.click(openfolder)
@@ -1221,12 +1236,12 @@ class Script(scripts.Script):
 
       
 
-        return [insanitylevel,subject, artist, imagetype, prefixprompt,suffixprompt,negativeprompt, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring, seperator, givensubject, smartsubject, giventypeofimage, imagemodechance, chosengender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept, promptvariantinsanitylevel, givenoutfit, autonegativeprompt, autonegativepromptstrength, autonegativepromptenhance, base_model, OBP_preset]
+        return [insanitylevel,subject, artist, imagetype, prefixprompt,suffixprompt,negativeprompt, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring, seperator, givensubject, smartsubject, giventypeofimage, imagemodechance, chosengender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept, promptvariantinsanitylevel, givenoutfit, autonegativeprompt, autonegativepromptstrength, autonegativepromptenhance, base_model, OBP_preset, amountoffluff]
             
     
 
     
-    def run(self, p, insanitylevel, subject, artist, imagetype, prefixprompt,suffixprompt,negativeprompt, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring,seperator, givensubject, smartsubject, giventypeofimage, imagemodechance, chosengender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept, promptvariantinsanitylevel, givenoutfit, autonegativeprompt, autonegativepromptstrength, autonegativepromptenhance, base_model, OBP_preset):
+    def run(self, p, insanitylevel, subject, artist, imagetype, prefixprompt,suffixprompt,negativeprompt, promptcompounderlevel, ANDtoggle, silentmode, workprompt, antistring,seperator, givensubject, smartsubject, giventypeofimage, imagemodechance, chosengender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept, promptvariantinsanitylevel, givenoutfit, autonegativeprompt, autonegativepromptstrength, autonegativepromptenhance, base_model, OBP_preset, amountoffluff):
         
         images = []
         infotexts = []
@@ -1300,7 +1315,9 @@ class Script(scripts.Script):
 
 
                 #Here is where we build a "normal" prompt
-                preppedprompt += build_dynamic_prompt(insanitylevel,subject,artist, imagetype, False, antistring, prefixprompt, suffixprompt,promptcompounderlevel, seperator,givensubject,smartsubject,giventypeofimage,imagemodechance,chosengender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept,True,False,-1,givenoutfit, False, base_model, OBP_preset)
+                base_prompt = build_dynamic_prompt(insanitylevel,subject,artist, imagetype, False, antistring, prefixprompt, suffixprompt,promptcompounderlevel, seperator,givensubject,smartsubject,giventypeofimage,imagemodechance,chosengender, chosensubjectsubtypeobject, chosensubjectsubtypehumanoid, chosensubjectsubtypeconcept,True,False,-1,givenoutfit, False, base_model, OBP_preset)
+                fluffed_prompt = flufferizer(prompt=base_prompt, amountoffluff=amountoffluff)
+                preppedprompt += fluffed_prompt
 
                 # set the artist mode back when done (for automatic mode)
                 artist = artistcopy
@@ -1311,7 +1328,8 @@ class Script(scripts.Script):
                 p.negative_prompt = negativeprompt
 
             if(silentmode == True):
-                p.prompt = createpromptvariant(workprompt,promptvariantinsanitylevel)
+                base_prompt = createpromptvariant(workprompt,promptvariantinsanitylevel)
+                p.prompt = base_prompt
 
             #for j in range(batchsize):
        
@@ -1321,7 +1339,7 @@ class Script(scripts.Script):
             print(p.prompt)
 
             if(autonegativeprompt):
-                 p.negative_prompt = build_dynamic_negative(positive_prompt=p.prompt, insanitylevel=autonegativepromptstrength,enhance=autonegativepromptenhance, existing_negative_prompt=p.negative_prompt, base_model=base_model)
+                 p.negative_prompt = build_dynamic_negative(positive_prompt=base_prompt, insanitylevel=autonegativepromptstrength,enhance=autonegativepromptenhance, existing_negative_prompt=p.negative_prompt, base_model=base_model)
                  
 
             promptlist = []

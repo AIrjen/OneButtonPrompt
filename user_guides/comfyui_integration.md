@@ -1,10 +1,11 @@
 # ComfyUI integration
 One Button Prompt is now also a ComfyUI extension.
 
-There are 4 nodes currently availabe, with One Button Prompt node being the main one.
+There are 7 nodes currently availabe, with One Button Prompt node being the main one.
 You can slam it in every workflow, where you replace it with the Positive Prompt node.
 
-![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/342bd715-9b7e-4e1a-a3ba-ff3b557b89cc)
+![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/271dc575-dfe7-48dc-bef5-222d0af53344)
+
 
 
 ## Installing in ComfyUI
@@ -59,6 +60,30 @@ Has a simple prompt output and a preset selector. You can add new presets by man
 
 ![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/33392e25-d24e-4cc7-a90f-95722e7e8e06)
 
+## One Button Artify
+
+One Button Artify works as an artist mixer for your prompt. Like SDXL styles, but for all artists known in Stable Diffusion. 
+
+It works best when adding a simple prompt.
+
+It has the following settings to play with:
+
+- Artist --> Selection of the style of artists to choose from.
+- amount_of_artists --> Amount of artists to generate. Select random, for a choice between 1 and 3.
+- artify_mode --> __standard__ adds tags according to the chosen artist. __remix__ chooses tags from different than the chosen artist. __super remix turbo__ chooses wildly from a long list of tags.
+
+![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/22415117-c457-44a3-bc35-d13629681319)
+> vibrant art by Chiho Aoshima, Digital Art, cute norwegian forest cat, Superflat art movement, kawaii aesthetics, fantastical and surreal imagery, blending traditional Japanese motifs with contemporary themes, vibrant colors, otherworldly landscapes, sharp focus, dynamic, contemporary, full color, grand illumination
+
+## One Button Flufferize
+
+One Button Prompts lightweight implementation of Fooocus Prompt Magic. It will enhance the output by adding quality tags at the end of your prompt. See the example above.
+
+It is standardly set to __dynamic__. You can turn it off by choosing __none__.
+
+Choose __short__, __medium__ or __long__ for more direct control.
+
+Don't __reverse the polarity!__
 
 ## Create Prompt Variant
 You can use the "Create Prompt Variant" node, to create variants based on a prompt you input. The strength of the variant is set with the "insanity level" slider. Simply connect it between the positive prompt and the CLIP encoder module.

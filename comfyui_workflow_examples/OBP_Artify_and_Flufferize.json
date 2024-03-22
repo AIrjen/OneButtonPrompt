@@ -1,6 +1,6 @@
 {
-  "last_node_id": 225,
-  "last_link_id": 337,
+  "last_node_id": 227,
+  "last_link_id": 342,
   "nodes": [
     {
       "id": 160,
@@ -146,7 +146,7 @@
         "Run widget replace on values": false
       },
       "widgets_values": [
-        890019860370061,
+        308913985818594,
         "randomize"
       ],
       "color": "#432",
@@ -166,7 +166,7 @@
       "flags": {
         "collapsed": false
       },
-      "order": 17,
+      "order": 13,
       "mode": 0,
       "inputs": [
         {
@@ -177,7 +177,7 @@
         {
           "name": "text_g",
           "type": "STRING",
-          "link": 336,
+          "link": 341,
           "widget": {
             "name": "text_g"
           },
@@ -186,7 +186,7 @@
         {
           "name": "text_l",
           "type": "STRING",
-          "link": 337,
+          "link": 342,
           "widget": {
             "name": "text_l"
           },
@@ -215,7 +215,7 @@
         0,
         4096,
         4096,
-        "xxx ",
+        "",
         "xxx "
       ]
     },
@@ -231,7 +231,7 @@
         "1": 316.8831481933594
       },
       "flags": {},
-      "order": 18,
+      "order": 16,
       "mode": 0,
       "inputs": [
         {
@@ -306,7 +306,7 @@
       },
       "widgets_values": [
         "enable",
-        890019860370061,
+        308913985818594,
         "fixed",
         30,
         8,
@@ -369,7 +369,7 @@
         26
       ],
       "flags": {},
-      "order": 19,
+      "order": 17,
       "mode": 0,
       "inputs": [
         {
@@ -405,7 +405,7 @@
         "1": 102.28533172607422
       },
       "flags": {},
-      "order": 20,
+      "order": 18,
       "mode": 0,
       "inputs": [
         {
@@ -436,42 +436,6 @@
       }
     },
     {
-      "id": 199,
-      "type": "SaveImage",
-      "pos": [
-        393,
-        148
-      ],
-      "size": {
-        "0": 565.774658203125,
-        "1": 596.3757934570312
-      },
-      "flags": {},
-      "order": 21,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "images",
-          "type": "IMAGE",
-          "link": 286
-        },
-        {
-          "name": "filename_prefix",
-          "type": "STRING",
-          "link": 323,
-          "widget": {
-            "name": "filename_prefix"
-          }
-        }
-      ],
-      "properties": {},
-      "widgets_values": [
-        "%date:yyyy-M-d%/ComfyUI"
-      ],
-      "color": "#222",
-      "bgcolor": "#000"
-    },
-    {
       "id": 218,
       "type": "SavePromptToFile",
       "pos": [
@@ -483,7 +447,7 @@
         "1": 166
       },
       "flags": {},
-      "order": 16,
+      "order": 14,
       "mode": 0,
       "inputs": [
         {
@@ -654,107 +618,6 @@
       ]
     },
     {
-      "id": 220,
-      "type": "Note",
-      "pos": [
-        -1027,
-        -640
-      ],
-      "size": {
-        "0": 210,
-        "1": 58
-      },
-      "flags": {},
-      "order": 7,
-      "mode": 0,
-      "properties": {
-        "text": ""
-      },
-      "widgets_values": [
-        "Made by blitzk241\nThank you!"
-      ],
-      "color": "#432",
-      "bgcolor": "#653"
-    },
-    {
-      "id": 215,
-      "type": "PrimitiveNode",
-      "pos": [
-        -1025,
-        -539
-      ],
-      "size": {
-        "0": 210,
-        "1": 58
-      },
-      "flags": {
-        "collapsed": false
-      },
-      "order": 8,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "STRING",
-          "type": "STRING",
-          "links": [
-            327
-          ],
-          "slot_index": 0,
-          "widget": {
-            "name": "custom_subject"
-          }
-        }
-      ],
-      "title": "Overwrite Subject",
-      "properties": {
-        "Run widget replace on values": false
-      },
-      "widgets_values": [
-        ""
-      ],
-      "color": "#232",
-      "bgcolor": "#353"
-    },
-    {
-      "id": 222,
-      "type": "PrimitiveNode",
-      "pos": [
-        -1032,
-        -433
-      ],
-      "size": {
-        "0": 210,
-        "1": 58
-      },
-      "flags": {
-        "collapsed": false
-      },
-      "order": 9,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "STRING",
-          "type": "STRING",
-          "links": [
-            328
-          ],
-          "slot_index": 0,
-          "widget": {
-            "name": "custom_outfit"
-          }
-        }
-      ],
-      "title": "Overwrite Outfit",
-      "properties": {
-        "Run widget replace on values": false
-      },
-      "widgets_values": [
-        ""
-      ],
-      "color": "#232",
-      "bgcolor": "#353"
-    },
-    {
       "id": 16,
       "type": "PrimitiveNode",
       "pos": [
@@ -766,7 +629,7 @@
         "1": 152.36099243164062
       },
       "flags": {},
-      "order": 10,
+      "order": 7,
       "mode": 0,
       "outputs": [
         {
@@ -792,85 +655,6 @@
       "bgcolor": "#533"
     },
     {
-      "id": 221,
-      "type": "OneButtonPrompt",
-      "pos": [
-        -630,
-        -548
-      ],
-      "size": {
-        "0": 315,
-        "1": 386
-      },
-      "flags": {},
-      "order": 12,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "custom_subject",
-          "type": "STRING",
-          "link": 327,
-          "widget": {
-            "name": "custom_subject"
-          }
-        },
-        {
-          "name": "custom_outfit",
-          "type": "STRING",
-          "link": 328,
-          "widget": {
-            "name": "custom_outfit"
-          }
-        }
-      ],
-      "outputs": [
-        {
-          "name": "prompt",
-          "type": "STRING",
-          "links": [
-            333,
-            334
-          ],
-          "shape": 3,
-          "slot_index": 0
-        },
-        {
-          "name": "prompt_g",
-          "type": "STRING",
-          "links": null,
-          "shape": 3
-        },
-        {
-          "name": "prompt_l",
-          "type": "STRING",
-          "links": null,
-          "shape": 3
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "OneButtonPrompt"
-      },
-      "widgets_values": [
-        5,
-        "all",
-        "all",
-        20,
-        "all",
-        "",
-        "",
-        "all",
-        "all",
-        "all",
-        "all",
-        false,
-        "SDXL",
-        1054047122686601,
-        "randomize"
-      ],
-      "color": "#2a363b",
-      "bgcolor": "#3f5159"
-    },
-    {
       "id": 4,
       "type": "CheckpointLoaderSimple",
       "pos": [
@@ -882,7 +666,7 @@
         "1": 101.19705200195312
       },
       "flags": {},
-      "order": 11,
+      "order": 8,
       "mode": 0,
       "outputs": [
         {
@@ -921,24 +705,60 @@
       "bgcolor": "#653"
     },
     {
+      "id": 199,
+      "type": "SaveImage",
+      "pos": [
+        233,
+        -743
+      ],
+      "size": {
+        "0": 565.774658203125,
+        "1": 596.3757934570312
+      },
+      "flags": {},
+      "order": 19,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 286
+        },
+        {
+          "name": "filename_prefix",
+          "type": "STRING",
+          "link": 323,
+          "widget": {
+            "name": "filename_prefix"
+          }
+        }
+      ],
+      "properties": {},
+      "widgets_values": [
+        "%date:yyyy-M-d%/ComfyUI"
+      ],
+      "color": "#222",
+      "bgcolor": "#000"
+    },
+    {
       "id": 224,
       "type": "OneButtonFlufferize",
       "pos": [
         -197,
         -542
       ],
-      "size": {
-        "0": 325.6371154785156,
-        "1": 166.23045349121094
-      },
+      "size": [
+        325.63710937500014,
+        166.2304595947266
+      ],
       "flags": {},
-      "order": 14,
+      "order": 11,
       "mode": 0,
       "inputs": [
         {
           "name": "prompt",
           "type": "STRING",
-          "link": 334,
+          "link": 337,
           "widget": {
             "name": "prompt"
           }
@@ -950,8 +770,8 @@
           "type": "STRING",
           "links": [
             335,
-            336,
-            337
+            341,
+            342
           ],
           "shape": 3,
           "slot_index": 0
@@ -964,7 +784,94 @@
         "",
         "dynamic",
         false,
-        921089971232293,
+        754567122416526,
+        "randomize"
+      ],
+      "color": "#2a363b",
+      "bgcolor": "#3f5159"
+    },
+    {
+      "id": 227,
+      "type": "PrimitiveNode",
+      "pos": [
+        -906,
+        -545
+      ],
+      "size": {
+        "0": 210,
+        "1": 75.99998474121094
+      },
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            339
+          ],
+          "slot_index": 0,
+          "widget": {
+            "name": "prompt"
+          }
+        }
+      ],
+      "title": "Base prompt",
+      "properties": {
+        "Run widget replace on values": false
+      },
+      "widgets_values": [
+        "cute norwegian forest cat"
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 226,
+      "type": "OneButtonArtify",
+      "pos": [
+        -650,
+        -547
+      ],
+      "size": [
+        400,
+        200
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "link": 339,
+          "widget": {
+            "name": "prompt"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "artified_prompt",
+          "type": "STRING",
+          "links": [
+            337,
+            340
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OneButtonArtify"
+      },
+      "widgets_values": [
+        "cute norwegian forest cat",
+        "all",
+        "1",
+        "standard",
+        513971971657364,
         "randomize"
       ],
       "color": "#2a363b",
@@ -982,13 +889,13 @@
         "1": 174
       },
       "flags": {},
-      "order": 13,
+      "order": 12,
       "mode": 0,
       "inputs": [
         {
           "name": "postive_prompt",
           "type": "STRING",
-          "link": 333,
+          "link": 340,
           "widget": {
             "name": "postive_prompt"
           }
@@ -1021,10 +928,10 @@
       "widgets_values": [
         "",
         "text, watermark\n",
-        0,
+        1,
         0,
         "SDXL",
-        209255417752634,
+        874035790461879,
         "randomize"
       ],
       "color": "#322",
@@ -1161,22 +1068,6 @@
       "STRING"
     ],
     [
-      327,
-      215,
-      0,
-      221,
-      0,
-      "STRING"
-    ],
-    [
-      328,
-      222,
-      0,
-      221,
-      1,
-      "STRING"
-    ],
-    [
       329,
       16,
       0,
@@ -1209,22 +1100,6 @@
       "STRING"
     ],
     [
-      333,
-      221,
-      0,
-      223,
-      0,
-      "STRING"
-    ],
-    [
-      334,
-      221,
-      0,
-      224,
-      0,
-      "STRING"
-    ],
-    [
       335,
       224,
       0,
@@ -1233,7 +1108,31 @@
       "STRING"
     ],
     [
-      336,
+      337,
+      226,
+      0,
+      224,
+      0,
+      "STRING"
+    ],
+    [
+      339,
+      227,
+      0,
+      226,
+      0,
+      "STRING"
+    ],
+    [
+      340,
+      226,
+      0,
+      223,
+      0,
+      "STRING"
+    ],
+    [
+      341,
       224,
       0,
       50,
@@ -1241,7 +1140,7 @@
       "STRING"
     ],
     [
-      337,
+      342,
       224,
       0,
       50,

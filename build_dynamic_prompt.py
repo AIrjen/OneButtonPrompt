@@ -16,6 +16,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
     remove_weights =  False
     less_verbose = False
+    add_vomit = True
+    add_quality = True
    
 
     # set seed
@@ -84,6 +86,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     # "Stable Cascade" -- Remove weights
     if(base_model == "Stable Cascade"):
         remove_weights = True
+        add_vomit = False
+        add_quality = False
     if(base_model == "SD1.5"):
         less_verbose = True
 
@@ -134,7 +138,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     hairvomitlist = csv_to_list("hairvomit",antilist,"./csvfiles/",0,"?",False,False)
     
     humanoidlist = csv_to_list("humanoids",antilist)
-    imagetypelist = csv_to_list(csvfilename="imagetypes",antilist=antilist, insanitylevel=insanitylevel)
+    imagetypelist = csv_to_list(csvfilename="imagetypes",antilist=antilist, insanitylevel=insanitylevel, delimiter="?")
     joblist = csv_to_list(csvfilename="jobs",antilist=antilist,skipheader=True,gender=gender)
     lenslist = csv_to_list(csvfilename="lenses",antilist=antilist, insanitylevel=insanitylevel)
     lightinglist = csv_to_list(csvfilename="lighting",antilist=antilist, insanitylevel=insanitylevel)
@@ -187,6 +191,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     charactertypelist = csv_to_list("charactertypes", antilist)
     objectstoholdlist = csv_to_list("objectstohold", antilist)
     episodetitlelist = csv_to_list(csvfilename="episodetitles",antilist=antilist,skipheader=True)
+    flufferlist = csv_to_list("fluff", antilist)
     tokenlist = []
     
     
@@ -351,6 +356,21 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     
     tokinatorlist = csv_to_list("tokinator", antilist,"./csvfiles/templates/",0,"?")
     styleslist = csv_to_list("styles", antilist,"./csvfiles/templates/",0,"?")
+    stylessuffix = [item.split('-subject-')[1] for item in styleslist]
+    breakstylessuffix = [item.split(',') for item in stylessuffix]
+    allstylessuffixlist = [value for sublist in breakstylessuffix for value in sublist]
+    allstylessuffixlist = list(set(allstylessuffixlist))
+
+    artistsuffix = artist_descriptions_csv_to_list("artists_and_category")
+    breakartiststylessuffix = [item.split(',') for item in artistsuffix]
+    artiststylessuffixlist = [value for sublist in breakartiststylessuffix for value in sublist]
+    artiststylessuffixlist = list(set(artiststylessuffixlist))
+    allstylessuffixlist += artiststylessuffixlist
+
+
+    
+    dynamictemplatesprefixlist = csv_to_list("dynamic_templates_prefix", antilist,"./csvfiles/templates/",0,"?")
+    dynamictemplatessuffixlist = csv_to_list("dynamic_templates_suffix", antilist,"./csvfiles/templates/",0,"?")
 
        
     # subjects
@@ -806,6 +826,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     onlysubjectmode = False
     stylesmode = False
     thetokinatormode = False
+    dynamictemplatesmode = False
+    artifymode = False
 
     # determine wether we should go for a template or not. Not hooked up to insanitylevel
     if(imagetype == "only templates mode"):
@@ -815,7 +837,11 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
     if(imagetype == "art blaster mode"):
         specialmode = True
-        artblastermode = True
+        if(uncommon_dist(insanitylevel)):
+            artblastermode = True
+        else:
+            onlysubjectmode = True
+            artifymode = True
         print("Running in art blaster mode")
 
     if(imagetype == "unique art mode"):
@@ -862,6 +888,17 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         print("Running with a completely random set of words")
         print("All safety and logic is turned off")
 
+    if(imagetype == "dynamic templates mode"):
+        specialmode = True
+        dynamictemplatesmode = True
+        print("Running with dynamic templates mode")
+
+    # just for testing, you can't choose this. Artify runs through Art Blaster instead.
+    if(imagetype == "artify mode"):
+        specialmode = True
+        onlysubjectmode = True
+        artifymode = True
+        print("Running with artify mode")
 
     # main stuff
     generatetype = not specialmode
@@ -887,8 +924,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     generatelighting = bool(lightinglist) and not specialmode
     generatemood = bool(moodlist) and not specialmode
     generatepose = bool(poselist) and not templatemode
-    generatevomit = bool(vomitlist) and not specialmode
-    generatequality = bool(qualitylist) and not specialmode
+    generatevomit = bool(vomitlist) and not specialmode and add_vomit
+    generatequality = bool(qualitylist) and not specialmode and add_quality
     generateshot = bool(shotsizelist) and not specialmode
     generatetimeperiod = bool(timeperiodlist) and not specialmode
     generateemoji = bool(emojilist) and not templatemode
@@ -913,8 +950,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     generateepisodetitle = bool(episodetitlelist) and not specialmode
     
     generateminilocationaddition = bool(minilocationadditionslist) and not specialmode
-    generateminivomit = bool(minivomitlist) and not specialmode
-    generateimagetypequality = bool(imagetypequalitylist) and not specialmode and generateimagetypequality
+    generateminivomit = bool(minivomitlist) and not specialmode and add_vomit
+    generateimagetypequality = bool(imagetypequalitylist) and not specialmode and generateimagetypequality 
     generateoveralladdition = bool(overalladditionlist) and not specialmode
     generateimagetype = bool(imagetypelist) and not specialmode and generateimagetype
 
@@ -1080,7 +1117,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         subjectchooser = ""
         mainchooser = ""
       
-        completeprompt += prefixprompt
+        #completeprompt += prefixprompt
 
         completeprompt += ", "
 
@@ -1312,6 +1349,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                     completeprompt += "-imagetype-, "
                 if(unique_dist(insanitylevel) and bool(colorschemelist)):
                     completeprompt += "-colorscheme-, "
+                if(uncommon_dist(insanitylevel) and bool(artistlist)):
+                    completeprompt += "-artiststyle-, "
                 step = step + 1 
 
         # start unique art here
@@ -1333,6 +1372,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                     completeprompt += "-imagetype-, "
                 if(unique_dist(insanitylevel) and bool(qualitylist)):
                     completeprompt += "-quality-, "
+                if(unique_dist(insanitylevel) and bool(artistlist)):
+                    completeprompt += "-artistdescription-, "
                 
                 step = step + 1 
 
@@ -1343,6 +1384,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             while step < end:
                 if(uncommon_dist(insanitylevel) and bool(vomitlist)):
                     completeprompt += "-vomit-, "
+                if(uncommon_dist(insanitylevel) and bool(flufferlist)):
+                    completeprompt += "-fluff-, "
                 if(uncommon_dist(insanitylevel) and bool(qualitylist)):
                     completeprompt += "-quality-, "
                 if(unique_dist(insanitylevel) and bool(minivomitlist)):
@@ -1368,6 +1411,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                     completeprompt += "-artmovement-, "
                 if(unique_dist(insanitylevel) and bool(lightinglist)):
                     completeprompt += "-lighting-, "
+                if(unique_dist(insanitylevel) and bool(allstylessuffixlist)):
+                    completeprompt += "-allstylessuffix-, "
                 step = step + 1 
 
         # start photo fantasy here
@@ -1430,13 +1475,22 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             
 
 
-         # start styles mode here
+        # start styles mode here
         if(stylesmode == True):
             chosenstyle = random.choice(styleslist)
             chosenstyleprefix = chosenstyle.split("-subject-")[0]
-            chosenstylesuffix= chosenstyle.split("-subject-")[1]
+            chosenstylesuffix = chosenstyle.split("-subject-")[1]
             completeprompt += chosenstyleprefix
 
+        if(dynamictemplatesmode == True):
+            if(artists == "none"):
+                dynamictemplatesprefixlist = [sentence for sentence in dynamictemplatesprefixlist if "-artist-" not in sentence.lower()]
+            chosenstyleprefix = random.choice(dynamictemplatesprefixlist)
+            completeprompt += chosenstyleprefix
+            if(chosenstyleprefix[-1] == "."):
+                completeprompt += " OR(Capturing a; Describing a;Portraying a;Featuring a)"
+            else:
+                completeprompt += " OR(with a;capturing a; describing a;portraying a;of a;featuring a)"
 
 
         # start artist part
@@ -2408,73 +2462,97 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 completeprompt += ", "
                 # end of the artist stuff
         if(thetokinatormode == False):
-                # Add more quality while in greg mode lol
-                if(originalartistchoice == "greg mode" and generatequality == True):
-                    completeprompt += "-quality-, "
-
-                # others
-                if(chance_roll(max(1,insanitylevel -1), directionchance) and generatedirection == True):
-                    completeprompt += "-direction-, "
-
-                if(chance_roll(insanitylevel, moodchance) and generatemood == True):
-                    completeprompt += "-mood-, " 
-
-                # add in some more mini vomits
-                if(chance_roll(insanitylevel, minivomitsuffixchance) and generateminivomit == True):
-                    completeprompt += " -minivomit-, "
-            
-                if(chance_roll(insanitylevel, artmovementchance) and generateartmovement == True):
-                    completeprompt += "-artmovement-, "  
                 
-                if(chance_roll(insanitylevel, lightingchance) and generatelighting == True):
-                    completeprompt += "-lighting-, "  
+                # todo
+                descriptivemode = False
+                # if we have artists, maybe go in artists descriptor mode
+                if(templatemode == False and specialmode == False and "-artist-" in completeprompt and common_dist(max(8 - insanitylevel,3))):
+                    for i in range(random.randint(1,3)):
+                        # print("adding artist stuff")
+                        completeprompt += ", -artistdescription-"
+                        descriptivemode = True
+                    completeprompt += ", "
 
-                # determine wether we have a photo or not
-                if("photo" in completeprompt.lower()):
-                    isphoto = 1
                     
-                if(chance_roll(insanitylevel, photoadditionchance) and isphoto == 1 and generatephotoaddition == True):
-                    completeprompt += random.choice(photoadditionlist) + ", "
-                        
-                if(isphoto == 1 and generatecamera == True):
-                    completeprompt += "-camera-, "  
 
-                if(chance_roll(insanitylevel, lenschance) or isphoto == 1):
-                    if(generatelens == True):
-                        completeprompt += "-lens-, "
+                # if not, we could go in random styles descriptor mode
+                elif(templatemode == False and specialmode == False and uncommon_dist(10 - insanitylevel)):
+                    for i in range(random.randint(1,max(7,insanitylevel + 2))):
+                        # print("adding random crap")
+                        completeprompt += ", -allstylessuffix-"
+                        descriptivemode = True
+                    completeprompt += ", "
 
-                if(chance_roll(insanitylevel, colorschemechance) and generatecolorscheme == True):
-                    completeprompt += "-colorscheme-, "
+                # and on high levels, DO EVERYTHING :D
+                if(descriptivemode == False or rare_dist(insanitylevel)):
 
-                # vomit some cool/wierd things into the prompt
-                if(chance_roll(insanitylevel, vomit1chance) and generatevomit == True):
-                    completeprompt += "-vomit-, "
-                    if(chance_roll(insanitylevel, vomit2chance)):
-                        completeprompt += "-vomit-, "
-
-                # human specfic vomit
-                if(mainchooser == "humanoid" and chance_roll(insanitylevel, humanvomitchance) and generatehumanvomit == True):
-                    completeprompt += "-humanvomit-, "
-                    if(chance_roll(insanitylevel, humanvomitchance)):
-                        completeprompt += "-humanvomit-, "
-
-                #adding a great work of art, like starry night has cool effects. But this should happen only very rarely.
-                if(chance_roll(insanitylevel, greatworkchance) and generategreatwork == True):
-                    completeprompt += " in the style of -greatwork-, "
-
-                #adding a poemline. But this should happen only very rarely.
-                if(chance_roll(insanitylevel, poemlinechance) and generatepoemline == True):
-                    completeprompt += " \"-poemline-\", "
-
-                #adding a songline. But this should happen only very rarely.
-                if(chance_roll(insanitylevel, songlinechance) and generatesongline == True):
-                    completeprompt += " \"-songline-\", "
-
-                # everyone loves the adding quality. The better models don't need this, but lets add it anyway
-                if((chance_roll(insanitylevel, quality1chance) or originalartistchoice == "greg mode") and generatequality == True):
-                    completeprompt += "-quality-, "
-                    if((chance_roll(insanitylevel, quality2chance) or originalartistchoice == "greg mode")):
+                    # Add more quality while in greg mode lol
+                    if(originalartistchoice == "greg mode" and generatequality == True):
                         completeprompt += "-quality-, "
+
+                    # others
+                    if(chance_roll(max(1,insanitylevel -1), directionchance) and generatedirection == True):
+                        completeprompt += "-direction-, "
+
+                    if(chance_roll(insanitylevel, moodchance) and generatemood == True):
+                        completeprompt += "-mood-, " 
+
+                    # add in some more mini vomits
+                    if(chance_roll(insanitylevel, minivomitsuffixchance) and generateminivomit == True):
+                        completeprompt += " -minivomit-, "
+                
+                    if(chance_roll(insanitylevel, artmovementchance) and generateartmovement == True):
+                        completeprompt += "-artmovement-, "  
+                    
+                    if(chance_roll(insanitylevel, lightingchance) and generatelighting == True):
+                        completeprompt += "-lighting-, "  
+
+                    # determine wether we have a photo or not
+                    if("photo" in completeprompt.lower()):
+                        isphoto = 1
+                        
+                    if(chance_roll(insanitylevel, photoadditionchance) and isphoto == 1 and generatephotoaddition == True):
+                        completeprompt += random.choice(photoadditionlist) + ", "
+                            
+                    if(isphoto == 1 and generatecamera == True):
+                        completeprompt += "-camera-, "  
+
+                    if(chance_roll(insanitylevel, lenschance) or isphoto == 1):
+                        if(generatelens == True):
+                            completeprompt += "-lens-, "
+
+                    if(chance_roll(insanitylevel, colorschemechance) and generatecolorscheme == True):
+                        completeprompt += "-colorscheme-, "
+
+                    # vomit some cool/wierd things into the prompt
+                    if(chance_roll(insanitylevel, vomit1chance) and generatevomit == True):
+                        completeprompt += "-vomit-, "
+                        if(chance_roll(insanitylevel, vomit2chance)):
+                            completeprompt += "-vomit-, "
+
+                    # human specfic vomit
+                    if(mainchooser == "humanoid" and chance_roll(insanitylevel, humanvomitchance) and generatehumanvomit == True):
+                        completeprompt += "-humanvomit-, "
+                        if(chance_roll(insanitylevel, humanvomitchance)):
+                            completeprompt += "-humanvomit-, "
+
+                    #adding a great work of art, like starry night has cool effects. But this should happen only very rarely.
+                    if(chance_roll(insanitylevel, greatworkchance) and generategreatwork == True):
+                        completeprompt += " in the style of -greatwork-, "
+
+                    #adding a poemline. But this should happen only very rarely.
+                    if(chance_roll(insanitylevel, poemlinechance) and generatepoemline == True):
+                        completeprompt += " \"-poemline-\", "
+
+                    #adding a songline. But this should happen only very rarely.
+                    if(chance_roll(insanitylevel, songlinechance) and generatesongline == True):
+                        completeprompt += " \"-songline-\", "
+
+                    # everyone loves the adding quality. The better models don't need this, but lets add it anyway
+                    if((chance_roll(insanitylevel, quality1chance) or originalartistchoice == "greg mode") and generatequality == True):
+                        completeprompt += "-quality-, "
+                        if((chance_roll(insanitylevel, quality2chance) or originalartistchoice == "greg mode")):
+                            completeprompt += "-quality-, "
 
         
         
@@ -2609,6 +2687,60 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         # start styles mode here
         if(stylesmode == True):
             completeprompt += chosenstylesuffix
+        
+        templatesmodechance = 0
+        if(uncommon_dist(insanitylevel)):
+           templatesmodechance = 1
+
+        if(dynamictemplatesmode == True and templatesmodechance == 1):
+            for i in range(random.randint(1,max(2,insanitylevel))):
+                completeprompt += ", -allstylessuffix-"
+            
+
+       
+        if(dynamictemplatesmode == True and common_dist(insanitylevel) and templatesmodechance == 0):
+            if("-artist-" in completeprompt or artists == "none"):
+                dynamictemplatessuffixlist = [sentence for sentence in dynamictemplatessuffixlist if "-artist-" not in sentence.lower()]
+                dynamictemplatessuffixlist = [sentence for sentence in dynamictemplatessuffixlist if "-artiststyle-" not in sentence.lower()]
+                dynamictemplatessuffixlist = [sentence for sentence in dynamictemplatessuffixlist if "-artistdescription-" not in sentence.lower()]
+            if("-lighting-" in completeprompt):
+                dynamictemplatessuffixlist = [sentence for sentence in dynamictemplatessuffixlist if "-lighting-" not in sentence.lower()]
+            if("-shotsize-" in completeprompt):
+                dynamictemplatessuffixlist = [sentence for sentence in dynamictemplatessuffixlist if "-shotsize-" not in sentence.lower()]
+            if("-artmovement-" in completeprompt):
+                dynamictemplatessuffixlist = [sentence for sentence in dynamictemplatessuffixlist if "-artmovement-" not in sentence.lower()]
+            if("-imagetype-" in completeprompt or "-othertype-" in completeprompt ):
+                dynamictemplatessuffixlist = [sentence for sentence in dynamictemplatessuffixlist if "-imagetype-" not in sentence.lower()]
+                dynamictemplatessuffixlist = [sentence for sentence in dynamictemplatessuffixlist if "-othertype-" not in sentence.lower()]
+            if("-colorcombination-" in completeprompt or "-colorscheme" in completeprompt ):
+                dynamictemplatessuffixlist = [sentence for sentence in dynamictemplatessuffixlist if "-colorcombination-" not in sentence.lower()]
+                dynamictemplatessuffixlist = [sentence for sentence in dynamictemplatessuffixlist if "-colorscheme-" not in sentence.lower()]
+            if("-mood-" in completeprompt or "-humanexpression" in completeprompt ):
+                dynamictemplatessuffixlist = [sentence for sentence in dynamictemplatessuffixlist if "-mood-" not in sentence.lower()]
+                dynamictemplatessuffixlist = [sentence for sentence in dynamictemplatessuffixlist if "-humanexpression-" not in sentence.lower()]
+            chosenstylesuffix = random.choice(dynamictemplatessuffixlist)
+            completeprompt += ". " + chosenstylesuffix
+
+            if(normal_dist(insanitylevel)):
+                if("-artist-" in completeprompt):
+                    dynamictemplatessuffixlist = [sentence for sentence in dynamictemplatessuffixlist if "-artist-" not in sentence.lower()]
+                if("-lighting-" in completeprompt):
+                    dynamictemplatessuffixlist = [sentence for sentence in dynamictemplatessuffixlist if "-lighting-" not in sentence.lower()]
+                if("-shotsize-" in completeprompt):
+                    dynamictemplatessuffixlist = [sentence for sentence in dynamictemplatessuffixlist if "-shotsize-" not in sentence.lower()]
+                if("-artmovement-" in completeprompt):
+                    dynamictemplatessuffixlist = [sentence for sentence in dynamictemplatessuffixlist if "-artmovement-" not in sentence.lower()]
+                if("-imagetype-" in completeprompt or "-othertype-" in completeprompt ):
+                    dynamictemplatessuffixlist = [sentence for sentence in dynamictemplatessuffixlist if "-imagetype-" not in sentence.lower()]
+                    dynamictemplatessuffixlist = [sentence for sentence in dynamictemplatessuffixlist if "-othertype-" not in sentence.lower()]
+                if("-colorcombination-" in completeprompt or "-colorscheme" in completeprompt ):
+                    dynamictemplatessuffixlist = [sentence for sentence in dynamictemplatessuffixlist if "-colorcombination-" not in sentence.lower()]
+                    dynamictemplatessuffixlist = [sentence for sentence in dynamictemplatessuffixlist if "-colorscheme-" not in sentence.lower()]
+                if("-mood-" in completeprompt or "-humanexpression" in completeprompt ):
+                    dynamictemplatessuffixlist = [sentence for sentence in dynamictemplatessuffixlist if "-mood-" not in sentence.lower()]
+                    dynamictemplatessuffixlist = [sentence for sentence in dynamictemplatessuffixlist if "-humanexpression-" not in sentence.lower()]
+                chosenstylesuffix = random.choice(dynamictemplatessuffixlist)
+                completeprompt += " " + chosenstylesuffix
 
         
         # custom style list
@@ -2746,10 +2878,20 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
             completeprompt += ", " + chosenstylesuffixcomplete
             
-
+        if(artifymode == True):
+            amountofartists = "random"
+            if(unique_dist(insanitylevel)):
+               mode = "super remix turbo"
+            elif(legendary_dist(insanitylevel)):
+                 mode = "remix"
+            else:
+                mode = "standard"
+            completeprompt = artify_prompt(insanitylevel=insanitylevel,prompt=completeprompt, artists=artists, amountofartists=amountofartists, mode=mode, seed=seed)
         
         completeprompt += " -tempnewwords- "
         completeprompt += ", "
+
+        completeprompt = prefixprompt + ", " + completeprompt
         completeprompt += suffixprompt
 
         # and then up the compounding stuff
@@ -2773,7 +2915,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
 
     # In front and the back?
-    completeprompt = parse_custom_functions(completeprompt, insanitylevel)
+    if(dynamictemplatesmode == False):
+        completeprompt = parse_custom_functions(completeprompt, insanitylevel)
     
     # Sometimes change he/she to the actual subject
     # Doesnt work if someone puts in a manual subject
@@ -3038,11 +3181,13 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     "-charactertype-" in completeprompt or
     "-objectstohold-" in completeprompt or
     "-episodetitle-" in completeprompt or
-    "-token-" in completeprompt):
+    "-token-" in completeprompt or
+    "-allstylessuffix-" in completeprompt or
+    "-fluff-" in completeprompt):
         allwildcardslistnohybrid = [ "-color-","-object-", "-animal-", "-fictional-","-nonfictional-","-building-","-vehicle-","-location-","-conceptprefix-","-food-","-haircolor-","-hairstyle-","-job-", "-accessory-", "-humanoid-", "-manwoman-", "-human-", "-colorscheme-", "-mood-", "-genderdescription-", "-artmovement-", "-malefemale-", "-bodytype-", "-minilocation-", "-minilocationaddition-", "-pose-", "-season-", "-minioutfit-", "-elaborateoutfit-", "-minivomit-", "-vomit-", "-rpgclass-", "-subjectfromfile-","-subjectfromfile-", "-brand-", "-space-", "-artist-", "-imagetype-", "-othertype-", "-quality-", "-lighting-", "-camera-", "-lens-","-imagetypequality-", "-poemline-", "-songline-", "-greatwork-", "-fantasyartist-", "-popularartist-", "-romanticismartist-", "-photographyartist-", "-emoji-", "-timeperiod-", "-shotsize-", "-musicgenre-", "-animaladdition-", "-addontolocationinside-", "-addontolocation-", "-objectaddition-", "-humanaddition-", "-overalladdition-", "-focus-", "-direction-", "-styletilora-", "-manwomanrelation-", "-waterlocation-", "-container-", "-firstname-", "-flora-", "-print-", "-miniactivity-", "-pattern-", "-animalsuffixaddition-", "-chair-", "-cardname-", "-covering-", "-heshe-", "-hisher-", "-himher-", "-outfitdescriptor-", "-hairdescriptor-", "-hairvomit-", "-humandescriptor-", "-manwomanmultiple-", "-facepart-", "-buildfacepart-", "-outfitvomit-", "-locationdescriptor-", "-basicbitchdescriptor-", "-animaldescriptor-", "-humanexpression-", "-humanvomit-", "-eyecolor-", "-fashiondesigner-", "-colorcombination-", "-materialcombination-", "-oppositefictional-", "-oppositenonfictional-", "-photoaddition-", "-age-", "-agecalculator-", "-gregmode-"
-                                    ,"-portraitartist-", "-characterartist-" , "-landscapeartist-", "-scifiartist-", "-graphicdesignartist-", "-digitalartist-", "-architectartist-", "-cinemaartist-", "-setting-", "-charactertype-", "-objectstohold-", "-episodetitle-", "-token-"]
+                                    ,"-portraitartist-", "-characterartist-" , "-landscapeartist-", "-scifiartist-", "-graphicdesignartist-", "-digitalartist-", "-architectartist-", "-cinemaartist-", "-setting-", "-charactertype-", "-objectstohold-", "-episodetitle-", "-token-", "-allstylessuffix-", "-fluff-"]
         allwildcardslistnohybridlists = [colorlist, objectlist, animallist, fictionallist, nonfictionallist, buildinglist, vehiclelist, locationlist,conceptprefixlist,foodlist,haircolorlist, hairstylelist,joblist, accessorielist, humanoidlist, manwomanlist, humanlist, colorschemelist, moodlist, genderdescriptionlist, artmovementlist, malefemalelist, bodytypelist, minilocationlist, minilocationadditionslist, poselist, seasonlist, minioutfitlist, elaborateoutfitlist, minivomitlist, vomitlist, rpgclasslist, customsubjectslist, customoutfitslist, brandlist, spacelist, artistlist, imagetypelist, othertypelist, qualitylist, lightinglist, cameralist, lenslist, imagetypequalitylist, poemlinelist, songlinelist, greatworklist, fantasyartistlist, popularartistlist, romanticismartistlist, photographyartistlist, emojilist, timeperiodlist, shotsizelist, musicgenrelist, animaladditionlist, addontolocationinsidelist, addontolocationlist, objectadditionslist, humanadditionlist, overalladditionlist, focuslist, directionlist, stylestiloralist, manwomanrelationlist, waterlocationlist, containerlist, firstnamelist, floralist, printlist, miniactivitylist, patternlist, animalsuffixadditionlist, chairlist, cardnamelist, coveringlist, heshelist, hisherlist, himherlist, outfitdescriptorlist, hairdescriptorlist, hairvomitlist, humandescriptorlist, manwomanmultiplelist, facepartlist, buildfacepartlist, outfitvomitlist, locationdescriptorlist, basicbitchdescriptorlist, animaldescriptorlist, humanexpressionlist, humanvomitlist, eyecolorlist, fashiondesignerlist, colorcombinationlist, materialcombinationlist, oppositefictionallist, oppositenonfictionallist, photoadditionlist, agelist, agecalculatorlist, gregmodelist
-                                         , portraitartistlist, characterartistlist, landscapeartistlist, scifiartistlist, graphicdesignartistlist, digitalartistlist, architectartistlist, cinemaartistlist, settinglist, charactertypelist, objectstoholdlist, episodetitlelist, tokenlist]
+                                         , portraitartistlist, characterartistlist, landscapeartistlist, scifiartistlist, graphicdesignartistlist, digitalartistlist, architectartistlist, cinemaartistlist, settinglist, charactertypelist, objectstoholdlist, episodetitlelist, tokenlist, allstylessuffixlist, flufferlist]
         
         allwildcardslistwithhybrid = ["-material-", "-descriptor-", "-outfit-", "-conceptsuffix-","-culture-", "-objecttotal-", "-outfitprinttotal-", "-element-"]
         allwildcardslistwithhybridlists = [materiallist, descriptorlist,outfitlist,conceptsuffixlist,culturelist, objecttotallist, outfitprinttotallist, elementlist]
@@ -3243,6 +3388,7 @@ def createpromptvariant(prompt = "", insanitylevel = 5, antivalues = "" , gender
     charactertypelist = csv_to_list("charactertypes", antilist)
     objectstoholdlist = csv_to_list("objectstohold", antilist)
     episodetitlelist = csv_to_list(csvfilename="episodetitles",antilist=antilist,skipheader=True)
+    flufferlist = csv_to_list("fluff", antilist)
 
     outfitdescriptorlist = csv_to_list("outfitdescriptors",antilist)
     hairdescriptorlist = csv_to_list("hairdescriptors",antilist)
@@ -3254,6 +3400,12 @@ def createpromptvariant(prompt = "", insanitylevel = 5, antivalues = "" , gender
     humanlist = fictionallist + nonfictionallist + humanoidlist + malefemalelist + manwomanlist + manwomanrelationlist + manwomanmultiplelist
     objecttotallist = objectlist + buildinglist + vehiclelist + foodlist + spacelist + floralist + containerlist
     outfitprinttotallist = objecttotallist + locationlist + colorlist + musicgenrelist + seasonlist + animallist + patternlist
+
+    styleslist = csv_to_list("styles", antilist,"./csvfiles/templates/",0,"?")
+    stylessuffix = [item.split('-subject-')[1] for item in styleslist]
+    breakstylessuffix = [item.split(',') for item in stylessuffix]
+    allstylessuffixlist = [value for sublist in breakstylessuffix for value in sublist]
+    allstylessuffixlist = list(set(allstylessuffixlist))
 
     # build artists list
     if artists == "wild":
@@ -3479,6 +3631,9 @@ def createpromptvariant(prompt = "", insanitylevel = 5, antivalues = "" , gender
                     prompt = prompt.replace(combination," -objectstohold- ")
                 if lowercase_combination in [x.lower() for x in episodetitlelist] and chance_roll(insanitylevel, "uncommon"):
                     prompt = prompt.replace(combination," -episodetitle- ")
+                
+                if lowercase_combination in [x.lower() for x in flufferlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -fluff- ")
 
                 
                 #if lowercase_combination in [x.lower() for x in conceptprefixlist] and chance_roll(insanitylevel, "uncommon"):
@@ -3647,6 +3802,9 @@ def createpromptvariant(prompt = "", insanitylevel = 5, antivalues = "" , gender
                 if lowercase_combination in [x.lower() for x in waterlocationlist] and chance_roll(insanitylevel, "uncommon"):
                     prompt = prompt.replace(combination," -waterlocation- ")
 
+                if lowercase_combination in [x.lower() for x in allstylessuffixlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -allstylessuffix- ")
+
             runs += 1
     
     # If nothing changed...  Lets do at least something
@@ -3784,12 +3942,14 @@ def createpromptvariant(prompt = "", insanitylevel = 5, antivalues = "" , gender
         "-setting-" in completeprompt or
         "-charactertype-" in completeprompt or
         "-objectstohold-" in completeprompt or
-        "-episodetitle-" in completeprompt
+        "-episodetitle-" in completeprompt or
+        "-allstylessuffix-" in completeprompt or
+        "-fluff-" in completeprompt
         ):
             allwildcardslistnohybrid = [ "-color-","-object-", "-animal-", "-fictional-","-nonfictional-","-building-","-vehicle-","-location-","-conceptprefix-","-food-","-haircolor-","-hairstyle-","-job-", "-accessory-", "-humanoid-", "-manwoman-", "-human-", "-colorscheme-", "-mood-", "-genderdescription-", "-artmovement-", "-malefemale-", "-bodytype-", "-minilocation-", "-minilocationaddition-", "-pose-", "-season-", "-minioutfit-", "-elaborateoutfit-", "-minivomit-", "-vomit-", "-rpgclass-", "-subjectfromfile-", "-subjectfromfile-", "-brand-", "-space-", "-artist-", "-imagetype-", "-othertype-", "-quality-", "-lighting-", "-camera-", "-lens-","-imagetypequality-", "-poemline-", "-songline-", "-greatwork-", "-fantasyartist-", "-popularartist-", "-romanticismartist-", "-photographyartist-", "-emoji-", "-timeperiod-", "-shotsize-", "-musicgenre-", "-animaladdition-", "-objectaddition-", "-humanaddition-", "-overalladdition-", "-focus-", "-direction-", "-styletilora-", "-manwomanrelation-", "-waterlocation-", "-container-", "-firstname-", "-flora-", "-print-", "-miniactivity-", "-pattern-", "-chair-", "-cardname-", "-covering-", "-outfitdescriptor-", "-hairdescriptor-", "-hairvomit-", "-humandescriptor-", "-manwomanmultiple-", "-facepart-", "-locationdescriptor-", "-basicbitchdescriptor-", "-animaldescriptor-", "-humanexpression-", "-humanvomit-", "-eyecolor-", "-fashiondesigner-", "-colorcombination-", "-materialcombination-", "-photoaddition-", "-age-", "agecalculator-", "-gregmode-"
-                                        ,"-portraitartist-", "-characterartist-" , "-landscapeartist-", "-scifiartist-", "-graphicdesignartist-", "-digitalartist-", "-architectartist-", "-cinemaartist-", "-setting-", "-charactertype-", "-objectstohold-", "-episodetitle-"]
+                                        ,"-portraitartist-", "-characterartist-" , "-landscapeartist-", "-scifiartist-", "-graphicdesignartist-", "-digitalartist-", "-architectartist-", "-cinemaartist-", "-setting-", "-charactertype-", "-objectstohold-", "-episodetitle-", "-allstylessuffix-", "-fluff-"]
             allwildcardslistnohybridlists = [colorlist, objectlist, animallist, fictionallist, nonfictionallist, buildinglist, vehiclelist, locationlist,conceptprefixlist,foodlist,haircolorlist, hairstylelist,joblist, accessorielist, humanoidlist, manwomanlist, humanlist, colorschemelist, moodlist, genderdescriptionlist, artmovementlist, malefemalelist, bodytypelist, minilocationlist, minilocationadditionslist, poselist, seasonlist, minioutfitlist, elaborateoutfitlist, minivomitlist, vomitlist, rpgclasslist, customsubjectslist, customoutfitslist, brandlist, spacelist, artistlist, imagetypelist, othertypelist, qualitylist, lightinglist, cameralist, lenslist, imagetypequalitylist, poemlinelist, songlinelist, greatworklist, fantasyartistlist, popularartistlist, romanticismartistlist, photographyartistlist, emojilist, timeperiodlist, shotsizelist, musicgenrelist, animaladditionlist, objectadditionslist, humanadditionlist, overalladditionlist, focuslist, directionlist, stylestiloralist, manwomanrelationlist, waterlocationlist, containerlist, firstnamelist, floralist, printlist, miniactivitylist, patternlist, chairlist, cardnamelist, coveringlist, outfitdescriptorlist, hairdescriptorlist, hairvomitlist, humandescriptorlist, manwomanmultiplelist, facepartlist, locationdescriptorlist, basicbitchdescriptorlist, animaldescriptorlist, humanexpressionlist, humanvomitlist, eyecolorlist, fashiondesignerlist, colorcombinationlist, materialcombinationlist, photoadditionlist, agelist, agecalculatorlist, gregmodelist
-                                             , portraitartistlist, characterartistlist, landscapeartistlist, scifiartistlist, graphicdesignartistlist, digitalartistlist, architectartistlist, cinemaartistlist, settinglist, charactertypelist, objectstoholdlist, episodetitlelist]
+                                             , portraitartistlist, characterartistlist, landscapeartistlist, scifiartistlist, graphicdesignartistlist, digitalartistlist, architectartistlist, cinemaartistlist, settinglist, charactertypelist, objectstoholdlist, episodetitlelist, allstylessuffixlist, flufferlist]
             
             allwildcardslistwithhybrid = ["-material-", "-descriptor-", "-outfit-", "-conceptsuffix-","-culture-", "-objecttotal-", "-outfitprinttotal-", "-element-"]
             allwildcardslistwithhybridlists = [materiallist, descriptorlist,outfitlist,conceptsuffixlist,culturelist, objecttotallist, outfitprinttotallist, elementlist]
@@ -3856,11 +4016,14 @@ def replacewildcard(completeprompt, insanitylevel, wildcard,listname, activatehy
                 replacementvalue = ""
 
             # override for artist and artiststyle, only for first artist
-            if(wildcard == "-artist-" and "-artiststyle-" in completeprompt):
+            if(wildcard == "-artist-" and ("-artiststyle-" in completeprompt or "-artistmedium-" in completeprompt or "-artistdescription-" in completeprompt)):
                 artiststyles = []
                 artiststyle = []
                 chosenartiststyle = ""
-                artiststyles = artist_category_by_category_csv_to_list("artists_and_category",replacementvalue)
+                artistscomplete = artist_category_by_category_csv_to_list("artists_and_category",replacementvalue)
+                artiststyles = artistscomplete[0]
+                artistmediums = artistscomplete[1]
+                artistdescriptions = artistscomplete[2]
                 artiststyle = [x.strip() for x in artiststyles[0].split(",")]
 
                 artiststyle = list(filter(lambda x: len(x) > 0, artiststyle)) # remove empty values
@@ -3874,6 +4037,19 @@ def replacewildcard(completeprompt, insanitylevel, wildcard,listname, activatehy
 
                 # keep on looping until we have no more wildcards or no more styles to choose from
                 # leftovers will be removed in the cleaning step
+                while bool(artiststyle) and "-artiststyle-" in completeprompt:
+                
+                    chosenartiststyle = random.choice(artiststyle)
+                    completeprompt = completeprompt.replace("-artiststyle-",chosenartiststyle ,1)
+                    artiststyle.remove(chosenartiststyle)
+
+                if("-artistmedium-" in completeprompt):
+                    if(artistmediums[0].lower() not in completeprompt.lower()):
+                        completeprompt = completeprompt.replace("-artistmedium-",artistmediums[0] ,1)
+
+                if("-artistdescription-" in completeprompt):
+                    completeprompt = completeprompt.replace("-artistdescription-",artistdescriptions[0] ,1)
+                
                 while bool(artiststyle) and "-artiststyle-" in completeprompt:
                 
                     chosenartiststyle = random.choice(artiststyle)
@@ -4110,6 +4286,152 @@ def enhance_positive(positive_prompt = "", amountofwords = 3):
 
     return addwords
 
+def artify_prompt(insanitylevel = 5, prompt = "", artists = "all", amountofartists = "1", mode="standard", seed = -1):
+    if(amountofartists=="random"):
+        intamountofartists = random.randint(1,int((insanitylevel/3) + 1.20))
+    else:    
+        intamountofartists = int(amountofartists)
+
+
+    # set seed
+    # For use in ComfyUI (might bring to Automatic1111 as well)
+    # lets do it when its larger than 0
+    # Otherwise, just do nothing and it will keep on working based on an earlier set seed
+    if(seed > 0):
+        random.seed(seed)
+
+
+    # first build up a complete anti list. Those values are removing during list building
+    # this uses the antivalues string AND the antilist.csv
+    emptylist = []
+    antilist = csv_to_list("antilist",emptylist , "./userfiles/",1)
+    
+    # clean up antivalue list:
+    antilist = [s.strip().lower() for s in antilist]
+
+     # build artists list
+    if artists == "wild":
+        artists = "all (wild)"
+
+    # we want to create more cohorence, so we are adding all (wild) mode for the old logic
+    
+    artisttypes = ["popular", "3D",	"abstract",	"angular", "anime"	,"architecture",	"art nouveau",	"art deco",	"baroque",	"bauhaus", 	"cartoon",	"character",	"children's illustration", 	"cityscape", "cinema",	"clean",	"cloudscape",	"collage",	"colorful",	"comics",	"cubism",	"dark",	"detailed", 	"digital",	"expressionism",	"fantasy",	"fashion",	"fauvism",	"figurativism",	"graffiti",	"graphic design",	"high contrast",	"horror",	"impressionism",	"installation",	"landscape",	"light",	"line drawing",	"low contrast",	"luminism",	"magical realism",	"manga",	"melanin",	"messy",	"monochromatic",	"nature",	"photography",	"pop art",	"portrait",	"primitivism",	"psychedelic",	"realism",	"renaissance",	"romanticism",	"scene",	"sci-fi",	"sculpture",	"seascape",	"space",	"stained glass",	"still life",	"storybook realism",	"street art",	"streetscape",	"surrealism",	"symbolism",	"textile",	"ukiyo-e",	"vibrant",	"watercolor",	"whimsical"]
+    artiststyleselector = ""
+    artiststyleselectormode = "normal"
+    artiststyleselector = random.choice(artisttypes)
+
+    artistlist = []
+    # create artist list to use in the code, maybe based on category  or personal lists
+    if(artists != "all (wild)" and artists != "all" and artists != "none" and artists.startswith("personal_artists") == False and artists.startswith("personal artists") == False and artists in artisttypes):
+        artistlist = artist_category_csv_to_list("artists_and_category",artists)
+    elif(artists.startswith("personal_artists") == True or artists.startswith("personal artists") == True):
+        artists = artists.replace(" ","_",-1) # add underscores back in
+        artistlist = csv_to_list(artists,antilist,"./userfiles/")
+    elif(artists != "none"):
+        artistlist = csv_to_list("artists",antilist)
+    
+
+    # load up the styles list for the other modes
+    styleslist = csv_to_list("styles", antilist,"./csvfiles/templates/",0,"?")
+    stylessuffix = [item.split('-subject-')[1] for item in styleslist]
+    breakstylessuffix = [item.split(',') for item in stylessuffix]
+    allstylessuffixlist = [value for sublist in breakstylessuffix for value in sublist]
+    allstylessuffixlist = list(set(allstylessuffixlist))
+
+    artistsuffix = artist_descriptions_csv_to_list("artists_and_category")
+    breakartiststylessuffix = [item.split(',') for item in artistsuffix]
+    artiststylessuffixlist = [value for sublist in breakartiststylessuffix for value in sublist]
+    artiststylessuffixlist = list(set(artiststylessuffixlist))
+    allstylessuffixlist += artiststylessuffixlist
+
+    completeprompt = ""
+    if(common_dist(insanitylevel)):
+        completeprompt += "-artiststyle- "
+    completeprompt += "art by "
+    #Lets go effing artify this MF'er
+        
+    for i in range(0,intamountofartists):
+        if(intamountofartists > 1 and i == intamountofartists - 2):
+            completeprompt += "-artist- and "
+        else:
+            completeprompt += "-artist-, "
+    
+    if(uncommon_dist(insanitylevel)):
+        completeprompt += "-artistmedium-, " 
+            
+    # now add the prompt in
+    completeprompt += prompt
+
+    if(mode.lower() == "remix"):
+        for i in range(0,intamountofartists):
+            completeprompt += ", " + artistsuffix.pop(artistsuffix.index(random.choice(artistsuffix)))
+
+    elif(mode.lower() == "super remix turbo"):
+        for i in range(0,intamountofartists*4):
+            completeprompt += ", " + allstylessuffixlist.pop(allstylessuffixlist.index(random.choice(allstylessuffixlist)))
+
+    else:
+        # else just go standard
+        for i in range(0,intamountofartists):
+            completeprompt += ", -artistdescription-"
+    
+    
+    
+    
+    while ("-artist-" in completeprompt):
+
+        completeprompt = replacewildcard(completeprompt,5,"-artist-", artistlist,"","",artiststyleselector)
+
+
+    return completeprompt
+
+
+def flufferizer(prompt = "", amountoffluff = "dynamic", seed = -1, reverse_polarity = False):
+    if(amountoffluff == "none"):
+        return prompt
+    
+    # set seed
+    # For use in ComfyUI (might bring to Automatic1111 as well)
+    # lets do it when its larger than 0
+    # Otherwise, just do nothing and it will keep on working based on an earlier set seed
+    if(seed > 0):
+        random.seed(seed)
+    
+    if(reverse_polarity):
+        flufferlist = csv_to_list("antifluff") # all negative words
+    else:
+        flufferlist = csv_to_list("fluff")
+
+    # dynamic = based on prompt length + insanitylevel
+    minfluff = 4
+    maxfluff = 6
+    # short = 4-6
+    # medium = 5-8
+    # long = 8-12
+    if(amountoffluff == "dynamic"):
+        
+        if(len(prompt) < 150):
+            amountoffluff = "long"
+        elif(len(prompt) < 250):
+            amountoffluff = "medium"
+        else:
+            amountoffluff = "short"
+
+    if(amountoffluff == "long"):
+        minfluff = 8
+        maxfluff = 12
+    if(amountoffluff == "medium"):
+        minfluff = 5
+        maxfluff = 8
+    
+    for i in range(0,random.randint(minfluff, maxfluff)):
+        prompt += ", " + flufferlist.pop(flufferlist.index(random.choice(flufferlist)))
+    
+    return prompt
+
+
+    
+
 def replace_match(match):
     # Extract the first word from the match
     words = match.group(0)[1:-1].split('|')
@@ -4173,6 +4495,8 @@ def cleanup(completeprompt, advancedprompting, insanitylevel = 5):
     completeprompt = re.sub(' ,', ',', completeprompt)
     completeprompt = re.sub(',\(', ', (', completeprompt)
 
+
+
     while "  " in completeprompt:
         completeprompt = re.sub('  ', ' ', completeprompt)
     completeprompt = re.sub('a The', 'The', completeprompt)
@@ -4194,10 +4518,18 @@ def cleanup(completeprompt, advancedprompting, insanitylevel = 5):
 
 
     completeprompt = re.sub('art art', 'art', completeprompt)
+    completeprompt = re.sub('Art art', 'art', completeprompt)
+    completeprompt = re.sub('lighting lighting', 'lighting', completeprompt)
+    completeprompt = re.sub('Lighting lighting', 'lighting', completeprompt)
+    completeprompt = re.sub('light lighting', 'light', completeprompt)
     completeprompt = re.sub('-artiststyle- art,', '', completeprompt)
     completeprompt = re.sub('-artiststyle- art', '', completeprompt)
     completeprompt = re.sub('-artiststyle-', '', completeprompt)
+    completeprompt = re.sub('-artistmedium-', '', completeprompt)
+    completeprompt = re.sub('-artistdescription-', '', completeprompt)
     completeprompt = re.sub('- art ', '', completeprompt)
+
+    completeprompt = re.sub('shot shot', 'shot', completeprompt)
     
 
     completeprompt = re.sub('a his', 'his', completeprompt)
@@ -4242,6 +4574,12 @@ def cleanup(completeprompt, advancedprompting, insanitylevel = 5):
 
     # Move the extracted LoRA's to the end of completeprompt
     #completeprompt += " " + " ".join(allLoRA)   
+
+    completeprompt = completeprompt.replace(' . ', '. ')
+    completeprompt = completeprompt.replace(', . ', '. ')
+    completeprompt = completeprompt.replace(',. ', '. ')
+    completeprompt = completeprompt.replace('., ', '. ')
+    completeprompt = completeprompt.replace('. . ', '. ')
 
     completeprompt = completeprompt.strip(", ")
 

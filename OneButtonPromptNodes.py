@@ -18,7 +18,8 @@ OBPresets = OneButtonPresets()
 allpresets = [OBPresets.RANDOM_PRESET_OBP] + list(OBPresets.opb_presets.keys())
 
 artists = ["all", "all (wild)", "none", "popular", "greg mode", "3D",	"abstract",	"angular", "anime"	,"architecture",	"art nouveau",	"art deco",	"baroque",	"bauhaus", 	"cartoon",	"character",	"children's illustration", 	"cityscape", "cinema", 	"clean",	"cloudscape",	"collage",	"colorful",	"comics",	"cubism",	"dark",	"detailed", 	"digital",	"expressionism",	"fantasy",	"fashion",	"fauvism",	"figurativism",	"gore",	"graffiti",	"graphic design",	"high contrast",	"horror",	"impressionism",	"installation",	"landscape",	"light",	"line drawing",	"low contrast",	"luminism",	"magical realism",	"manga",	"melanin",	"messy",	"monochromatic",	"nature",	"nudity",	"photography",	"pop art",	"portrait",	"primitivism",	"psychedelic",	"realism",	"renaissance",	"romanticism",	"scene",	"sci-fi",	"sculpture",	"seascape",	"space",	"stained glass",	"still life",	"storybook realism",	"street art",	"streetscape",	"surrealism",	"symbolism",	"textile",	"ukiyo-e",	"vibrant",	"watercolor",	"whimsical"]
-imagetypes = ["all", "all - force multiple",  "photograph", "octane render","digital art","concept art", "painting", "portrait", "anime key visual", "only other types", "only templates mode", "art blaster mode", "quality vomit mode", "color cannon mode", "unique art mode", "massive madness mode", "photo fantasy mode", "subject only mode", "fixed styles mode", "the tokinator"]
+artifyartists = ["all", "all (wild)", "popular", "greg mode", "3D",	"abstract",	"angular", "anime"	,"architecture",	"art nouveau",	"art deco",	"baroque",	"bauhaus", 	"cartoon",	"character",	"children's illustration", 	"cityscape", "cinema", 	"clean",	"cloudscape",	"collage",	"colorful",	"comics",	"cubism",	"dark",	"detailed", 	"digital",	"expressionism",	"fantasy",	"fashion",	"fauvism",	"figurativism",	"gore",	"graffiti",	"graphic design",	"high contrast",	"horror",	"impressionism",	"installation",	"landscape",	"light",	"line drawing",	"low contrast",	"luminism",	"magical realism",	"manga",	"melanin",	"messy",	"monochromatic",	"nature",	"nudity",	"photography",	"pop art",	"portrait",	"primitivism",	"psychedelic",	"realism",	"renaissance",	"romanticism",	"scene",	"sci-fi",	"sculpture",	"seascape",	"space",	"stained glass",	"still life",	"storybook realism",	"street art",	"streetscape",	"surrealism",	"symbolism",	"textile",	"ukiyo-e",	"vibrant",	"watercolor",	"whimsical"]
+imagetypes = ["all", "all - force multiple",  "photograph", "octane render","digital art","concept art", "painting", "portrait", "anime key visual", "only other types", "only templates mode", "dynamic templates mode", "art blaster mode", "quality vomit mode", "color cannon mode", "unique art mode", "massive madness mode", "photo fantasy mode", "subject only mode", "fixed styles mode", "the tokinator"]
 subjects =["all", "object", "animal", "humanoid", "landscape", "concept"]
 genders = ["all", "male", "female"]
 emojis = [False, True]
@@ -31,6 +32,12 @@ subjectsubtypesconcept = ["all"]
 #subjectsubtypesobject = ["all", "generic objects", "vehicles", "food", "buildings", "space", "flora"]
 #subjectsubtypeshumanoid = ["all", "generic humans", "generic human relations", "celebrities e.a.", "fictional characters", "humanoids", "based on job or title", "based on first name"]
 #subjectsubtypesconcept = ["all", "event", "the X of Y concepts", "lines from poems", "lines from songs"]
+
+amountofflufflist = ["none", "dynamic", "short", "medium", "long"]
+fluff_reverse_polarity = [False,True]
+
+artifymodeslist = ["standard", "remix", "super remix turbo"]
+artifyamountofartistslist = ["random", "0", "1", "2", "3", "4", "5"]
 
 
 # Load up stuff for personal artists list, if any
@@ -570,15 +577,91 @@ class AutoNegativePrompt:
         print("Generated negative prompt: " + generatedprompt)
         
         return (generatedprompt,)
+    
+class OneButtonArtify:
+
+    def __init__(self):
+        pass
+    
+    @classmethod
+    def INPUT_TYPES(s):
+               
+        return {
+            "required": {
+                "prompt": ("STRING", {"default": '', "multiline": True}),
+                "artist": (artifyartists, {"default": "all"}),
+                "amount_of_artists": (artifyamountofartistslist, {"default": "1"}),
+                "artify_mode": (artifymodeslist, {"default": "standard"})
+            },
+            "optional": {                
+                "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF}),
+            },
+        }
+
+    RETURN_TYPES = ("STRING",)
+    RETURN_NAMES = ("artified_prompt",)
+
+    FUNCTION = "Comfy_OBP_Artify"
+
+    #OUTPUT_NODE = False
+
+    CATEGORY = "OneButtonPrompt"
+    
+    def Comfy_OBP_Artify(self, prompt, artist, amount_of_artists,artify_mode, seed):
+        # artify here
+        artified_prompt = artify_prompt(prompt=prompt, artists=artist, amountofartists=amount_of_artists, mode=artify_mode, seed=seed)
+        
+        print("Artified prompt: " + artified_prompt)
+        
+        return (artified_prompt,)
+
+class OneButtonFlufferize:
+
+    def __init__(self):
+        pass
+    
+    @classmethod
+    def INPUT_TYPES(s):
+               
+        return {
+            "required": {
+                "prompt": ("STRING", {"default": '', "multiline": True}),
+                "amount_of_fluff": (amountofflufflist, {"default": "dynamic"}),
+                "reverse_polarity": (fluff_reverse_polarity, {"default": False}),
+            },
+            "optional": {                
+                "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF}),
+            },
+        }
+
+    RETURN_TYPES = ("STRING",)
+    RETURN_NAMES = ("fluffed_prompt",)
+
+    FUNCTION = "Comfy_OBP_Flufferize"
+
+    #OUTPUT_NODE = False
+
+    CATEGORY = "OneButtonPrompt"
+    
+    def Comfy_OBP_Flufferize(self, prompt, amount_of_fluff, reverse_polarity, seed):
+        # artify here
+        fluffed_prompt = flufferizer(prompt=prompt, amountoffluff=amount_of_fluff, reverse_polarity=reverse_polarity, seed=seed)
+        
+        print("Fluffed prompt: " + fluffed_prompt)
+        
+        return (fluffed_prompt,)
+
 
 # A dictionary that contains all nodes you want to export with their names
 # NOTE: names should be globally unique
 NODE_CLASS_MAPPINGS = {
     "OneButtonPrompt": OneButtonPrompt,
     "OneButtonPreset": OneButtonPreset,
+    "OneButtonArtify": OneButtonArtify,
     "CreatePromptVariant": CreatePromptVariant,
     "SavePromptToFile": SavePromptToFile,
     "AutoNegativePrompt": AutoNegativePrompt,
+    "OneButtonFlufferize": OneButtonFlufferize,
     
 }
 
@@ -586,7 +669,9 @@ NODE_CLASS_MAPPINGS = {
 NODE_DISPLAY_NAME_MAPPINGS = {
     "OneButtonPrompt": "One Button Prompt",
     "OneButtonPreset": "One Button Preset",
+    "OneButtonArtify": "One Button Artify",
     "CreatePromptVariant": "Create Prompt Variant",
     "SavePromptToFile": "Save Prompt To File",
     "AutoNegativePrompt": "Auto Negative Prompt",
+    "OneButtonFlufferize": "One Button Flufferize",
 }

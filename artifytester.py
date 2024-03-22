@@ -34,4 +34,5 @@ def generateprompts(amount = 1,prompt = "",artists="all",amountofartists = "1", 
     print("")
     print("All done!")
 
-generateprompts(10,"a norwegian forest cat", "all","random", "standard")
+if __name__ == "__main__":
+    generateprompts(10,"a norwegian forest cat", "all","random", "standard")

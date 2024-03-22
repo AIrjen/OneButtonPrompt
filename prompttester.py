@@ -95,9 +95,9 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
     print("All done!")
 
 generateprompts(10,5
-                ,"concept" # subject
-                ,"none" # artists
-                ,"dynamic templates mode" # image type  "only other types", "only templates mode", "art blaster mode", "quality vomit mode", "color cannon mode", "unique art mode", "massive madness mode", "photo fantasy mode", "subject only mode", "fixed styles mode", "dynamic templates mode", "artify mode"
+                ,"all" # subject
+                ,"all" # artists
+                ,"all" # image type  "only other types", "only templates mode", "art blaster mode", "quality vomit mode", "color cannon mode", "unique art mode", "massive madness mode", "photo fantasy mode", "subject only mode", "fixed styles mode", "dynamic templates mode", "artify mode"
                 , False # only artists
                 ,"","","PREFIXPROMPT" 
                 ,"SUFFIXPROMPT"

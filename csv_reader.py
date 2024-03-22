@@ -256,5 +256,6 @@ def sort_and_dedupe_csv_file():
                         # write each item on a new line
                         fp.write("%s\n" % item)
 
-#
-#sort_and_dedupe_csv_file()
+
+# sort_and_dedupe_csv_file()
+

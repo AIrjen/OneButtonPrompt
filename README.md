@@ -33,6 +33,7 @@ More of a Fooocus fan? Take a look at this excellent fork called [RuinedFooocus]
 - Has a set of __template prompts__ from various sources, __fully wildcarded__ and usable with Subject Override ==> [guide to prompt templates](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/templates.md)
 - Has multiple __prompt generation modes__ to choose from ==> [guide to prompt generation modes](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/prompt_generation_modes.md)
 - Stay in control, and fine-tune One Button Prompt with a __config__ file ==> [config file](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/config_file.md)
+- __Flufferize__ your prompt to enhance your results with Prompt Magic
 
 ## Important Notice
 

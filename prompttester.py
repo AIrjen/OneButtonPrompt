@@ -2,6 +2,7 @@ import sys, os
 import random
 import uuid
 import re
+from superprompter.superprompter import *
 from datetime import datetime
 sys.path.append(os.path.abspath(".."))
 
@@ -27,6 +28,11 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
 
         else:
             result = build_dynamic_prompt(insanitylevel,subject,artist,imagetype, onlyartists,antistring,prefixprompt,suffixprompt,promptcompounderlevel, seperator,givensubject,smartsubject,giventypeofimage,imagemodechance, gender, subtypeobject, subtypehumanoid, subtypeconcept, advancedprompting, hardturnoffemojis, seed, overrideoutfit, prompt_g_and_l, base_model, OBP_preset)
+
+        load_models()
+        result = answer(input_text=result)
+        unload_models()
+
         print("")
         print("loop " + str(steps))
         print("")
@@ -95,13 +101,14 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
     print("All done!")
 
 if __name__ == "__main__":
-    generateprompts(10,5
+    generateprompts(1,5
                 ,"all" # subject
                 ,"all" # artists
-                ,"all" # image type  "only other types", "only templates mode", "art blaster mode", "quality vomit mode", "color cannon mode", "unique art mode", "massive madness mode", "photo fantasy mode", "subject only mode", "fixed styles mode", "dynamic templates mode", "artify mode"
+                ,"subject only mode" # image type  "only other types", "only templates mode", "art blaster mode", "quality vomit mode", "color cannon mode", "unique art mode", "massive madness mode", "photo fantasy mode", "subject only mode", "fixed styles mode", "dynamic templates mode", "artify mode"
                 , False # only artists
-                ,"","","PREFIXPROMPT" 
-                ,"SUFFIXPROMPT"
+                ,"",""
+                ,""  #prefix prompt
+                ,"" #suffix prompt
                 ,"",1,""
                 ,"" # subject override
                 ,True, # smart subject
@@ -115,6 +122,6 @@ if __name__ == "__main__":
                 , 0  # seed
                 , "" #outfit override
                 , False #prompt_g_and_l
-                , "Stable Cascade" #base model
+                , "SDXL" #base model
                 , "" #preset  "All (random)..."
                 )

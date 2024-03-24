@@ -11,7 +11,7 @@ from build_dynamic_prompt import *
 
 
 
-def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", imagetype="all",onlyartists=False, workprompt="", antistring="",prefixprompt="", suffixprompt="", negativeprompt="",promptcompounderlevel = "1", seperator="comma",givensubject="",smartsubject=True,giventypeofimage="",imagemodechance=20, gender = "all", subtypeobject = "all", subtypehumanoid = "all", subtypeconcept = "all", advancedprompting = True, hardturnoffemojis=False, seed=0, overrideoutfit="", prompt_g_and_l = False, base_model = "SD1.5", OBP_preset = ""):
+def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", imagetype="all",onlyartists=False, workprompt="", antistring="",prefixprompt="", suffixprompt="", negativeprompt="",promptcompounderlevel = "1", seperator="comma",givensubject="",smartsubject=True,giventypeofimage="",imagemodechance=20, gender = "all", subtypeobject = "all", subtypehumanoid = "all", subtypeconcept = "all", advancedprompting = True, hardturnoffemojis=False, seed=0, overrideoutfit="", prompt_g_and_l = False, base_model = "SD1.5", OBP_preset = "", superprompter=False):
     loops = int(amount)  # amount of images to generate
     steps = 0
    
@@ -27,11 +27,18 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
             print(resultlist[2])
 
         else:
-            result = build_dynamic_prompt(insanitylevel,subject,artist,imagetype, onlyartists,antistring,prefixprompt,suffixprompt,promptcompounderlevel, seperator,givensubject,smartsubject,giventypeofimage,imagemodechance, gender, subtypeobject, subtypehumanoid, subtypeconcept, advancedprompting, hardturnoffemojis, seed, overrideoutfit, prompt_g_and_l, base_model, OBP_preset)
+            result = build_dynamic_prompt(insanitylevel,subject,artist,imagetype, onlyartists,antistring,prefixprompt,suffixprompt,promptcompounderlevel, seperator,givensubject,smartsubject,giventypeofimage,imagemodechance, gender, subtypeobject, subtypehumanoid, subtypeconcept, advancedprompting, hardturnoffemojis, seed, overrideoutfit, prompt_g_and_l, base_model, OBP_preset, superprompter)
 
-        load_models()
-        result = answer(input_text=result)
-        unload_models()
+        if(superprompter):
+            load_models()
+            superpromptresult = answer(input_text=result, max_new_tokens=150, repetition_penalty=1.5, temperature=0.5, top_p=0.1, top_k=10, seed=seed)
+            superpromptresult = answer(input_text="Help me prompt this a little bit better and concise: """ + result + "" , max_new_tokens=150, repetition_penalty=1.5, temperature=0.5, top_p=0.1, top_k=10, seed=seed)
+            superpromptresult = answer(input_text="Remix these words into a sentence: """ + result + "" , max_new_tokens=150, repetition_penalty=1.5, temperature=0.5, top_p=0.1, top_k=10, seed=seed)
+            superpromptresult = answer(input_text="Remix these words into a sentence: """ + result + "" , max_new_tokens=150, repetition_penalty=1.5, temperature=5.0, top_p=5, top_k=1, seed=seed)
+            superpromptresult = answer(input_text="Make this more artful: """ + result + "" , max_new_tokens=150, repetition_penalty=1.5, temperature=5.0, top_p=5, top_k=1, seed=seed)
+        #unload_models()
+
+            print (result + " --- " + superpromptresult)
 
         print("")
         print("loop " + str(steps))
@@ -104,7 +111,7 @@ if __name__ == "__main__":
     generateprompts(1,5
                 ,"all" # subject
                 ,"all" # artists
-                ,"subject only mode" # image type  "only other types", "only templates mode", "art blaster mode", "quality vomit mode", "color cannon mode", "unique art mode", "massive madness mode", "photo fantasy mode", "subject only mode", "fixed styles mode", "dynamic templates mode", "artify mode"
+                ,"all" # image type  "only other types", "only templates mode", "art blaster mode", "quality vomit mode", "color cannon mode", "unique art mode", "massive madness mode", "photo fantasy mode", "subject only mode", "fixed styles mode", "dynamic templates mode", "artify mode"
                 , False # only artists
                 ,"",""
                 ,""  #prefix prompt
@@ -119,9 +126,10 @@ if __name__ == "__main__":
                 , "all" # concept types
                 , False  # prompt switching
                 , True  # Turn off emojis
-                , 0  # seed
+                , 25  # seed
                 , "" #outfit override
                 , False #prompt_g_and_l
-                , "SDXL" #base model
+                , "Stable Cascade" #base model
                 , "" #preset  "All (random)..."
+                , True # superprompter
                 )

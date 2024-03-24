@@ -12,7 +12,7 @@ OBPresets = OneButtonPresets()
 # insanity level controls randomness of propmt 0-10
 # forcesubject van be used to force a certain type of subject
 # Set artistmode to none, to exclude artists 
-def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", givensubject="",smartsubject = True,giventypeofimage="", imagemodechance = 20, gender = "all", subtypeobject="all", subtypehumanoid="all", subtypeconcept="all", advancedprompting=True, hardturnoffemojis=False, seed=-1, overrideoutfit="", prompt_g_and_l = False, base_model = "SD1.5", OBP_preset = ""):
+def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", givensubject="",smartsubject = True,giventypeofimage="", imagemodechance = 20, gender = "all", subtypeobject="all", subtypehumanoid="all", subtypeconcept="all", advancedprompting=True, hardturnoffemojis=False, seed=-1, overrideoutfit="", prompt_g_and_l = False, base_model = "SD1.5", OBP_preset = "", superprompter = False):
 
     remove_weights =  False
     less_verbose = False
@@ -3264,6 +3264,11 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         promptlist = completeprompt.split("@@@")
         prompt_g = cleanup(promptlist[1], advancedprompting, insanitylevel)
         prompt_l = cleanup((promptlist[0] + ", " + promptlist[2]).replace("of a",""), advancedprompting, insanitylevel)
+    if("@@@" in completeprompt and superprompter == True):
+        promptlist = completeprompt.split("@@@")
+        subjectprompt = cleanup(promptlist[1], advancedprompting, insanitylevel)
+        startprompt = cleanup(promptlist[0], advancedprompting, insanitylevel)
+        completeprompt = startprompt + ", " + subjectprompt
     elif(prompt_g_and_l == True):
         prompt_g = completeprompt
         prompt_l = completeprompt

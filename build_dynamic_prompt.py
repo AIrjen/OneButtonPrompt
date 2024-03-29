@@ -3,6 +3,7 @@ import re
 from csv_reader import *
 from random_functions import *
 from one_button_presets import OneButtonPresets
+from superprompter.superprompter import *
 OBPresets = OneButtonPresets()
 
 
@@ -18,6 +19,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     less_verbose = False
     add_vomit = True
     add_quality = True
+    if(superprompter==True):
+        base_model = "Stable Cascade"
    
 
     # set seed
@@ -3265,10 +3268,13 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         prompt_g = cleanup(promptlist[1], advancedprompting, insanitylevel)
         prompt_l = cleanup((promptlist[0] + ", " + promptlist[2]).replace("of a",""), advancedprompting, insanitylevel)
     if("@@@" in completeprompt and superprompter == True):
+        load_models()
         promptlist = completeprompt.split("@@@")
         subjectprompt = cleanup(promptlist[1], advancedprompting, insanitylevel)
+        superpromptresult = one_button_superprompt(insanitylevel=insanitylevel, prompt=subjectprompt, seed=seed)
         startprompt = cleanup(promptlist[0], advancedprompting, insanitylevel)
-        completeprompt = startprompt + ", " + subjectprompt
+        endprompt = cleanup(promptlist[2], advancedprompting, insanitylevel)
+        completeprompt = startprompt + ", " + superpromptresult + ", " + endprompt
     elif(prompt_g_and_l == True):
         prompt_g = completeprompt
         prompt_l = completeprompt
@@ -4691,3 +4697,84 @@ def split_prompt_to_words(text):
         totallist = list(set(filter(None, totallist)))
 
         return totallist
+
+def one_button_superprompt(insanitylevel, prompt, seed):
+    
+    temperature_lookup = {
+    1: 0.001,
+    2: 0.01,
+    3: 0.1,
+    4: 0.3,
+    5: 0.5,
+    6: 0.7,
+    7: 1.0,
+    8: 2.5,
+    9: 5.0,
+    10: 10.0
+    }
+
+    old_max_new_tokens_lookup = {
+    1: 40,
+    2: 45,
+    3: 50,
+    4: 70,
+    5: 80,
+    6: 95,
+    7: 105,
+    8: 125,
+    9: 150,
+    10: 255
+    }
+
+    max_new_tokens_lookup = {
+    1: 512,
+    2: 512,
+    3: 512,
+    4: 512,
+    5: 512,
+    6: 512,
+    7: 512,
+    8: 512,
+    9: 512,
+    10: 512
+    }
+
+    top_p_lookup = {
+    1: 0.5,
+    2: 0.7,
+    3: 1.0,
+    4: 1.5,
+    5: 2.0,
+    6: 3.0,
+    7: 4.0,
+    8: 5.5,
+    9: 7.0,
+    10: 15.0
+    }
+    for insanitylevel in range(1,10):
+        temperature = temperature_lookup.get(insanitylevel, 0.5)
+        max_new_tokens = max_new_tokens_lookup.get(insanitylevel, 75)
+        top_p = top_p_lookup.get(insanitylevel, 5.0)
+
+        question = "Expand the following prompt to add more detail: "
+        superpromptresult = answer(input_text=question + prompt, max_new_tokens=max_new_tokens, repetition_penalty=2.0, temperature=temperature, top_p=top_p, top_k=10, seed=seed)
+
+        print("orignal: " + prompt)
+        print("insanitylevel: " + str(insanitylevel))
+        print("")
+        print("complete superprompt: " + superpromptresult)
+        print("")
+
+        # Find the indices of the nearest period and comma
+        period_index = superpromptresult.rfind('.')
+        comma_index = superpromptresult.rfind(',')
+
+        # Determine the index to cut off the string
+        cut_off_index = max(period_index, comma_index)
+
+        # Cut off the string at the determined index
+        if cut_off_index != -1:  # If either period or comma exists
+            superpromptresult = superpromptresult[:cut_off_index + 1]  # Include the period or comma
+        else:
+            superpromptresult = superpromptresult  # If neither period nor comma exists, keep the entire text
+    return superpromptresult

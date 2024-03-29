@@ -1,9 +1,6 @@
 #!/usr/bin/env python
-import datetime
 import os
 import random
-import tkinter as tk
-from tkinter import scrolledtext, ttk
 import torch
 from transformers import T5Tokenizer, T5ForConditionalGeneration
 from superprompter.download_models import download_models
@@ -61,7 +58,7 @@ def answer(input_text="", max_new_tokens=512, repetition_penalty=1.2, temperatur
 
     dirty_text = tokenizer.decode(outputs[0])
     text = dirty_text.replace("<pad>", "").replace("</s>", "").strip()
-    print("Temperature: {temperature}\nTop P: {top_p}\nTop K: {top_k}\nSeed: {seed}\nOutput:\n\n")
+    # print("Temperature: {temperature}\nTop P: {top_p}\nTop K: {top_k}\nSeed: {seed}\nOutput:\n\n")
     
-    print(text)
+    # print(text)
     return text

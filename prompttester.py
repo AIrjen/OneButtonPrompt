@@ -29,16 +29,15 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
         else:
             result = build_dynamic_prompt(insanitylevel,subject,artist,imagetype, onlyartists,antistring,prefixprompt,suffixprompt,promptcompounderlevel, seperator,givensubject,smartsubject,giventypeofimage,imagemodechance, gender, subtypeobject, subtypehumanoid, subtypeconcept, advancedprompting, hardturnoffemojis, seed, overrideoutfit, prompt_g_and_l, base_model, OBP_preset, superprompter)
 
-        if(superprompter):
-            load_models()
-            superpromptresult = answer(input_text=result, max_new_tokens=150, repetition_penalty=1.5, temperature=0.5, top_p=0.1, top_k=10, seed=seed)
-            superpromptresult = answer(input_text="Help me prompt this a little bit better and concise: """ + result + "" , max_new_tokens=150, repetition_penalty=1.5, temperature=0.5, top_p=0.1, top_k=10, seed=seed)
-            superpromptresult = answer(input_text="Remix these words into a sentence: """ + result + "" , max_new_tokens=150, repetition_penalty=1.5, temperature=0.5, top_p=0.1, top_k=10, seed=seed)
-            superpromptresult = answer(input_text="Remix these words into a sentence: """ + result + "" , max_new_tokens=150, repetition_penalty=1.5, temperature=5.0, top_p=5, top_k=1, seed=seed)
-            superpromptresult = answer(input_text="Make this more artful: """ + result + "" , max_new_tokens=150, repetition_penalty=1.5, temperature=5.0, top_p=5, top_k=1, seed=seed)
+        #if(superprompter):
+        #    load_models()
+        #    superpromptresult1 = answer(input_text=result, max_new_tokens=150, repetition_penalty=1.5, temperature=0.5, top_p=0.1, top_k=10, seed=seed)
+        #    superpromptresult2 = answer(input_text="Help me prompt this a little bit better and concise: """ + result + "" , max_new_tokens=150, repetition_penalty=1.5, temperature=0.5, top_p=0.1, top_k=10, seed=seed)
+        #    superpromptresult3 = answer(input_text="Make this more artful: """ + result + "" , max_new_tokens=150, repetition_penalty=1.5, temperature=5.0, top_p=5, top_k=1, seed=seed)
+        #    superpromptresult4 = answer(input_text="Describe this for me please: """ + result + "" , max_new_tokens=150, repetition_penalty=1.5, temperature=5.0, top_p=5, top_k=1, seed=seed)
         #unload_models()
 
-            print (result + " --- " + superpromptresult)
+            #print (result + " --- " + superpromptresult1 + " --- " + superpromptresult2 + " --- " + superpromptresult3  + " --- " + superpromptresult4)
 
         print("")
         print("loop " + str(steps))
@@ -108,7 +107,7 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
     print("All done!")
 
 if __name__ == "__main__":
-    generateprompts(1,5
+    generateprompts(1,3
                 ,"all" # subject
                 ,"all" # artists
                 ,"all" # image type  "only other types", "only templates mode", "art blaster mode", "quality vomit mode", "color cannon mode", "unique art mode", "massive madness mode", "photo fantasy mode", "subject only mode", "fixed styles mode", "dynamic templates mode", "artify mode"
@@ -126,10 +125,10 @@ if __name__ == "__main__":
                 , "all" # concept types
                 , False  # prompt switching
                 , True  # Turn off emojis
-                , 25  # seed
+                , 8  # seed
                 , "" #outfit override
                 , False #prompt_g_and_l
-                , "Stable Cascade" #base model
+                , "SDXL" #base model
                 , "" #preset  "All (random)..."
                 , True # superprompter
                 )

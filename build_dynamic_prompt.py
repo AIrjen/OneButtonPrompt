@@ -30,7 +30,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     if(seed > 0):
         random.seed(seed)
 
-    #
+    originalinsanitylevel = insanitylevel
     if(advancedprompting != False and random.randint(0,max(0, insanitylevel - 2)) <= 0):
         advancedprompting == False
 
@@ -1773,7 +1773,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             completeprompt += giventypeofimage + " of a "
 
 
-        
+        ## do less insane stuff while working for superprompter
+        if(superprompter == True):
+            insanitylevel = max(1, insanitylevel-4)
         ### here we can do some other stuff to spice things up
         if(chance_roll(insanitylevel, minilocationadditionchance) and generateminilocationaddition == True):
             completeprompt += " -minilocationaddition-, "
@@ -2231,6 +2233,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                             else:
                                 completeprompt += " and -descriptor- "
                 completeprompt += ", "
+        ## set the insanitylevel back
+        if(superprompter == True):
+            insanitylevel = originalinsanitylevel
 
         if(thetokinatormode == False):
             # object additions
@@ -3271,7 +3276,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         load_models()
         promptlist = completeprompt.split("@@@")
         subjectprompt = cleanup(promptlist[1], advancedprompting, insanitylevel)
-        superpromptresult = one_button_superprompt(insanitylevel=insanitylevel, prompt=subjectprompt, seed=seed)
+        superpromptresult = one_button_superprompt(insanitylevel=insanitylevel, prompt=subjectprompt, seed=seed, override_subject=givensubject, override_outfit=overrideoutfit)
         startprompt = cleanup(promptlist[0], advancedprompting, insanitylevel)
         endprompt = cleanup(promptlist[2], advancedprompting, insanitylevel)
         completeprompt = startprompt + ", " + superpromptresult + ", " + endprompt
@@ -4698,7 +4703,12 @@ def split_prompt_to_words(text):
 
         return totallist
 
-def one_button_superprompt(insanitylevel, prompt, seed):
+def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_subject = "" , override_outfit = ""):
+
+    if(seed <= 0):
+        seed = 1
+    
+    done = False
     
     temperature_lookup = {
     1: 0.001,
@@ -4713,20 +4723,20 @@ def one_button_superprompt(insanitylevel, prompt, seed):
     10: 10.0
     }
 
-    old_max_new_tokens_lookup = {
-    1: 40,
-    2: 45,
-    3: 50,
-    4: 70,
-    5: 80,
-    6: 95,
-    7: 105,
-    8: 125,
+    max_new_tokens_lookup = {
+    1: 80,
+    2: 80,
+    3: 90,
+    4: 90,
+    5: 100,
+    6: 100,
+    7: 120,
+    8: 120,
     9: 150,
     10: 255
     }
 
-    max_new_tokens_lookup = {
+    test_max_new_tokens_lookup = {
     1: 512,
     2: 512,
     3: 512,
@@ -4740,23 +4750,30 @@ def one_button_superprompt(insanitylevel, prompt, seed):
     }
 
     top_p_lookup = {
-    1: 0.5,
-    2: 0.7,
+    1: 0.1,
+    2: 0.5,
     3: 1.0,
     4: 1.5,
     5: 2.0,
-    6: 3.0,
-    7: 4.0,
-    8: 5.5,
+    6: 2.5,
+    7: 3.0,
+    8: 4.0,
     9: 7.0,
     10: 15.0
     }
-    for insanitylevel in range(1,10):
-        temperature = temperature_lookup.get(insanitylevel, 0.5)
-        max_new_tokens = max_new_tokens_lookup.get(insanitylevel, 75)
-        top_p = top_p_lookup.get(insanitylevel, 5.0)
+    # for insanitylevel in range(1,11):
+    j = 0
+    temperature = temperature_lookup.get(insanitylevel, 0.5)
+    max_new_tokens = max_new_tokens_lookup.get(insanitylevel, 75)
+    top_p = top_p_lookup.get(insanitylevel, 5.0)
+    while done == False:
+        print(seed)
+        print(temperature)
+        print(top_p)
+        
 
         question = "Expand the following prompt to add more detail: "
+        #question = "Expand the following prompt to make it more epic: "
         superpromptresult = answer(input_text=question + prompt, max_new_tokens=max_new_tokens, repetition_penalty=2.0, temperature=temperature, top_p=top_p, top_k=10, seed=seed)
 
         print("orignal: " + prompt)
@@ -4777,4 +4794,33 @@ def one_button_superprompt(insanitylevel, prompt, seed):
             superpromptresult = superpromptresult[:cut_off_index + 1]  # Include the period or comma
         else:
             superpromptresult = superpromptresult  # If neither period nor comma exists, keep the entire text
+
+        # check if its matching all words from the override:
+        words_to_check = override_subject.split() + override_outfit.split()
+
+        # Iterate through each word and check if it exists in the other string
+        i = 0
+        for word in words_to_check:
+            if word not in superpromptresult:
+                i += 1
+                
+        
+        if(i==0 or j == 20):
+            done = True
+        else:
+            seed += 1
+            j += 1
+            if(temperature < 5.0):
+                temperature += 0.4 + round((10/random.randint(15,25)),2)
+            else:
+                temperature -= 0.4
+
+            if(top_p < 2.0):
+                top_p += 0.2 + round((10/random.randint(25,35)),2)
+            else:
+                top_p -= 0.3
+            
+        
+
+            
     return superpromptresult

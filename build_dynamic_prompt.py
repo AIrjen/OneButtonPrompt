@@ -3273,7 +3273,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         prompt_g = cleanup(promptlist[1], advancedprompting, insanitylevel)
         prompt_l = cleanup((promptlist[0] + ", " + promptlist[2]).replace("of a",""), advancedprompting, insanitylevel)
     if("@@@" in completeprompt and superprompter == True):
-        load_models()
+        #load_models()
         promptlist = completeprompt.split("@@@")
         subjectprompt = cleanup(promptlist[1], advancedprompting, insanitylevel)
         superpromptresult = one_button_superprompt(insanitylevel=insanitylevel, prompt=subjectprompt, seed=seed, override_subject=givensubject, override_outfit=overrideoutfit)
@@ -4706,9 +4706,13 @@ def split_prompt_to_words(text):
 def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_subject = "" , override_outfit = ""):
 
     if(seed <= 0):
-        seed = 1
+        seed = random.randint(1,1000000)
     
     done = False
+    load_models()
+
+    superprompterstyleslist = csv_to_list("superprompter_styles")
+    descriptorlist = csv_to_list("descriptors")
     
     temperature_lookup = {
     1: 0.001,
@@ -4724,14 +4728,14 @@ def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_s
     }
 
     max_new_tokens_lookup = {
-    1: 80,
-    2: 80,
-    3: 90,
-    4: 90,
-    5: 100,
-    6: 100,
-    7: 120,
-    8: 120,
+    1: 25,
+    2: 30,
+    3: 35,
+    4: 40,
+    5: 50,
+    6: 70,
+    7: 90,
+    8: 100,
     9: 150,
     10: 255
     }
@@ -4753,10 +4757,10 @@ def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_s
     1: 0.1,
     2: 0.5,
     3: 1.0,
-    4: 1.5,
-    5: 2.0,
-    6: 2.5,
-    7: 3.0,
+    4: 1.25,
+    5: 1.5,
+    6: 1.75,
+    7: 2.0,
     8: 4.0,
     9: 7.0,
     10: 15.0
@@ -4766,14 +4770,26 @@ def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_s
     temperature = temperature_lookup.get(insanitylevel, 0.5)
     max_new_tokens = max_new_tokens_lookup.get(insanitylevel, 75)
     top_p = top_p_lookup.get(insanitylevel, 5.0)
+
+    if(uncommon_dist(insanitylevel)):
+        question = "Expand the following prompt to make it more " + random.choice(descriptorlist)
+    elif(normal_dist(insanitylevel)):
+        question = "Expand the following prompt to make it more " + random.choice(superprompterstyleslist)
+    else:
+        question = "Expand the following prompt to add more detail: "
+
+    translation_table_remove_stuff = str.maketrans('', '', '., ')
+    translation_table_remove_numbers = str.maketrans('', '', '0123456789')
+
+    prompt = prompt.translate(translation_table_remove_numbers)
+
     while done == False:
         print(seed)
         print(temperature)
         print(top_p)
+        print(question)
         
-
-        question = "Expand the following prompt to add more detail: "
-        #question = "Expand the following prompt to make it more epic: "
+    	
         superpromptresult = answer(input_text=question + prompt, max_new_tokens=max_new_tokens, repetition_penalty=2.0, temperature=temperature, top_p=top_p, top_k=10, seed=seed)
 
         print("orignal: " + prompt)
@@ -4796,29 +4812,40 @@ def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_s
             superpromptresult = superpromptresult  # If neither period nor comma exists, keep the entire text
 
         # check if its matching all words from the override:
-        words_to_check = override_subject.split() + override_outfit.split()
+        possible_words_to_check = override_subject.lower().split() + override_outfit.lower().split()
+        print(possible_words_to_check)
+        words_to_check = []
+        words_to_remove = ['subject', 'solo', '1girl', '1boy']
+        for word in possible_words_to_check:
+            word = word.translate(translation_table_remove_stuff)
+            if word not in words_to_remove:
+                if not word.startswith("-") and not word.endswith("-"):
+                    words_to_check.append(word)
 
+        print(words_to_check)
         # Iterate through each word and check if it exists in the other string
         i = 0
         for word in words_to_check:
-            if word not in superpromptresult:
+            if word not in superpromptresult.lower() and word != "subject":
                 i += 1
                 
         
         if(i==0 or j == 20):
             done = True
+        # slowly converge and change
         else:
             seed += 1
             j += 1
-            if(temperature < 5.0):
-                temperature += 0.4 + round((10/random.randint(15,25)),2)
+            if(temperature < 0.5):
+                temperature += 0.05 + round((1/random.randint(15,25)),2)
             else:
-                temperature -= 0.4
+                temperature -= 0.1
 
-            if(top_p < 2.0):
-                top_p += 0.2 + round((10/random.randint(25,35)),2)
+            if(top_p < 1.0):
+                top_p += 0.2 + round((1/random.randint(25,35)),2)
             else:
                 top_p -= 0.3
+            max_new_tokens += 3
             
         
 

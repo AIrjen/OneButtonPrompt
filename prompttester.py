@@ -35,7 +35,7 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
         #    superpromptresult2 = answer(input_text="Help me prompt this a little bit better and concise: """ + result + "" , max_new_tokens=150, repetition_penalty=1.5, temperature=0.5, top_p=0.1, top_k=10, seed=seed)
         #    superpromptresult3 = answer(input_text="Make this more artful: """ + result + "" , max_new_tokens=150, repetition_penalty=1.5, temperature=5.0, top_p=5, top_k=1, seed=seed)
         #    superpromptresult4 = answer(input_text="Describe this for me please: """ + result + "" , max_new_tokens=150, repetition_penalty=1.5, temperature=5.0, top_p=5, top_k=1, seed=seed)
-        #unload_models()
+        # unload_models()
 
             #print (result + " --- " + superpromptresult1 + " --- " + superpromptresult2 + " --- " + superpromptresult3  + " --- " + superpromptresult4)
 

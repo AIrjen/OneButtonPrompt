@@ -1900,6 +1900,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                         objectwildcardlist = ["-space-"]
                     if(subtypeobject == "flora"):
                         objectwildcardlist = ["-flora-"]
+                    subjectchooser = subtypeobject
+
                 
                 # if we have a given subject, we should skip making an actual subject
                 # unless we have "subject" in the given subject
@@ -3276,9 +3278,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         #load_models()
         promptlist = completeprompt.split("@@@")
         subjectprompt = cleanup(promptlist[1], advancedprompting, insanitylevel)
-        superpromptresult = one_button_superprompt(insanitylevel=insanitylevel, prompt=subjectprompt, seed=seed, override_subject=givensubject, override_outfit=overrideoutfit)
         startprompt = cleanup(promptlist[0], advancedprompting, insanitylevel)
         endprompt = cleanup(promptlist[2], advancedprompting, insanitylevel)
+        superpromptresult = one_button_superprompt(insanitylevel=insanitylevel, prompt=subjectprompt, seed=seed, override_subject=givensubject, override_outfit=overrideoutfit, chosensubject=subjectchooser, gender=gender, restofprompt = startprompt + endprompt)
         completeprompt = startprompt + ", " + superpromptresult + ", " + endprompt
     elif(prompt_g_and_l == True):
         prompt_g = completeprompt
@@ -4703,7 +4705,7 @@ def split_prompt_to_words(text):
 
         return totallist
 
-def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_subject = "" , override_outfit = ""):
+def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_subject = "" , override_outfit = "", chosensubject ="", gender = "", restofprompt = ""):
 
     if(seed <= 0):
         seed = random.randint(1,1000000)
@@ -4713,6 +4715,9 @@ def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_s
 
     superprompterstyleslist = csv_to_list("superprompter_styles")
     descriptorlist = csv_to_list("descriptors")
+
+    restofprompt = restofprompt.lower()
+    question = ""
     
     temperature_lookup = {
     1: 0.001,
@@ -4740,19 +4745,6 @@ def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_s
     10: 255
     }
 
-    test_max_new_tokens_lookup = {
-    1: 512,
-    2: 512,
-    3: 512,
-    4: 512,
-    5: 512,
-    6: 512,
-    7: 512,
-    8: 512,
-    9: 512,
-    10: 512
-    }
-
     top_p_lookup = {
     1: 0.1,
     2: 0.5,
@@ -4765,21 +4757,72 @@ def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_s
     9: 7.0,
     10: 15.0
     }
+
+    chosensubject_lookup = {
+    "humanoid": "fantasy character",
+    "manwomanrelation": "person",
+    "manwomanmultiple": "people",
+    "firstname": "person",
+    "job": "person",
+    "fictional": "fictional character",
+    "non fictional": "celebrity",
+    "human": "person",
+    "animal": "animal",
+    "animal as human": "human creature",
+    "landscape": "landscape",
+    "concept": "concept",
+    "event": "concept",
+    "concept": "concept",
+    "poemline": "concept",
+    "songline": "concept",
+    "cardname": "concept",
+    "episodetitle": "concept",
+    "generic objects": "object",
+    "vehicles": "vehicle",
+    "food": "food",
+    "building": "building",
+    "space": "space",
+    "flora": "nature",
+    }
     # for insanitylevel in range(1,11):
     j = 0
     temperature = temperature_lookup.get(insanitylevel, 0.5)
     max_new_tokens = max_new_tokens_lookup.get(insanitylevel, 75)
     top_p = top_p_lookup.get(insanitylevel, 5.0)
+    subject_to_generate = chosensubject_lookup.get(chosensubject, "")
 
-    if(uncommon_dist(insanitylevel)):
-        question = "Expand the following prompt to make it more " + random.choice(descriptorlist)
-    elif(normal_dist(insanitylevel)):
-        question = "Expand the following prompt to make it more " + random.choice(superprompterstyleslist)
+    if chosensubject not in ("humanoid","firstname","job","fictional","non fictional","human"):
+        gender = ""
+
+    if "fantasy" in restofprompt or "d&d" in restofprompt:
+        superpromptstyle = "fantasy style"
+    elif "sci-fi" in restofprompt or "scifi" in restofprompt or "science fiction" in restofprompt:
+        superpromptstyle = "sci-fi style"
+    elif "cyberpunk" in restofprompt:
+        superpromptstyle = "cyberpunk"
+    elif "horror" in restofprompt:
+        superpromptstyle = "horror themed"
+    elif "evil" in restofprompt:
+        superpromptstyle = "evil"
     else:
-        question = "Expand the following prompt to add more detail: "
+        superpromptstyle = random.choice(superprompterstyleslist)
+
+    if (override_outfit != "" or override_subject != ""):
+        question += "Make sure the subject is used: " + override_outfit + ", " + override_subject + " \n"
+
+
+    if "portrait" in restofprompt and normal_dist(insanitylevel):
+        question += "Expand the following " + gender + " " + subject_to_generate + " prompt to describe a " + superpromptstyle + " portrait: "
+    elif "portrait" in restofprompt:
+        question += "Expand the following " + gender + " " + subject_to_generate + " prompt to describe a portrait: "
+    elif(normal_dist(insanitylevel)):
+        question += "Expand the following " + gender + " " + subject_to_generate + " prompt to make it more " + superpromptstyle
+    else:
+        question += "Expand the following " + gender + " " + subject_to_generate + " prompt to add more detail: "
+    # question = "Expand the following fantasy character prompt to describe a portrait: "
 
     translation_table_remove_stuff = str.maketrans('', '', '., ')
-    translation_table_remove_numbers = str.maketrans('', '', '0123456789')
+    translation_table_remove_numbers = str.maketrans('', '', '0123456789:()<>|[]')
 
     prompt = prompt.translate(translation_table_remove_numbers)
 
@@ -4788,6 +4831,7 @@ def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_s
         print(temperature)
         print(top_p)
         print(question)
+        print("chosen subject: " + chosensubject)
         
     	
         superpromptresult = answer(input_text=question + prompt, max_new_tokens=max_new_tokens, repetition_penalty=2.0, temperature=temperature, top_p=top_p, top_k=10, seed=seed)

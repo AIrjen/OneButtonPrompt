@@ -3282,6 +3282,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         endprompt = cleanup(promptlist[2], advancedprompting, insanitylevel)
         superpromptresult = one_button_superprompt(insanitylevel=insanitylevel, prompt=subjectprompt, seed=seed, override_subject=givensubject, override_outfit=overrideoutfit, chosensubject=subjectchooser, gender=gender, restofprompt = startprompt + endprompt)
         completeprompt = startprompt + ", " + superpromptresult + ", " + endprompt
+        prompt_g = superpromptresult
+        prompt_l = completeprompt
     elif(prompt_g_and_l == True):
         prompt_g = completeprompt
         prompt_l = completeprompt
@@ -4762,7 +4764,7 @@ def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_s
     "humanoid": "fantasy character",
     "manwomanrelation": "person",
     "manwomanmultiple": "people",
-    "firstname": "person",
+    "firstname": "",
     "job": "person",
     "fictional": "fictional character",
     "non fictional": "celebrity",
@@ -4791,38 +4793,71 @@ def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_s
     top_p = top_p_lookup.get(insanitylevel, 5.0)
     subject_to_generate = chosensubject_lookup.get(chosensubject, "")
 
+    translation_table_remove_stuff = str.maketrans('', '', '.,:()<>|[]"" ')
+    translation_table_remove_numbers = str.maketrans('', '', '0123456789:()<>|[]""')
+
+     # check if its matching all words from the override:
+    possible_words_to_check = override_subject.lower().split() + override_outfit.lower().split()
+    print(possible_words_to_check)
+    words_to_check = []
+    words_to_remove = ['subject', 'solo', '1girl', '1boy']
+    for word in possible_words_to_check:
+        word = word.translate(translation_table_remove_stuff)
+        if word not in words_to_remove:
+            if not word.startswith("-") and not word.endswith("-"):
+                words_to_check.append(word)
+
+
     if chosensubject not in ("humanoid","firstname","job","fictional","non fictional","human"):
         gender = ""
 
-    if "fantasy" in restofprompt or "d&d" in restofprompt:
-        superpromptstyle = "fantasy style"
+    if "fantasy" in restofprompt or "d&d" in restofprompt or "dungeons and dragons" in restofprompt or "dungeons and dragons" in restofprompt:
+        superpromptstyle = random.choice(["fantasy style","d&d style"])
     elif "sci-fi" in restofprompt or "scifi" in restofprompt or "science fiction" in restofprompt:
-        superpromptstyle = "sci-fi style"
+        superpromptstyle = random.choice(["sci-fi style","futuristic"])
     elif "cyberpunk" in restofprompt:
         superpromptstyle = "cyberpunk"
     elif "horror" in restofprompt:
         superpromptstyle = "horror themed"
     elif "evil" in restofprompt:
         superpromptstyle = "evil"
+    elif "fashion" in restofprompt:
+        superpromptstyle = random.choice(["elegant","glamourous"])
+    elif "cute" in restofprompt or "adorable" in restofprompt or "kawaii" in restofprompt:
+        superpromptstyle = random.choice(["cute","adorable", "kawaii"])
+
     else:
         superpromptstyle = random.choice(superprompterstyleslist)
 
-    if (override_outfit != "" or override_subject != ""):
-        question += "Make sure the subject is used: " + override_outfit + ", " + override_subject + " \n"
+    if(words_to_check):
+        question += "Make sure the subject is used: " + ', '.join(words_to_check) + " \n"
+
+    imagetype = ""
+    if "portrait" in restofprompt:
+        imagetype = "a portrait"
+    elif "painting" in restofprompt:
+        imagetype = "a painting"
+    elif "digital art" in restofprompt:
+        imagetype = "a digital artwork"
+    elif "concept" in restofprompt:
+        imagetype = "concept art"
+    elif "pixel" in restofprompt:
+        imagetype = "pixel art"
+    elif "game" in restofprompt:
+        imagetype = "video game artwork"
 
 
-    if "portrait" in restofprompt and normal_dist(insanitylevel):
-        question += "Expand the following " + gender + " " + subject_to_generate + " prompt to describe a " + superpromptstyle + " portrait: "
-    elif "portrait" in restofprompt:
-        question += "Expand the following " + gender + " " + subject_to_generate + " prompt to describe a portrait: "
+    if imagetype != "" and normal_dist(insanitylevel):
+        question += "Expand the following " + gender + " " + subject_to_generate + " prompt to describe " + superpromptstyle + " " + imagetype + ": "
+    elif imagetype != "":
+        question += "Expand the following " + gender + " " + subject_to_generate + " prompt to describe " + imagetype + ": "
     elif(normal_dist(insanitylevel)):
         question += "Expand the following " + gender + " " + subject_to_generate + " prompt to make it more " + superpromptstyle
     else:
         question += "Expand the following " + gender + " " + subject_to_generate + " prompt to add more detail: "
     # question = "Expand the following fantasy character prompt to describe a portrait: "
 
-    translation_table_remove_stuff = str.maketrans('', '', '., ')
-    translation_table_remove_numbers = str.maketrans('', '', '0123456789:()<>|[]')
+
 
     prompt = prompt.translate(translation_table_remove_numbers)
 
@@ -4855,16 +4890,6 @@ def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_s
         else:
             superpromptresult = superpromptresult  # If neither period nor comma exists, keep the entire text
 
-        # check if its matching all words from the override:
-        possible_words_to_check = override_subject.lower().split() + override_outfit.lower().split()
-        print(possible_words_to_check)
-        words_to_check = []
-        words_to_remove = ['subject', 'solo', '1girl', '1boy']
-        for word in possible_words_to_check:
-            word = word.translate(translation_table_remove_stuff)
-            if word not in words_to_remove:
-                if not word.startswith("-") and not word.endswith("-"):
-                    words_to_check.append(word)
 
         print(words_to_check)
         # Iterate through each word and check if it exists in the other string
@@ -4874,11 +4899,11 @@ def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_s
                 i += 1
                 
         
-        if(i==0 or j == 20):
+        if(i==0 or j == 20 or insanitylevel >= 9):
             done = True
         # slowly converge and change
         else:
-            seed += 1
+            seed += 100
             j += 1
             if(temperature < 0.5):
                 temperature += 0.05 + round((1/random.randint(15,25)),2)

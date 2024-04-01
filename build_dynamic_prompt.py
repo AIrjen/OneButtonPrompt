@@ -13,12 +13,16 @@ OBPresets = OneButtonPresets()
 # insanity level controls randomness of propmt 0-10
 # forcesubject van be used to force a certain type of subject
 # Set artistmode to none, to exclude artists 
-def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", givensubject="",smartsubject = True,giventypeofimage="", imagemodechance = 20, gender = "all", subtypeobject="all", subtypehumanoid="all", subtypeconcept="all", advancedprompting=True, hardturnoffemojis=False, seed=-1, overrideoutfit="", prompt_g_and_l = False, base_model = "SD1.5", OBP_preset = "", superprompter = False):
+def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", givensubject="",smartsubject = True,giventypeofimage="", imagemodechance = 20, gender = "all", subtypeobject="all", subtypehumanoid="all", subtypeconcept="all", advancedprompting=True, hardturnoffemojis=False, seed=-1, overrideoutfit="", prompt_g_and_l = False, base_model = "SD1.5", OBP_preset = "", prompt_enhancer = "none"):
 
     remove_weights =  False
     less_verbose = False
     add_vomit = True
     add_quality = True
+
+    superprompter = False
+    if(prompt_enhancer == "superprompter"):
+        superprompter = True
     if(superprompter==True):
         base_model = "Stable Cascade"
    
@@ -4707,7 +4711,7 @@ def split_prompt_to_words(text):
 
         return totallist
 
-def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_subject = "" , override_outfit = "", chosensubject ="", gender = "", restofprompt = ""):
+def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_subject = "" , override_outfit = "", chosensubject ="", gender = "", restofprompt = "", superpromptstyle = ""):
 
     if(seed <= 0):
         seed = random.randint(1,1000000)
@@ -4718,15 +4722,19 @@ def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_s
     superprompterstyleslist = csv_to_list("superprompter_styles")
     descriptorlist = csv_to_list("descriptors")
 
+    usestyle = False
+    if(superpromptstyle != "" or superpromptstyle != "all"):
+        usestyle = True
+
     restofprompt = restofprompt.lower()
     question = ""
     
     temperature_lookup = {
-    1: 0.001,
-    2: 0.01,
-    3: 0.1,
-    4: 0.3,
-    5: 0.5,
+    1: 0.01,
+    2: 0.1,
+    3: 0.3,
+    4: 0.5,
+    5: 0.6,
     6: 0.7,
     7: 1.0,
     8: 2.5,
@@ -4735,11 +4743,11 @@ def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_s
     }
 
     max_new_tokens_lookup = {
-    1: 25,
-    2: 30,
-    3: 35,
-    4: 40,
-    5: 50,
+    1: 45,
+    2: 45,
+    3: 50,
+    4: 55,
+    5: 60,
     6: 70,
     7: 90,
     8: 100,
@@ -4749,10 +4757,10 @@ def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_s
 
     top_p_lookup = {
     1: 0.1,
-    2: 0.5,
-    3: 1.0,
-    4: 1.25,
-    5: 1.5,
+    2: 1.0,
+    3: 1.3,
+    4: 1.5,
+    5: 1.6,
     6: 1.75,
     7: 2.0,
     8: 4.0,
@@ -4810,24 +4818,26 @@ def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_s
 
     if chosensubject not in ("humanoid","firstname","job","fictional","non fictional","human"):
         gender = ""
+    if(superpromptstyle == "" or superpromptstyle == "all"):
+        if "fantasy" in restofprompt or "d&d" in restofprompt or "dungeons and dragons" in restofprompt or "dungeons and dragons" in restofprompt:
+            superpromptstyle = random.choice(["fantasy style","d&d style"])
+        elif "sci-fi" in restofprompt or "scifi" in restofprompt or "science fiction" in restofprompt:
+            superpromptstyle = random.choice(["sci-fi style","futuristic"])
+        elif "cyberpunk" in restofprompt:
+            superpromptstyle = "cyberpunk"
+        elif "horror" in restofprompt:
+            superpromptstyle = "horror themed"
+        elif "evil" in restofprompt:
+            superpromptstyle = "evil"
+        elif "cinestill" in restofprompt or "movie still" in restofprompt or "cinematic" in restofprompt or "epic" in restofprompt:
+            superpromptstyle = random.choice(["cinematic","epic"])
+        elif "fashion" in restofprompt:
+            superpromptstyle = random.choice(["elegant","glamourous"])
+        elif "cute" in restofprompt or "adorable" in restofprompt or "kawaii" in restofprompt:
+            superpromptstyle = random.choice(["cute","adorable", "kawaii"])
 
-    if "fantasy" in restofprompt or "d&d" in restofprompt or "dungeons and dragons" in restofprompt or "dungeons and dragons" in restofprompt:
-        superpromptstyle = random.choice(["fantasy style","d&d style"])
-    elif "sci-fi" in restofprompt or "scifi" in restofprompt or "science fiction" in restofprompt:
-        superpromptstyle = random.choice(["sci-fi style","futuristic"])
-    elif "cyberpunk" in restofprompt:
-        superpromptstyle = "cyberpunk"
-    elif "horror" in restofprompt:
-        superpromptstyle = "horror themed"
-    elif "evil" in restofprompt:
-        superpromptstyle = "evil"
-    elif "fashion" in restofprompt:
-        superpromptstyle = random.choice(["elegant","glamourous"])
-    elif "cute" in restofprompt or "adorable" in restofprompt or "kawaii" in restofprompt:
-        superpromptstyle = random.choice(["cute","adorable", "kawaii"])
-
-    else:
-        superpromptstyle = random.choice(superprompterstyleslist)
+        else:
+            superpromptstyle = random.choice(superprompterstyleslist)
 
     if(words_to_check):
         question += "Make sure the subject is used: " + ', '.join(words_to_check) + " \n"
@@ -4845,13 +4855,16 @@ def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_s
         imagetype = "pixel art"
     elif "game" in restofprompt:
         imagetype = "video game artwork"
+    
+    usestyle = False
 
 
-    if imagetype != "" and normal_dist(insanitylevel):
+
+    if imagetype != "" and (normal_dist(insanitylevel) or usestyle == True):
         question += "Expand the following " + gender + " " + subject_to_generate + " prompt to describe " + superpromptstyle + " " + imagetype + ": "
     elif imagetype != "":
         question += "Expand the following " + gender + " " + subject_to_generate + " prompt to describe " + imagetype + ": "
-    elif(normal_dist(insanitylevel)):
+    elif(normal_dist(insanitylevel) or usestyle == True):
         question += "Expand the following " + gender + " " + subject_to_generate + " prompt to make it more " + superpromptstyle
     else:
         question += "Expand the following " + gender + " " + subject_to_generate + " prompt to add more detail: "

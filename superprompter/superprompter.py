@@ -6,7 +6,8 @@ from transformers import T5Tokenizer, T5ForConditionalGeneration
 from superprompter.download_models import download_models
 
 global tokenizer, model
-modelDir = os.path.expanduser("~") + "/.superprompter/model_files"
+script_dir = os.path.dirname(os.path.abspath(__file__))  # Script directory
+modelDir = os.path.join(script_dir, "./model_files/" )
 
 def load_models():
  

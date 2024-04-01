@@ -25,6 +25,7 @@ genders = ["all", "male", "female"]
 emojis = [False, True]
 
 models = ["SD1.5", "SDXL", "Stable Cascade"]
+prompt_enhancers = ["none", "superprompter"]
 subjects =["all"]
 subjectsubtypesobject = ["all"]
 subjectsubtypeshumanoid = ["all"]
@@ -38,6 +39,9 @@ fluff_reverse_polarity = [False,True]
 
 artifymodeslist = ["standard", "remix", "super remix turbo"]
 artifyamountofartistslist = ["random", "0", "1", "2", "3", "4", "5"]
+
+superprompterstyleslist = ['all']
+superprompterstyleslist += csv_to_list("superprompter_styles")
 
 
 # Load up stuff for personal artists list, if any
@@ -238,6 +242,7 @@ class OneButtonPrompt:
                 "subject_subtypes_concepts": (subjectsubtypesconcept, {"default": "all"}),
                 "emojis":(emojis, {"default": False}),
                 "base_model":(models, {"default": "SDXL"}),
+                "prompt_enhancer":(prompt_enhancers, {"default": "none"}),
                 
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF}),
             },
@@ -252,8 +257,8 @@ class OneButtonPrompt:
 
     CATEGORY = "OneButtonPrompt"
     
-    def Comfy_OBP(self, insanitylevel, custom_subject, seed, artist, imagetype, subject, imagemodechance, humanoids_gender, subject_subtype_objects, subject_subtypes_humanoids, subject_subtypes_concepts, emojis, custom_outfit, base_model):
-        generatedpromptlist = build_dynamic_prompt(insanitylevel,subject,artist,imagetype,False,"","","",1,"",custom_subject,True,"",imagemodechance, humanoids_gender, subject_subtype_objects, subject_subtypes_humanoids, subject_subtypes_concepts, False, emojis, seed, custom_outfit, True, base_model)
+    def Comfy_OBP(self, insanitylevel, custom_subject, seed, artist, imagetype, subject, imagemodechance, humanoids_gender, subject_subtype_objects, subject_subtypes_humanoids, subject_subtypes_concepts, emojis, custom_outfit, base_model, prompt_enhancer):
+        generatedpromptlist = build_dynamic_prompt(insanitylevel,subject,artist,imagetype,False,"","","",1,"",custom_subject,True,"",imagemodechance, humanoids_gender, subject_subtype_objects, subject_subtypes_humanoids, subject_subtypes_concepts, False, emojis, seed, custom_outfit, True, base_model, "", prompt_enhancer)
         #print(generatedprompt)
         generatedprompt = generatedpromptlist[0]
         prompt_g = generatedpromptlist[1]
@@ -461,7 +466,8 @@ class OneButtonPreset:
                 "OneButtonPreset": (allpresets, {"default": "Standard"}),
             },
             "optional": {
-                "base_model":(models, {"default": "SDXL"}),    
+                "base_model":(models, {"default": "SDXL"}),
+                "prompt_enhancer":(prompt_enhancers, {"default": "none"}),   
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF}),
             },
         }
@@ -476,7 +482,7 @@ class OneButtonPreset:
 
     CATEGORY = "OneButtonPrompt"
     
-    def Comfy_OBP_OneButtonPreset(self, OneButtonPreset, seed, base_model):
+    def Comfy_OBP_OneButtonPreset(self, OneButtonPreset, seed, base_model, prompt_enhancer):
         # load the stuff
         if(OneButtonPreset == OBPresets.RANDOM_PRESET_OBP):
             selected_opb_preset = OBPresets.get_obp_preset("Standard")
@@ -521,6 +527,7 @@ class OneButtonPreset:
                                                seed=seed,
                                                base_model=base_model,
                                                OBP_preset=OneButtonPreset,
+                                               prompt_enhancer=prompt_enhancer,
                                                )
         
         
@@ -651,6 +658,47 @@ class OneButtonFlufferize:
         
         return (fluffed_prompt,)
 
+class OneButtonSuperPrompt:
+
+    def __init__(self):
+        pass
+    
+    @classmethod
+    def INPUT_TYPES(s):
+               
+        return {
+            "required": {
+                "prompt": ("STRING", {"default": '', "multiline": True}),
+                "insanitylevel": ("INT", {
+                    "default": 5,
+                    "min": 1, #Minimum value
+                    "max": 10, #Maximum value
+                    "step": 1 #Slider's step
+                }),
+                "superpromptstyle": (superprompterstyleslist, {"default": "all"}),
+            },
+            "optional": {                
+                "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF}),
+            },
+        }
+
+    RETURN_TYPES = ("STRING",)
+    RETURN_NAMES = ("super_prompt",)
+
+    FUNCTION = "Comfy_OBP_SuperPrompt"
+
+    #OUTPUT_NODE = False
+
+    CATEGORY = "OneButtonPrompt"
+    
+    def Comfy_OBP_SuperPrompt(self, insanitylevel, prompt, superpromptstyle, seed):
+        # artify here
+        OBPsuperprompt = one_button_superprompt(insanitylevel=insanitylevel, prompt=prompt, seed=seed, superpromptstyle=superpromptstyle)
+        
+        print("Super prompt: " + OBPsuperprompt)
+        
+        return (OBPsuperprompt,)
+
 
 # A dictionary that contains all nodes you want to export with their names
 # NOTE: names should be globally unique
@@ -662,6 +710,7 @@ NODE_CLASS_MAPPINGS = {
     "SavePromptToFile": SavePromptToFile,
     "AutoNegativePrompt": AutoNegativePrompt,
     "OneButtonFlufferize": OneButtonFlufferize,
+    "OneButtonSuperPrompt": OneButtonSuperPrompt,
     
 }
 
@@ -674,4 +723,5 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "SavePromptToFile": "Save Prompt To File",
     "AutoNegativePrompt": "Auto Negative Prompt",
     "OneButtonFlufferize": "One Button Flufferize",
+    "OneButtonSuperPrompt": "One Button SuperPrompt",
 }

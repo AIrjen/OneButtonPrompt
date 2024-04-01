@@ -11,7 +11,7 @@ from build_dynamic_prompt import *
 
 
 
-def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", imagetype="all",onlyartists=False, workprompt="", antistring="",prefixprompt="", suffixprompt="", negativeprompt="",promptcompounderlevel = "1", seperator="comma",givensubject="",smartsubject=True,giventypeofimage="",imagemodechance=20, gender = "all", subtypeobject = "all", subtypehumanoid = "all", subtypeconcept = "all", advancedprompting = True, hardturnoffemojis=False, seed=0, overrideoutfit="", prompt_g_and_l = False, base_model = "SD1.5", OBP_preset = "", superprompter=False):
+def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", imagetype="all",onlyartists=False, workprompt="", antistring="",prefixprompt="", suffixprompt="", negativeprompt="",promptcompounderlevel = "1", seperator="comma",givensubject="",smartsubject=True,giventypeofimage="",imagemodechance=20, gender = "all", subtypeobject = "all", subtypehumanoid = "all", subtypeconcept = "all", advancedprompting = True, hardturnoffemojis=False, seed=0, overrideoutfit="", prompt_g_and_l = False, base_model = "SD1.5", OBP_preset = "", prompt_enhancer="none"):
     loops = int(amount)  # amount of images to generate
     steps = 0
    
@@ -19,7 +19,7 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
     while steps < loops:
         # build prompt
         if(prompt_g_and_l == True):
-            resultlist = build_dynamic_prompt(insanitylevel,subject,artist,imagetype, onlyartists,antistring,prefixprompt,suffixprompt,promptcompounderlevel, seperator,givensubject,smartsubject,giventypeofimage,imagemodechance, gender, subtypeobject, subtypehumanoid, subtypeconcept, advancedprompting, hardturnoffemojis, seed, overrideoutfit, prompt_g_and_l, base_model, OBP_preset)
+            resultlist = build_dynamic_prompt(insanitylevel,subject,artist,imagetype, onlyartists,antistring,prefixprompt,suffixprompt,promptcompounderlevel, seperator,givensubject,smartsubject,giventypeofimage,imagemodechance, gender, subtypeobject, subtypehumanoid, subtypeconcept, advancedprompting, hardturnoffemojis, seed, overrideoutfit, prompt_g_and_l, base_model, OBP_preset, prompt_enhancer)
             result = resultlist[0]
             print("prompt_g")
             print(resultlist[1])
@@ -27,7 +27,7 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
             print(resultlist[2])
 
         else:
-            result = build_dynamic_prompt(insanitylevel,subject,artist,imagetype, onlyartists,antistring,prefixprompt,suffixprompt,promptcompounderlevel, seperator,givensubject,smartsubject,giventypeofimage,imagemodechance, gender, subtypeobject, subtypehumanoid, subtypeconcept, advancedprompting, hardturnoffemojis, seed, overrideoutfit, prompt_g_and_l, base_model, OBP_preset, superprompter)
+            result = build_dynamic_prompt(insanitylevel,subject,artist,imagetype, onlyartists,antistring,prefixprompt,suffixprompt,promptcompounderlevel, seperator,givensubject,smartsubject,giventypeofimage,imagemodechance, gender, subtypeobject, subtypehumanoid, subtypeconcept, advancedprompting, hardturnoffemojis, seed, overrideoutfit, prompt_g_and_l, base_model, OBP_preset, prompt_enhancer)
 
         #if(superprompter):
         #    load_models()
@@ -130,5 +130,5 @@ if __name__ == "__main__":
                 , False #prompt_g_and_l
                 , "SDXL" #base model
                 , "" #preset  "All (random)..."
-                , True # superprompter
+                , "superprompter" # superprompter
                 )

@@ -4723,7 +4723,7 @@ def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_s
     descriptorlist = csv_to_list("descriptors")
 
     usestyle = False
-    if(superpromptstyle != "" or superpromptstyle != "all"):
+    if(superpromptstyle != "" and superpromptstyle != "all"):
         usestyle = True
 
     restofprompt = restofprompt.lower()
@@ -4775,7 +4775,7 @@ def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_s
     "firstname": "",
     "job": "person",
     "fictional": "fictional character",
-    "non fictional": "celebrity",
+    "non fictional": "person",
     "human": "person",
     "animal": "animal",
     "animal as human": "human creature",
@@ -4797,8 +4797,8 @@ def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_s
     # for insanitylevel in range(1,11):
     j = 0
     temperature = temperature_lookup.get(insanitylevel, 0.5)
-    max_new_tokens = max_new_tokens_lookup.get(insanitylevel, 75)
-    top_p = top_p_lookup.get(insanitylevel, 5.0)
+    max_new_tokens = max_new_tokens_lookup.get(insanitylevel, 70)
+    top_p = top_p_lookup.get(insanitylevel, 1.6)
     subject_to_generate = chosensubject_lookup.get(chosensubject, "")
 
     translation_table_remove_stuff = str.maketrans('', '', '.,:()<>|[]"" ')
@@ -4820,7 +4820,7 @@ def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_s
         gender = ""
     if(superpromptstyle == "" or superpromptstyle == "all"):
         if "fantasy" in restofprompt or "d&d" in restofprompt or "dungeons and dragons" in restofprompt or "dungeons and dragons" in restofprompt:
-            superpromptstyle = random.choice(["fantasy style","d&d style"])
+            superpromptstyle = "fantasy style"
         elif "sci-fi" in restofprompt or "scifi" in restofprompt or "science fiction" in restofprompt:
             superpromptstyle = random.choice(["sci-fi style","futuristic"])
         elif "cyberpunk" in restofprompt:
@@ -4856,10 +4856,6 @@ def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_s
     elif "game" in restofprompt:
         imagetype = "video game artwork"
     
-    usestyle = False
-
-
-
     if imagetype != "" and (normal_dist(insanitylevel) or usestyle == True):
         question += "Expand the following " + gender + " " + subject_to_generate + " prompt to describe " + superpromptstyle + " " + imagetype + ": "
     elif imagetype != "":
@@ -4882,7 +4878,7 @@ def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_s
         print("chosen subject: " + chosensubject)
         
     	
-        superpromptresult = answer(input_text=question + prompt, max_new_tokens=max_new_tokens, repetition_penalty=2.0, temperature=temperature, top_p=top_p, top_k=10, seed=seed)
+        superpromptresult = answer(input_text=question + '"' + prompt + '"', max_new_tokens=max_new_tokens, repetition_penalty=2.0, temperature=temperature, top_p=top_p, top_k=10, seed=seed)
 
         print("orignal: " + prompt)
         print("insanitylevel: " + str(insanitylevel))

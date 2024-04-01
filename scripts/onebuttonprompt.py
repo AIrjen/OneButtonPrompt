@@ -654,9 +654,11 @@ class Script(scripts.Script):
 
                                 A simple and quick implementiation of Fooocus prompt magic
                             
-                                🤓 Prompt enhancer
+                                🦸‍♂️💬 Prompt enhancer
 
-                                Choose for "superprompter" to super prompt the prompts
+                                Choose for "superprompter" to super prompt the prompts.
+                            
+                                Please install requirements for superprompter before use.
 
                                 </font>
                                 """
@@ -670,6 +672,13 @@ class Script(scripts.Script):
             with gr.Row(variant="compact"):
                 promptenhancer = gr.Dropdown(
                      prompt_enhancers, label="🤓 Prompt enhancer", value="none")
+            with gr.Row(variant="compact"):
+                 gr.Markdown("""
+                                <font size="2">
+                                Other options
+                                </font>
+                                """
+                    )
             with gr.Row(variant="compact"):
                 with gr.Column(variant="compact"):
                     promptcompounderlevel = gr.Dropdown(

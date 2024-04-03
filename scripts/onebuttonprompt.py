@@ -32,7 +32,7 @@ ANDtogglemode = ["none", "automatic", "prefix AND prompt + suffix", "prefix + pr
 seperatorlist = ["comma", "AND", "BREAK"]
 genders = ["all", "male", "female"]
 
-prompt_enhancers = ["none", "superprompter"]
+prompt_enhancers = ["none", "superprompt-v1"]
 
 qualitymodelist = ["highest", "gated"]
 qualitykeeplist = ["keep used","keep all"]
@@ -656,9 +656,9 @@ class Script(scripts.Script):
                             
                                 🦸‍♂️💬 Prompt enhancer
 
-                                Choose for "superprompter" to super prompt the prompts.
+                                Choose for "superprompt-v1" to super prompt the prompts with roborovski superprompt-v1 model.
                             
-                                Please install requirements for superprompter before use.
+                                Please install requirements for superprompt before use.
 
                                 </font>
                                 """
@@ -675,7 +675,10 @@ class Script(scripts.Script):
             with gr.Row(variant="compact"):
                  gr.Markdown("""
                                 <font size="2">
+                             
                                 Other options
+                             
+                                ---
                                 </font>
                                 """
                     )

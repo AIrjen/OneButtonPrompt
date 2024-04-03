@@ -21,7 +21,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     add_quality = True
 
     superprompter = False
-    if(prompt_enhancer == "superprompter"):
+    prompt_enhancer = prompt_enhancer.lower()
+    if(prompt_enhancer == "superprompter" or prompt_enhancer == "superprompt" or prompt_enhancer == "superprompt-v1"):
         superprompter = True
     if(superprompter==True):
         base_model = "Stable Cascade"
@@ -4721,6 +4722,7 @@ def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_s
 
     superprompterstyleslist = csv_to_list("superprompter_styles")
     descriptorlist = csv_to_list("descriptors")
+    devmessagessuperpromptlist = csv_to_list("devmessages_superprompt")
 
     usestyle = False
     if(superpromptstyle != "" and superpromptstyle != "all"):
@@ -4763,8 +4765,8 @@ def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_s
     5: 1.6,
     6: 1.75,
     7: 2.0,
-    8: 4.0,
-    9: 7.0,
+    8: 3.0,
+    9: 5.0,
     10: 15.0
     }
 
@@ -4806,7 +4808,7 @@ def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_s
 
      # check if its matching all words from the override:
     possible_words_to_check = override_subject.lower().split() + override_outfit.lower().split()
-    print(possible_words_to_check)
+    # print(possible_words_to_check)
     words_to_check = []
     words_to_remove = ['subject', 'solo', '1girl', '1boy']
     for word in possible_words_to_check:
@@ -4871,20 +4873,20 @@ def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_s
     prompt = prompt.translate(translation_table_remove_numbers)
 
     while done == False:
-        print(seed)
-        print(temperature)
-        print(top_p)
-        print(question)
-        print("chosen subject: " + chosensubject)
+        #print(seed)
+        #print(temperature)
+        #print(top_p)
+        #print(question)
+        #print("chosen subject: " + chosensubject)
         
     	
-        superpromptresult = answer(input_text=question + '"' + prompt + '"', max_new_tokens=max_new_tokens, repetition_penalty=2.0, temperature=temperature, top_p=top_p, top_k=10, seed=seed)
+        superpromptresult = answer(input_text=question + prompt, max_new_tokens=max_new_tokens, repetition_penalty=2.0, temperature=temperature, top_p=top_p, top_k=10, seed=seed)
 
-        print("orignal: " + prompt)
-        print("insanitylevel: " + str(insanitylevel))
-        print("")
-        print("complete superprompt: " + superpromptresult)
-        print("")
+        #print("orignal: " + prompt)
+        #print("insanitylevel: " + str(insanitylevel))
+        #print("")
+        #print("complete superprompt: " + superpromptresult)
+        #print("")
 
         # Find the indices of the nearest period and comma
         period_index = superpromptresult.rfind('.')
@@ -4900,7 +4902,7 @@ def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_s
             superpromptresult = superpromptresult  # If neither period nor comma exists, keep the entire text
 
 
-        print(words_to_check)
+        #print(words_to_check)
         # Iterate through each word and check if it exists in the other string
         i = 0
         for word in words_to_check:
@@ -4924,6 +4926,9 @@ def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_s
             else:
                 top_p -= 0.3
             max_new_tokens += 3
+            print("")
+            print(random.choice(devmessagessuperpromptlist) + "... Retrying...")
+            print("")
             
         
 

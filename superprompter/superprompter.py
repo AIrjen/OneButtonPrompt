@@ -14,17 +14,17 @@ def load_models():
     if not all(os.path.exists(modelDir) for file in modelDir):
         print("Model files not found. Downloading...\n")
         download_models()
-    else:
-        print("Model files found. Skipping download.\n")
+    # else:
+        # print("Model files found. Skipping download.\n")
 
-    print("Loading SuperPrompt-v1 model...\n")
+    # print("Loading SuperPrompt-v1 model...\n")
 
 
     global tokenizer, model
     tokenizer = T5Tokenizer.from_pretrained(modelDir)
     model = T5ForConditionalGeneration.from_pretrained(modelDir, torch_dtype=torch.float16)
 
-    print("SuperPrompt-v1 model loaded successfully.\n")
+    # print("SuperPrompt-v1 model loaded successfully.\n")
 
 def unload_models():
     global tokenizer, model
@@ -39,7 +39,6 @@ def unload_models():
 
 def answer(input_text="", max_new_tokens=512, repetition_penalty=1.2, temperature=0.5, top_p=1, top_k = 1 , seed=-1):
        
-    # if the seed is "0", generate a random seed and log it to the output
     if seed == -1:
         seed = random.randint(1, 1000000)
 
@@ -59,7 +58,5 @@ def answer(input_text="", max_new_tokens=512, repetition_penalty=1.2, temperatur
 
     dirty_text = tokenizer.decode(outputs[0])
     text = dirty_text.replace("<pad>", "").replace("</s>", "").strip()
-    # print("Temperature: {temperature}\nTop P: {top_p}\nTop K: {top_k}\nSeed: {seed}\nOutput:\n\n")
-    
-    # print(text)
+
     return text

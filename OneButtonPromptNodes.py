@@ -25,7 +25,7 @@ genders = ["all", "male", "female"]
 emojis = [False, True]
 
 models = ["SD1.5", "SDXL", "Stable Cascade"]
-prompt_enhancers = ["none", "superprompter"]
+prompt_enhancers = ["none", "superprompt-v1"]
 subjects =["all"]
 subjectsubtypesobject = ["all"]
 subjectsubtypeshumanoid = ["all"]
@@ -692,7 +692,7 @@ class OneButtonSuperPrompt:
     CATEGORY = "OneButtonPrompt"
     
     def Comfy_OBP_SuperPrompt(self, insanitylevel, prompt, superpromptstyle, seed):
-        # artify here
+
         OBPsuperprompt = one_button_superprompt(insanitylevel=insanitylevel, prompt=prompt, seed=seed, superpromptstyle=superpromptstyle)
         
         print("Super prompt: " + OBPsuperprompt)

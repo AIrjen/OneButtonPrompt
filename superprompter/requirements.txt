@@ -1,0 +1,4 @@
+transformers
+einops
+accelerate
+sentencepiece

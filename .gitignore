@@ -3,3 +3,5 @@
 userfiles/antilist.csv
 userfiles/config.csv
 userfiles/*.json
+superprompter/model_files
+superprompter/model_files/*.*

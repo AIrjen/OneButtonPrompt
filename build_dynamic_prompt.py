@@ -3,6 +3,7 @@ import re
 from csv_reader import *
 from random_functions import *
 from one_button_presets import OneButtonPresets
+from superprompter.superprompter import *
 OBPresets = OneButtonPresets()
 
 
@@ -12,12 +13,19 @@ OBPresets = OneButtonPresets()
 # insanity level controls randomness of propmt 0-10
 # forcesubject van be used to force a certain type of subject
 # Set artistmode to none, to exclude artists 
-def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", givensubject="",smartsubject = True,giventypeofimage="", imagemodechance = 20, gender = "all", subtypeobject="all", subtypehumanoid="all", subtypeconcept="all", advancedprompting=True, hardturnoffemojis=False, seed=-1, overrideoutfit="", prompt_g_and_l = False, base_model = "SD1.5", OBP_preset = ""):
+def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", givensubject="",smartsubject = True,giventypeofimage="", imagemodechance = 20, gender = "all", subtypeobject="all", subtypehumanoid="all", subtypeconcept="all", advancedprompting=True, hardturnoffemojis=False, seed=-1, overrideoutfit="", prompt_g_and_l = False, base_model = "SD1.5", OBP_preset = "", prompt_enhancer = "none"):
 
     remove_weights =  False
     less_verbose = False
     add_vomit = True
     add_quality = True
+
+    superprompter = False
+    prompt_enhancer = prompt_enhancer.lower()
+    if(prompt_enhancer == "superprompter" or prompt_enhancer == "superprompt" or prompt_enhancer == "superprompt-v1"):
+        superprompter = True
+    if(superprompter==True):
+        base_model = "Stable Cascade"
    
 
     # set seed
@@ -27,7 +35,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     if(seed > 0):
         random.seed(seed)
 
-    #
+    originalinsanitylevel = insanitylevel
     if(advancedprompting != False and random.randint(0,max(0, insanitylevel - 2)) <= 0):
         advancedprompting == False
 
@@ -1770,7 +1778,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             completeprompt += giventypeofimage + " of a "
 
 
-        
+        ## do less insane stuff while working for superprompter
+        if(superprompter == True):
+            insanitylevel = max(1, insanitylevel-4)
         ### here we can do some other stuff to spice things up
         if(chance_roll(insanitylevel, minilocationadditionchance) and generateminilocationaddition == True):
             completeprompt += " -minilocationaddition-, "
@@ -1895,6 +1905,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                         objectwildcardlist = ["-space-"]
                     if(subtypeobject == "flora"):
                         objectwildcardlist = ["-flora-"]
+                    subjectchooser = subtypeobject
+
                 
                 # if we have a given subject, we should skip making an actual subject
                 # unless we have "subject" in the given subject
@@ -2228,6 +2240,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                             else:
                                 completeprompt += " and -descriptor- "
                 completeprompt += ", "
+        ## set the insanitylevel back
+        if(superprompter == True):
+            insanitylevel = originalinsanitylevel
 
         if(thetokinatormode == False):
             # object additions
@@ -3264,6 +3279,16 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         promptlist = completeprompt.split("@@@")
         prompt_g = cleanup(promptlist[1], advancedprompting, insanitylevel)
         prompt_l = cleanup((promptlist[0] + ", " + promptlist[2]).replace("of a",""), advancedprompting, insanitylevel)
+    if("@@@" in completeprompt and superprompter == True):
+        #load_models()
+        promptlist = completeprompt.split("@@@")
+        subjectprompt = cleanup(promptlist[1], advancedprompting, insanitylevel)
+        startprompt = cleanup(promptlist[0], advancedprompting, insanitylevel)
+        endprompt = cleanup(promptlist[2], advancedprompting, insanitylevel)
+        superpromptresult = one_button_superprompt(insanitylevel=insanitylevel, prompt=subjectprompt, seed=seed, override_subject=givensubject, override_outfit=overrideoutfit, chosensubject=subjectchooser, gender=gender, restofprompt = startprompt + endprompt)
+        completeprompt = startprompt + ", " + superpromptresult + ", " + endprompt
+        prompt_g = superpromptresult
+        prompt_l = completeprompt
     elif(prompt_g_and_l == True):
         prompt_g = completeprompt
         prompt_l = completeprompt
@@ -4686,3 +4711,226 @@ def split_prompt_to_words(text):
         totallist = list(set(filter(None, totallist)))
 
         return totallist
+
+def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_subject = "" , override_outfit = "", chosensubject ="", gender = "", restofprompt = "", superpromptstyle = ""):
+
+    if(seed <= 0):
+        seed = random.randint(1,1000000)
+    
+    done = False
+    load_models()
+
+    superprompterstyleslist = csv_to_list("superprompter_styles")
+    descriptorlist = csv_to_list("descriptors")
+    devmessagessuperpromptlist = csv_to_list("devmessages_superprompt")
+
+    usestyle = False
+    if(superpromptstyle != "" and superpromptstyle != "all"):
+        usestyle = True
+
+    restofprompt = restofprompt.lower()
+    question = ""
+    
+    temperature_lookup = {
+    1: 0.01,
+    2: 0.1,
+    3: 0.3,
+    4: 0.5,
+    5: 0.6,
+    6: 0.7,
+    7: 1.0,
+    8: 2.5,
+    9: 5.0,
+    10: 10.0
+    }
+
+    max_new_tokens_lookup = {
+    1: 45,
+    2: 45,
+    3: 50,
+    4: 55,
+    5: 60,
+    6: 70,
+    7: 90,
+    8: 100,
+    9: 150,
+    10: 255
+    }
+
+    top_p_lookup = {
+    1: 0.1,
+    2: 1.0,
+    3: 1.3,
+    4: 1.5,
+    5: 1.6,
+    6: 1.75,
+    7: 2.0,
+    8: 3.0,
+    9: 5.0,
+    10: 15.0
+    }
+
+    chosensubject_lookup = {
+    "humanoid": "fantasy character",
+    "manwomanrelation": "person",
+    "manwomanmultiple": "people",
+    "firstname": "",
+    "job": "person",
+    "fictional": "fictional character",
+    "non fictional": "person",
+    "human": "person",
+    "animal": "animal",
+    "animal as human": "human creature",
+    "landscape": "landscape",
+    "concept": "concept",
+    "event": "concept",
+    "concept": "concept",
+    "poemline": "concept",
+    "songline": "concept",
+    "cardname": "concept",
+    "episodetitle": "concept",
+    "generic objects": "object",
+    "vehicles": "vehicle",
+    "food": "food",
+    "building": "building",
+    "space": "space",
+    "flora": "nature",
+    }
+    # for insanitylevel in range(1,11):
+    j = 0
+    temperature = temperature_lookup.get(insanitylevel, 0.5)
+    max_new_tokens = max_new_tokens_lookup.get(insanitylevel, 70)
+    top_p = top_p_lookup.get(insanitylevel, 1.6)
+    subject_to_generate = chosensubject_lookup.get(chosensubject, "")
+
+    translation_table_remove_stuff = str.maketrans('', '', '.,:()<>|[]"" ')
+    translation_table_remove_numbers = str.maketrans('', '', '0123456789:()<>|[]""')
+
+     # check if its matching all words from the override:
+    possible_words_to_check = override_subject.lower().split() + override_outfit.lower().split()
+    # print(possible_words_to_check)
+    words_to_check = []
+    words_to_remove = ['subject', 'solo', '1girl', '1boy']
+    for word in possible_words_to_check:
+        word = word.translate(translation_table_remove_stuff)
+        if word not in words_to_remove:
+            if not word.startswith("-") and not word.endswith("-"):
+                words_to_check.append(word)
+
+
+    if chosensubject not in ("humanoid","firstname","job","fictional","non fictional","human"):
+        gender = ""
+    if(superpromptstyle == "" or superpromptstyle == "all"):
+        if "fantasy" in restofprompt or "d&d" in restofprompt or "dungeons and dragons" in restofprompt or "dungeons and dragons" in restofprompt:
+            superpromptstyle = "fantasy style"
+        elif "sci-fi" in restofprompt or "scifi" in restofprompt or "science fiction" in restofprompt:
+            superpromptstyle = random.choice(["sci-fi style","futuristic"])
+        elif "cyberpunk" in restofprompt:
+            superpromptstyle = "cyberpunk"
+        elif "horror" in restofprompt:
+            superpromptstyle = "horror themed"
+        elif "evil" in restofprompt:
+            superpromptstyle = "evil"
+        elif "cinestill" in restofprompt or "movie still" in restofprompt or "cinematic" in restofprompt or "epic" in restofprompt:
+            superpromptstyle = random.choice(["cinematic","epic"])
+        elif "fashion" in restofprompt:
+            superpromptstyle = random.choice(["elegant","glamourous"])
+        elif "cute" in restofprompt or "adorable" in restofprompt or "kawaii" in restofprompt:
+            superpromptstyle = random.choice(["cute","adorable", "kawaii"])
+
+        else:
+            superpromptstyle = random.choice(superprompterstyleslist)
+
+    if(words_to_check):
+        question += "Make sure the subject is used: " + ', '.join(words_to_check) + " \n"
+
+    imagetype = ""
+    if "portrait" in restofprompt:
+        imagetype = "a portrait"
+    elif "painting" in restofprompt:
+        imagetype = "a painting"
+    elif "digital art" in restofprompt:
+        imagetype = "a digital artwork"
+    elif "concept" in restofprompt:
+        imagetype = "concept art"
+    elif "pixel" in restofprompt:
+        imagetype = "pixel art"
+    elif "game" in restofprompt:
+        imagetype = "video game artwork"
+    
+    if imagetype != "" and (normal_dist(insanitylevel) or usestyle == True):
+        question += "Expand the following " + gender + " " + subject_to_generate + " prompt to describe " + superpromptstyle + " " + imagetype + ": "
+    elif imagetype != "":
+        question += "Expand the following " + gender + " " + subject_to_generate + " prompt to describe " + imagetype + ": "
+    elif(normal_dist(insanitylevel) or usestyle == True):
+        question += "Expand the following " + gender + " " + subject_to_generate + " prompt to make it more " + superpromptstyle
+    else:
+        question += "Expand the following " + gender + " " + subject_to_generate + " prompt to add more detail: "
+    # question = "Expand the following fantasy character prompt to describe a portrait: "
+
+
+
+    prompt = prompt.translate(translation_table_remove_numbers)
+
+    while done == False:
+        #print(seed)
+        #print(temperature)
+        #print(top_p)
+        #print(question)
+        #print("chosen subject: " + chosensubject)
+        
+    	
+        superpromptresult = answer(input_text=question + prompt, max_new_tokens=max_new_tokens, repetition_penalty=2.0, temperature=temperature, top_p=top_p, top_k=10, seed=seed)
+
+        #print("orignal: " + prompt)
+        #print("insanitylevel: " + str(insanitylevel))
+        #print("")
+        #print("complete superprompt: " + superpromptresult)
+        #print("")
+
+        # Find the indices of the nearest period and comma
+        period_index = superpromptresult.rfind('.')
+        comma_index = superpromptresult.rfind(',')
+
+        # Determine the index to cut off the string
+        cut_off_index = max(period_index, comma_index)
+
+        # Cut off the string at the determined index
+        if cut_off_index != -1:  # If either period or comma exists
+            superpromptresult = superpromptresult[:cut_off_index + 1]  # Include the period or comma
+        else:
+            superpromptresult = superpromptresult  # If neither period nor comma exists, keep the entire text
+
+
+        #print(words_to_check)
+        # Iterate through each word and check if it exists in the other string
+        i = 0
+        for word in words_to_check:
+            if word not in superpromptresult.lower() and word != "subject":
+                i += 1
+                
+        
+        if(i==0 or j == 20 or insanitylevel >= 9):
+            done = True
+        # slowly converge and change
+        else:
+            seed += 100
+            j += 1
+            if(temperature < 0.5):
+                temperature += 0.05 + round((1/random.randint(15,25)),2)
+            else:
+                temperature -= 0.1
+
+            if(top_p < 1.0):
+                top_p += 0.2 + round((1/random.randint(25,35)),2)
+            else:
+                top_p -= 0.3
+            max_new_tokens += 3
+            print("")
+            print(random.choice(devmessagessuperpromptlist) + "... Retrying...")
+            print("")
+            
+        
+
+            
+    return superpromptresult

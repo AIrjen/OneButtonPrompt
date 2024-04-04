@@ -1,7 +1,7 @@
 # ComfyUI integration
 One Button Prompt is now also a ComfyUI extension.
 
-There are 7 nodes currently availabe, with One Button Prompt node being the main one.
+There are 8 nodes currently availabe, with One Button Prompt node being the main one.
 You can slam it in every workflow, where you replace it with the Positive Prompt node.
 
 ![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/271dc575-dfe7-48dc-bef5-222d0af53344)
@@ -84,6 +84,19 @@ It is standardly set to __dynamic__. You can turn it off by choosing __none__.
 Choose __short__, __medium__ or __long__ for more direct control.
 
 Don't __reverse the polarity!__
+
+## One Button SuperPrompt
+One Button prompts integration of the SuperPrompt-v1 model. This is a different implementation than [NeuralSamurAI](https://github.com/NeuralSamurAI/Comfyui-Superprompt-Unofficial) his node.
+
+Its simple, type in what you want to see, and let it do its magic.
+
+You can set the intended style with the superpromptstyle settings. 'All' will either do nothing or add a random style.
+
+All other settings are controlled by the insanitylevel.
+
+It works great in combination with One Button Artify
+
+![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/1d8949c6-1a4a-420e-850f-bf5cba7f76c9)
 
 ## Create Prompt Variant
 You can use the "Create Prompt Variant" node, to create variants based on a prompt you input. The strength of the variant is set with the "insanity level" slider. Simply connect it between the positive prompt and the CLIP encoder module.

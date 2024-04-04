@@ -130,5 +130,5 @@ if __name__ == "__main__":
                 , False #prompt_g_and_l
                 , "SDXL" #base model
                 , "" #preset  "All (random)..."
-                , "superprompter" # superprompter
+                , "" # superprompter
                 )

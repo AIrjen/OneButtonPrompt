@@ -3220,7 +3220,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             completeprompt = replacewildcard(completeprompt, insanitylevel, wildcard, attachedlist,True, advancedprompting, artiststyleselector)
 
 
-      
+    completeprompt = replace_user_wildcards(completeprompt)  
     # prompt strenght stuff
 
     # if the given subject already is formed like this ( :1.x)
@@ -4934,3 +4934,13 @@ def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_s
 
             
     return superpromptresult
+
+def replace_user_wildcards(completeprompt):
+    user_wildcards_list = re.findall(r'-[\w_]*-', completeprompt)
+    for user_wildcard in user_wildcards_list:
+        user_wildcard_clean = user_wildcard.strip("-")
+        wordlist = csv_to_list(csvfilename=user_wildcard_clean, directory="./userfiles/")
+        if(wordlist):
+            completeprompt = completeprompt.replace(user_wildcard, random.choice(wordlist),1)
+
+    return completeprompt

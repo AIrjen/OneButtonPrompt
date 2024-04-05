@@ -82,6 +82,8 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
         resultnew = resultnew.replace("-da-", " da ")
         resultnew = resultnew.replace("-doo-", " doo ")
         resultnew = resultnew.replace("-and-", " and ")
+        resultnew = resultnew.replace("-o-", " o ")
+        resultnew = resultnew.replace("-horse-", " horse ")
         matches = re.findall(r'-\w+-', resultnew)
 
         # Filter out matches with commas and spaces

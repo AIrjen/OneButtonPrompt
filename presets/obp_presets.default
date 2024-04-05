@@ -233,6 +233,24 @@
       "giventypeofimage": "wallpaper art, in the center is an image",
       "antistring": ""
     },
+    "The Cauldron": {
+      "insanitylevel": 5,
+      "subject": "concept",
+      "artist": "all",
+      "chosensubjectsubtypeobject": "all",
+      "chosensubjectsubtypehumanoid": "all",
+      "chosensubjectsubtypeconcept": "concept mixer",
+      "chosengender": "all",
+      "imagetype": "subject only mode",
+      "imagemodechance": "20",
+      "givensubject": "",
+      "smartsubject": true,
+      "givenoutfit": "",
+      "prefixprompt": "",
+      "suffixprompt": "-quality-, -fluff-, -fluff-, -quality-, -fluff-",
+      "giventypeofimage": "",
+      "antistring": ""
+    },
     "The Connaisseur": {
       "insanitylevel": 5,
       "subject": "concept",

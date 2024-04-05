@@ -31,6 +31,7 @@ subject_poemline;on
 subject_songline;on
 subject_cardname;on
 subject_episodetitle;on
+subject_conceptmixer;on
 #----;
 # other main lists, in order of appearance;
 # setting the random chance, for normal generation;

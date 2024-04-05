@@ -4808,16 +4808,17 @@ def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_s
 
      # check if its matching all words from the override:
     possible_words_to_check = override_subject.lower().split() + override_outfit.lower().split()
-    # print(possible_words_to_check)
+    #print(possible_words_to_check)
     words_to_check = []
     words_to_remove = ['subject', 'solo', '1girl', '1boy']
     for word in possible_words_to_check:
         word = word.translate(translation_table_remove_stuff)
+        #print(word)
         if word not in words_to_remove:
-            if not word.startswith("-") and not word.endswith("-"):
+            if (not word.startswith("-") and not word.endswith("-")) and (not word.startswith("_") and not word.endswith("_")) :
                 words_to_check.append(word)
 
-
+    #print(words_to_check)
     if chosensubject not in ("humanoid","firstname","job","fictional","non fictional","human"):
         gender = ""
     if(superpromptstyle == "" or superpromptstyle == "all"):
@@ -4866,7 +4867,6 @@ def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_s
         question += "Expand the following " + gender + " " + subject_to_generate + " prompt to make it more " + superpromptstyle
     else:
         question += "Expand the following " + gender + " " + subject_to_generate + " prompt to add more detail: "
-    # question = "Expand the following fantasy character prompt to describe a portrait: "
 
 
 
@@ -4936,11 +4936,12 @@ def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_s
     return superpromptresult
 
 def replace_user_wildcards(completeprompt):
-    user_wildcards_list = re.findall(r'-[\w_]*-', completeprompt)
-    for user_wildcard in user_wildcards_list:
-        user_wildcard_clean = user_wildcard.strip("-")
-        wordlist = csv_to_list(csvfilename=user_wildcard_clean, directory="./userfiles/")
-        if(wordlist):
-            completeprompt = completeprompt.replace(user_wildcard, random.choice(wordlist),1)
+    for i in range(0,10):
+        user_wildcards_list = re.findall(r'-[\w_]*-', completeprompt)
+        for user_wildcard in user_wildcards_list:
+            user_wildcard_clean = user_wildcard.strip("-")
+            wordlist = csv_to_list(csvfilename=user_wildcard_clean, directory="./userfiles/wildcards/")
+            if(wordlist):
+                completeprompt = completeprompt.replace(user_wildcard, random.choice(wordlist),1)
 
     return completeprompt

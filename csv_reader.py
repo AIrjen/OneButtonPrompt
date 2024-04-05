@@ -31,6 +31,7 @@ def csv_to_list(csvfilename, antilist=[], directory="./csvfiles/", lowerandstrip
         full_path = os.path.join(script_dir, directory )
         userfilesfolder = os.path.join(script_dir, userfilesdirectory )
         directoryfilesfolder = os.path.join(script_dir, directory )
+        
         # check if there is a replace file
         if(directory=="./csvfiles/" or directory=="./csvfiles/special_lists/" or directory=="./csvfiles/templates/"):      
                 for filename in os.listdir(userfilesfolder):
@@ -81,7 +82,27 @@ def csv_to_list(csvfilename, antilist=[], directory="./csvfiles/", lowerandstrip
                                                                 csvlist.append(row[0].lower().strip())        
                                                         else:
                                                                 csvlist.append(row[0])
-                
+        # dirty hack for possible .txt files
+        if(os.path.isfile(full_path + csvfilename + ".txt")):
+                with open(full_path + csvfilename + ".txt", "r", newline="",encoding="utf8") as file:
+                        reader = csv.reader(file, delimiter=delimiter)
+                        if(skipheader==True):
+                                next(reader)
+                        if(listoflistmode==True):
+                                csvlist = list(reader)
+                        else:
+                                for row in reader:
+                                        value = row[0]
+                                        if( 
+                                                gender != "all" and (row[1] == gender or row[1] == "genderless" or row[1] == "both")
+                                                or gender == "all"
+                                                ):
+                                                if(value.lower().strip() not in antilist):
+                                                        if(lowerandstrip == 1):
+                                                                csvlist.append(row[0].lower().strip())        
+                                                        else:
+                                                                csvlist.append(row[0])
+
         # do the add ons!
         if(directory=="./csvfiles/" or directory=="./csvfiles/special_lists/"):
                 if(os.path.isfile(userfilesfolder + csvfilename + "_addon" + ".csv")):

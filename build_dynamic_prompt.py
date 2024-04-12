@@ -22,7 +22,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
     superprompter = False
     prompt_enhancer = prompt_enhancer.lower()
-    if(prompt_enhancer == "superprompter" or prompt_enhancer == "superprompt" or prompt_enhancer == "superprompt-v1"):
+    if(prompt_enhancer == "superprompter" or prompt_enhancer == "superprompt" or prompt_enhancer == "superprompt-v1" or prompt_enhancer == "hyperprompt"):
         superprompter = True
     if(superprompter==True):
         base_model = "Stable Cascade"
@@ -126,6 +126,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     vehiclelist = csv_to_list("vehicles",antilist)
     outfitlist = csv_to_list("outfits",antilist)
     locationlist = csv_to_list("locations",antilist)
+    backgroundlist = csv_to_list("backgrounds",antilist)
 
     accessorielist = csv_to_list("accessories",antilist,"./csvfiles/",0,"?",False,False,gender)
     artmovementlist = csv_to_list("artmovements",antilist)
@@ -783,7 +784,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     if(generatelandscape):
         mainchooserlist.append("landscape")
         addontolocationlist.append("-location-")
+        addontolocationlist.append("-background-")
         addontolocationinsidelist.append("-location-")
+        addontolocationinsidelist.append("-background-")
     
     generateevent = bool(eventlist) and generateevent
     generateconcepts = bool(conceptprefixlist) and bool(conceptsuffixlist) and generateconcepts
@@ -1850,7 +1853,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 heshelist = ["they"]
                 hisherlist = ["their"]
                 himherlist = ["them"]
-                completeprompt += "a OR(-building-;-location-;-waterlocation-;-container-;rare) full of "
+                completeprompt += "a OR(-building-;-location-;-waterlocation-;-container-;-background-;rare) full of "
 
 
             # Sometimes the descriptors are at the back, in more natural language. Lets determine.
@@ -2148,7 +2151,10 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                         completeprompt += "-culture- "
 
                     #addontolocation = [locationlist,buildinglist, vehiclelist]
-                    completeprompt += "-addontolocation- "
+                    if(random.randint(0,1) == 1):
+                        completeprompt += "-addontolocation- "
+                    else:
+                        completeprompt += "-background- "
 
 
             if(mainchooser == "concept"):
@@ -3222,11 +3228,12 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     "-token-" in completeprompt or
     "-allstylessuffix-" in completeprompt or
     "-fluff-" in completeprompt or
-    "-event-" in completeprompt):
+    "-event-" in completeprompt or
+    "-background-" in completeprompt):
         allwildcardslistnohybrid = [ "-color-","-object-", "-animal-", "-fictional-","-nonfictional-","-building-","-vehicle-","-location-","-conceptprefix-","-food-","-haircolor-","-hairstyle-","-job-", "-accessory-", "-humanoid-", "-manwoman-", "-human-", "-colorscheme-", "-mood-", "-genderdescription-", "-artmovement-", "-malefemale-", "-bodytype-", "-minilocation-", "-minilocationaddition-", "-pose-", "-season-", "-minioutfit-", "-elaborateoutfit-", "-minivomit-", "-vomit-", "-rpgclass-", "-subjectfromfile-","-outfitfromfile-", "-brand-", "-space-", "-artist-", "-imagetype-", "-othertype-", "-quality-", "-lighting-", "-camera-", "-lens-","-imagetypequality-", "-poemline-", "-songline-", "-greatwork-", "-fantasyartist-", "-popularartist-", "-romanticismartist-", "-photographyartist-", "-emoji-", "-timeperiod-", "-shotsize-", "-musicgenre-", "-animaladdition-", "-addontolocationinside-", "-addontolocation-", "-objectaddition-", "-humanaddition-", "-overalladdition-", "-focus-", "-direction-", "-styletilora-", "-manwomanrelation-", "-waterlocation-", "-container-", "-firstname-", "-flora-", "-print-", "-miniactivity-", "-pattern-", "-animalsuffixaddition-", "-chair-", "-cardname-", "-covering-", "-heshe-", "-hisher-", "-himher-", "-outfitdescriptor-", "-hairdescriptor-", "-hairvomit-", "-humandescriptor-", "-manwomanmultiple-", "-facepart-", "-buildfacepart-", "-outfitvomit-", "-locationdescriptor-", "-basicbitchdescriptor-", "-animaldescriptor-", "-humanexpression-", "-humanvomit-", "-eyecolor-", "-fashiondesigner-", "-colorcombination-", "-materialcombination-", "-oppositefictional-", "-oppositenonfictional-", "-photoaddition-", "-age-", "-agecalculator-", "-gregmode-"
-                                    ,"-portraitartist-", "-characterartist-" , "-landscapeartist-", "-scifiartist-", "-graphicdesignartist-", "-digitalartist-", "-architectartist-", "-cinemaartist-", "-setting-", "-charactertype-", "-objectstohold-", "-episodetitle-", "-token-", "-allstylessuffix-", "-fluff-", "-event-"]
+                                    ,"-portraitartist-", "-characterartist-" , "-landscapeartist-", "-scifiartist-", "-graphicdesignartist-", "-digitalartist-", "-architectartist-", "-cinemaartist-", "-setting-", "-charactertype-", "-objectstohold-", "-episodetitle-", "-token-", "-allstylessuffix-", "-fluff-", "-event-", "-background-"]
         allwildcardslistnohybridlists = [colorlist, objectlist, animallist, fictionallist, nonfictionallist, buildinglist, vehiclelist, locationlist,conceptprefixlist,foodlist,haircolorlist, hairstylelist,joblist, accessorielist, humanoidlist, manwomanlist, humanlist, colorschemelist, moodlist, genderdescriptionlist, artmovementlist, malefemalelist, bodytypelist, minilocationlist, minilocationadditionslist, poselist, seasonlist, minioutfitlist, elaborateoutfitlist, minivomitlist, vomitlist, rpgclasslist, customsubjectslist, customoutfitslist, brandlist, spacelist, artistlist, imagetypelist, othertypelist, qualitylist, lightinglist, cameralist, lenslist, imagetypequalitylist, poemlinelist, songlinelist, greatworklist, fantasyartistlist, popularartistlist, romanticismartistlist, photographyartistlist, emojilist, timeperiodlist, shotsizelist, musicgenrelist, animaladditionlist, addontolocationinsidelist, addontolocationlist, objectadditionslist, humanadditionlist, overalladditionlist, focuslist, directionlist, stylestiloralist, manwomanrelationlist, waterlocationlist, containerlist, firstnamelist, floralist, printlist, miniactivitylist, patternlist, animalsuffixadditionlist, chairlist, cardnamelist, coveringlist, heshelist, hisherlist, himherlist, outfitdescriptorlist, hairdescriptorlist, hairvomitlist, humandescriptorlist, manwomanmultiplelist, facepartlist, buildfacepartlist, outfitvomitlist, locationdescriptorlist, basicbitchdescriptorlist, animaldescriptorlist, humanexpressionlist, humanvomitlist, eyecolorlist, fashiondesignerlist, colorcombinationlist, materialcombinationlist, oppositefictionallist, oppositenonfictionallist, photoadditionlist, agelist, agecalculatorlist, gregmodelist
-                                         , portraitartistlist, characterartistlist, landscapeartistlist, scifiartistlist, graphicdesignartistlist, digitalartistlist, architectartistlist, cinemaartistlist, settinglist, charactertypelist, objectstoholdlist, episodetitlelist, tokenlist, allstylessuffixlist, flufferlist, eventlist]
+                                         , portraitartistlist, characterartistlist, landscapeartistlist, scifiartistlist, graphicdesignartistlist, digitalartistlist, architectartistlist, cinemaartistlist, settinglist, charactertypelist, objectstoholdlist, episodetitlelist, tokenlist, allstylessuffixlist, flufferlist, eventlist, backgroundlist]
         
         allwildcardslistwithhybrid = ["-material-", "-descriptor-", "-outfit-", "-conceptsuffix-","-culture-", "-objecttotal-", "-outfitprinttotal-", "-element-"]
         allwildcardslistwithhybridlists = [materiallist, descriptorlist,outfitlist,conceptsuffixlist,culturelist, objecttotallist, outfitprinttotallist, elementlist]
@@ -3365,6 +3372,8 @@ def createpromptvariant(prompt = "", insanitylevel = 5, antivalues = "" , gender
     vehiclelist = csv_to_list("vehicles",antilist)
     outfitlist = csv_to_list("outfits",antilist)
     locationlist = csv_to_list("locations",antilist)
+    backgroundlist = csv_to_list("backgrounds",antilist)
+    locationlist = locationlist + backgroundlist
 
     accessorielist = csv_to_list("accessories",antilist,"./csvfiles/",0,"?")
     artmovementlist = csv_to_list("artmovements",antilist)
@@ -3623,6 +3632,9 @@ def createpromptvariant(prompt = "", insanitylevel = 5, antivalues = "" , gender
                 
                 if lowercase_combination in [x.lower() for x in locationlist] and chance_roll(insanitylevel, "uncommon"):
                     prompt = prompt.replace(combination," -location- ")
+
+                if lowercase_combination in [x.lower() for x in backgroundlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -background- ")
 
                 
                 if lowercase_combination in [x.lower() for x in accessorielist] and chance_roll(insanitylevel, "uncommon"):
@@ -3994,12 +4006,13 @@ def createpromptvariant(prompt = "", insanitylevel = 5, antivalues = "" , gender
         "-episodetitle-" in completeprompt or
         "-allstylessuffix-" in completeprompt or
         "-fluff-" in completeprompt or
-        "-event-" in completeprompt
+        "-event-" in completeprompt or
+        "-background-" in completeprompt
         ):
             allwildcardslistnohybrid = [ "-color-","-object-", "-animal-", "-fictional-","-nonfictional-","-building-","-vehicle-","-location-","-conceptprefix-","-food-","-haircolor-","-hairstyle-","-job-", "-accessory-", "-humanoid-", "-manwoman-", "-human-", "-colorscheme-", "-mood-", "-genderdescription-", "-artmovement-", "-malefemale-", "-bodytype-", "-minilocation-", "-minilocationaddition-", "-pose-", "-season-", "-minioutfit-", "-elaborateoutfit-", "-minivomit-", "-vomit-", "-rpgclass-", "-subjectfromfile-", "-outfitfromfile-", "-brand-", "-space-", "-artist-", "-imagetype-", "-othertype-", "-quality-", "-lighting-", "-camera-", "-lens-","-imagetypequality-", "-poemline-", "-songline-", "-greatwork-", "-fantasyartist-", "-popularartist-", "-romanticismartist-", "-photographyartist-", "-emoji-", "-timeperiod-", "-shotsize-", "-musicgenre-", "-animaladdition-", "-objectaddition-", "-humanaddition-", "-overalladdition-", "-focus-", "-direction-", "-styletilora-", "-manwomanrelation-", "-waterlocation-", "-container-", "-firstname-", "-flora-", "-print-", "-miniactivity-", "-pattern-", "-chair-", "-cardname-", "-covering-", "-outfitdescriptor-", "-hairdescriptor-", "-hairvomit-", "-humandescriptor-", "-manwomanmultiple-", "-facepart-", "-locationdescriptor-", "-basicbitchdescriptor-", "-animaldescriptor-", "-humanexpression-", "-humanvomit-", "-eyecolor-", "-fashiondesigner-", "-colorcombination-", "-materialcombination-", "-photoaddition-", "-age-", "agecalculator-", "-gregmode-"
-                                        ,"-portraitartist-", "-characterartist-" , "-landscapeartist-", "-scifiartist-", "-graphicdesignartist-", "-digitalartist-", "-architectartist-", "-cinemaartist-", "-setting-", "-charactertype-", "-objectstohold-", "-episodetitle-", "-allstylessuffix-", "-fluff-", "-event-"]
+                                        ,"-portraitartist-", "-characterartist-" , "-landscapeartist-", "-scifiartist-", "-graphicdesignartist-", "-digitalartist-", "-architectartist-", "-cinemaartist-", "-setting-", "-charactertype-", "-objectstohold-", "-episodetitle-", "-allstylessuffix-", "-fluff-", "-event-", "-background-"]
             allwildcardslistnohybridlists = [colorlist, objectlist, animallist, fictionallist, nonfictionallist, buildinglist, vehiclelist, locationlist,conceptprefixlist,foodlist,haircolorlist, hairstylelist,joblist, accessorielist, humanoidlist, manwomanlist, humanlist, colorschemelist, moodlist, genderdescriptionlist, artmovementlist, malefemalelist, bodytypelist, minilocationlist, minilocationadditionslist, poselist, seasonlist, minioutfitlist, elaborateoutfitlist, minivomitlist, vomitlist, rpgclasslist, customsubjectslist, customoutfitslist, brandlist, spacelist, artistlist, imagetypelist, othertypelist, qualitylist, lightinglist, cameralist, lenslist, imagetypequalitylist, poemlinelist, songlinelist, greatworklist, fantasyartistlist, popularartistlist, romanticismartistlist, photographyartistlist, emojilist, timeperiodlist, shotsizelist, musicgenrelist, animaladditionlist, objectadditionslist, humanadditionlist, overalladditionlist, focuslist, directionlist, stylestiloralist, manwomanrelationlist, waterlocationlist, containerlist, firstnamelist, floralist, printlist, miniactivitylist, patternlist, chairlist, cardnamelist, coveringlist, outfitdescriptorlist, hairdescriptorlist, hairvomitlist, humandescriptorlist, manwomanmultiplelist, facepartlist, locationdescriptorlist, basicbitchdescriptorlist, animaldescriptorlist, humanexpressionlist, humanvomitlist, eyecolorlist, fashiondesignerlist, colorcombinationlist, materialcombinationlist, photoadditionlist, agelist, agecalculatorlist, gregmodelist
-                                             , portraitartistlist, characterartistlist, landscapeartistlist, scifiartistlist, graphicdesignartistlist, digitalartistlist, architectartistlist, cinemaartistlist, settinglist, charactertypelist, objectstoholdlist, episodetitlelist, allstylessuffixlist, flufferlist, eventlist]
+                                             , portraitartistlist, characterartistlist, landscapeartistlist, scifiartistlist, graphicdesignartistlist, digitalartistlist, architectartistlist, cinemaartistlist, settinglist, charactertypelist, objectstoholdlist, episodetitlelist, allstylessuffixlist, flufferlist, eventlist, backgroundlist]
             
             allwildcardslistwithhybrid = ["-material-", "-descriptor-", "-outfit-", "-conceptsuffix-","-culture-", "-objecttotal-", "-outfitprinttotal-", "-element-"]
             allwildcardslistwithhybridlists = [materiallist, descriptorlist,outfitlist,conceptsuffixlist,culturelist, objecttotallist, outfitprinttotallist, elementlist]
@@ -4737,7 +4750,7 @@ def split_prompt_to_words(text):
 
         return totallist
 
-def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_subject = "" , override_outfit = "", chosensubject ="", gender = "", restofprompt = "", superpromptstyle = ""):
+def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_subject = "" , override_outfit = "", chosensubject ="", gender = "", restofprompt = "", superpromptstyle = "", setnewtokens = 0, remove_bias = True):
 
     if(seed <= 0):
         seed = random.randint(1,1000000)
@@ -4755,6 +4768,15 @@ def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_s
 
     restofprompt = restofprompt.lower()
     question = ""
+
+    # first, move LoRA's to the back dynamically
+
+    # Find all occurrences of text between < and > using regex
+    allLoRA = re.findall(r"<[^>]+>", prompt)
+
+    # Remove the extracted matches from completeprompt
+    prompt = re.sub(r"<[^>]+>", "", prompt)
+    override_subject = re.sub(r"<[^>]+>", "", override_subject)
     
     temperature_lookup = {
     1: 0.01,
@@ -4824,7 +4846,10 @@ def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_s
     # for insanitylevel in range(1,11):
     j = 0
     temperature = temperature_lookup.get(insanitylevel, 0.5)
-    max_new_tokens = max_new_tokens_lookup.get(insanitylevel, 70)
+    if(setnewtokens < 1):
+        max_new_tokens = max_new_tokens_lookup.get(insanitylevel, 70)
+    else:
+        max_new_tokens = setnewtokens
     top_p = top_p_lookup.get(insanitylevel, 1.6)
     subject_to_generate = chosensubject_lookup.get(chosensubject, "")
 
@@ -4926,7 +4951,12 @@ def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_s
         else:
             superpromptresult = superpromptresult  # If neither period nor comma exists, keep the entire text
 
-
+        # piercing green eyes problem
+        # basically, the model has some biasses, lets get rid of it, OBP style!
+        if(common_dist(insanitylevel) and remove_bias): # but not always
+            superpromptresult = remove_superprompt_bias(superpromptresult=superpromptresult, insanitylevel=insanitylevel, override_outfit=override_outfit)
+            
+       
         #print(words_to_check)
         # Iterate through each word and check if it exists in the other string
         i = 0
@@ -4957,7 +4987,85 @@ def one_button_superprompt(insanitylevel = 5, prompt = "", seed = -1, override_s
             
         
 
-            
+    superpromptresult += " " + " ".join(allLoRA)
+
+    return superpromptresult
+
+def remove_superprompt_bias(superpromptresult = "", insanitylevel = 5, override_outfit = ""):
+
+    if(" green eye" in superpromptresult):
+        eyecolorslist = csv_to_list("eyecolors")
+        eyecolorslist = [x for x in eyecolorslist if not x.startswith('-')]
+        neweyecolor = " " + random.choice(eyecolorslist).lower() + " eye"
+        #print(neweyecolor)
+        superpromptresult = superpromptresult.replace(" green eye", neweyecolor)
+    #  white gown  or white dress
+    if(" white gown" in superpromptresult 
+        or " white dress" in superpromptresult
+        or " black suit" in superpromptresult):
+        colorcombinationslist = csv_to_list("colorcombinations")
+        colorcombinationslist = [x for x in colorcombinationslist if not x.startswith('-')]
+        colorslist = csv_to_list("colors")
+        colorslist = [x for x in colorslist if not x.startswith('-')]
+        if(normal_dist(insanitylevel)):
+            newcolordress = " " + random.choice(colorcombinationslist).lower() + " dress"
+            newcolorgown = " " + random.choice(colorcombinationslist).lower() + " gown"
+            newcolorsuit = " " + random.choice(colorcombinationslist).lower() + " suit"
+        else:
+            newcolordress = " " + random.choice(colorslist).lower() + " dress"
+            newcolorgown = " " + random.choice(colorslist).lower() + " gown"
+            newcolorsuit = " " + random.choice(colorcombinationslist).lower() + " suit"
+        #print(newcolordress)                
+        #print(newcolorgown)                
+        #print(newcolorsuit)
+        superpromptresult = superpromptresult.replace(" white dress", newcolordress)
+        superpromptresult = superpromptresult.replace(" white gown", newcolorgown)
+        superpromptresult = superpromptresult.replace(" black suit", newcolorsuit)
+    if(" gown" in superpromptresult 
+        or " dress" in superpromptresult 
+        or " suit" in superpromptresult
+        and not "gown" in override_outfit 
+        and not "dress" in override_outfit
+        and not "suit " in override_outfit
+        and not " dressed" in superpromptresult
+        and not " suited" in superpromptresult):
+        if(override_outfit == ""):
+            outfitslist = csv_to_list("outfits")
+            outfitslist = [x for x in outfitslist if not x.startswith('-')]
+            newoutfit = " " + random.choice(outfitslist).lower()
+        else:
+            newoutfit = " " + override_outfit
+        superpromptresult = superpromptresult.replace(" dress", newoutfit)
+        superpromptresult = superpromptresult.replace(" gown", newoutfit)
+        superpromptresult = superpromptresult.replace(" suit", newoutfit)
+    if(" sleek " in superpromptresult):
+        
+        descriptorslist = csv_to_list("descriptors")
+        descriptorslist = [x for x in descriptorslist if not x.startswith('-')]
+        newdescriptor = " " + random.choice(descriptorslist).lower() + " "
+        #print(newdescriptor)
+
+        superpromptresult = superpromptresult.replace(" sleek ", newdescriptor)
+    ## lush green (meadow), sun shines down
+    # A graceful woman with long, flowing hair stands on a lush green lawn, her arms spread wide as she kneels gently in the breeze. The sun shines down on her
+    if("lush green meadow" in superpromptresult):
+        
+        backgroundlist = csv_to_list("backgrounds")
+        backgroundlist = [x for x in backgroundlist if not x.startswith('-')]
+        newbackground = random.choice(backgroundlist).lower()
+        #print(newbackground)
+
+        superpromptresult = superpromptresult.replace("lush green meadow", newbackground)
+
+    if("long, flowing hair" in superpromptresult):
+        
+        hairstylelist = csv_to_list("hairstyles2")
+        hairstylelist = [x for x in hairstylelist if not x.startswith('-')]
+        newhairstyle = random.choice(hairstylelist).lower()
+        #print(newhairstyle)
+
+        superpromptresult = superpromptresult.replace("long, flowing hair", newhairstyle)
+    
     return superpromptresult
 
 def replace_user_wildcards(completeprompt):

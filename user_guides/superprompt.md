@@ -19,7 +19,7 @@ In this example, created with the D&D Portrait preset, you can see the bolded pa
 ## Requirements
 If its not working out of the box. Go to the OneButtonPrompt\superprompter\ directory. In here, execute the following command:
 
-`pip install requirements.txt`
+`pip install -r requirements.txt`
 
 It needs at least the following pieces installed:
 - transformers

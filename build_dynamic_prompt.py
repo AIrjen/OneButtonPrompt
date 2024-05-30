@@ -62,6 +62,31 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         suffixprompt = selected_opb_preset["suffixprompt"]
         giventypeofimage = selected_opb_preset["giventypeofimage"]
         antistring = selected_opb_preset["antistring"]
+
+        # api support tricks for OBP presets
+        OBP_preset = ""
+
+    if(OBP_preset != ""):
+        selected_opb_preset = OBPresets.get_obp_preset(OBP_preset)
+        insanitylevel = selected_opb_preset["insanitylevel"]
+        forcesubject = selected_opb_preset["subject"]
+        artists = selected_opb_preset["artist"]
+        subtypeobject = selected_opb_preset["chosensubjectsubtypeobject"]
+        subtypehumanoid = selected_opb_preset["chosensubjectsubtypehumanoid"]
+        subtypeconcept = selected_opb_preset["chosensubjectsubtypeconcept"]
+        gender = selected_opb_preset["chosengender"]
+        imagetype = selected_opb_preset["imagetype"]
+        imagemodechance = selected_opb_preset["imagemodechance"]
+        givensubject = selected_opb_preset["givensubject"]
+        smartsubject = selected_opb_preset["smartsubject"]
+        overrideoutfit = selected_opb_preset["givenoutfit"]
+        prefixprompt = selected_opb_preset["prefixprompt"]
+        suffixprompt = selected_opb_preset["suffixprompt"]
+        giventypeofimage = selected_opb_preset["giventypeofimage"]
+        antistring = selected_opb_preset["antistring"]
+
+        # api support tricks for OBP presets
+        OBP_preset = ""
     
     originalartistchoice = artists
     doartistnormal = True
@@ -276,12 +301,16 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         # go popular! Or even worse, we go full greg mode!
         elif(common_dist(max(3,insanitylevel))):
             artists = "popular" 
-        # only on lower instanity levels anyway
-        elif(insanitylevel < 6):
-            artists = "greg mode"
+        elif(random.randint(0,1) == 0):
+            # only on lower instanity levels anyway
+            if(insanitylevel < 6):
+                #too much greg mode!
+                
+                artists = "greg mode"
+            else:
+                artists = "popular"
         else:
-            artists = "popular"
-
+            artists = "none"
 
     else:
         artiststyleselectormode = "custom"

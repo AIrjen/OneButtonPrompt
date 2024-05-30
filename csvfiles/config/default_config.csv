@@ -11,6 +11,7 @@ subject_food;on
 subject_space;on
 subject_building;on
 subject_flora;on
+subject_occult;on
 # animals;
 subject_animal;on
 # humanoids;
@@ -24,6 +25,11 @@ subject_job;on
 subject_firstnames;on
 # landscape;
 subject_landscape;on
+subject_location_fantasy;on
+subject_location_scifi;on
+subject_location_videogame;on
+subject_location_biome;on
+subject_location_city;on
 # concept;
 subject_event;on
 subject_concept;on

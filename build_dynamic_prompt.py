@@ -27,6 +27,22 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     if(superprompter==True):
         base_model = "Stable Cascade"
    
+    # new method of subject choosing from the interface, lets translate this:
+    subjectlist = translate_main_subject(forcesubject)
+    forcesubject = subjectlist[0]
+
+
+    # ugly but it works :D Keeps both methods working while the UI changes.
+    if(subtypeobject != "all" or subtypeobject != ""):
+        subtypeobject = subjectlist[1]
+    if(subtypeanimal != "all" or subtypeanimal != ""):
+        subtypeanimal = subjectlist[1]
+    if(subtypelocation != "all" or subtypelocation != ""):
+        subtypelocation = subjectlist[1]
+    if(subtypehumanoid != "all" or subtypehumanoid != ""):
+        subtypehumanoid = subjectlist[1]
+    if(subtypeconcept != "all" or subtypeconcept != ""):
+        subtypeconcept = subjectlist[1]
 
     # set seed
     # For use in ComfyUI (might bring to Automatic1111 as well)
@@ -466,6 +482,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     generatehumanoids = True
     generatejob = True
     generatefirstnames = True
+
     generatelandscape = True
     generatelocation = True
     generatelocationfantasy = True
@@ -473,6 +490,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     generatelocationvideogame = True
     generatelocationbiome = True
     generatelocationcity = True
+
     generateevent = True
     generateconcepts = True
     generatepoemline = True
@@ -1442,20 +1460,22 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             if(subtypehumanoid != "all"):
                 if(subtypehumanoid == "generic humans"):
                     subjectchooser = "human"
-                if(subtypehumanoid == "generic human relations"):
+                elif(subtypehumanoid == "generic human relations"):
                     subjectchooser = "manwomanrelation"
-                if(subtypehumanoid == "multiple humans"):
+                elif(subtypehumanoid == "multiple humans"):
                     subjectchooser = "manwomanmultiple"
-                if(subtypehumanoid == "celebrities e.a."):
+                elif(subtypehumanoid == "celebrities e.a."):
                     subjectchooser = "non fictional"
-                if(subtypehumanoid == "fictional characters"):
+                elif(subtypehumanoid == "fictional characters"):
                     subjectchooser = "fictional"
-                if(subtypehumanoid == "humanoids"):
+                elif(subtypehumanoid == "humanoids"):
                     subjectchooser = "humanoid"
-                if(subtypehumanoid == "based on job or title"):
+                elif(subtypehumanoid == "based on job or title"):
                     subjectchooser = "job"
-                if(subtypehumanoid == "based on first name"):
+                elif(subtypehumanoid == "based on first name"):
                     subjectchooser = "firstname"
+                else:
+                    subjectchooser = subtypehumanoid
         if(mainchooser == "landscape"):
             subjectchooser = random.choice(locationsubjectchooserlist)
 
@@ -2078,8 +2098,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                         objectwildcardlist = ["-space-"]
                     if(subtypeobject == "flora"):
                         objectwildcardlist = ["-flora-"]
-                    if(subtypeobject == "occult"):
-                        objectwildcardlist = ["-occult-"]
+                    # not varied enough
+                    #if(subtypeobject == "occult"):
+                    #    objectwildcardlist = ["-occult-"]
                     subjectchooser = subtypeobject
 
                 
@@ -2124,18 +2145,19 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 # if we have a given subject, we should skip making an actual subject
                 if(givensubject == "" or (subjectingivensubject and givensubject != "")):
 
-                    if(subjectchooser=="animal"):
-                        animalwildcardlist = ["-animal-"]
-                    elif(subjectchooser=="bird"):
-                        animalwildcardlist = ["-bird-"]
-                    elif(subjectchooser=="cat"):
-                        animalwildcardlist = ["-cat-"]
-                    elif(subjectchooser=="dog"):
-                        animalwildcardlist = ["-dog-"]
-                    elif(subjectchooser=="insect"):
-                        animalwildcardlist = ["-insect-"]
-                    elif(subjectchooser=="pokemon"):
-                        animalwildcardlist = ["-pokemon-"]
+                    if(subtypeanimal != "all"):
+                        if(subtypeanimal=="generic animal"):
+                            animalwildcardlist = ["-animal-"]
+                        elif(subtypeanimal=="bird"):
+                            animalwildcardlist = ["-bird-"]
+                        elif(subtypeanimal=="cat"):
+                            animalwildcardlist = ["-cat-"]
+                        elif(subtypeanimal=="dog"):
+                            animalwildcardlist = ["-dog-"]
+                        elif(subtypeanimal=="insect"):
+                            animalwildcardlist = ["-insect-"]
+                        elif(subtypeanimal=="pokemon"):
+                            animalwildcardlist = ["-pokemon-"]
 
                     
                     chosenanimalwildcard = random.choice(animalwildcardlist)
@@ -2301,19 +2323,19 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                         hybridorswap = random.choice(hybridorswaplist)
                         completeprompt += "["
                     
-                    
-                    if(subjectchooser=="location"):
-                        locationwildcardlist = ["-location-"]
-                    elif(subjectchooser=="fantasy location"):
-                        locationwildcardlist = ["-locationfantasy-"]
-                    elif(subjectchooser=="videogame location"):
-                        locationwildcardlist = ["-locationvideogame-"]
-                    elif(subjectchooser=="sci-fi location"):
-                        locationwildcardlist = ["-locationscifi-"]
-                    elif(subjectchooser=="biome"):
-                        locationwildcardlist = ["-locationbiome-"]
-                    elif(subjectchooser=="city"):
-                        locationwildcardlist = ["-locationcity-"]
+                    if(subtypelocation != "all"):
+                        if(subtypelocation=="location"):
+                            locationwildcardlist = ["-location-"]
+                        elif(subtypelocation=="fantasy location"):
+                            locationwildcardlist = ["-locationfantasy-"]
+                        elif(subtypelocation=="videogame location"):
+                            locationwildcardlist = ["-locationvideogame-"]
+                        elif(subtypelocation=="sci-fi location"):
+                            locationwildcardlist = ["-locationscifi-"]
+                        elif(subtypelocation=="biome"):
+                            locationwildcardlist = ["-locationbiome-"]
+                        elif(subtypelocation=="city"):
+                            locationwildcardlist = ["-locationcity-"]
 
                     
                     chosenlocationwildcard = random.choice(locationwildcardlist)
@@ -2332,7 +2354,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 completeprompt += "-objectstrengthend-"
 
                 # shots from inside can create cool effects in landscapes
-                if(chance_roll(insanitylevel, subjectlandscapeaddonlocationchance) and insideshot == 0):
+                if(chance_roll(max(1,insanitylevel-2), subjectlandscapeaddonlocationchance) and insideshot == 0):
                     insideshot = 1
                     # lets cheat a bit here, we can do something cool I saw on reddit
                     if(mainchooser=="humanoid" and legendary_dist(insanitylevel)):
@@ -5346,3 +5368,193 @@ def replace_user_wildcards(completeprompt):
                 completeprompt = completeprompt.replace(user_wildcard, random.choice(wordlist),1)
 
     return completeprompt
+
+def translate_main_subject(main_subject=""):
+    subjecttype_lookup = {
+        "object - all": ["object", "all"],
+        "--- object - all": ["object", "all"],
+        "object - generic": ["object", "all"],
+        "generic object": ["object", "generic objects"],
+        "generic objects": ["object", "generic objects"],
+        "genericobject": ["object", "generic objects"],
+        "genericobjects": ["object", "generic objects"],
+        "object - vehicle": ["object", "vehicles"],
+        "vehicle": ["object", "vehicles"],
+        "vehicles": ["object", "vehicles"],
+        "object - food": ["object", "food"],
+        "food": ["object", "food"],
+        "object - building": ["object", "buildings"],
+        "building": ["object", "buildings"],
+        "buildings": ["object", "buildings"],
+        "object - space": ["object", "space"],
+        "space": ["object", "space"],
+        "object - flora": ["object", "flora"],
+        "flora": ["object", "flora"],
+        "nature": ["object", "flora"],
+
+        "animal - all": ["animal", "all"],
+        "--- animal - all": ["animal", "all"],
+        "animal": ["animal", "all"],
+        "animals": ["animal", "all"],
+        "animal - generic": ["animal", "generic animal"],
+        "generic animal": ["animal", "generic animal"],
+        "generic animals": ["animal", "generic animal"],
+        "genericanimal": ["animal", "generic animal"],
+        "genericanimals": ["animal", "generic animal"],
+        "animal - cat": ["animal", "cat"],
+        "cat": ["animal", "cat"],
+        "cats": ["animal", "cat"],
+        "animal - dog": ["animal", "dog"],
+        "dog": ["animal", "dog"],
+        "dogs": ["animal", "dog"],
+        "animal - bird": ["animal", "bird"],
+        "bird": ["animal", "bird"],
+        "birds": ["animal", "bird"],
+        "animal - insect": ["animal", "insect"],
+        "insect": ["animal", "insect"],
+        "insects": ["animal", "insect"],
+        "animal - pokémon": ["animal", "pokemon"],
+        "animal - pokemon": ["animal", "pokemon"],
+        "pokemon": ["animal", "pokemon"],
+        "pokemons": ["animal", "pokemon"],
+        "pokémon": ["animal", "pokemon"],
+        "pokémons": ["animal", "pokemon"],
+
+        "human - all": ["humanoid", "all"],
+        "--- human - all": ["humanoid", "all"],
+        "human": ["humanoid", "all"],
+        "humans": ["humanoid", "all"],
+        "person": ["humanoid", "all"],
+        "persons": ["humanoid", "all"],
+        "people": ["humanoid", "all"],
+        "man": ["humanoid", "all"],
+        "woman": ["humanoid", "all"],
+        "male": ["humanoid", "all"],
+        "female": ["humanoid", "all"],
+        "guy": ["humanoid", "all"],
+        "girl": ["humanoid", "all"],
+        "human - generic": ["humanoid", "human"],
+        "generic human": ["humanoid", "human"],
+        "generic humans": ["humanoid", "human"],
+        "generichuman": ["humanoid", "human"],
+        "generichumans": ["humanoid", "human"],
+        "human - relations": ["humanoid","manwomanrelation"],
+        "relations": ["humanoid","manwomanrelation"],
+        "human relations": ["humanoid","manwomanrelation"],
+        "humanrelations": ["humanoid","manwomanrelation"],
+        "human - celebrity": ["humanoid","non fictional"],
+        "celebrities": ["humanoid","non fictional"],
+        "celebrity": ["humanoid","non fictional"],
+        "human - fictional": ["humanoid","fictional"],
+        "fictional characters": ["humanoid","fictional"],
+        "fictional character": ["humanoid","fictional"],
+        "fictionalcharacters": ["humanoid","fictional"],
+        "fictionalcharacter": ["humanoid","fictional"],
+        "fictional": ["humanoid","fictional"],
+        "human - humanoids": ["humanoid","humanoid"],
+        "humanoid": ["humanoid","humanoid"],
+        "humanoids": ["humanoid","humanoid"],
+        "human - job/title": ["humanoid","job"],
+        "job": ["humanoid","job"],
+        "jobs": ["humanoid","job"],
+        "title": ["humanoid","job"],
+        "titles": ["humanoid","job"],
+        "human - first name": ["humanoid","firstname"],
+        "first name": ["humanoid","firstname"],
+        "firstname": ["humanoid","firstname"],
+        "human - multiple": ["humanoid","manwomanmultiple"], 
+        "multiplehumans": ["humanoid","manwomanmultiple"], 
+        "multiple": ["humanoid","manwomanmultiple"], 
+
+        "landscape - all": ["landscape","all"],
+        "--- landscape - all": ["landscape","all"],
+        "landscape": ["landscape","all"],
+        "landscapes": ["landscape","all"],
+        "landscape - generic": ["landscape","location"],
+        "landscape generic": ["landscape","location"],
+        "landscapes generic": ["landscape","location"],
+        "landscapegeneric": ["landscape","location"],
+        "landscapesgeneric": ["landscape","location"],
+        "genericlandscape": ["landscape","location"],
+        "generic landscape": ["landscape","location"],
+        "genericlandscapes": ["landscape","location"],
+        "generic landscapes": ["landscape","location"],
+        "landscape - fantasy": ["landscape","fantasy location"],
+        "landscape fantasy": ["landscape","fantasy location"],
+        "landscapefantasy": ["landscape","fantasy location"],
+        "fantasylandscape": ["landscape","fantasy location"],
+        "fantasy landscape": ["landscape","fantasy location"],
+        "landscape - videogame": ["landscape","videogame location"],
+        "landscape videogame": ["landscape","videogame location"],
+        "landscapevideogame": ["landscape","videogame location"],
+        "videogamelandscape": ["landscape","videogame location"],
+        "videogame landscape": ["landscape","videogame location"],
+        "landscape - sci-fi": ["landscape","sci-fi location"],
+        "landscape sci-fi": ["landscape","sci-fi location"],
+        "landscapesci-fi": ["landscape","sci-fi location"],
+        "sci-filandscape": ["landscape","sci-fi location"],
+        "sci-fi landscape": ["landscape","sci-fi location"],
+        "landscape - scifi": ["landscape","sci-fi location"],
+        "landscape scifi": ["landscape","sci-fi location"],
+        "landscapescifi": ["landscape","sci-fi location"],
+        "scifilandscape": ["landscape","sci-fi location"],
+        "scifi landscape": ["landscape","sci-fi location"],
+        "landscape - biome": ["landscape","biome"],
+        "landscape biome": ["landscape","biome"],
+        "landscapebiome": ["landscape","biome"],
+        "biomelandscape": ["landscape","biome"],
+        "biome landscape": ["landscape","biome"],
+        "biome": ["landscape","biome"],
+        "biomes": ["landscape","biome"],
+        "landscape - city": ["landscape","city"],
+        "landscape city": ["landscape","city"],
+        "landscapecity": ["landscape","city"],
+        "citylandscape": ["landscape","city"],
+        "city landscape": ["landscape","city"],
+        "city": ["landscape","city"],
+        "cities": ["landscape","city"],
+
+        "concept - all": ["concept", "all"],
+        "--- concept - all": ["concept", "all"],
+        "concept": ["concept", "all"],
+        "concepts": ["concept", "all"],
+        "concept - event": ["concept", "event"],
+        "event": ["concept", "event"],
+        "events": ["concept", "event"],
+        "concept - the x of y": ["concept", "concept"],
+        "xofy": ["concept", "concept"],
+        "thexofy": ["concept", "concept"],
+        "concept - poem lines": ["concept", "poemline"],
+        "poem": ["concept", "poemline"],
+        "poems": ["concept", "poemline"],
+        "poemline": ["concept", "poemline"],
+        "poemlines": ["concept", "poemline"],
+        "concept - song lines": ["concept", "songline"],
+        "song": ["concept", "songline"],
+        "songs": ["concept", "songline"],
+        "songline": ["concept", "songline"],
+        "songlines": ["concept", "songline"],
+        "concept - card names": ["concept", "cardname"],
+        "cards": ["concept", "cardname"],
+        "card": ["concept", "cardname"],
+        "cardgame": ["concept", "cardname"],
+        "cardgames": ["concept", "cardname"],
+        "cardname": ["concept", "cardname"],
+        "cardnames": ["concept", "cardname"],
+        "concept - episode titles": ["concept", "episodetitle"],
+        "episode": ["concept", "episodetitle"],
+        "episodes": ["concept", "episodetitle"],
+        "episodetitle": ["concept", "episodetitle"],
+        "episodetitles": ["concept", "episodetitle"],
+        "tv": ["concept", "episodetitle"],
+        "tv shows": ["concept", "episodetitle"],
+        "tvshows": ["concept", "episodetitle"],
+        "concept - mixer": ["concept", "conceptmixer"],
+        "concept mixer": ["concept", "conceptmixer"],
+        "conceptmixer": ["concept", "conceptmixer"],
+        "mixer": ["concept", "conceptmixer"],
+    }
+
+    subjecttype = subjecttype_lookup.get(main_subject, ["all", "all"])
+
+    return subjecttype

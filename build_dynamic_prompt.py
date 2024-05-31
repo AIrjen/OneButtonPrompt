@@ -1485,18 +1485,20 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             if(subtypeconcept != "all"):
                 if(subtypeconcept == "event"):
                     subjectchooser = "event"
-                if(subtypeconcept == "the X of Y concepts"):
+                elif(subtypeconcept == "the X of Y concepts"):
                     subjectchooser = "concept"
-                if(subtypeconcept == "lines from poems"):
+                elif(subtypeconcept == "lines from poems"):
                     subjectchooser = "poemline"
-                if(subtypeconcept == "lines from songs"):
+                elif(subtypeconcept == "lines from songs"):
                     subjectchooser = "songline"
-                if(subtypeconcept == "names from card based games"):
+                elif(subtypeconcept == "names from card based games"):
                     subjectchooser = "cardname"
-                if(subtypeconcept == "episode titles from tv shows"):
+                elif(subtypeconcept == "episode titles from tv shows"):
                     subjectchooser = "episodetitle"
-                if(subtypeconcept == "concept mixer"):
+                elif(subtypeconcept == "concept mixer"):
                     subjectchooser = "conceptmixer"
+                else:
+                    subjectchooser = subtypeconcept
 
         # After we chose the subject, lets set all things ready for He/She/It etc
         

@@ -26,7 +26,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         superprompter = True
     if(superprompter==True):
         base_model = "Stable Cascade"
-   
+
     # new method of subject choosing from the interface, lets translate this:
     subjectlist = translate_main_subject(forcesubject)
     forcesubject = subjectlist[0]
@@ -55,7 +55,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     if(advancedprompting != False and random.randint(0,max(0, insanitylevel - 2)) <= 0):
         advancedprompting == False
 
-    
+    original_OBP_preset = OBP_preset
     if(OBP_preset == OBPresets.RANDOM_PRESET_OBP):
         obp_options = OBPresets.load_obp_presets()
         random_preset = random.choice(list(obp_options.keys()))
@@ -101,9 +101,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         giventypeofimage = selected_opb_preset["giventypeofimage"]
         antistring = selected_opb_preset["antistring"]
 
-        # api support tricks for OBP presets
-        OBP_preset = ""
-    
+
+
+        
     originalartistchoice = artists
     doartistnormal = True
     outfitmode = 0

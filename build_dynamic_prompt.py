@@ -101,7 +101,24 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         giventypeofimage = selected_opb_preset["giventypeofimage"]
         antistring = selected_opb_preset["antistring"]
 
+    # new method of subject choosing from the interface, lets translate this:
+    # really hacky way of doing this now.
+    if("-" in forcesubject):
+        subjectlist = translate_main_subject(forcesubject)
+        forcesubject = subjectlist[0]
 
+
+        # ugly but it works :D Keeps both methods working while the UI changes.
+        if(subtypeobject != "all" or subtypeobject != ""):
+            subtypeobject = subjectlist[1]
+        if(subtypeanimal != "all" or subtypeanimal != ""):
+            subtypeanimal = subjectlist[1]
+        if(subtypelocation != "all" or subtypelocation != ""):
+            subtypelocation = subjectlist[1]
+        if(subtypehumanoid != "all" or subtypehumanoid != ""):
+            subtypehumanoid = subjectlist[1]
+        if(subtypeconcept != "all" or subtypeconcept != ""):
+            subtypeconcept = subjectlist[1]
 
         
     originalartistchoice = artists

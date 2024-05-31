@@ -20,6 +20,9 @@ It is also now available as a custom node for ComfyUI. [Check installation doc h
 
 More of a Fooocus fan? Take a look at this excellent fork called [RuinedFooocus](https://github.com/runew0lf/RuinedFooocus) that has One Button Prompt built in. [Check some options available here](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/ruinedfooocus_integration.md)
 
+Any other AI tool you are using? Midjourney? Dalle? No problem, I got it working on [a website here](https://airjen.pythonanywhere.com/). Just copy the prompt to your clipboard with a click, and paste it in any image generator tool.
+
+
 # Features
 - __Full prompt generation__ with the click of a button.                  ==> [guide to my first generation](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/my_first_generation.md) 
 - Supports __TXT2IMG, IMG2IMG, ControlNET, inpainting and latent couple__.  ==> [guide to IMG2IMG and ControlNET](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/the_next_generation_img2img_and_controlnet.md)
@@ -43,6 +46,10 @@ One Button Prompt had a recent large change in the UI when Presets were introduc
 If you are not finding the settings, change the __"One Button Preset"__ to __"Custom..."__.
 
 <img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/6d821c82-edf9-4496-867f-ac01dda994cd.png" width="50%" height="50%">
+
+Subtypes are also completely gone now, and integrated into the subject field.
+
+Loading the first time after upgrading on ComfyUI might give some errors, because the fields have shifted. Just set the settings back.
 
 ## How to use in automatic1111/SD.next
 In TXT2IMG or IMG2IMG, select the script "One Button Prompt".

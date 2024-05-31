@@ -20,7 +20,7 @@ OBPresets = OneButtonPresets()
 
 basemodelslist = ["SD1.5", "SDXL", "Stable Cascade"]
 #subjects = ["all","object","animal","humanoid", "landscape", "concept"]
-subjects =["all"]
+subjects =["------ all"]
 subjectsubtypesobject = ["all"]
 subjectsubtypeshumanoid = ["all"]
 subjectsubtypesconcept = ["all"]
@@ -92,7 +92,14 @@ generatefood = True
 generatebuilding = True
 generatespace = True
 generateflora = True
+
 generateanimal = True
+generatebird = True
+generatecat = True
+generatedog = True
+generateinsect = True
+generatepokemon = True
+
 generatemanwoman = True
 generatemanwomanrelation = True
 generatemanwomanmultiple = True
@@ -101,7 +108,15 @@ generatenonfictionalcharacter = True
 generatehumanoids = True
 generatejob = True
 generatefirstnames = True
+
 generatelandscape = True
+generatelocation = True
+generatelocationfantasy = True
+generatelocationscifi = True
+generatelocationvideogame = True
+generatelocationbiome = True
+generatelocationcity = True
+
 generateevent = True
 generateconcepts = True
 generatepoemline = True
@@ -128,6 +143,16 @@ for item in config:
         # animals
         if item[0] == 'subject_animal' and item[1] != 'on':
             generateanimal = False
+        if item[0] == 'subject_bird' and item[1] != 'on':
+            generatebird = False
+        if item[0] == 'subject_cat' and item[1] != 'on':
+            generatecat = False
+        if item[0] == 'subject_dog' and item[1] != 'on':
+            generatedog = False
+        if item[0] == 'subject_insect' and item[1] != 'on':
+            generateinsect = False
+        if item[0] == 'subject_pokemon' and item[1] != 'on':
+            generatepokemon = False
         # humanoids
         if item[0] == 'subject_manwoman' and item[1] != 'on':
             generatemanwoman = False
@@ -146,8 +171,18 @@ for item in config:
         if item[0] == 'subject_firstnames' and item[1] != 'on':
             generatefirstnames = False
         # landscape
-        if item[0] == 'subject_landscape' and item[1] != 'on':
-            generatelandscape = False
+        if item[0] == 'subject_location' and item[1] != 'on':
+            generatelocation = False
+        if item[0] == 'subject_location_fantasy' and item[1] != 'on':
+            generatelocationfantasy = False
+        if item[0] == 'subject_location_scifi' and item[1] != 'on':
+            generatelocationscifi = False
+        if item[0] == 'subject_location_videogame' and item[1] != 'on':
+            generatelocationvideogame = False
+        if item[0] == 'subject_location_biome' and item[1] != 'on':
+            generatelocationbiome = False
+        if item[0] == 'subject_location_city' and item[1] != 'on':
+            generatelocationcity = False
         # concept
         if item[0] == 'subject_event' and item[1] != 'on':
             generateevent = False
@@ -165,16 +200,87 @@ for item in config:
             generateconceptmixer = False
 
 # build up all subjects we can choose based on the loaded config file
-if(generatevehicle or generateobject or generatefood or generatebuilding or generatespace):
-     subjects.append("object")
-if(generateanimal):
-     subjects.append("animal")
+if(generatevehicle or generateobject or generatefood or generatebuilding or generatespace or generateflora):
+    subjects.append("--- object - all")
+    if(generateobject):
+          subjects.append("object - generic")
+    if(generatevehicle):
+          subjects.append("object - vehicle")
+    if(generatefood):
+          subjects.append("object - food")
+    if(generatebuilding):
+          subjects.append("object - building")
+    if(generatespace):
+          subjects.append("object - space")
+    if(generateflora):
+          subjects.append("object - flora")
+          
+if(generateanimal or generatebird or generatecat or generatedog or generateinsect or generatepokemon):
+    subjects.append("--- animal - all")
+    if(generateanimal):
+        subjects.append("animal - generic")
+    if(generatebird):
+        subjects.append("animal - bird")
+    if(generatecat):
+        subjects.append("animal - cat")
+    if(generatedog):
+        subjects.append("animal - dog")
+    if(generateinsect):
+        subjects.append("animal - insect")
+    if(generatepokemon):
+        subjects.append("animal - pokémon")
+
 if(generatemanwoman or generatemanwomanrelation or generatefictionalcharacter or generatenonfictionalcharacter or generatehumanoids or generatejob or generatemanwomanmultiple):
-     subjects.append("humanoid")
-if(generatelandscape):
-     subjects.append("landscape")
-if(generateevent or generateconcepts or generatepoemline or generatesongline or generatecardname or generateepisodetitle):
-     subjects.append("concept")
+    subjects.append("--- human - all")
+    if(generatemanwoman):
+        subjects.append("human - generic")
+    if(generatemanwomanrelation):
+        subjects.append("human - relations")
+    if(generatenonfictionalcharacter):
+        subjects.append("human - celebrity")
+    if(generatefictionalcharacter):
+        subjects.append("human - fictional")
+    if(generatehumanoids):
+        subjects.append("human - humanoids")
+    if(generatejob):
+        subjects.append("human - job/title")
+    if(generatefirstnames):
+        subjects.append("human - first name")
+    if(generatemanwomanmultiple):
+        subjects.append("human - multiple")
+
+if(generatelandscape or generatelocation or generatelocationfantasy or generatelocationscifi or generatelocationvideogame or generatelocationbiome or generatelocationcity):
+    subjects.append("--- landscape - all")
+    if(generatelocation):
+        subjects.append("landscape - generic")
+    if(generatelocationfantasy):
+        subjects.append("landscape - fantasy")
+    if(generatelocationscifi):
+        subjects.append("landscape - sci-fi")
+    if(generatelocationvideogame):
+        subjects.append("landscape - videogame")
+    if(generatelocationbiome):
+        subjects.append("landscape - biome")
+    if(generatelocationcity):
+        subjects.append("landscape - city")
+
+if(generateevent or generateconcepts or generatepoemline or generatesongline or generatecardname or generateepisodetitle or generateconceptmixer):
+    subjects.append("--- concept - all")
+    if(generateevent):
+        subjects.append("concept - event")
+    if(generateconcepts):
+        subjects.append("concept - the x of y")
+    if(generatepoemline):
+        subjects.append("concept - poem lines")
+    if(generatesongline):
+        subjects.append("concept - song lines")
+    if(generatecardname):
+        subjects.append("concept - card names")
+    if(generateepisodetitle):
+        subjects.append("concept - episode titles")
+    if(generateconceptmixer):
+        subjects.append("concept - mixer")
+         
 
 
 # do the same for the subtype subjects
@@ -401,55 +507,22 @@ class Script(scripts.Script):
                             ### 📸 Subject Types
                             
                             <font size="2">
-                            You can choose a certain subject type, if you want to generate something more specific. It has the following types:  
+                            You can choose a certain subject type. Choose the all version to randomly choose between the subtypes. Iff you want to generate something more specific, choose the subtype. It has the following types:  
                             
-                            1. object - Can be a random object, a building or a vehicle.  
+                            1. object - Can be a random object, a building, vehicle, space or flora.
                             
                             2. animal - A random (fictional) animal. Has a chance to have human characteristics, such as clothing added.  
                             
                             3. humanoid - A random humanoid, males, females, fantasy types, fictional and non-fictional characters. Can add clothing, features and a bunch of other things.  
                             
-                            4. landscape - A landscape or a landscape with a building.  
+                            4. landscape - A landscape, choose a cool location.
                             
                             5. concept - Can be a concept, such as "a X of Y", or an historical event such as "The Trojan War". It can also generate a line from a poem or a song. 
 
                             After choosing object, humanoid or concept a subselection menu will show. You can pick further details here. When choosing humanoid, you can also select the gender you wish to generate.
 
-                            🏺 Type of Object:
-
-                            1. all - selects randomly (default)
-
-                            2. generic objects - Hodgepodge of objects, can be household items, weapons or any other general object.
-
-                            3. vehicles - Cars, but also planes, trains and boats.
-
-                            4. food - Meals, fruits and others.
-
-                            5. buildings - From churches to libraries to castles.
-
-                            6. space - Some bigger objects, nebula's, black holes and constellations
-
-                            7. flora - Flowers and trees.
-
-                            👨‍👩‍👧 Type of humanoid:
-
-                            1. all - selects randomly (default)
-
-                            2. generic humans - Generic human descriptions. Example values would be Man, Woman, Male, etc
-
-                            3. generic human relations - Human relations, example values would be Grandpa, Sister, Father, etc
-
-                            4. celebrities e.a. - Known people, usually celebrities.
-
-                            5. fictional characters - Movie and videogame characters, such as Mario and Peach.
-
-                            6. humanoids - Humanoid type races, think Elves, Orcs, Dwarves, etc
-
-                            7. based on job or title - Examples are Queen, Carpenter, Vampire hunter
-
-                            8. based on first name - Examples are Anna, James, Emma etc.
-
-                            🚻 gender:
+                           
+                            🚻 gender (only available for human generations):
 
                             1. all - selects randomly
 
@@ -457,23 +530,6 @@ class Script(scripts.Script):
 
                             3. female
 
-                            💡🧠💭 Type of concept:
-
-                            1. all - selects randomly (default)
-
-                            2. event - an historical event, or even mythological event. Example The fall of Rome
-
-                            3. the X of Y concepts - Randomly creates a small sentence, example The Ocean of Thought or The Fortress of Flame, etc
-
-                            4. lines from poems - Picks a line from a poem
-
-                            5. lines from songs - Picks a line from a song
-
-                            6. names from card based games - Picks a card name from various card games, such as magic the gathering, yugioh and many others.
-
-                            7. episode titles from tv shows - Picks a episode title from a popular tv series, such as Star Trek, Simpsons, game of Thrones, etc.
-
-                            6. concept mixer - A mixer of different keywords and concepts. For example animal hybrids, objects shaped as other objects or other unusual combinations.
                             </font>
                             
                             ### 🎨 Artists
@@ -1109,7 +1165,7 @@ class Script(scripts.Script):
 
         # turn things on and off for gender
         def subjectsvalue(subject):
-             enable=(subject=="humanoid")
+             enable=("human" in subject)
              return {
                   chosengender: gr.update(visible=enable),
              }

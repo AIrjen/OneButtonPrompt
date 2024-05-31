@@ -6,6 +6,7 @@
 -element- god;male
 -element- goddess;female
 -musicgenre-mancer;both
+-pokemontype- type;both
 Abbot;both
 Abjurer;both
 Acrobat;both
@@ -136,8 +137,9 @@ Death knight;both
 Death knight;both
 Deep-Sea Diver;both
 Defender;both
-Demon hunter;both
 Demon Hunter;both
+Demon Queen;female
+Demon King;male
 Designer;both
 Detective;both
 Diplomat;both

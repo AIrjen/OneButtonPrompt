@@ -13,7 +13,7 @@ OBPresets = OneButtonPresets()
 # insanity level controls randomness of propmt 0-10
 # forcesubject van be used to force a certain type of subject
 # Set artistmode to none, to exclude artists 
-def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", givensubject="",smartsubject = True,giventypeofimage="", imagemodechance = 20, gender = "all", subtypeobject="all", subtypehumanoid="all", subtypeconcept="all", advancedprompting=True, hardturnoffemojis=False, seed=-1, overrideoutfit="", prompt_g_and_l = False, base_model = "SD1.5", OBP_preset = "", prompt_enhancer = "none"):
+def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", givensubject="",smartsubject = True,giventypeofimage="", imagemodechance = 20, gender = "all", subtypeobject="all", subtypehumanoid="all", subtypeconcept="all", advancedprompting=True, hardturnoffemojis=False, seed=-1, overrideoutfit="", prompt_g_and_l = False, base_model = "SD1.5", OBP_preset = "", prompt_enhancer = "none", subtypeanimal="all", subtypelocation="all"):
 
     remove_weights =  False
     less_verbose = False
@@ -26,7 +26,23 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         superprompter = True
     if(superprompter==True):
         base_model = "Stable Cascade"
-   
+
+    # new method of subject choosing from the interface, lets translate this:
+    subjectlist = translate_main_subject(forcesubject)
+    forcesubject = subjectlist[0]
+
+
+    # ugly but it works :D Keeps both methods working while the UI changes.
+    if(subtypeobject != "all" or subtypeobject != ""):
+        subtypeobject = subjectlist[1]
+    if(subtypeanimal != "all" or subtypeanimal != ""):
+        subtypeanimal = subjectlist[1]
+    if(subtypelocation != "all" or subtypelocation != ""):
+        subtypelocation = subjectlist[1]
+    if(subtypehumanoid != "all" or subtypehumanoid != ""):
+        subtypehumanoid = subjectlist[1]
+    if(subtypeconcept != "all" or subtypeconcept != ""):
+        subtypeconcept = subjectlist[1]
 
     # set seed
     # For use in ComfyUI (might bring to Automatic1111 as well)
@@ -39,7 +55,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     if(advancedprompting != False and random.randint(0,max(0, insanitylevel - 2)) <= 0):
         advancedprompting == False
 
-    
+    original_OBP_preset = OBP_preset
     if(OBP_preset == OBPresets.RANDOM_PRESET_OBP):
         obp_options = OBPresets.load_obp_presets()
         random_preset = random.choice(list(obp_options.keys()))
@@ -62,10 +78,54 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         suffixprompt = selected_opb_preset["suffixprompt"]
         giventypeofimage = selected_opb_preset["giventypeofimage"]
         antistring = selected_opb_preset["antistring"]
-    
+
+        # api support tricks for OBP presets
+        OBP_preset = ""
+
+    if(OBP_preset != "" and OBP_preset != 'Custom...'):
+        selected_opb_preset = OBPresets.get_obp_preset(OBP_preset)
+        insanitylevel = selected_opb_preset["insanitylevel"]
+        forcesubject = selected_opb_preset["subject"]
+        artists = selected_opb_preset["artist"]
+        subtypeobject = selected_opb_preset["chosensubjectsubtypeobject"]
+        subtypehumanoid = selected_opb_preset["chosensubjectsubtypehumanoid"]
+        subtypeconcept = selected_opb_preset["chosensubjectsubtypeconcept"]
+        gender = selected_opb_preset["chosengender"]
+        imagetype = selected_opb_preset["imagetype"]
+        imagemodechance = selected_opb_preset["imagemodechance"]
+        givensubject = selected_opb_preset["givensubject"]
+        smartsubject = selected_opb_preset["smartsubject"]
+        overrideoutfit = selected_opb_preset["givenoutfit"]
+        prefixprompt = selected_opb_preset["prefixprompt"]
+        suffixprompt = selected_opb_preset["suffixprompt"]
+        giventypeofimage = selected_opb_preset["giventypeofimage"]
+        antistring = selected_opb_preset["antistring"]
+
+    # new method of subject choosing from the interface, lets translate this:
+    # really hacky way of doing this now.
+    if("-" in forcesubject):
+        subjectlist = translate_main_subject(forcesubject)
+        forcesubject = subjectlist[0]
+
+
+        # ugly but it works :D Keeps both methods working while the UI changes.
+        if(subtypeobject != "all" or subtypeobject != ""):
+            subtypeobject = subjectlist[1]
+        if(subtypeanimal != "all" or subtypeanimal != ""):
+            subtypeanimal = subjectlist[1]
+        if(subtypelocation != "all" or subtypelocation != ""):
+            subtypelocation = subjectlist[1]
+        if(subtypehumanoid != "all" or subtypehumanoid != ""):
+            subtypehumanoid = subjectlist[1]
+        if(subtypeconcept != "all" or subtypeconcept != ""):
+            subtypeconcept = subjectlist[1]
+
+        
     originalartistchoice = artists
     doartistnormal = True
     outfitmode = 0
+
+    animalashuman = False
 
     partlystylemode = False
     # load the config file
@@ -203,6 +263,19 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     flufferlist = csv_to_list("fluff", antilist)
     tokenlist = []
     
+    # New set of lists
+    locationfantasylist = csv_to_list("locationsfantasy", antilist)
+    locationscifilist = csv_to_list("locationsscifi", antilist)
+    locationvideogamelist = csv_to_list("locationsvideogame", antilist)
+    locationbiomelist = csv_to_list("locationsbiome", antilist)
+    locationcitylist = csv_to_list("locationscities", antilist)
+    birdlist = csv_to_list("birds", antilist)
+    catlist = csv_to_list("cats", antilist)
+    doglist = csv_to_list("dogs", antilist)
+    insectlist = csv_to_list("insects", antilist)
+    pokemonlist = csv_to_list("pokemon", antilist)
+    pokemontypelist = csv_to_list("pokemontypes", antilist)
+    occultlist = csv_to_list("occult", antilist)
     
 
     # additional descriptor lists
@@ -228,7 +301,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             descriptorlist.append(item)
 
     humanlist = fictionallist + nonfictionallist + humanoidlist
-    objecttotallist = objectlist + buildinglist + vehiclelist + foodlist + spacelist + floralist + containerlist
+    objecttotallist = objectlist + buildinglist + vehiclelist + foodlist + spacelist + floralist + containerlist + occultlist
     outfitprinttotallist = objecttotallist + locationlist + colorlist + musicgenrelist + seasonlist + animallist + patternlist
     if(less_verbose):
         humanactivitycheatinglist = ["-miniactivity- OR(in;at) a OR(-location-;-building-;-waterlocation-)",
@@ -276,12 +349,16 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         # go popular! Or even worse, we go full greg mode!
         elif(common_dist(max(3,insanitylevel))):
             artists = "popular" 
-        # only on lower instanity levels anyway
-        elif(insanitylevel < 6):
-            artists = "greg mode"
+        elif(random.randint(0,1) == 0):
+            # only on lower instanity levels anyway
+            if(insanitylevel < 6):
+                #too much greg mode!
+                
+                artists = "greg mode"
+            else:
+                artists = "popular"
         else:
-            artists = "popular"
-
+            artists = "none"
 
     else:
         artiststyleselectormode = "custom"
@@ -386,10 +463,13 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     # subjects
     mainchooserlist = []
     objectwildcardlist = []
+    locationwildcardlist = []
+    animalwildcardlist = []
     hybridlist = []
     hybridhumanlist = []
     humanoidsubjectchooserlist = []
     eventsubjectchooserlist = []
+    locationsubjectchooserlist = []
     addontolocationinsidelist = []
     addontolocationlist = []
 
@@ -400,7 +480,17 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     generatebuilding = True
     generatespace = True
     generateflora = True
+    generateoccult = True
+    generateconcept = True
+
     generateanimal = True
+    generatebird = True
+    generatecat = True
+    generatedog = True
+    generateinsect = True
+    generatepokemon = True
+
+
     generatemanwoman = True
     generatemanwomanrelation = True
     generatemanwomanmultiple = True
@@ -409,7 +499,15 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     generatehumanoids = True
     generatejob = True
     generatefirstnames = True
+
     generatelandscape = True
+    generatelocation = True
+    generatelocationfantasy = True
+    generatelocationscifi = True
+    generatelocationvideogame = True
+    generatelocationbiome = True
+    generatelocationcity = True
+
     generateevent = True
     generateconcepts = True
     generatepoemline = True
@@ -507,9 +605,21 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             generatespace = False
         if item[0] == 'subject_flora' and item[1] != 'on':
             generateflora = False
+        if item[0] == 'subject_occult' and item[1] != 'on':
+            generateoccult = False
         # animals
         if item[0] == 'subject_animal' and item[1] != 'on':
             generateanimal = False
+        if item[0] == 'subject_bird' and item[1] != 'on':
+            generatebird = False
+        if item[0] == 'subject_cat' and item[1] != 'on':
+            generatecat = False
+        if item[0] == 'subject_dog' and item[1] != 'on':
+            generatedog = False
+        if item[0] == 'subject_insect' and item[1] != 'on':
+            generateinsect = False
+        if item[0] == 'subject_pokemon' and item[1] != 'on':
+            generatepokemon = False
         # humanoids
         if item[0] == 'subject_manwoman' and item[1] != 'on':
             generatemanwoman = False
@@ -528,8 +638,18 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         if item[0] == 'subject_firstnames' and item[1] != 'on':
             generatefirstnames = False
         # landscape
-        if item[0] == 'subject_landscape' and item[1] != 'on':
-            generatelandscape = False
+        if item[0] == 'subject_location' and item[1] != 'on':
+            generatelocation = False
+        if item[0] == 'subject_location_fantasy' and item[1] != 'on':
+            generatelocationfantasy = False
+        if item[0] == 'subject_location_scifi' and item[1] != 'on':
+            generatelocationscifi = False
+        if item[0] == 'subject_location_videogame' and item[1] != 'on':
+            generatelocationvideogame = False
+        if item[0] == 'subject_location_biome' and item[1] != 'on':
+            generatelocationbiome = False
+        if item[0] == 'subject_location_city' and item[1] != 'on':
+            generatelocationcity = False
         # concept
         if item[0] == 'subject_event' and item[1] != 'on':
             generateevent = False
@@ -693,7 +813,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     generatebuilding = bool(buildinglist) and generatebuilding
     generatespace = bool(spacelist) and generatespace
     generateflora = bool(floralist) and generateflora
-    generateobject = generatevehicle or generateobject or generatefood or generatebuilding or generatespace or generateflora
+    generateoccult = bool(occultlist) and generateoccult
+    generateobject = generatevehicle or generateobject or generatefood or generatebuilding or generatespace or generateflora or generateoccult
     
 
     if(generatevehicle):
@@ -724,9 +845,53 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         objectwildcardlist.append("-flora-")
         hybridlist.append("-flora-")
         addontolocationlist.append("-flora-")
+
+    if(generateoccult):
+        objectwildcardlist.append("-occult-")
+        hybridlist.append("-occult-")
+        addontolocationlist.append("-occult-")
     
     if(generateobject):
         mainchooserlist.append("object")
+
+    if(generatelandscape):
+        mainchooserlist.append("landscape")
+    
+    if(generatelocationfantasy):
+        locationwildcardlist.append("-locationfantasy-")
+    
+    if(generatelocationscifi):
+        locationwildcardlist.append("-locationscifi-")
+    
+    if(generatelocationvideogame):
+        locationwildcardlist.append("-locationvideogame-")
+    
+    if(generatelocationbiome):
+        locationwildcardlist.append("-locationbiome-")
+    
+    if(generatelocationcity):
+        locationwildcardlist.append("-locationcity-")
+    
+    if(generatelocation):
+        locationwildcardlist.append("-location-")
+
+    if(generateanimal):
+        animalwildcardlist.append("-animal-")
+
+    if(generatebird):
+        animalwildcardlist.append("-bird-")
+    
+    if(generatecat):
+        animalwildcardlist.append("-cat-")
+
+    if(generatedog):
+        animalwildcardlist.append("-dog-")
+
+    if(generateinsect):
+        animalwildcardlist.append("-insect-")
+
+    if(generatepokemon):
+        animalwildcardlist.append("-pokemon-")
 
     generatefictionalcharacter = bool(fictionallist) and generatefictionalcharacter
     generatenonfictionalcharacter = bool(nonfictionallist) and generatenonfictionalcharacter
@@ -774,12 +939,37 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     
     
     generateanimal = bool(animallist) and generateanimal
+    generatebird = bool(birdlist) and generatebird
+    generatecat = bool(catlist) and generatecat
+    generatedog = bool(doglist) and generatedog
+    generateinsect = bool(insectlist) and generateinsect
+    generatepokemon = bool(pokemonlist) and generatepokemon
+
+    generateanimaltotal = generateanimal or generatebird or generatecat or generatedog or generateinsect or generatepokemon
 
     if(generateanimal):
-        mainchooserlist.append("animal")
         hybridlist.append("-animal-")
+    if(generatebird):
+        hybridlist.append("-bird-")
+    if(generatecat):
+        hybridlist.append("-cat-")
+    if(generatedog):
+        hybridlist.append("-dog-")
+    if(generateinsect):
+        hybridlist.append("-insect-")
+    if(generatepokemon):
+        hybridlist.append("-pokemon-")
 
-    generatelandscape = bool(locationlist) and generatelandscape
+    if(generateanimaltotal):
+        mainchooserlist.append("animal")
+
+    generatelocation = bool(locationlist) and generatelocation
+    generatelocationfantasy = bool(locationfantasylist) and generatelocationfantasy
+    generatelocationscifi = bool(locationscifilist) and generatelocationscifi
+    generatelocationvideogame = bool(locationvideogamelist) and generatelocationvideogame
+    generatelocationbiome = bool(locationbiomelist) and generatelocationbiome
+    generatelocationcity = bool(locationcitylist) and generatelocationcity
+    generatelandscape = generatelocation or generatelocationfantasy or generatelocationscifi or generatelocationvideogame or generatelocationbiome or generatelocationcity
 
     if(generatelandscape):
         mainchooserlist.append("landscape")
@@ -787,6 +977,20 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         addontolocationlist.append("-background-")
         addontolocationinsidelist.append("-location-")
         addontolocationinsidelist.append("-background-")
+        locationsubjectchooserlist.append("landscape")
+    
+    if(generatelocation):
+        locationsubjectchooserlist.append("location")
+    if(generatelocationfantasy):
+        locationsubjectchooserlist.append("fantasy location")
+    if(generatelocationscifi):
+        locationsubjectchooserlist.append("sci-fi location")
+    if(generatelocationvideogame):
+        locationsubjectchooserlist.append("videogame location")
+    if(generatelocationbiome):
+        locationsubjectchooserlist.append("biome")
+    if(generatelocationcity):
+        locationsubjectchooserlist.append("city")
     
     generateevent = bool(eventlist) and generateevent
     generateconcepts = bool(conceptprefixlist) and bool(conceptsuffixlist) and generateconcepts
@@ -1234,12 +1438,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         # 0 object, 1 animal, 2 animal as human, 3 ManWoman, 4 Job, 5 fictional, 6 non fictional, 7 humanoid, 8 landscape, 9 event
         if(mainchooser == "object"):
             subjectchooser = "object"
-        if(mainchooser == "animal"):
+        if(mainchooser == "animal" and random.randint(0,5) == 5):
             # sometimes interpret the animal as a human
-            if(random.randint(0,5) < 5):
-                subjectchooser = "animal"
-            else:
-                subjectchooser = "animal as human"
+            animalashuman = True
         if(mainchooser == "humanoid"):
             #humanoidsubjectchooserlist = ["human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation", "firstname"]
             # Lets put generic humans as a more 'normal' value. Manwoman relation as the least picked.
@@ -1276,40 +1477,45 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             if(subtypehumanoid != "all"):
                 if(subtypehumanoid == "generic humans"):
                     subjectchooser = "human"
-                if(subtypehumanoid == "generic human relations"):
+                elif(subtypehumanoid == "generic human relations"):
                     subjectchooser = "manwomanrelation"
-                if(subtypehumanoid == "multiple humans"):
+                elif(subtypehumanoid == "multiple humans"):
                     subjectchooser = "manwomanmultiple"
-                if(subtypehumanoid == "celebrities e.a."):
+                elif(subtypehumanoid == "celebrities e.a."):
                     subjectchooser = "non fictional"
-                if(subtypehumanoid == "fictional characters"):
+                elif(subtypehumanoid == "fictional characters"):
                     subjectchooser = "fictional"
-                if(subtypehumanoid == "humanoids"):
+                elif(subtypehumanoid == "humanoids"):
                     subjectchooser = "humanoid"
-                if(subtypehumanoid == "based on job or title"):
+                elif(subtypehumanoid == "based on job or title"):
                     subjectchooser = "job"
-                if(subtypehumanoid == "based on first name"):
+                elif(subtypehumanoid == "based on first name"):
                     subjectchooser = "firstname"
+                else:
+                    subjectchooser = subtypehumanoid
         if(mainchooser == "landscape"):
-            subjectchooser = "landscape"
+            subjectchooser = random.choice(locationsubjectchooserlist)
+
         if(mainchooser == "concept"):
             #eventsubjectchooserlist = ["event", "concept", "poemline", "songline"]
             subjectchooser = random.choice(eventsubjectchooserlist)
             if(subtypeconcept != "all"):
                 if(subtypeconcept == "event"):
                     subjectchooser = "event"
-                if(subtypeconcept == "the X of Y concepts"):
+                elif(subtypeconcept == "the X of Y concepts"):
                     subjectchooser = "concept"
-                if(subtypeconcept == "lines from poems"):
+                elif(subtypeconcept == "lines from poems"):
                     subjectchooser = "poemline"
-                if(subtypeconcept == "lines from songs"):
+                elif(subtypeconcept == "lines from songs"):
                     subjectchooser = "songline"
-                if(subtypeconcept == "names from card based games"):
+                elif(subtypeconcept == "names from card based games"):
                     subjectchooser = "cardname"
-                if(subtypeconcept == "episode titles from tv shows"):
+                elif(subtypeconcept == "episode titles from tv shows"):
                     subjectchooser = "episodetitle"
-                if(subtypeconcept == "concept mixer"):
+                elif(subtypeconcept == "concept mixer"):
                     subjectchooser = "conceptmixer"
+                else:
+                    subjectchooser = subtypeconcept
 
         # After we chose the subject, lets set all things ready for He/She/It etc
         
@@ -1830,7 +2036,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             # outfitmode = 2 IS NORMAL
             if(overrideoutfit!=""):
                 outfitmode = 2
-            if(subjectchooser in ["animal as human","human","fictional", "non fictional", "humanoid", "manwomanrelation","manwomanmultiple", "firstname"]  and chance_roll(insanitylevel, outfitchance) and generateoutfit == True and humanspecial != 1):
+            if(animalashuman or subjectchooser in ["human","fictional", "non fictional", "humanoid", "manwomanrelation","manwomanmultiple", "firstname"]  and chance_roll(insanitylevel, outfitchance) and generateoutfit == True and humanspecial != 1):
                 if(random.randint(0,10)==0):
                     outfitmode = 1
                 else:
@@ -1847,7 +2053,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 completeprompt += " " + givensubjectpromptlist[0] + " "
 
             # Once in a very rare while, we get a ... full of ...s
-            if(novel_dist(insanitylevel) and subjectchooser in ["animal", "animal as human,","human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation","firstname"]):         
+            if(novel_dist(insanitylevel) and (animalashuman or subjectchooser in ["human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation","firstname"])):         
                 buildingfullmode = True
                 insideshot = 1
                 heshelist = ["they"]
@@ -1861,7 +2067,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             if(descriptorsintheback < 2):
                 # Common to have 1 description, uncommon to have 2
                 if(chance_roll(insanitylevel, subjectdescriptor1chance) and generatedescriptors == True):
-                    if(subjectchooser in ["animal as human,","human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation", "manwomanmultiple","firstname"]):
+                    if(animalashuman or subjectchooser in ["human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation", "manwomanmultiple","firstname"]):
                         completeprompt += "-humandescriptor- "
                     elif(mainchooser == "landscape"):
                         completeprompt += "-locationdescriptor- "
@@ -1871,7 +2077,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                         completeprompt += "-descriptor- "
 
                 if(chance_roll(insanitylevel, subjectdescriptor2chance) and generatedescriptors == True):
-                    if(subjectchooser in ["animal as human,","human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation", "manwomanmultiple","firstname"]):
+                    if(animalashuman or subjectchooser in ["human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation", "manwomanmultiple","firstname"]):
                         completeprompt += "-humandescriptor- "
                     elif(mainchooser == "landscape"):
                         completeprompt += "-locationdescriptor- "
@@ -1888,10 +2094,10 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             if(subjectchooser in ["human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation", "manwomanmultiple","firstname"] and extraordinary_dist(insanitylevel)):
                 completeprompt += str(random.randint(20,99)) + " OR(y.o.;year old) "
 
-            if(subjectchooser in ["animal as human,","human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation", "manwomanmultiple","firstname"] and chance_roll(insanitylevel, subjectbodytypechance) and generatebodytype == True):
+            if((animalashuman or subjectchooser in ["human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation", "manwomanmultiple","firstname"]) and chance_roll(insanitylevel, subjectbodytypechance) and generatebodytype == True):
                 completeprompt += "-bodytype- "
 
-            if(subjectchooser in ["object","animal as human,","human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation", "manwomanmultiple","firstname"] and chance_roll(insanitylevel, subjectculturechance) and generatedescriptors == True):
+            if((animalashuman or subjectchooser in ["object","human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation", "manwomanmultiple","firstname"]) and chance_roll(insanitylevel, subjectculturechance) and generatedescriptors == True):
                 completeprompt += "-culture- "
 
             if(mainchooser == "object"):
@@ -1911,6 +2117,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                         objectwildcardlist = ["-space-"]
                     if(subtypeobject == "flora"):
                         objectwildcardlist = ["-flora-"]
+                    # not varied enough
+                    #if(subtypeobject == "occult"):
+                    #    objectwildcardlist = ["-occult-"]
                     subjectchooser = subtypeobject
 
                 
@@ -1955,6 +2164,23 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 # if we have a given subject, we should skip making an actual subject
                 if(givensubject == "" or (subjectingivensubject and givensubject != "")):
 
+                    if(subtypeanimal != "all"):
+                        if(subtypeanimal=="generic animal"):
+                            animalwildcardlist = ["-animal-"]
+                        elif(subtypeanimal=="bird"):
+                            animalwildcardlist = ["-bird-"]
+                        elif(subtypeanimal=="cat"):
+                            animalwildcardlist = ["-cat-"]
+                        elif(subtypeanimal=="dog"):
+                            animalwildcardlist = ["-dog-"]
+                        elif(subtypeanimal=="insect"):
+                            animalwildcardlist = ["-insect-"]
+                        elif(subtypeanimal=="pokemon"):
+                            animalwildcardlist = ["-pokemon-"]
+
+                    
+                    chosenanimalwildcard = random.choice(animalwildcardlist)
+
                     if(rare_dist(insanitylevel) and advancedprompting == True):
                         hybridorswaplist = ["hybrid", "swap"]
                         hybridorswap = random.choice(hybridorswaplist)
@@ -1962,9 +2188,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                         
                     if(unique_dist(insanitylevel) and generateanimaladdition == True):
                         animaladdedsomething = 1
-                        completeprompt += "-animaladdition- -animal- "
+                        completeprompt += "-animaladdition- " + chosenanimalwildcard + " "
                     if(animaladdedsomething != 1):
-                        completeprompt += "-animal- "
+                        completeprompt += chosenanimalwildcard + " "
 
                    
 
@@ -1972,12 +2198,12 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                         if(uncommon_dist(insanitylevel)):
                             completeprompt += "|" + random.choice(hybridlist) + "] "
                         else:
-                            completeprompt += "| -animal- ] "
+                            completeprompt += "| " + chosenanimalwildcard +  " ] "
                     if(hybridorswap == "swap"):
                         if(uncommon_dist(insanitylevel)):
                             completeprompt += ":" + random.choice(hybridlist) + ":" + str(random.randint(1,5)) +  "] "
                         else:
-                            completeprompt += ":-animal-:" + str(random.randint(1,5)) +  "] "
+                            completeprompt += ":" + chosenanimalwildcard +  ":" + str(random.randint(1,5)) +  "] "
                 else:
                     completeprompt += " " + givensubject + " "
                 
@@ -1985,7 +2211,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
              # move job or activity logic here. We want to place it at 2 different places maybe
             
-            if(subjectchooser in ["animal as human","human","fictional", "non fictional", "humanoid", "manwomanrelation", "manwomanmultiple","firstname"]  and chance_roll(insanitylevel, joboractivitychance) and humanspecial != 1 and generatesubject == True):
+            if((animalashuman or subjectchooser in ["human","fictional", "non fictional", "humanoid", "manwomanrelation", "manwomanmultiple","firstname"])  and chance_roll(insanitylevel, joboractivitychance) and humanspecial != 1 and generatesubject == True):
                 genjoboractivity = True
                 genjoboractivitylocationslist = ["front","middle", "middle","back","back", "back"]
                 genjoboractivitylocation = random.choice(genjoboractivitylocationslist)
@@ -2105,7 +2331,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 completeprompt += " -animalsuffixaddition- "
             
             
-            if(subjectchooser == "landscape"):
+            if(mainchooser == "landscape"):
                 # first add a wildcard that can be used to create prompt strenght
                 completeprompt += " -objectstrengthstart-"
                 
@@ -2116,12 +2342,28 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                         hybridorswap = random.choice(hybridorswaplist)
                         completeprompt += "["
                     
-                    completeprompt += "-location- "
+                    if(subtypelocation != "all"):
+                        if(subtypelocation=="location"):
+                            locationwildcardlist = ["-location-"]
+                        elif(subtypelocation=="fantasy location"):
+                            locationwildcardlist = ["-locationfantasy-"]
+                        elif(subtypelocation=="videogame location"):
+                            locationwildcardlist = ["-locationvideogame-"]
+                        elif(subtypelocation=="sci-fi location"):
+                            locationwildcardlist = ["-locationscifi-"]
+                        elif(subtypelocation=="biome"):
+                            locationwildcardlist = ["-locationbiome-"]
+                        elif(subtypelocation=="city"):
+                            locationwildcardlist = ["-locationcity-"]
+
+                    
+                    chosenlocationwildcard = random.choice(locationwildcardlist)
+                    completeprompt += chosenlocationwildcard + " "
 
                     if(hybridorswap == "hybrid"):
-                        completeprompt += "|" + "-location-"  + "] "
+                        completeprompt += "|" + chosenlocationwildcard  + "] "
                     if(hybridorswap == "swap"):
-                        completeprompt += ":" + "-location-" + ":" + str(random.randint(1,5)) +  "] "        
+                        completeprompt += ":" + chosenlocationwildcard + ":" + str(random.randint(1,5)) +  "] "        
                 else:
                     completeprompt += " " + givensubject + " " 
                 
@@ -2131,7 +2373,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 completeprompt += "-objectstrengthend-"
 
                 # shots from inside can create cool effects in landscapes
-                if(chance_roll(insanitylevel, subjectlandscapeaddonlocationchance) and insideshot == 0):
+                if(chance_roll(max(1,insanitylevel-2), subjectlandscapeaddonlocationchance) and insideshot == 0):
                     insideshot = 1
                     # lets cheat a bit here, we can do something cool I saw on reddit
                     if(mainchooser=="humanoid" and legendary_dist(insanitylevel)):
@@ -2222,7 +2464,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             if(descriptorsintheback == 2):
                 # Common to have 1 description, uncommon to have 2
                 if(chance_roll(insanitylevel, subjectdescriptor1chance) and generatedescriptors == True):
-                    if(subjectchooser in ["animal as human,","human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation","manwomanmultiple", "firstname"]):
+                    if(animalashuman or subjectchooser in ["human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation","manwomanmultiple", "firstname"]):
                         if(less_verbose):
                             completeprompt += ", -humandescriptor- "
                         elif(random.randint(0,3) > 0):
@@ -2248,7 +2490,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                             completeprompt += ", OR(;-heshe- is;normal) OR(;very;rare) -descriptor- "
 
                     if(chance_roll(insanitylevel, subjectdescriptor2chance) and generatedescriptors == True):
-                        if(subjectchooser in ["animal as human,","human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation","manwomanmultiple","firstname"]):
+                        if(animalashuman or subjectchooser in ["human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation","manwomanmultiple","firstname"]):
                             if(less_verbose):
                                 completeprompt += ", -humandescriptor- "
                             else:
@@ -2281,7 +2523,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             
             
             # riding an animal, holding an object or driving a vehicle, rare
-            if(subjectchooser in ["animal as human,","human","fictional", "non fictional", "humanoid", "manwomanrelation","manwomanmultiple","firstname"] and chance_roll(insanitylevel, humanadditionchance) and generatehumanaddition == True):
+            if((animalashuman or subjectchooser in ["human","fictional", "non fictional", "humanoid", "manwomanrelation","manwomanmultiple","firstname"]) and chance_roll(insanitylevel, humanadditionchance) and generatehumanaddition == True):
                 humanspecial = 1
                 completeprompt += "-humanaddition- "
                 
@@ -2297,11 +2539,11 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
             # SD understands emoji's. Can be used to manipulate facial expressions.
             # emoji, legendary
-            if(subjectchooser in ["animal as human,","human","fictional", "non fictional", "humanoid", "manwomanrelation","manwomanmultiple","firstname"] and chance_roll(insanitylevel, emojichance) and generateemoji== True):
+            if((animalashuman or subjectchooser in ["human","fictional", "non fictional", "humanoid", "manwomanrelation","manwomanmultiple","firstname"]) and chance_roll(insanitylevel, emojichance) and generateemoji== True):
                 completeprompt += "-emoji-, "
 
             # human expressions
-            if(subjectchooser in ["animal as human,","human","fictional", "non fictional", "humanoid", "manwomanrelation","manwomanmultiple","firstname"] and chance_roll(insanitylevel, humanexpressionchance) and generatehumanexpression== True):
+            if((animalashuman or subjectchooser in ["animal as human,","human","fictional", "non fictional", "humanoid", "manwomanrelation","manwomanmultiple","firstname"]) and chance_roll(insanitylevel, humanexpressionchance) and generatehumanexpression== True):
                 completeprompt += "-humanexpression-, "
                 
 
@@ -2319,9 +2561,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                     completeprompt +=  "OR(,; as a;rare) -job-, "
 
 
-            # if(subjectchooser in ["animal as human","human","job", "fictional", "non fictional", "humanoid"] and legendary_dist(insanitylevel)):
-            #    skintypelist = ["-color-", "-material-"]
-            #    completeprompt += ", with " + random.choice(skintypelist) + " skin, "
+        
 
             # add face builder sometimes on generic humans
             if(subjectchooser in ["human", "humanoid", "manwomanrelation","firstname"] and chance_roll(insanitylevel, buildfacechance) and generateface== True):
@@ -2340,7 +2580,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 completeprompt += " -minivomit-, "
             
             # outfit builder
-            #if(subjectchooser in ["animal as human","human","fictional", "non fictional", "humanoid", "manwomanrelation","manwomanmultiple", "firstname"]  and chance_roll(insanitylevel, outfitchance) and generateoutfit == True and humanspecial != 1):
+           
             if(outfitmode == 2):
                 completeprompt += " " + random.choice(buildoutfitlist) + ", "
                 if(extraordinary_dist(insanitylevel)):
@@ -2352,7 +2592,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             
 
             
-            if(subjectchooser in ["animal as human","human","fictional", "non fictional", "humanoid", "manwomanrelation","manwomanmultiple", "firstname"]  and chance_roll(insanitylevel, posechance) and humanspecial != 1 and generatepose == True):
+            if((animalashuman or subjectchooser in ["human","fictional", "non fictional", "humanoid", "manwomanrelation","manwomanmultiple", "firstname"])  and chance_roll(insanitylevel, posechance) and humanspecial != 1 and generatepose == True):
                 completeprompt += random.choice(poselist) + ", "
             
             if(subjectchooser in ["human","job","fictional", "non fictional", "humanoid", "manwomanrelation","manwomanmultiple", "firstname"]  and chance_roll(insanitylevel, hairchance) and generatehairstyle == True):
@@ -2360,7 +2600,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 if(unique_dist(insanitylevel)):
                     completeprompt += " -hairvomit-, "
 
-            if(subjectchooser in ["animal as human,","human","fictional", "non fictional", "humanoid", "manwomanrelation","manwomanmultiple", "firstname"]  and chance_roll(insanitylevel, accessorychance) and generateaccessorie == True and generateaccessories == True):
+            if((animalashuman or subjectchooser in ["human","fictional", "non fictional", "humanoid", "manwomanrelation","manwomanmultiple", "firstname"])  and chance_roll(insanitylevel, accessorychance) and generateaccessorie == True and generateaccessories == True):
                 completeprompt += random.choice(buildaccessorielist) + ", "
 
             if(chance_roll(insanitylevel, humanoidinsideshotchance) and subjectchooser not in ["landscape", "concept"] and generateinsideshot == True):
@@ -3229,11 +3469,25 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     "-allstylessuffix-" in completeprompt or
     "-fluff-" in completeprompt or
     "-event-" in completeprompt or
-    "-background-" in completeprompt):
+    "-background-" in completeprompt or
+    "-occult-" in completeprompt or
+    "-locationfantasy-" in completeprompt or
+    "-locationscifi-" in completeprompt or
+    "-locationvideogame-" in completeprompt or
+    "-locationbiome-" in completeprompt or
+    "-locationcity-" in completeprompt or
+    "-bird-" in completeprompt or
+    "-cat-" in completeprompt or
+    "-dog-" in completeprompt or
+    "-insect-" in completeprompt or
+    "-pokemon-" in completeprompt or
+    "-pokemontype-" in completeprompt):
         allwildcardslistnohybrid = [ "-color-","-object-", "-animal-", "-fictional-","-nonfictional-","-building-","-vehicle-","-location-","-conceptprefix-","-food-","-haircolor-","-hairstyle-","-job-", "-accessory-", "-humanoid-", "-manwoman-", "-human-", "-colorscheme-", "-mood-", "-genderdescription-", "-artmovement-", "-malefemale-", "-bodytype-", "-minilocation-", "-minilocationaddition-", "-pose-", "-season-", "-minioutfit-", "-elaborateoutfit-", "-minivomit-", "-vomit-", "-rpgclass-", "-subjectfromfile-","-outfitfromfile-", "-brand-", "-space-", "-artist-", "-imagetype-", "-othertype-", "-quality-", "-lighting-", "-camera-", "-lens-","-imagetypequality-", "-poemline-", "-songline-", "-greatwork-", "-fantasyartist-", "-popularartist-", "-romanticismartist-", "-photographyartist-", "-emoji-", "-timeperiod-", "-shotsize-", "-musicgenre-", "-animaladdition-", "-addontolocationinside-", "-addontolocation-", "-objectaddition-", "-humanaddition-", "-overalladdition-", "-focus-", "-direction-", "-styletilora-", "-manwomanrelation-", "-waterlocation-", "-container-", "-firstname-", "-flora-", "-print-", "-miniactivity-", "-pattern-", "-animalsuffixaddition-", "-chair-", "-cardname-", "-covering-", "-heshe-", "-hisher-", "-himher-", "-outfitdescriptor-", "-hairdescriptor-", "-hairvomit-", "-humandescriptor-", "-manwomanmultiple-", "-facepart-", "-buildfacepart-", "-outfitvomit-", "-locationdescriptor-", "-basicbitchdescriptor-", "-animaldescriptor-", "-humanexpression-", "-humanvomit-", "-eyecolor-", "-fashiondesigner-", "-colorcombination-", "-materialcombination-", "-oppositefictional-", "-oppositenonfictional-", "-photoaddition-", "-age-", "-agecalculator-", "-gregmode-"
-                                    ,"-portraitartist-", "-characterartist-" , "-landscapeartist-", "-scifiartist-", "-graphicdesignartist-", "-digitalartist-", "-architectartist-", "-cinemaartist-", "-setting-", "-charactertype-", "-objectstohold-", "-episodetitle-", "-token-", "-allstylessuffix-", "-fluff-", "-event-", "-background-"]
+                                    ,"-portraitartist-", "-characterartist-" , "-landscapeartist-", "-scifiartist-", "-graphicdesignartist-", "-digitalartist-", "-architectartist-", "-cinemaartist-", "-setting-", "-charactertype-", "-objectstohold-", "-episodetitle-", "-token-", "-allstylessuffix-", "-fluff-", "-event-", "-background-"
+                                    , "-occult-", "-locationfantasy-", "-locationscifi-", "-locationvideogame-", "-locationbiome-", "-locationcity-", "-bird-", "-cat-", "-dog-", "-insect-", "-pokemon-", "-pokemontype-"]
         allwildcardslistnohybridlists = [colorlist, objectlist, animallist, fictionallist, nonfictionallist, buildinglist, vehiclelist, locationlist,conceptprefixlist,foodlist,haircolorlist, hairstylelist,joblist, accessorielist, humanoidlist, manwomanlist, humanlist, colorschemelist, moodlist, genderdescriptionlist, artmovementlist, malefemalelist, bodytypelist, minilocationlist, minilocationadditionslist, poselist, seasonlist, minioutfitlist, elaborateoutfitlist, minivomitlist, vomitlist, rpgclasslist, customsubjectslist, customoutfitslist, brandlist, spacelist, artistlist, imagetypelist, othertypelist, qualitylist, lightinglist, cameralist, lenslist, imagetypequalitylist, poemlinelist, songlinelist, greatworklist, fantasyartistlist, popularartistlist, romanticismartistlist, photographyartistlist, emojilist, timeperiodlist, shotsizelist, musicgenrelist, animaladditionlist, addontolocationinsidelist, addontolocationlist, objectadditionslist, humanadditionlist, overalladditionlist, focuslist, directionlist, stylestiloralist, manwomanrelationlist, waterlocationlist, containerlist, firstnamelist, floralist, printlist, miniactivitylist, patternlist, animalsuffixadditionlist, chairlist, cardnamelist, coveringlist, heshelist, hisherlist, himherlist, outfitdescriptorlist, hairdescriptorlist, hairvomitlist, humandescriptorlist, manwomanmultiplelist, facepartlist, buildfacepartlist, outfitvomitlist, locationdescriptorlist, basicbitchdescriptorlist, animaldescriptorlist, humanexpressionlist, humanvomitlist, eyecolorlist, fashiondesignerlist, colorcombinationlist, materialcombinationlist, oppositefictionallist, oppositenonfictionallist, photoadditionlist, agelist, agecalculatorlist, gregmodelist
-                                         , portraitartistlist, characterartistlist, landscapeartistlist, scifiartistlist, graphicdesignartistlist, digitalartistlist, architectartistlist, cinemaartistlist, settinglist, charactertypelist, objectstoholdlist, episodetitlelist, tokenlist, allstylessuffixlist, flufferlist, eventlist, backgroundlist]
+                                         , portraitartistlist, characterartistlist, landscapeartistlist, scifiartistlist, graphicdesignartistlist, digitalartistlist, architectartistlist, cinemaartistlist, settinglist, charactertypelist, objectstoholdlist, episodetitlelist, tokenlist, allstylessuffixlist, flufferlist, eventlist, backgroundlist
+                                         , occultlist, locationfantasylist, locationscifilist, locationvideogamelist, locationbiomelist, locationcitylist, birdlist, catlist, doglist, insectlist, pokemonlist, pokemontypelist]
         
         allwildcardslistwithhybrid = ["-material-", "-descriptor-", "-outfit-", "-conceptsuffix-","-culture-", "-objecttotal-", "-outfitprinttotal-", "-element-"]
         allwildcardslistwithhybridlists = [materiallist, descriptorlist,outfitlist,conceptsuffixlist,culturelist, objecttotallist, outfitprinttotallist, elementlist]
@@ -3493,6 +3747,21 @@ def createpromptvariant(prompt = "", insanitylevel = 5, antivalues = "" , gender
     cinemaartistlist = artist_category_csv_to_list("artists_and_category","cinema")
     gregmodelist = csv_to_list("gregmode", antilist)
 
+
+    # New set of lists
+    locationfantasylist = csv_to_list("locationsfantasy", antilist)
+    locationscifilist = csv_to_list("locationsscifi", antilist)
+    locationvideogamelist = csv_to_list("locationsvideogame", antilist)
+    locationbiomelist = csv_to_list("locationsbiome", antilist)
+    locationcitylist = csv_to_list("locationscities", antilist)
+    birdlist = csv_to_list("birds", antilist)
+    catlist = csv_to_list("cats", antilist)
+    doglist = csv_to_list("dogs", antilist)
+    insectlist = csv_to_list("insects", antilist)
+    pokemonlist = csv_to_list("pokemon", antilist)
+    pokemontypelist = csv_to_list("pokemontypes", antilist)
+    occultlist = csv_to_list("occult", antilist)
+
     # add any other custom lists
     stylestiloralist = csv_to_list("styles_ti_lora",antilist,"./userfiles/")
     generatestyle = bool(stylestiloralist) # True of not empty
@@ -3696,6 +3965,32 @@ def createpromptvariant(prompt = "", insanitylevel = 5, antivalues = "" , gender
                 if lowercase_combination in [x.lower() for x in flufferlist] and chance_roll(insanitylevel, "uncommon"):
                     prompt = prompt.replace(combination," -fluff- ")
 
+                if lowercase_combination in [x.lower() for x in occultlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -occult- ")
+                if lowercase_combination in [x.lower() for x in locationfantasylist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -locationfantasy- ")
+                if lowercase_combination in [x.lower() for x in locationscifilist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -locationscifi- ")
+                if lowercase_combination in [x.lower() for x in locationvideogamelist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -locationvideogame- ")
+                if lowercase_combination in [x.lower() for x in locationbiomelist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -locationbiome- ")
+                if lowercase_combination in [x.lower() for x in locationcitylist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -locationcity- ")
+
+                if lowercase_combination in [x.lower() for x in birdlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -bird- ")              
+                if lowercase_combination in [x.lower() for x in catlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -cat- ")
+                if lowercase_combination in [x.lower() for x in doglist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -dog- ")
+                if lowercase_combination in [x.lower() for x in insectlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -insect- ")
+                if lowercase_combination in [x.lower() for x in pokemonlist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -pokemon- ")
+
+                if lowercase_combination in [x.lower() for x in pokemontypelist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -pokemontype- ")
                 
                 #if lowercase_combination in [x.lower() for x in conceptprefixlist] and chance_roll(insanitylevel, "uncommon"):
                 #    prompt = prompt.replace(combination," -conceptprefix- ")
@@ -4007,12 +4302,26 @@ def createpromptvariant(prompt = "", insanitylevel = 5, antivalues = "" , gender
         "-allstylessuffix-" in completeprompt or
         "-fluff-" in completeprompt or
         "-event-" in completeprompt or
-        "-background-" in completeprompt
+        "-background-" in completeprompt or
+        "-occult-" in completeprompt or
+        "-locationfantasy-" in completeprompt or
+        "-locationscifi-" in completeprompt or
+        "-locationvideogame-" in completeprompt or
+        "-locationbiome-" in completeprompt or
+        "-locationcity-" in completeprompt or
+         "-bird-" in completeprompt or
+        "-cat-" in completeprompt or
+        "-dog-" in completeprompt or
+        "-insect-" in completeprompt or
+        "-pokemon-" in completeprompt or
+        "-pokemontype-" in completeprompt
         ):
             allwildcardslistnohybrid = [ "-color-","-object-", "-animal-", "-fictional-","-nonfictional-","-building-","-vehicle-","-location-","-conceptprefix-","-food-","-haircolor-","-hairstyle-","-job-", "-accessory-", "-humanoid-", "-manwoman-", "-human-", "-colorscheme-", "-mood-", "-genderdescription-", "-artmovement-", "-malefemale-", "-bodytype-", "-minilocation-", "-minilocationaddition-", "-pose-", "-season-", "-minioutfit-", "-elaborateoutfit-", "-minivomit-", "-vomit-", "-rpgclass-", "-subjectfromfile-", "-outfitfromfile-", "-brand-", "-space-", "-artist-", "-imagetype-", "-othertype-", "-quality-", "-lighting-", "-camera-", "-lens-","-imagetypequality-", "-poemline-", "-songline-", "-greatwork-", "-fantasyartist-", "-popularartist-", "-romanticismartist-", "-photographyartist-", "-emoji-", "-timeperiod-", "-shotsize-", "-musicgenre-", "-animaladdition-", "-objectaddition-", "-humanaddition-", "-overalladdition-", "-focus-", "-direction-", "-styletilora-", "-manwomanrelation-", "-waterlocation-", "-container-", "-firstname-", "-flora-", "-print-", "-miniactivity-", "-pattern-", "-chair-", "-cardname-", "-covering-", "-outfitdescriptor-", "-hairdescriptor-", "-hairvomit-", "-humandescriptor-", "-manwomanmultiple-", "-facepart-", "-locationdescriptor-", "-basicbitchdescriptor-", "-animaldescriptor-", "-humanexpression-", "-humanvomit-", "-eyecolor-", "-fashiondesigner-", "-colorcombination-", "-materialcombination-", "-photoaddition-", "-age-", "-agecalculator-", "-gregmode-"
-                                        ,"-portraitartist-", "-characterartist-" , "-landscapeartist-", "-scifiartist-", "-graphicdesignartist-", "-digitalartist-", "-architectartist-", "-cinemaartist-", "-setting-", "-charactertype-", "-objectstohold-", "-episodetitle-", "-allstylessuffix-", "-fluff-", "-event-", "-background-"]
+                                        ,"-portraitartist-", "-characterartist-" , "-landscapeartist-", "-scifiartist-", "-graphicdesignartist-", "-digitalartist-", "-architectartist-", "-cinemaartist-", "-setting-", "-charactertype-", "-objectstohold-", "-episodetitle-", "-allstylessuffix-", "-fluff-", "-event-", "-background-"
+                                        , "-occult-", "-locationfantasy-", "-locationscifi-", "-locationvideogame-", "-locationbiome-", "-locationcity-", "-bird-", "-cat-", "-dog-", "-insect-", "-pokemon-", "-pokemontype-"]
             allwildcardslistnohybridlists = [colorlist, objectlist, animallist, fictionallist, nonfictionallist, buildinglist, vehiclelist, locationlist,conceptprefixlist,foodlist,haircolorlist, hairstylelist,joblist, accessorielist, humanoidlist, manwomanlist, humanlist, colorschemelist, moodlist, genderdescriptionlist, artmovementlist, malefemalelist, bodytypelist, minilocationlist, minilocationadditionslist, poselist, seasonlist, minioutfitlist, elaborateoutfitlist, minivomitlist, vomitlist, rpgclasslist, customsubjectslist, customoutfitslist, brandlist, spacelist, artistlist, imagetypelist, othertypelist, qualitylist, lightinglist, cameralist, lenslist, imagetypequalitylist, poemlinelist, songlinelist, greatworklist, fantasyartistlist, popularartistlist, romanticismartistlist, photographyartistlist, emojilist, timeperiodlist, shotsizelist, musicgenrelist, animaladditionlist, objectadditionslist, humanadditionlist, overalladditionlist, focuslist, directionlist, stylestiloralist, manwomanrelationlist, waterlocationlist, containerlist, firstnamelist, floralist, printlist, miniactivitylist, patternlist, chairlist, cardnamelist, coveringlist, outfitdescriptorlist, hairdescriptorlist, hairvomitlist, humandescriptorlist, manwomanmultiplelist, facepartlist, locationdescriptorlist, basicbitchdescriptorlist, animaldescriptorlist, humanexpressionlist, humanvomitlist, eyecolorlist, fashiondesignerlist, colorcombinationlist, materialcombinationlist, photoadditionlist, agelist, agecalculatorlist, gregmodelist
-                                             , portraitartistlist, characterartistlist, landscapeartistlist, scifiartistlist, graphicdesignartistlist, digitalartistlist, architectartistlist, cinemaartistlist, settinglist, charactertypelist, objectstoholdlist, episodetitlelist, allstylessuffixlist, flufferlist, eventlist, backgroundlist]
+                                             , portraitartistlist, characterartistlist, landscapeartistlist, scifiartistlist, graphicdesignartistlist, digitalartistlist, architectartistlist, cinemaartistlist, settinglist, charactertypelist, objectstoholdlist, episodetitlelist, allstylessuffixlist, flufferlist, eventlist, backgroundlist
+                                             , occultlist, locationfantasylist, locationscifilist, locationvideogamelist, locationbiomelist, locationcitylist, birdlist, catlist, doglist, insectlist, pokemonlist, pokemontypelist]
             
             allwildcardslistwithhybrid = ["-material-", "-descriptor-", "-outfit-", "-conceptsuffix-","-culture-", "-objecttotal-", "-outfitprinttotal-", "-element-"]
             allwildcardslistwithhybridlists = [materiallist, descriptorlist,outfitlist,conceptsuffixlist,culturelist, objecttotallist, outfitprinttotallist, elementlist]
@@ -5078,3 +5387,193 @@ def replace_user_wildcards(completeprompt):
                 completeprompt = completeprompt.replace(user_wildcard, random.choice(wordlist),1)
 
     return completeprompt
+
+def translate_main_subject(main_subject=""):
+    subjecttype_lookup = {
+        "object - all": ["object", "all"],
+        "--- object - all": ["object", "all"],
+        "object - generic": ["object", "all"],
+        "generic object": ["object", "generic objects"],
+        "generic objects": ["object", "generic objects"],
+        "genericobject": ["object", "generic objects"],
+        "genericobjects": ["object", "generic objects"],
+        "object - vehicle": ["object", "vehicles"],
+        "vehicle": ["object", "vehicles"],
+        "vehicles": ["object", "vehicles"],
+        "object - food": ["object", "food"],
+        "food": ["object", "food"],
+        "object - building": ["object", "buildings"],
+        "building": ["object", "buildings"],
+        "buildings": ["object", "buildings"],
+        "object - space": ["object", "space"],
+        "space": ["object", "space"],
+        "object - flora": ["object", "flora"],
+        "flora": ["object", "flora"],
+        "nature": ["object", "flora"],
+
+        "animal - all": ["animal", "all"],
+        "--- animal - all": ["animal", "all"],
+        "animal": ["animal", "all"],
+        "animals": ["animal", "all"],
+        "animal - generic": ["animal", "generic animal"],
+        "generic animal": ["animal", "generic animal"],
+        "generic animals": ["animal", "generic animal"],
+        "genericanimal": ["animal", "generic animal"],
+        "genericanimals": ["animal", "generic animal"],
+        "animal - cat": ["animal", "cat"],
+        "cat": ["animal", "cat"],
+        "cats": ["animal", "cat"],
+        "animal - dog": ["animal", "dog"],
+        "dog": ["animal", "dog"],
+        "dogs": ["animal", "dog"],
+        "animal - bird": ["animal", "bird"],
+        "bird": ["animal", "bird"],
+        "birds": ["animal", "bird"],
+        "animal - insect": ["animal", "insect"],
+        "insect": ["animal", "insect"],
+        "insects": ["animal", "insect"],
+        "animal - pokémon": ["animal", "pokemon"],
+        "animal - pokemon": ["animal", "pokemon"],
+        "pokemon": ["animal", "pokemon"],
+        "pokemons": ["animal", "pokemon"],
+        "pokémon": ["animal", "pokemon"],
+        "pokémons": ["animal", "pokemon"],
+
+        "human - all": ["humanoid", "all"],
+        "--- human - all": ["humanoid", "all"],
+        "human": ["humanoid", "all"],
+        "humans": ["humanoid", "all"],
+        "person": ["humanoid", "all"],
+        "persons": ["humanoid", "all"],
+        "people": ["humanoid", "all"],
+        "man": ["humanoid", "all"],
+        "woman": ["humanoid", "all"],
+        "male": ["humanoid", "all"],
+        "female": ["humanoid", "all"],
+        "guy": ["humanoid", "all"],
+        "girl": ["humanoid", "all"],
+        "human - generic": ["humanoid", "human"],
+        "generic human": ["humanoid", "human"],
+        "generic humans": ["humanoid", "human"],
+        "generichuman": ["humanoid", "human"],
+        "generichumans": ["humanoid", "human"],
+        "human - relations": ["humanoid","manwomanrelation"],
+        "relations": ["humanoid","manwomanrelation"],
+        "human relations": ["humanoid","manwomanrelation"],
+        "humanrelations": ["humanoid","manwomanrelation"],
+        "human - celebrity": ["humanoid","non fictional"],
+        "celebrities": ["humanoid","non fictional"],
+        "celebrity": ["humanoid","non fictional"],
+        "human - fictional": ["humanoid","fictional"],
+        "fictional characters": ["humanoid","fictional"],
+        "fictional character": ["humanoid","fictional"],
+        "fictionalcharacters": ["humanoid","fictional"],
+        "fictionalcharacter": ["humanoid","fictional"],
+        "fictional": ["humanoid","fictional"],
+        "human - humanoids": ["humanoid","humanoid"],
+        "humanoid": ["humanoid","humanoid"],
+        "humanoids": ["humanoid","humanoid"],
+        "human - job/title": ["humanoid","job"],
+        "job": ["humanoid","job"],
+        "jobs": ["humanoid","job"],
+        "title": ["humanoid","job"],
+        "titles": ["humanoid","job"],
+        "human - first name": ["humanoid","firstname"],
+        "first name": ["humanoid","firstname"],
+        "firstname": ["humanoid","firstname"],
+        "human - multiple": ["humanoid","manwomanmultiple"], 
+        "multiplehumans": ["humanoid","manwomanmultiple"], 
+        "multiple": ["humanoid","manwomanmultiple"], 
+
+        "landscape - all": ["landscape","all"],
+        "--- landscape - all": ["landscape","all"],
+        "landscape": ["landscape","all"],
+        "landscapes": ["landscape","all"],
+        "landscape - generic": ["landscape","location"],
+        "landscape generic": ["landscape","location"],
+        "landscapes generic": ["landscape","location"],
+        "landscapegeneric": ["landscape","location"],
+        "landscapesgeneric": ["landscape","location"],
+        "genericlandscape": ["landscape","location"],
+        "generic landscape": ["landscape","location"],
+        "genericlandscapes": ["landscape","location"],
+        "generic landscapes": ["landscape","location"],
+        "landscape - fantasy": ["landscape","fantasy location"],
+        "landscape fantasy": ["landscape","fantasy location"],
+        "landscapefantasy": ["landscape","fantasy location"],
+        "fantasylandscape": ["landscape","fantasy location"],
+        "fantasy landscape": ["landscape","fantasy location"],
+        "landscape - videogame": ["landscape","videogame location"],
+        "landscape videogame": ["landscape","videogame location"],
+        "landscapevideogame": ["landscape","videogame location"],
+        "videogamelandscape": ["landscape","videogame location"],
+        "videogame landscape": ["landscape","videogame location"],
+        "landscape - sci-fi": ["landscape","sci-fi location"],
+        "landscape sci-fi": ["landscape","sci-fi location"],
+        "landscapesci-fi": ["landscape","sci-fi location"],
+        "sci-filandscape": ["landscape","sci-fi location"],
+        "sci-fi landscape": ["landscape","sci-fi location"],
+        "landscape - scifi": ["landscape","sci-fi location"],
+        "landscape scifi": ["landscape","sci-fi location"],
+        "landscapescifi": ["landscape","sci-fi location"],
+        "scifilandscape": ["landscape","sci-fi location"],
+        "scifi landscape": ["landscape","sci-fi location"],
+        "landscape - biome": ["landscape","biome"],
+        "landscape biome": ["landscape","biome"],
+        "landscapebiome": ["landscape","biome"],
+        "biomelandscape": ["landscape","biome"],
+        "biome landscape": ["landscape","biome"],
+        "biome": ["landscape","biome"],
+        "biomes": ["landscape","biome"],
+        "landscape - city": ["landscape","city"],
+        "landscape city": ["landscape","city"],
+        "landscapecity": ["landscape","city"],
+        "citylandscape": ["landscape","city"],
+        "city landscape": ["landscape","city"],
+        "city": ["landscape","city"],
+        "cities": ["landscape","city"],
+
+        "concept - all": ["concept", "all"],
+        "--- concept - all": ["concept", "all"],
+        "concept": ["concept", "all"],
+        "concepts": ["concept", "all"],
+        "concept - event": ["concept", "event"],
+        "event": ["concept", "event"],
+        "events": ["concept", "event"],
+        "concept - the x of y": ["concept", "concept"],
+        "xofy": ["concept", "concept"],
+        "thexofy": ["concept", "concept"],
+        "concept - poem lines": ["concept", "poemline"],
+        "poem": ["concept", "poemline"],
+        "poems": ["concept", "poemline"],
+        "poemline": ["concept", "poemline"],
+        "poemlines": ["concept", "poemline"],
+        "concept - song lines": ["concept", "songline"],
+        "song": ["concept", "songline"],
+        "songs": ["concept", "songline"],
+        "songline": ["concept", "songline"],
+        "songlines": ["concept", "songline"],
+        "concept - card names": ["concept", "cardname"],
+        "cards": ["concept", "cardname"],
+        "card": ["concept", "cardname"],
+        "cardgame": ["concept", "cardname"],
+        "cardgames": ["concept", "cardname"],
+        "cardname": ["concept", "cardname"],
+        "cardnames": ["concept", "cardname"],
+        "concept - episode titles": ["concept", "episodetitle"],
+        "episode": ["concept", "episodetitle"],
+        "episodes": ["concept", "episodetitle"],
+        "episodetitle": ["concept", "episodetitle"],
+        "episodetitles": ["concept", "episodetitle"],
+        "tv": ["concept", "episodetitle"],
+        "tv shows": ["concept", "episodetitle"],
+        "tvshows": ["concept", "episodetitle"],
+        "concept - mixer": ["concept", "conceptmixer"],
+        "concept mixer": ["concept", "conceptmixer"],
+        "conceptmixer": ["concept", "conceptmixer"],
+        "mixer": ["concept", "conceptmixer"],
+    }
+
+    subjecttype = subjecttype_lookup.get(main_subject, ["all", "all"])
+
+    return subjecttype

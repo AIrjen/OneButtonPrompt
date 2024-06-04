@@ -270,12 +270,13 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     locationbiomelist = csv_to_list("locationsbiome", antilist)
     locationcitylist = csv_to_list("locationscities", antilist)
     birdlist = csv_to_list("birds", antilist)
-    catlist = csv_to_list("cats", antilist)
-    doglist = csv_to_list("dogs", antilist)
+    catlist = csv_to_list(csvfilename="cats", antilist=antilist,delimiter="?")
+    doglist = csv_to_list(csvfilename="dogs", antilist=antilist,delimiter="?")
     insectlist = csv_to_list("insects", antilist)
     pokemonlist = csv_to_list("pokemon", antilist)
     pokemontypelist = csv_to_list("pokemontypes", antilist)
     occultlist = csv_to_list("occult", antilist)
+    marinelifelist = csv_to_list("marinelife", antilist)
     
 
     # additional descriptor lists
@@ -489,6 +490,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     generatedog = True
     generateinsect = True
     generatepokemon = True
+    generatemarinelife = True
 
 
     generatemanwoman = True
@@ -620,6 +622,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             generateinsect = False
         if item[0] == 'subject_pokemon' and item[1] != 'on':
             generatepokemon = False
+        if item[0] == 'subject_marinelife' and item[1] != 'on':
+            generatemarinelife = False
         # humanoids
         if item[0] == 'subject_manwoman' and item[1] != 'on':
             generatemanwoman = False
@@ -892,6 +896,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
     if(generatepokemon):
         animalwildcardlist.append("-pokemon-")
+    
+    if(generatemarinelife):
+        animalwildcardlist.append("-marinelife-")
 
     generatefictionalcharacter = bool(fictionallist) and generatefictionalcharacter
     generatenonfictionalcharacter = bool(nonfictionallist) and generatenonfictionalcharacter
@@ -944,8 +951,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     generatedog = bool(doglist) and generatedog
     generateinsect = bool(insectlist) and generateinsect
     generatepokemon = bool(pokemonlist) and generatepokemon
+    generatemarinelife = bool(marinelifelist) and generatemarinelife
 
-    generateanimaltotal = generateanimal or generatebird or generatecat or generatedog or generateinsect or generatepokemon
+    generateanimaltotal = generateanimal or generatebird or generatecat or generatedog or generateinsect or generatepokemon or generatemarinelife
 
     if(generateanimal):
         hybridlist.append("-animal-")
@@ -959,6 +967,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         hybridlist.append("-insect-")
     if(generatepokemon):
         hybridlist.append("-pokemon-")
+
+    if(generatemarinelife):
+        hybridlist.append("-marinelife-")
 
     if(generateanimaltotal):
         mainchooserlist.append("animal")
@@ -1913,7 +1924,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
 
         # start image type
-
+        if(giventypeofimage == "" and (imagetype == "none" or giventypeofimage=="none") ):
+           generatetype = False
         if(giventypeofimage=="" and generatetype == True):
             if(imagetype != "all" and imagetype != "all - force multiple" and imagetype != "only other types"):
                  
@@ -2177,6 +2189,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                             animalwildcardlist = ["-insect-"]
                         elif(subtypeanimal=="pokemon"):
                             animalwildcardlist = ["-pokemon-"]
+                        elif(subtypeanimal=="marine life"):
+                            animalwildcardlist = ["-marinelife-"]
 
                     
                     chosenanimalwildcard = random.choice(animalwildcardlist)
@@ -3481,13 +3495,14 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     "-dog-" in completeprompt or
     "-insect-" in completeprompt or
     "-pokemon-" in completeprompt or
-    "-pokemontype-" in completeprompt):
+    "-pokemontype-" in completeprompt or
+    "-marinelife-"  in completeprompt):
         allwildcardslistnohybrid = [ "-color-","-object-", "-animal-", "-fictional-","-nonfictional-","-building-","-vehicle-","-location-","-conceptprefix-","-food-","-haircolor-","-hairstyle-","-job-", "-accessory-", "-humanoid-", "-manwoman-", "-human-", "-colorscheme-", "-mood-", "-genderdescription-", "-artmovement-", "-malefemale-", "-bodytype-", "-minilocation-", "-minilocationaddition-", "-pose-", "-season-", "-minioutfit-", "-elaborateoutfit-", "-minivomit-", "-vomit-", "-rpgclass-", "-subjectfromfile-","-outfitfromfile-", "-brand-", "-space-", "-artist-", "-imagetype-", "-othertype-", "-quality-", "-lighting-", "-camera-", "-lens-","-imagetypequality-", "-poemline-", "-songline-", "-greatwork-", "-fantasyartist-", "-popularartist-", "-romanticismartist-", "-photographyartist-", "-emoji-", "-timeperiod-", "-shotsize-", "-musicgenre-", "-animaladdition-", "-addontolocationinside-", "-addontolocation-", "-objectaddition-", "-humanaddition-", "-overalladdition-", "-focus-", "-direction-", "-styletilora-", "-manwomanrelation-", "-waterlocation-", "-container-", "-firstname-", "-flora-", "-print-", "-miniactivity-", "-pattern-", "-animalsuffixaddition-", "-chair-", "-cardname-", "-covering-", "-heshe-", "-hisher-", "-himher-", "-outfitdescriptor-", "-hairdescriptor-", "-hairvomit-", "-humandescriptor-", "-manwomanmultiple-", "-facepart-", "-buildfacepart-", "-outfitvomit-", "-locationdescriptor-", "-basicbitchdescriptor-", "-animaldescriptor-", "-humanexpression-", "-humanvomit-", "-eyecolor-", "-fashiondesigner-", "-colorcombination-", "-materialcombination-", "-oppositefictional-", "-oppositenonfictional-", "-photoaddition-", "-age-", "-agecalculator-", "-gregmode-"
                                     ,"-portraitartist-", "-characterartist-" , "-landscapeartist-", "-scifiartist-", "-graphicdesignartist-", "-digitalartist-", "-architectartist-", "-cinemaartist-", "-setting-", "-charactertype-", "-objectstohold-", "-episodetitle-", "-token-", "-allstylessuffix-", "-fluff-", "-event-", "-background-"
-                                    , "-occult-", "-locationfantasy-", "-locationscifi-", "-locationvideogame-", "-locationbiome-", "-locationcity-", "-bird-", "-cat-", "-dog-", "-insect-", "-pokemon-", "-pokemontype-"]
+                                    , "-occult-", "-locationfantasy-", "-locationscifi-", "-locationvideogame-", "-locationbiome-", "-locationcity-", "-bird-", "-cat-", "-dog-", "-insect-", "-pokemon-", "-pokemontype-", "-marinelife-"]
         allwildcardslistnohybridlists = [colorlist, objectlist, animallist, fictionallist, nonfictionallist, buildinglist, vehiclelist, locationlist,conceptprefixlist,foodlist,haircolorlist, hairstylelist,joblist, accessorielist, humanoidlist, manwomanlist, humanlist, colorschemelist, moodlist, genderdescriptionlist, artmovementlist, malefemalelist, bodytypelist, minilocationlist, minilocationadditionslist, poselist, seasonlist, minioutfitlist, elaborateoutfitlist, minivomitlist, vomitlist, rpgclasslist, customsubjectslist, customoutfitslist, brandlist, spacelist, artistlist, imagetypelist, othertypelist, qualitylist, lightinglist, cameralist, lenslist, imagetypequalitylist, poemlinelist, songlinelist, greatworklist, fantasyartistlist, popularartistlist, romanticismartistlist, photographyartistlist, emojilist, timeperiodlist, shotsizelist, musicgenrelist, animaladditionlist, addontolocationinsidelist, addontolocationlist, objectadditionslist, humanadditionlist, overalladditionlist, focuslist, directionlist, stylestiloralist, manwomanrelationlist, waterlocationlist, containerlist, firstnamelist, floralist, printlist, miniactivitylist, patternlist, animalsuffixadditionlist, chairlist, cardnamelist, coveringlist, heshelist, hisherlist, himherlist, outfitdescriptorlist, hairdescriptorlist, hairvomitlist, humandescriptorlist, manwomanmultiplelist, facepartlist, buildfacepartlist, outfitvomitlist, locationdescriptorlist, basicbitchdescriptorlist, animaldescriptorlist, humanexpressionlist, humanvomitlist, eyecolorlist, fashiondesignerlist, colorcombinationlist, materialcombinationlist, oppositefictionallist, oppositenonfictionallist, photoadditionlist, agelist, agecalculatorlist, gregmodelist
                                          , portraitartistlist, characterartistlist, landscapeartistlist, scifiartistlist, graphicdesignartistlist, digitalartistlist, architectartistlist, cinemaartistlist, settinglist, charactertypelist, objectstoholdlist, episodetitlelist, tokenlist, allstylessuffixlist, flufferlist, eventlist, backgroundlist
-                                         , occultlist, locationfantasylist, locationscifilist, locationvideogamelist, locationbiomelist, locationcitylist, birdlist, catlist, doglist, insectlist, pokemonlist, pokemontypelist]
+                                         , occultlist, locationfantasylist, locationscifilist, locationvideogamelist, locationbiomelist, locationcitylist, birdlist, catlist, doglist, insectlist, pokemonlist, pokemontypelist, marinelifelist]
         
         allwildcardslistwithhybrid = ["-material-", "-descriptor-", "-outfit-", "-conceptsuffix-","-culture-", "-objecttotal-", "-outfitprinttotal-", "-element-"]
         allwildcardslistwithhybridlists = [materiallist, descriptorlist,outfitlist,conceptsuffixlist,culturelist, objecttotallist, outfitprinttotallist, elementlist]
@@ -3761,6 +3776,7 @@ def createpromptvariant(prompt = "", insanitylevel = 5, antivalues = "" , gender
     pokemonlist = csv_to_list("pokemon", antilist)
     pokemontypelist = csv_to_list("pokemontypes", antilist)
     occultlist = csv_to_list("occult", antilist)
+    marinelifelist = csv_to_list("marinelife", antilist)
 
     # add any other custom lists
     stylestiloralist = csv_to_list("styles_ti_lora",antilist,"./userfiles/")
@@ -3988,6 +4004,8 @@ def createpromptvariant(prompt = "", insanitylevel = 5, antivalues = "" , gender
                     prompt = prompt.replace(combination," -insect- ")
                 if lowercase_combination in [x.lower() for x in pokemonlist] and chance_roll(insanitylevel, "uncommon"):
                     prompt = prompt.replace(combination," -pokemon- ")
+                if lowercase_combination in [x.lower() for x in marinelifelist] and chance_roll(insanitylevel, "uncommon"):
+                    prompt = prompt.replace(combination," -marinelife- ")
 
                 if lowercase_combination in [x.lower() for x in pokemontypelist] and chance_roll(insanitylevel, "uncommon"):
                     prompt = prompt.replace(combination," -pokemontype- ")
@@ -4314,14 +4332,15 @@ def createpromptvariant(prompt = "", insanitylevel = 5, antivalues = "" , gender
         "-dog-" in completeprompt or
         "-insect-" in completeprompt or
         "-pokemon-" in completeprompt or
-        "-pokemontype-" in completeprompt
+        "-pokemontype-" in completeprompt or
+        "-marinelife-" in completeprompt
         ):
             allwildcardslistnohybrid = [ "-color-","-object-", "-animal-", "-fictional-","-nonfictional-","-building-","-vehicle-","-location-","-conceptprefix-","-food-","-haircolor-","-hairstyle-","-job-", "-accessory-", "-humanoid-", "-manwoman-", "-human-", "-colorscheme-", "-mood-", "-genderdescription-", "-artmovement-", "-malefemale-", "-bodytype-", "-minilocation-", "-minilocationaddition-", "-pose-", "-season-", "-minioutfit-", "-elaborateoutfit-", "-minivomit-", "-vomit-", "-rpgclass-", "-subjectfromfile-", "-outfitfromfile-", "-brand-", "-space-", "-artist-", "-imagetype-", "-othertype-", "-quality-", "-lighting-", "-camera-", "-lens-","-imagetypequality-", "-poemline-", "-songline-", "-greatwork-", "-fantasyartist-", "-popularartist-", "-romanticismartist-", "-photographyartist-", "-emoji-", "-timeperiod-", "-shotsize-", "-musicgenre-", "-animaladdition-", "-objectaddition-", "-humanaddition-", "-overalladdition-", "-focus-", "-direction-", "-styletilora-", "-manwomanrelation-", "-waterlocation-", "-container-", "-firstname-", "-flora-", "-print-", "-miniactivity-", "-pattern-", "-chair-", "-cardname-", "-covering-", "-outfitdescriptor-", "-hairdescriptor-", "-hairvomit-", "-humandescriptor-", "-manwomanmultiple-", "-facepart-", "-locationdescriptor-", "-basicbitchdescriptor-", "-animaldescriptor-", "-humanexpression-", "-humanvomit-", "-eyecolor-", "-fashiondesigner-", "-colorcombination-", "-materialcombination-", "-photoaddition-", "-age-", "-agecalculator-", "-gregmode-"
                                         ,"-portraitartist-", "-characterartist-" , "-landscapeartist-", "-scifiartist-", "-graphicdesignartist-", "-digitalartist-", "-architectartist-", "-cinemaartist-", "-setting-", "-charactertype-", "-objectstohold-", "-episodetitle-", "-allstylessuffix-", "-fluff-", "-event-", "-background-"
-                                        , "-occult-", "-locationfantasy-", "-locationscifi-", "-locationvideogame-", "-locationbiome-", "-locationcity-", "-bird-", "-cat-", "-dog-", "-insect-", "-pokemon-", "-pokemontype-"]
+                                        , "-occult-", "-locationfantasy-", "-locationscifi-", "-locationvideogame-", "-locationbiome-", "-locationcity-", "-bird-", "-cat-", "-dog-", "-insect-", "-pokemon-", "-pokemontype-", "-marinelife-"]
             allwildcardslistnohybridlists = [colorlist, objectlist, animallist, fictionallist, nonfictionallist, buildinglist, vehiclelist, locationlist,conceptprefixlist,foodlist,haircolorlist, hairstylelist,joblist, accessorielist, humanoidlist, manwomanlist, humanlist, colorschemelist, moodlist, genderdescriptionlist, artmovementlist, malefemalelist, bodytypelist, minilocationlist, minilocationadditionslist, poselist, seasonlist, minioutfitlist, elaborateoutfitlist, minivomitlist, vomitlist, rpgclasslist, customsubjectslist, customoutfitslist, brandlist, spacelist, artistlist, imagetypelist, othertypelist, qualitylist, lightinglist, cameralist, lenslist, imagetypequalitylist, poemlinelist, songlinelist, greatworklist, fantasyartistlist, popularartistlist, romanticismartistlist, photographyartistlist, emojilist, timeperiodlist, shotsizelist, musicgenrelist, animaladditionlist, objectadditionslist, humanadditionlist, overalladditionlist, focuslist, directionlist, stylestiloralist, manwomanrelationlist, waterlocationlist, containerlist, firstnamelist, floralist, printlist, miniactivitylist, patternlist, chairlist, cardnamelist, coveringlist, outfitdescriptorlist, hairdescriptorlist, hairvomitlist, humandescriptorlist, manwomanmultiplelist, facepartlist, locationdescriptorlist, basicbitchdescriptorlist, animaldescriptorlist, humanexpressionlist, humanvomitlist, eyecolorlist, fashiondesignerlist, colorcombinationlist, materialcombinationlist, photoadditionlist, agelist, agecalculatorlist, gregmodelist
                                              , portraitartistlist, characterartistlist, landscapeartistlist, scifiartistlist, graphicdesignartistlist, digitalartistlist, architectartistlist, cinemaartistlist, settinglist, charactertypelist, objectstoholdlist, episodetitlelist, allstylessuffixlist, flufferlist, eventlist, backgroundlist
-                                             , occultlist, locationfantasylist, locationscifilist, locationvideogamelist, locationbiomelist, locationcitylist, birdlist, catlist, doglist, insectlist, pokemonlist, pokemontypelist]
+                                             , occultlist, locationfantasylist, locationscifilist, locationvideogamelist, locationbiomelist, locationcitylist, birdlist, catlist, doglist, insectlist, pokemonlist, pokemontypelist, marinelifelist]
             
             allwildcardslistwithhybrid = ["-material-", "-descriptor-", "-outfit-", "-conceptsuffix-","-culture-", "-objecttotal-", "-outfitprinttotal-", "-element-"]
             allwildcardslistwithhybridlists = [materiallist, descriptorlist,outfitlist,conceptsuffixlist,culturelist, objecttotallist, outfitprinttotallist, elementlist]
@@ -5438,6 +5457,12 @@ def translate_main_subject(main_subject=""):
         "pokemons": ["animal", "pokemon"],
         "pokémon": ["animal", "pokemon"],
         "pokémons": ["animal", "pokemon"],
+        "animal - marine life": ["animal", "marine life"],
+        "marine life": ["animal", "marine life"],
+        "marinelife": ["animal", "marine life"],
+        "ocean gang": ["animal", "marine life"],
+        "oceangang": ["animal", "marine life"],
+        "marine": ["animal", "marine life"],
 
         "human - all": ["humanoid", "all"],
         "--- human - all": ["humanoid", "all"],

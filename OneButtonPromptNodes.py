@@ -19,7 +19,7 @@ allpresets = [OBPresets.RANDOM_PRESET_OBP] + list(OBPresets.opb_presets.keys())
 
 artists = ["all", "all (wild)", "none", "popular", "greg mode", "3D",	"abstract",	"angular", "anime"	,"architecture",	"art nouveau",	"art deco",	"baroque",	"bauhaus", 	"cartoon",	"character",	"children's illustration", 	"cityscape", "cinema", 	"clean",	"cloudscape",	"collage",	"colorful",	"comics",	"cubism",	"dark",	"detailed", 	"digital",	"expressionism",	"fantasy",	"fashion",	"fauvism",	"figurativism",	"gore",	"graffiti",	"graphic design",	"high contrast",	"horror",	"impressionism",	"installation",	"landscape",	"light",	"line drawing",	"low contrast",	"luminism",	"magical realism",	"manga",	"melanin",	"messy",	"monochromatic",	"nature",	"nudity",	"photography",	"pop art",	"portrait",	"primitivism",	"psychedelic",	"realism",	"renaissance",	"romanticism",	"scene",	"sci-fi",	"sculpture",	"seascape",	"space",	"stained glass",	"still life",	"storybook realism",	"street art",	"streetscape",	"surrealism",	"symbolism",	"textile",	"ukiyo-e",	"vibrant",	"watercolor",	"whimsical"]
 artifyartists = ["all", "all (wild)", "popular", "greg mode", "3D",	"abstract",	"angular", "anime"	,"architecture",	"art nouveau",	"art deco",	"baroque",	"bauhaus", 	"cartoon",	"character",	"children's illustration", 	"cityscape", "cinema", 	"clean",	"cloudscape",	"collage",	"colorful",	"comics",	"cubism",	"dark",	"detailed", 	"digital",	"expressionism",	"fantasy",	"fashion",	"fauvism",	"figurativism",	"gore",	"graffiti",	"graphic design",	"high contrast",	"horror",	"impressionism",	"installation",	"landscape",	"light",	"line drawing",	"low contrast",	"luminism",	"magical realism",	"manga",	"melanin",	"messy",	"monochromatic",	"nature",	"nudity",	"photography",	"pop art",	"portrait",	"primitivism",	"psychedelic",	"realism",	"renaissance",	"romanticism",	"scene",	"sci-fi",	"sculpture",	"seascape",	"space",	"stained glass",	"still life",	"storybook realism",	"street art",	"streetscape",	"surrealism",	"symbolism",	"textile",	"ukiyo-e",	"vibrant",	"watercolor",	"whimsical"]
-imagetypes = ["all", "all - force multiple",  "photograph", "octane render","digital art","concept art", "painting", "portrait", "anime key visual", "only other types", "only templates mode", "dynamic templates mode", "art blaster mode", "quality vomit mode", "color cannon mode", "unique art mode", "massive madness mode", "photo fantasy mode", "subject only mode", "fixed styles mode", "the tokinator"]
+imagetypes = ["all", "all - force multiple", "none", "photograph", "octane render","digital art","concept art", "painting", "portrait", "anime key visual", "only other types", "only templates mode", "dynamic templates mode", "art blaster mode", "quality vomit mode", "color cannon mode", "unique art mode", "massive madness mode", "photo fantasy mode", "subject only mode", "fixed styles mode", "the tokinator"]
 subjects =["all", "object", "animal", "humanoid", "landscape", "concept"]
 genders = ["all", "male", "female"]
 emojis = [False, True]
@@ -73,6 +73,7 @@ generatecat = True
 generatedog = True
 generateinsect = True
 generatepokemon = True
+generatemarinelife = True
 
 generatemanwoman = True
 generatemanwomanrelation = True
@@ -127,6 +128,8 @@ for item in config:
             generateinsect = False
         if item[0] == 'subject_pokemon' and item[1] != 'on':
             generatepokemon = False
+        if item[0] == 'subject_marinelife' and item[1] != 'on':
+            generatemarinelife = False
         # humanoids
         if item[0] == 'subject_manwoman' and item[1] != 'on':
             generatemanwoman = False
@@ -189,7 +192,7 @@ if(generatevehicle or generateobject or generatefood or generatebuilding or gene
     if(generateflora):
           subjects.append("object - flora")
           
-if(generateanimal or generatebird or generatecat or generatedog or generateinsect or generatepokemon):
+if(generateanimal or generatebird or generatecat or generatedog or generateinsect or generatepokemon or generatemarinelife):
     subjects.append("--- animal - all")
     if(generateanimal):
         subjects.append("animal - generic")
@@ -201,6 +204,8 @@ if(generateanimal or generatebird or generatecat or generatedog or generateinsec
         subjects.append("animal - dog")
     if(generateinsect):
         subjects.append("animal - insect")
+    if(generatemarinelife):
+        subjects.append("animal - marine life")
     if(generatepokemon):
         subjects.append("animal - pokémon")
 

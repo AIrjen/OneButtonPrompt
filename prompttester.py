@@ -110,7 +110,7 @@ def generateprompts(amount = 1,insanitylevel="5",subject="all", artist="all", im
 
 if __name__ == "__main__":
     generateprompts(10,5
-                ,"------ all" # subject
+                ,"all" # subject
                 ,"all" # artists
                 ,"all" # image type  "only other types", "only templates mode", "art blaster mode", "quality vomit mode", "color cannon mode", "unique art mode", "massive madness mode", "photo fantasy mode", "subject only mode", "fixed styles mode", "dynamic templates mode", "artify mode"
                 , False # only artists
@@ -130,7 +130,7 @@ if __name__ == "__main__":
                 , -1  # seed
                 , "" #outfit override
                 , False #prompt_g_and_l
-                , "SDXL" #base model
+                , "SD1.5" #base model 
                 , "" #preset  "All (random)..."
                 , "" # superprompter
                 )

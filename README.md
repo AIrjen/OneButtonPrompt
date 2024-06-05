@@ -12,7 +12,7 @@ It generates an entire prompt from scratch. It is random, but controlled. You si
 
 It is a full AI prompt generator for Stable Diffusion.
 
-It is best used on all-purpose models, such as Stable Difussion 1.5 or those based on 1.5. It also works great on SDXL. Models such as [deliberate](https://civitai.com/models/4823/deliberate) and [dreamlike diffusion](https://civitai.com/models/1274/dreamlike-diffusion-10). However, feel free to use it on your personal favorite models.
+It is best used on all-purpose models, such as Stable Difussion 1.5 or SDXL type models. However, feel free to use it on your personal favorite models.
 
 A simple user guide for first time use and settings is available [here](https://github.com/AIrjen/OneButtonPrompt/blob/main/user_guides/my_first_generation.md).
 
@@ -65,9 +65,9 @@ Hit Generate!
 <img src="https://user-images.githubusercontent.com/130234949/230793086-cedbe72a-e1eb-46e5-a425-4a52540847f6.png" alt="click!" width="30%" height="30%">
 
 Enjoy creating awesome pictures:
+<img src="https://github.com/AIrjen/OneButtonPrompt/assets/130234949/aa0ff559-03a9-49be-bbe5-94789f8102a0.png" alt="wow, good job you!">
 
-![image](https://user-images.githubusercontent.com/130234949/230916833-0dc38593-94e0-40f5-9312-da720278b791.png "wow, good job you!")
-> Concept art, Fluid Biosphere, at Dawn, F/1.8, Kodak portra, extremely beautiful ,
+> stylized by Waterhouse, John Constable, Ed Blinkey, Atey Ghailan, Studio Ghibli, Jeremy Mann, Greg Manchess, Antonio Moro and makoto shinkai, landscape of a Atmospheric (Lazarus Labs:1.1) , from inside of a Furious Stargate, Ultrarealistic, extremely hyper aesthetic
 
 Please be aware, that not each picture will be awesome due to the randomness of the prompt, artist and model used.
 You might get an epic landscape, or a photo of an Aggregavated Trout. In my experience, about 1 in 5 is good. Everyone of them is interesting.
@@ -200,75 +200,35 @@ Some ideas I'd like to implement:
 
 If you have a good idea or suggestion, let me know, or build it yourself ;)
 
-# prompts and examples
-From the above header, these are the generated prompts, from left to right, top to bottom. Generated during various stages of development. Using deliberate and DPM Karras.
-
->cinematic shot of a Cruel " The Soul of Enlightenment ", at Blue hour, Cel shaded 
-
->( art by Albert Dubois-Pillet :0.9), art by Bastien Lecouffe-Deharme, Physically based render, Tranquil Delicate Island and Windmill, at Golden hour, Illustration, Amusing, Fish-eye Lens 
-
->art by Aykut Aydogdu,art by Jacob van Ruisdael, 3D Rendering, extreme wide shot of a Wraith, Crusader ,wearing Floral maxi dress and sandals, background is Strait, Illustration, Modern European Ink Painting, loop lighting, octane engine 
-
->art by Gaston Bussière, Photograph, Cottage Progressive Era Tokyo, Orange and Pink hue
-
->art by Jeffrey T. Larson, Tired Illuminating The Misty Mountains and The River Styx, at Dusk, Vaporwave Art, Rembrandt lighting 
-
->art by Jon Foster,art by Ricardo Bofill, extreme wide shot of a " The Industrial Revolution ", background is Appalachian, tilt shift, New Wave Art, Mono Color 
 
 
+# Prompts and examples
+![00081-1764500323](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/e975309c-78bc-468b-980e-2e5445cadfdd)
+> video game concept art, 2d game art, concept art, landscape of a Kokiri Forest, it is Tribal, Sun in the sky, designed by Atey Ghailan, detailed, masterpiece, Deathpunk, 35mm, Polychromatic, digital art, contemporary fine detail, stunning, unique, fine detail, aesthetic
 
->( art by Peter Saville :0.7), Layered paper art of a Irritated Airy Blueberry, Screen print, hair light, Depth of field 270mm, Kinemacolor 
+![00095-1877749527](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/c140be7b-0857-47de-8610-a91c091d3e83)
+> small centered composition, product shot, plain background, wallpaper art, in the center is an image of an epic beautiful ("The Orb of Elegance":1.2) , foliage, at Golden hour, side lit, Colorless, warm light, dynamic dramatic atmosphere, background inspired, dynamic composition, ambient light, fine detail
 
->( art by Jessie Arms Botke :1.1), ( art by Juan Carreño de Miranda :1.2), ( art by Cerith Wyn Evans :1.2), [ birds-eye-view shot of a Belle Époque portly Tyra Banks cosplaying as Spider-Man, Hosting parties ,wearing Industrial Turquoise Gator skin Tank top and denim skirt, Black hair styled as Space buns, Scarf, background is The Gobi Desert, at Starry night, split diopter, Realistic, Autochrome ::8]
+![00088-1877749520](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/d060a48c-41c7-4364-9bdb-80126b170c87)
+> colorful art by Norm Rapmund, Fatigued 25 y.o. Girl of [Rot|Music], Comic book art, dynamic, detailed, portrait art by Brian Sum, luxurious sharp focus, highly contrasted, sunny, complex artistic color composition, magnificent, dynamic cinematic color, cool colors, beautiful composition, complimentary colors, beautiful
 
->art by Art Spiegelman, Unsightly The Badwater Basin and Stonehenge, Sunny, Ultrarealistic, Psytrance Art, Mono Color 
+![00011-4053395104](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/6b99aa1b-a54c-4013-9060-a11cb3678c5c)
+> Pill Bug, Moon in the night, Barbiecore, Side lighting, 50mm, designed by Ilya Kuvshinov, sci-fi
 
->art by Gerhard Munthe, Long shot of a Classical midweight Asian Chris Hemsworth riding a Koala, Brown hair styled as Short and messy, background is The Palace of Asgard, natural lighting, Low shutter, Film Washi 
+![00066-1877749498](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/e5c9d081-7202-47c6-9195-69cc90c01bbb)
+> photograph, buxom Girl, Appealing, dressed in headwear, the Girl has a Pink Angelic Halo, Wide view, Grim, Long exposure, Iphone X, F/5, dreamy, dream, dark, cozy, highly enhanced, intricate artistic color, beautiful elegant, confident, intricate detail
 
->art by Peter Eisenman, Vector Art, Serene The Garden of Eden, Stormy weather, Movie still, Peaceful
+![00017-2787914262](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/d53e7aee-72c0-4b27-b8e6-6e08a4bb1b72)
+Origami, Anime, Concept art of a Shinto Foliage, Average, it is in a Star Wars setting, Narnia in background, at Dusk, (realism art designed by Agnes Martin:1.0) , natural lighting, Pastel Colors, masterpiece
 
->( art by Hans Zatzka :1.3), Aquatint of a Compelling Dubrovnik, at Sunrise, Illustration, Orientalism Art, Black lighting, overhead angle 
+![00070-3423685499](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/851f39fd-6050-4682-a756-31965313c69a)
+>  (by Carne Griffiths:1.2) , Cyborg "Through the lens of poetry, ordinary moments transform into extraordinary tales of the human experience.", nature and River stone background, Bathed in shadows, Monochrome, beautiful, boring, fauna, cool colors, magnificent, modified, radiant, magical composition
 
+![00022-2065006526](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/8e814495-000a-42a2-b39d-6ecd55769c95)
+> Suprematism, "Worgen Infiltrator", abstract, limited color palette, geometric forms, Suprematism
 
->art by Guillem H. Pongiluppi, F/1.8 of a " The life of Saint Barbara of Nicomedia ", at Starry night, shallow depth of field, Movie still, Frightening 
-
->art by Jeffrey Smith, close-up shot of a Victorian Bulgarian Kitchen timer, background is The Grand Canyon of the Yellowstone, Spring, Sketch, Peaceful, natural lighting, Calotype 
-
->art by Helen Allingham,art by Étienne Maurice Falconet, Water color painting, Circular polarizer of a Mayan Revival Dominican Female Dragon rider, Auburn hair styled as Messy bun, at Sunrise, deep focus, Sad 
-
->art by Sparth , Spanish Golden Age Tranquil The Angel Oak and Liverpool , Foggy conditions , Screen print , Ukiyo-E , Provia 
-
->by artist Michael Craig-Martin, by artist John Lurie, Zoon lens of a Rustic Fatigued portly Blue Jay, background is Indonesia, Relieving, Mono Color
-
->by artist Brandon Mably, Vector Art, extreme wide shot of a Aggravated Invigorating Fijian snake at Stormy weather, FOV 90 degrees, Vaporwave Art, flat lighting, High Contrast
-
-
-# More prompts and examples
-
-![efa94f2f-2bb8-4484-9855-ebd2600f8092](https://user-images.githubusercontent.com/130234949/232003239-3d983bf1-df26-4450-bf71-2b3bfe23ccbd.png)
-> (art by Daniel Lieske:1.3), Spray paint style, Noble Rustic The Hanging Gardens of Babylon and Cafe, at Dusk, Masterpiece, Shameful, Academism, Lens Flare, Fujifilm Superia, UHD
-
-![c25eb65a-0656-4a8a-a436-60bff4d6bd84](https://user-images.githubusercontent.com/130234949/232003386-933cfc7b-ed49-4aee-bbd4-66cdacf80efc.png)
-> [art by Max Bedulenko| art by Jack Davis], Spray paint style, Vile Mecha Spit, at Starry night, F/5, psychedelic colors, 8K
- 
-![d5c2ace0-1aac-4512-9006-7431fe57fbb4](https://user-images.githubusercontent.com/130234949/232003478-0bf98902-7c57-4ca7-b821-c70d6c5488f9.png)
->close-up shot of a Cozy Falcon, Summer, Bokeh, Sketch, Lonely, Pop Art, Black lighting, Fish-eye Lens, Calotype, Magic the gathering, layered textures, [(art by Yasushi Nirasawa :0.8),(art by Rumiko Takahashi :1.3), art by Carl Barks :7], 
-
-![00016-3511975148](https://user-images.githubusercontent.com/130234949/232003763-32d4aa2e-eb95-4edf-b0a9-2afc501b5628.png)
-> [(art by Walter Quirt :1.2):(art by Arthur Dove :1.0):8], Renderman, Hideous The Eyrie of House Arryn and Imp-drawn carriage, at Starry night, Detailed illustration, Bloom light, 80mm, Film grain
-
-
-![b7287807-efd3-4d0e-98b8-1fb1d7e57757](https://user-images.githubusercontent.com/130234949/232003927-ec8ed961-6f47-4aa0-ba55-a12f92c21cfe.png)
-> by artist Sam Spratt, by artist Robert Hagan, by artist Mike Kelley, Painting, landscape, wide shot of Cavern, Screen print, Lonely, Neo-Fauvism
-
-![00007-3666399242](https://user-images.githubusercontent.com/130234949/232004618-e0407158-fa5d-46aa-97b5-33990fc8d382.png)
-> Vector Art, high angle shot of a Dreadful Anime "The Fukushima Disaster", Disgusting, Methaphysical painting, studio lighting, F/5, Mono Color, behance, [(art by Hans Zatzka :1.1),(art by Alexandre Jacovleff :1.0)::13], ,
-
-![00033-437599208](https://user-images.githubusercontent.com/130234949/232122501-1eec6247-b4cd-4f75-b4ad-0a6094dd4b39.png)
-> Long exposure of a Ignorant Light Klingon cosplaying as Princes Leia Organa, with Pink skin, Sitting with elbows on knees, Gloves, background is Landfill, at Nighttime, Happy, Grayscale, extremely detailed CG Unity 8k wallpaper, (art by Paul Hedley:1.1), art by Giacomo Balla , (art by Andre Norton:1.1)
-
-![3e04863e-2627-4e93-9596-fb0d43416b99](https://user-images.githubusercontent.com/130234949/232122614-73bb655d-c0f3-421d-a640-69219db18fa7.png)
-> art by Marianne North, Cozy Botanical garden and South-American The Alhambra, Thunderstorm, Detailed illustration, Private Press, Light caustics, Circular polarizer, Swirling Polyester, Light streaks, absurdres, trending on artstation
+![00003-334769067](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/1a7a056f-3a5a-4be4-b756-5e74da472368)
+> attractive, Seductive Female Valkyrie, Dark matter background, fairy tale, Abstract Art, feminine
 
 # Thank you
 Thank you to the amazing [Stylepile](https://github.com/some9000/StylePile) and [Dynamic Prompts](https://github.com/adieyal/sd-dynamic-prompts) for inspiration.

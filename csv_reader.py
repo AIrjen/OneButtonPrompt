@@ -176,13 +176,17 @@ def artist_descriptions_csv_to_list(csvfilename):
                         csvlist.append(row["Description"])
         return csvlist
 
-def load_config_csv():
+def load_config_csv(suffix=""):
         csvlist = []
         script_dir = os.path.dirname(os.path.abspath(__file__))
         full_path_config_file = os.path.join(script_dir, "./userfiles/" )
         full_path_default_config_file = os.path.join(script_dir, "./csvfiles/config/" )
-        config_file = full_path_config_file + 'config.csv'
-        default_config_file = full_path_default_config_file + 'default_config.csv'
+        if(suffix != ""):
+                config_file = full_path_config_file + 'config_' + suffix + '.csv'
+                default_config_file = full_path_default_config_file + 'default_config_' + suffix + '.csv'
+        else:
+                config_file = full_path_config_file + 'config.csv'
+                default_config_file = full_path_default_config_file + 'default_config.csv'
 
         if not os.path.exists(config_file):
                 shutil.copy2(default_config_file, config_file)

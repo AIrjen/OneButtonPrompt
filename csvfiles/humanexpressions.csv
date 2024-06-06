@@ -1,4 +1,5 @@
-OR(;-heshe- is feeling;uncommon) OR(;very;normal) angry
+OR(;-heshe- is feeling;uncommon) OR(;very;normal) angry OR(;, anger vein;rare)
+OR(;-heshe- is feeling;uncommon) OR(;very;normal) annoyed
 OR(;-heshe- is feeling;uncommon) furious
 OR(;-heshe- is feeling;uncommon) OR(;very;normal) confused
 OR(;-heshe- is feeling;uncommon) OR(;very;normal) akward
@@ -26,6 +27,8 @@ OR(;-heshe- has a;uncommon) OR(;very;normal) smug smile
 OR(;-heshe- has a;uncommon) OR(;very;normal) light smile
 OR(;-heshe- has a;uncommon) OR(;very;normal) radiant smile
 OR(;-heshe- has a;uncommon) OR(;very;normal) wicked smile
+OR(;-heshe- has a;uncommon) OR(;very;normal) seductive smile
+OR(;-heshe- has a;uncommon) OR(;very;normal) sad smile
 OR(;-heshe- is;uncommon) biting -himher- lip
 OR(;-heshe- is looking;uncommon) OR(;very;normal) OR(neutral;hollow)
 OR(;-heshe- is feeling;uncommon) OR(;very;normal) shy OR(;, looking away;uncommon)
@@ -44,8 +47,16 @@ OR(;-heshe- is ;uncommon) expressing guilt
 OR(;-heshe- is ;uncommon) expressing joy
 OR(;-heshe- is;uncommon) laughing
 OR(;-heshe- is;uncommon) grinning
+doyagao
 OR(;-heshe- is ;uncommon) feeling OR(;very;normal) relaxed
 OR(;-heshe- is ;uncommon) feeling OR(;very;normal) insecure
 OR(;-heshe- is ;uncommon) feeling OR(;very;normal) shocked
 OR(;-heshe- is ;uncommon) feeling OR(;very;normal) worried
 OR(;-heshe- is ;uncommon) feeling OR(;very;normal) resentfull
+OR(;-heshe- is ;uncommon) feeling OR(;very;normal) flustered
+OR(;-heshe- is ;uncommon) blushing
+OR(;-heshe- is ;uncommon) feeling OR(;very;normal) crazy
+OR(;-heshe- is ;uncommon) OR(;very;normal) drunk
+OR(;-heshe- is ;uncommon) grimacing
+OR(;-heshe- is ;uncommon) rolling eyes
+OR(;-heshe- is ;uncommon) staring

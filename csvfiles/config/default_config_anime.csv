@@ -1,0 +1,124 @@
+#this file controls the generation process;
+#records starting with # are ignored;
+#----;
+# main subject generation options;
+# these can either be on or off;
+#----;
+# objects;
+subject_object;on
+subject_vehicle;on
+subject_food;on
+subject_space;on
+subject_building;on
+subject_flora;on
+subject_occult;on
+# animals;
+subject_animal;on
+subject_bird;on
+subject_cat;on
+subject_dog;on
+subject_insect;on
+subject_pokemon;on
+subject_marinelife;on
+# humanoids;
+subject_manwoman;on
+subject_manwomanrelation;on
+subject_manwomanmultiple;on
+subject_fictional;on
+subject_nonfictional;on
+subject_humanoid;on
+subject_job;on
+subject_firstnames;on
+# landscape;
+subject_location;on
+subject_location_fantasy;on
+subject_location_scifi;on
+subject_location_videogame;on
+subject_location_biome;on
+subject_location_city;on
+# concept;
+subject_event;on
+subject_concept;on
+subject_poemline;on
+subject_songline;on
+subject_cardname;on
+subject_episodetitle;on
+subject_conceptmixer;on
+#----;
+# other main lists, in order of appearance;
+# setting the random chance, for normal generation;
+# these can be, in order of most appearing to least appearing;
+# always, common, normal, uncommon, rare, legendary, unique, extraordinary, novel, never;
+custominputprefixrepeats;2
+custominputprefixchance;uncommon
+imagetypechance;legendary
+imagetypequalitychance;normal
+# some prefixes that happen rarely;
+minilocationadditionchance;unique
+artmovementprefixchance;unique
+minivomitprefix1chance;rare
+minivomitprefix2chance;unique
+# shot size generation;
+shotsizechance;common
+# subject specific stuff;
+subjectdescriptor1chance;common
+subjectdescriptor2chance;uncommon
+subjectbodytypechance;common
+subjectculturechance;uncommon
+subjectconceptsuffixchance;unique
+# subjectlandscape specific stuff;
+subjectlandscapeinsideshotchance;unique
+subjectlandscapeaddonlocationchance;normal
+subjectlandscapeaddonlocationdescriptorchance;rare
+subjectlandscapeaddonlocationculturechance;rare
+# all additions;
+objectadditionsrepeats;2
+objectadditionschance;uncommon
+humanadditionchance;uncommon
+overalladditionchance;extraordinary
+# humanoid other stuff;
+emojichance;legendary
+buildfacechance;uncommon
+humanexpressionchance;uncommon
+humanvomitchance;normal
+joboractivitychance;rare
+# things in the middle of the prompt;
+custominputmidrepeats;2
+custominputmidchance;uncommon
+minivomitmidchance;unique
+# humanoid main stuff;
+outfitchance;common
+posechance;common
+hairchance;common
+accessorychance;uncommon
+humanoidinsideshotchance;novel
+humanoidbackgroundchance;novel
+# minilocation stuff;
+landscapeminilocationchance;uncommon
+generalminilocationchance;rare
+# general stuff add the end of the prompt;
+timperiodchance;normal
+focuschance;normal
+directionchance;normal
+moodchance;common
+minivomitsuffixchance;unique
+artmovementchance;unique
+lightingchance;normal
+photoadditionchance;unique
+lenschance;unique
+colorschemechance;normal
+vomit1chance;rare
+vomit2chance;rare
+greatworkchance;never
+poemlinechance;never
+songlinechance;never
+quality1chance;normal
+quality2chance;normal
+# custom style list (lora and tis);
+customstyle1chance;uncommon
+customstyle2chance;uncommon
+# suffix custom list;
+custominputsuffixrepeats;2
+custominputsuffixchance;uncommon
+# artists stuff;
+artistsatbackchance;uncommon

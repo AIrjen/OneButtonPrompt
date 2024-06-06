@@ -31,13 +31,21 @@ For use of this, you can create a new preset/settings as followed.
 ![image](https://github.com/AIrjen/OneButtonPrompt/assets/130234949/9e2ab917-f205-4746-bf67-f31d2aff2306)
 
 Make sure the following is set:
+ 
+ - Insanitylevel between 4-6 is recommended.
  - Artists = 'none'. Artists are all SD based, and will interfere and create bad results. However, some models might work with it. You can try setting it to 'anime' or 'cartoon' as well.
  - Imagetype = 'all - anime'. Other options might be 'none' or 'subject only mode'.
  - Subjecttype = 'human - all', but feel free to select 'human - fictional' or any other to your preference. You can also go for animals, at your own risk ;) You know who you are.
  - Gender, your choice! 'All' will do both males and females.
  - Prompt prefix: The prefix stated on the model page. It in this example I am using AnimagineXL, so the prefix is = 'masterpiece, best quality, very aesthetic, absurdres'. For Pony based models, it should be something like 'score_9, score_8_up, score_7_up'. For 1.5 models it is usually something like '(((masterpiece))) (((high quality)))'
 
- - You can play around more with the prompt prefix and suffix if needed.
- - 
+You can play around more with the prompt prefix and suffix if needed.
+
+Other things you can do, is add a overwrite subject and/or outfit yourself. It is possibly to add a subject + Lora in the overwrite subject field.
+An example would be:
+Overwrite subject: Princess Peach
+Overwrite outfit: white dress
+
+Use your imagination!
 
 # Examples

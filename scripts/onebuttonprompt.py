@@ -719,6 +719,8 @@ class Script(scripts.Script):
                                 
                                 Stable Cascade --> More natural language and no prompt weights
                             
+                                Anime Model --> Focussed on characters and tags, adds 1girl/1boy automatically.
+                            
                                 ⭐ Flufferizer
 
                                 A simple and quick implementiation of Fooocus prompt magic

@@ -26,8 +26,23 @@ It needs at least the following pieces installed:
 - einops
 - accelerate
 - sentencepiece
+- safetensors
 
 It will download the model on first use, it will download into: __\OneButtonPrompt\superprompter\model_files__
+
+### Error on pickled file?
+
+**If you get a __Error verifying pickled file__ issue**: Try and see if it downloaded the model.bin or model.safetensors file in the __\OneButtonPrompt\superprompter\model_files__ directory.
+
+If you have the model.bin file, then remove the model_files directory.
+
+Execute 'pip install safetensors'
+
+Try again.
+
+If that doesn't work, download the safetensors model directly from [this location on hugginface](https://huggingface.co/roborovski/superprompt-v1/tree/main), and place it in the model_files directly instead of the model.bin file.
+
+
 
 ## How to turn it on in A1111/SD.Next
 Under Advanced, go to the setting __Prompt enhancer__, set this to __superprompt-v1__:

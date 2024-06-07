@@ -1,2 +1,3 @@
-OR(-haircolor-;-hairdescriptor-;-culture-;uncommon) hair OR(styled as -hairstyle-;, ;rare)
+OR(-haircolor-;-hairdescriptor-;-culture-;uncommon) hair
 OR(-haircolor-; -hairstyle-) OR(hairstyle;hair)
+-hairstyle-

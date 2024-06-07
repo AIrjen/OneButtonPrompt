@@ -112,10 +112,10 @@ if __name__ == "__main__":
     generateprompts(10,5
                 ,"all" # subject
                 ,"all" # artists
-                ,"all" # image type  "only other types", "only templates mode", "art blaster mode", "quality vomit mode", "color cannon mode", "unique art mode", "massive madness mode", "photo fantasy mode", "subject only mode", "fixed styles mode", "dynamic templates mode", "artify mode"
+                ,"all" # image type  "only other types", "only templates mode", "all - anime", "art blaster mode", "quality vomit mode", "color cannon mode", "unique art mode", "massive madness mode", "photo fantasy mode", "subject only mode", "fixed styles mode", "dynamic templates mode", "artify mode"
                 , False # only artists
                 ,"",""
-                ,""  #prefix prompt
+                ,""  #prefix prompt -- masterpiece, best quality, very aesthetic, absurdres
                 ,"" #suffix prompt
                 ,"",1,""
                 ,"" # subject override
@@ -130,7 +130,7 @@ if __name__ == "__main__":
                 , -1  # seed
                 , "" #outfit override
                 , False #prompt_g_and_l
-                , "SD1.5" #base model 
+                , "Stable Cascade" #base model 
                 , "" #preset  "All (random)..."
                 , "" # superprompter
                 )

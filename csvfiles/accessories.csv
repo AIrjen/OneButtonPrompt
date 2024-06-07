@@ -51,7 +51,9 @@ OR(Cat;Bunny;Fox) Ears?female
 -animal- Tail?female
 Tail?female
 Fangs?both
-Wings?both
+OR(Wings;Angel Wings;Bird Wings;Demon Wings;Dragon Wings;Fairy Wings;Bat Wings;Skeletal Wings)?both
+OR(Butterfly Wings;Dragonfly Wings;Ladybug Wings;Moth wings)?both
+OR(Crystal Wings;Energy Wings;Fiery Wings;Icy Wings;Liquid Wings;Plant Wings)?both
 Cybernetics?both
 Mechanical Body Parts?both
 Mechanical Arms?both
@@ -84,6 +86,8 @@ Bowtie?both
 Earrings?both
 Earring?both
 Necklace?both
+Chain Necklace?both
+Flower Necklace?both
 Bracelet?both
 Ring?both
 Rings?both
@@ -152,3 +156,17 @@ Ruff?both
 Unicorn horn?both
 Nonblinding sunglasses?both
 Great-eyed?both
+Scouter?both
+OR(opera glasses;opaque glasses;aviator sunglasses;3D glasses;groucho glasses)?both
+Gem-studded?both
+Glitter?both
+Sequins?both
+Magatama?both
+Ribbon?both
+Pentacle?both
+Feather boa?both
+Necktie?both
+Fur collar?both
+Jetpack?both
+Automail?both
+Severed limb?both

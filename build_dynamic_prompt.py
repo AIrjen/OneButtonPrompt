@@ -15,10 +15,12 @@ OBPresets = OneButtonPresets()
 # Set artistmode to none, to exclude artists 
 def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", givensubject="",smartsubject = True,giventypeofimage="", imagemodechance = 20, gender = "all", subtypeobject="all", subtypehumanoid="all", subtypeconcept="all", advancedprompting=True, hardturnoffemojis=False, seed=-1, overrideoutfit="", prompt_g_and_l = False, base_model = "SD1.5", OBP_preset = "", prompt_enhancer = "none", subtypeanimal="all", subtypelocation="all"):
 
-    remove_weights =  False
+    remove_weights = False
     less_verbose = False
     add_vomit = True
     add_quality = True
+    anime_mode = False
+    configfilesuffix = ""
 
     superprompter = False
     prompt_enhancer = prompt_enhancer.lower()
@@ -126,13 +128,37 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     outfitmode = 0
 
     animalashuman = False
+    
 
     partlystylemode = False
-    # load the config file
-    config = load_config_csv()
+    # cheat for presets
+    if(OBP_preset=='Waifu''s' or OBP_preset=='Husbando''s'):
+        basemodel = "Anime Model"
+    # Base model options, used to change things in prompt generation. Might be able to extend to different forms like animatediff as well?
+    base_model_options = ["SD1.5", "SDXL", "Stable Cascade", "Anime Model"]
+    if base_model not in base_model_options:
+        base_model = "SD1.5" # Just in case there is no option here.
+    # "SD1.5" -- Standard, future: More original style prompting
+    # "SDXL" -- Standard (for now), future: More natural language
+    # "Stable Cascade" -- Remove weights
+    if(base_model == "Stable Cascade"):
+        remove_weights = True
+        add_vomit = False
+        add_quality = False
+    if(base_model == "SD1.5"):
+        less_verbose = True
+    if(base_model == "Anime Model"):
+        less_verbose = True
+        advancedprompting = False
+        anime_mode = True
+        configfilesuffix = "anime"
 
-    
-    
+
+    # load the config file
+
+    config = load_config_csv(configfilesuffix)
+
+       
     # first build up a complete anti list. Those values are removing during list building
     # this uses the antivalues string AND the antilist.csv
     emptylist = []
@@ -145,19 +171,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     # clean up antivalue list:
     antilist = [s.strip().lower() for s in antilist]
 
-    # Base model options, used to change things in prompt generation. Might be able to extend to different forms like animatediff as well?
-    base_model_options = ["SD1.5", "SDXL", "Stable Cascade"]
-    if base_model not in base_model_options:
-        base_model = "SD1.5" # Just in case there is no option here.
-    # "SD1.5" -- Standard, future: More original style prompting
-    # "SDXL" -- Standard (for now), future: More natural language
-    # "Stable Cascade" -- Remove weights
-    if(base_model == "Stable Cascade"):
-        remove_weights = True
-        add_vomit = False
-        add_quality = False
-    if(base_model == "SD1.5"):
-        less_verbose = True
+    
 
     # Some tricks for gender to make sure we can choose Him/Her/It etc on the right time.
     if(gender=="all"):
@@ -207,7 +221,13 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     hairvomitlist = csv_to_list("hairvomit",antilist,"./csvfiles/",0,"?",False,False)
     
     humanoidlist = csv_to_list("humanoids",antilist)
-    imagetypelist = csv_to_list(csvfilename="imagetypes",antilist=antilist, insanitylevel=insanitylevel, delimiter="?")
+    if(anime_mode or imagetype=="all - anime"):
+        if(imagetype == "all"):
+            imagetype = "all - anime"
+        imagetypelist = csv_to_list(csvfilename="imagetypes_anime",antilist=antilist, insanitylevel=insanitylevel, delimiter="?")
+    else:
+        imagetypelist = csv_to_list(csvfilename="imagetypes",antilist=antilist, insanitylevel=insanitylevel, delimiter="?")
+
     joblist = csv_to_list(csvfilename="jobs",antilist=antilist,skipheader=True,gender=gender)
     lenslist = csv_to_list(csvfilename="lenses",antilist=antilist, insanitylevel=insanitylevel)
     lightinglist = csv_to_list(csvfilename="lighting",antilist=antilist, insanitylevel=insanitylevel)
@@ -220,6 +240,18 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     shotsizelist = csv_to_list(csvfilename="shotsizes",antilist=antilist, insanitylevel=insanitylevel)
     timeperiodlist = csv_to_list("timeperiods",antilist)
     vomitlist = csv_to_list(csvfilename="vomit",antilist=antilist, insanitylevel=insanitylevel)
+    if(anime_mode):
+        replacements = {
+        "-allstylessuffix-": "-buildfacepart-",
+        "-artistdescription-": "-buildfacepart-"
+        }
+
+        for i, item in enumerate(vomitlist):
+            for old, new in replacements.items():
+                item = item.replace(old, new)
+            vomitlist[i] = item
+        
+
     foodlist = csv_to_list("foods", antilist)
     genderdescriptionlist = csv_to_list(csvfilename="genderdescription",antilist=antilist,skipheader=True,gender=gender)
     minilocationlist = csv_to_list("minilocations", antilist)
@@ -247,7 +279,6 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     coveringlist = csv_to_list("coverings", antilist)
     facepartlist = csv_to_list("faceparts", antilist)
     outfitvomitlist = csv_to_list(csvfilename="outfitvomit",antilist=antilist,delimiter="?")
-    humanexpressionlist = csv_to_list(csvfilename="humanexpressions",antilist=antilist,delimiter="?")
     humanvomitlist = csv_to_list("humanvomit", antilist)
     eyecolorlist = csv_to_list("eyecolors", antilist)
     fashiondesignerlist = csv_to_list("fashiondesigners", antilist)
@@ -420,6 +451,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         buildfacelist = csv_to_list("buildface_less_verbose", antilist,"./csvfiles/special_lists/",0,"?")
         buildaccessorielist = csv_to_list("buildaccessorie_less_verbose", antilist,"./csvfiles/special_lists/",0,"?")
         humanactivitylist = csv_to_list("human_activities_less_verbose",antilist,"./csvfiles/",0,"?",False,False)
+        humanexpressionlist = csv_to_list("humanexpressions_less_verbose",antilist,"./csvfiles/",0,"?",False,False)
     else:
         buildhairlist = csv_to_list("buildhair", antilist,"./csvfiles/special_lists/",0,"?")
         buildoutfitlist = csv_to_list("buildoutfit", antilist,"./csvfiles/special_lists/",0,"?")
@@ -428,6 +460,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         buildfacelist = csv_to_list("buildface", antilist,"./csvfiles/special_lists/",0,"?")
         buildaccessorielist = csv_to_list("buildaccessorie", antilist,"./csvfiles/special_lists/",0,"?")
         humanactivitylist = csv_to_list("human_activities",antilist,"./csvfiles/",0,"?",False,False)
+        humanexpressionlist = csv_to_list("humanexpressions",antilist,"./csvfiles/",0,"?",False,False)
 
     humanactivitylist = humanactivitylist + humanactivitycheatinglist
 
@@ -1449,8 +1482,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         # 0 object, 1 animal, 2 animal as human, 3 ManWoman, 4 Job, 5 fictional, 6 non fictional, 7 humanoid, 8 landscape, 9 event
         if(mainchooser == "object"):
             subjectchooser = "object"
-        if(mainchooser == "animal" and random.randint(0,5) == 5):
+        if(mainchooser == "animal" and (random.randint(0,5) == 5 or anime_mode)):
             # sometimes interpret the animal as a human
+            # for anime_mode this is always true
             animalashuman = True
         if(mainchooser == "humanoid"):
             #humanoidsubjectchooserlist = ["human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation", "firstname"]
@@ -1530,7 +1564,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
         # After we chose the subject, lets set all things ready for He/She/It etc
         
-        if(subjectchooser in ["manwomanmultiple"] and givensubject != "" and subtypehumanoid != "multiple humans"):
+        if(not less_verbose and subjectchooser in ["manwomanmultiple"] and givensubject != "" and subtypehumanoid != "multiple humans"):
             heshelist = ["they"]
             hisherlist = ["their"]
             himherlist = ["them"]
@@ -1539,7 +1573,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 heshelist = ["one of them"]
                 hisherlist = ["one of their"]
                 himherlist = ["one of them"]
-        elif(subjectchooser in ["human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation","firstname","manwomanmultiple"]):
+        elif(not less_verbose and subjectchooser in ["human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation","firstname","manwomanmultiple"]):
             if(gender == "male"):
                 heshelist = ["he"]
                 hisherlist = ["his"]
@@ -1548,7 +1582,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 heshelist = ["she"]
                 hisherlist = ["her"]
                 himherlist = ["her"]
-        if(subjectchooser in ["manwomanmultiple"] and givensubject == ""):
+        if(not less_verbose and subjectchooser in ["manwomanmultiple"] and givensubject == ""):
             heshelist = ["they"]
             hisherlist = ["their"]
             himherlist = ["them"]
@@ -1927,10 +1961,10 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         if(giventypeofimage == "" and (imagetype == "none" or giventypeofimage=="none") ):
            generatetype = False
         if(giventypeofimage=="" and generatetype == True):
-            if(imagetype != "all" and imagetype != "all - force multiple" and imagetype != "only other types"):
+            if(imagetype != "all" and imagetype != "all - force multiple" and imagetype != "only other types" and imagetype != "all - anime"):
                  
                     completeprompt += " " + imagetype + ", "
-            elif(imagetype == "all - force multiple" or unique_dist(insanitylevel)):
+            elif(imagetype == "all - force multiple" or unique_dist(insanitylevel) and not anime_mode):
                 amountofimagetypes = random.randint(2,3)
             elif(imagetype == "only other types"):
                 if(amountofimagetypes < 2 and random.randint(0,2) == 0):
@@ -1945,14 +1979,14 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                     othertype = 1
                     completeprompt += random.choice(othertypelist)
             
-            if(imagetype == "all" and chance_roll(insanitylevel, imagetypechance) and amountofimagetypes <= 1):
+            if((imagetype == "all" or imagetype == "all - anime") and chance_roll(insanitylevel, imagetypechance) and amountofimagetypes <= 1):
                 amountofimagetypes = 1
 
             # on lower insanity levels, almost force this
-            if(imagetype == "all" and insanitylevel <= 3 and amountofimagetypes <= 1 and random.randint(0,1)== 0):
+            if((imagetype == "all" or imagetype == "all - anime") and insanitylevel <= 3 and amountofimagetypes <= 1 and random.randint(0,1)== 0):
                 amountofimagetypes = 1
 
-            if(imagetype == "all" and insanitylevel <= 2 and amountofimagetypes <= 1):
+            if((imagetype == "all" or imagetype == "all - anime") and insanitylevel <= 2 and amountofimagetypes <= 1):
                 amountofimagetypes = 1
 
 
@@ -1963,24 +1997,15 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             # one in 6 images is a complex/other type
                 if((chance_roll(insanitylevel, imagetypequalitychance) or originalartistchoice == "greg mode") and generateimagetypequality):
                     completeprompt += "-imagetypequality- "
-               # if("photography" in artiststyleselector
-               #         or "photography" in artists):
-               #      completeprompt += " photograph, "
-               # elif("portrait" in artiststyleselector 
-               #         or "portrait" in artists):
-               #     completeprompt += " portrait, "
-               # if("landscape" in artiststyleselector
-               #         or "landscape" in artists):
-               #     completeprompt += " landscape, "
-
-               
-                    
+              
+                if(imagetype == "all - anime" and not anime_mode):
+                    completeprompt += " anime"
                 if(random.randint(0,4) < 4 and insanitylevel > 3 ):
                     # woops, never to this as wildcards. We need to know as early as possible wether something is a photo. Lets put it back!
                     completeprompt += " " + random.choice(imagetypelist) + ", "
                 elif(random.randint(0,1) == 0 and insanitylevel <= 3):
                     completeprompt += " " + random.choice(imagetypelist) + ", "
-                else:
+                elif(not anime_mode):
                     if(amountofimagetypes < 2 and random.randint(0,1) == 0):
                         partlystylemode = True
                         print("Ohhh! Adding some secret sauce to this prompt")
@@ -2080,7 +2105,10 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 # Common to have 1 description, uncommon to have 2
                 if(chance_roll(insanitylevel, subjectdescriptor1chance) and generatedescriptors == True):
                     if(animalashuman or subjectchooser in ["human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation", "manwomanmultiple","firstname"]):
-                        completeprompt += "-humandescriptor- "
+                        if(anime_mode and random.randint(0,2)<2):
+                            completeprompt += "-basicbitchdescriptor- "
+                        else:
+                            completeprompt += "-humandescriptor- "
                     elif(mainchooser == "landscape"):
                         completeprompt += "-locationdescriptor- "
                     elif(mainchooser == "animal"):
@@ -2090,7 +2118,10 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
                 if(chance_roll(insanitylevel, subjectdescriptor2chance) and generatedescriptors == True):
                     if(animalashuman or subjectchooser in ["human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation", "manwomanmultiple","firstname"]):
-                        completeprompt += "-humandescriptor- "
+                        if(anime_mode and random.randint(0,2)<2):
+                            completeprompt += "-basicbitchdescriptor- "
+                        else:
+                            completeprompt += "-humandescriptor- "
                     elif(mainchooser == "landscape"):
                         completeprompt += "-locationdescriptor- "
                     elif(mainchooser == "animal"):
@@ -2172,6 +2203,16 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             if(mainchooser == "animal"):
                 # first add a wildcard that can be used to create prompt strenght
                 completeprompt += " -objectstrengthstart-"
+                if(anime_mode 
+                   and "1girl" not in givensubject
+                   and "1boy" not in givensubject):
+                    anthrolist = ["anthro", "anthrophomorphic", "furry"]
+                
+                        
+                    if(gender=="male"):
+                        completeprompt += random.choice(anthrolist) + ", 1boy, solo, "
+                    else:
+                        completeprompt += random.choice(anthrolist) + ", 1girl, solo, "
                 
                 # if we have a given subject, we should skip making an actual subject
                 if(givensubject == "" or (subjectingivensubject and givensubject != "")):
@@ -2239,9 +2280,24 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             if(mainchooser == "humanoid"):
                 # first add a wildcard that can be used to create prompt strenght
                 completeprompt += " -objectstrengthstart-"
+                
+                if(anime_mode 
+                   and "1girl" not in givensubject
+                   and "1boy" not in givensubject):
+                    if(subjectchooser != "manwomanmultiple"):
+                        if(gender=="male"):
+                            completeprompt += "1boy, solo, "
+                        else:
+                            completeprompt += "1girl, solo, "
+                    else:
+                        if(gender=="male"):
+                            completeprompt += "multipleboys, "
+                        else:
+                            completeprompt += "multiplegirls, "
+                
                 if(givensubject == "" or (subjectingivensubject and givensubject != "")):
 
-                    if(subjectchooser == "human"):
+                    if(subjectchooser == "human" and not anime_mode):
                         completeprompt += "-manwoman-"
                     
                     if(subjectchooser == "manwomanrelation"):
@@ -2251,7 +2307,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                         completeprompt += "-manwomanmultiple-"
 
                     if(subjectchooser == "job"):
-                        completeprompt += "-malefemale- "
+                        if(not anime_mode):
+                            completeprompt += "-malefemale- "
                         completeprompt += "-job-"
 
                     if(subjectchooser == "fictional"):
@@ -2480,7 +2537,10 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 if(chance_roll(insanitylevel, subjectdescriptor1chance) and generatedescriptors == True):
                     if(animalashuman or subjectchooser in ["human", "job", "fictional", "non fictional", "humanoid", "manwomanrelation","manwomanmultiple", "firstname"]):
                         if(less_verbose):
-                            completeprompt += ", -humandescriptor- "
+                            if(anime_mode and random.randint(0,2)<2):
+                                completeprompt += ", -basicbitchdescriptor- "
+                            else:
+                                completeprompt += ", -humandescriptor- "
                         elif(random.randint(0,3) > 0):
                             completeprompt += ", OR(;-heshe- is;normal) OR(;very;rare) -humandescriptor- "
                         elif(subjectchooser == "manwomanmultiple"):
@@ -2572,7 +2632,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 if(random.randint(0,1)==0):
                     completeprompt +=  ", " + random.choice(humanactivitylist)+ ", "
                 else:
-                    completeprompt +=  "OR(,; as a;rare) -job-, "
+                    completeprompt +=  ", OR(,; as a;rare) -job-, "
 
 
         
@@ -2774,7 +2834,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                     
 
                 # if not, we could go in random styles descriptor mode
-                elif(templatemode == False and specialmode == False and uncommon_dist(10 - insanitylevel)):
+                elif(not anime_mode and templatemode == False and specialmode == False and uncommon_dist(10 - insanitylevel)):
                     for i in range(random.randint(1,max(7,insanitylevel + 2))):
                         # print("adding random crap")
                         completeprompt += ", -allstylessuffix-"
@@ -2987,7 +3047,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
             completeprompt += chosenstylesuffix
         
         templatesmodechance = 0
-        if(uncommon_dist(insanitylevel)):
+        if(uncommon_dist(insanitylevel) and not anime_mode): # not for anime models!
            templatesmodechance = 1
 
         if(dynamictemplatesmode == True and templatesmodechance == 1):
@@ -3353,7 +3413,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         completeprompt = "".join(completeprompt_list)
 
         
-
+    #    print(completeprompt)
     
     # lol, this needs a rewrite :D
     while (
@@ -4919,6 +4979,9 @@ def cleanup(completeprompt, advancedprompting, insanitylevel = 5):
     completeprompt = re.sub('-artistmedium-', '', completeprompt)
     completeprompt = re.sub('-artistdescription-', '', completeprompt)
     completeprompt = re.sub('- art ', '', completeprompt)
+
+    completeprompt = re.sub('anime anime', 'anime', completeprompt)
+    completeprompt = re.sub('anime, anime', 'anime', completeprompt)
 
     completeprompt = re.sub('shot shot', 'shot', completeprompt)
     

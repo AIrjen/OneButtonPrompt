@@ -563,48 +563,52 @@ class Script(scripts.Script):
                             1. all --> normally picks a image type as random. Can choose a 'other' more unique type.
 
                             2. all - force multiple  --> idea by redditor WestWordHoeDown, it forces to choose between 2 and 3 image types
+
+                            3. all - anime --> Chooses from anime styles, for support of Anime Model mode.
+
+                            4. none --> Turns off image type generation
                             
-                            3. photograph
+                            5. photograph
 
-                            4. octane render
+                            6. octane render
 
-                            5. digital art
+                            7. digital art
 
-                            6. concept art
+                            8. concept art
 
-                            7. painting
+                            9. painting
 
-                            6. portrait
+                            10. portrait
 
-                            7. anime key visual
+                            11. anime
                             
-                            8. only other types --> Will pick only from the more unique types, such as stained glass window or a funko pop
+                            12. only other types --> Will pick only from the more unique types, such as stained glass window or a funko pop
 
                             All modes below are considered a special image type mode.
 
-                            9. only templates mode --> Will only choose from a set of wildcarded prompt templates. Templates have been gathered from various sources, such as CivitAI, prompthero, promptbook, etc.
+                            13. only templates mode --> Will only choose from a set of wildcarded prompt templates. Templates have been gathered from various sources, such as CivitAI, prompthero, promptbook, etc.
 
                             only templates mode is perfect for beginners, who want to see some good results fast.
 
-                            10. dynamic templates mode --> A method that uses prompts in a more natural language.
+                            14. dynamic templates mode --> A method that uses prompts in a more natural language.
 
-                            11. art blaster mode --> Special generation mode that focusses on art movements, stylings and artists.
+                            15. art blaster mode --> Special generation mode that focusses on art movements, stylings and artists.
 
-                            12. quality vomit mode --> Special generation mode that focusses on qualifiers and stylings.
+                            16. quality vomit mode --> Special generation mode that focusses on qualifiers and stylings.
 
-                            13. color cannon mode --> Special generation mode that focusses on color scheme's and moods.
+                            17. color cannon mode --> Special generation mode that focusses on color scheme's and moods.
 
-                            14. unique art mode --> Special generation mode that focusses on other image types, art movements, stylings and lighting.
+                            18. unique art mode --> Special generation mode that focusses on other image types, art movements, stylings and lighting.
 
-                            15. massive madness mode --> Special generation mode, creates prompt soup. Almost pure randomness.
+                            19. massive madness mode --> Special generation mode, creates prompt soup. Almost pure randomness.
 
-                            16. photo fantasy mode --> Special generation mode that focusses on photographs, cameras, lenses and lighting.
+                            20. photo fantasy mode --> Special generation mode that focusses on photographs, cameras, lenses and lighting.
 
-                            17. subject only mode --> Will only generate a subject, with no additional frills.
+                            21. subject only mode --> Will only generate a subject, with no additional frills.
 
-                            18. fixed styles mode --> Generate a subject on top of a fixed style.
+                            22. fixed styles mode --> Generate a subject on top of a fixed style.
 
-                            19. the tokinator --> Complete random word gibberish mode, use at own risk
+                            23. the tokinator --> Complete random word gibberish mode, use at own risk
 
                             ### 🎲🖼️ One in X chance to use special image type mode
 

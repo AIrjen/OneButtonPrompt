@@ -21,6 +21,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     add_quality = True
     anime_mode = False
     configfilesuffix = ""
+    if(forcesubject ==  "------ all"):
+        forcesubject = "all"
 
     superprompter = False
     prompt_enhancer = prompt_enhancer.lower()
@@ -1475,9 +1477,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 mainchooserlist.remove("object")
             if(random.randint(0,8) > max(2,insanitylevel -2) and "humanoid" in mainchooserlist):
                 mainchooserlist.remove("humanoid")
-        
+        print(forcesubject)
         #focus in animemode on mostly humans
-        if(anime_mode):
+        if(anime_mode  and (forcesubject == "all" or forcesubject == "")):
             if(random.randint(0,11) > max(2,insanitylevel -2) and "concept" in mainchooserlist):
                 mainchooserlist.remove("concept")
             if(random.randint(0,11) > max(2,insanitylevel -2) and "landscape" in mainchooserlist):

@@ -413,6 +413,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     elif(artists != "none"):
         artistlist = csv_to_list("artists",antilist)
 
+
     # create special artists lists, used in templates
     fantasyartistlist = artist_category_csv_to_list("artists_and_category","fantasy")
     popularartistlist = artist_category_csv_to_list("artists_and_category","popular")
@@ -1076,8 +1077,16 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
 
     # determine wether we have a special mode or not
-    if(random.randint(1,int(imagemodechance)) == 1 and imagetype == "all" and giventypeofimage == "" and onlyartists == False):
+    if(random.randint(1,int(imagemodechance)) == 1 and (imagetype == "all" or imagetype == "all - anime") and giventypeofimage == "" and onlyartists == False):
+        if(less_verbose):
+            imagetypemodelist.remove("dynamic templates mode")
+        if(anime_mode):
+            imagetypemodelist.remove("only templates mode")
+            imagetypemodelist.remove("massive madness mode")
+            imagetypemodelist.remove("fixed styles mode")
+            imagetypemodelist.remove("unique art mode")
         imagetype = random.choice(imagetypemodelist)  # override imagetype with a random "mode" value
+
 
 
     specialmode = False
@@ -1104,9 +1113,11 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         specialmode = True
         if(uncommon_dist(insanitylevel)):
             artblastermode = True
-        else:
+        elif(bool(artistlist)):
             onlysubjectmode = True
             artifymode = True
+        else:
+            artblastermode = True
         print("Running in art blaster mode")
 
     if(imagetype == "unique art mode"):
@@ -1477,7 +1488,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 mainchooserlist.remove("object")
             if(random.randint(0,8) > max(2,insanitylevel -2) and "humanoid" in mainchooserlist):
                 mainchooserlist.remove("humanoid")
-        print(forcesubject)
+
         #focus in animemode on mostly humans
         if(anime_mode  and (forcesubject == "all" or forcesubject == "")):
             if(random.randint(0,11) > max(2,insanitylevel -2) and "concept" in mainchooserlist):
@@ -1633,6 +1644,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 if(uncommon_dist(insanitylevel) and bool(artistlist)):
                     completeprompt += "-artiststyle-, "
                 step = step + 1 
+
 
         # start unique art here
         if(uniqueartmode==True):
@@ -1945,6 +1957,10 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         # start tokinator here
         if(thetokinatormode == True):
             tokinatorsubtype = ["personification", "human form", "object", "landscape", "OR(creature;beast;animal;myth;concept;world;planet)", "building", "location", "shape", "being", "-token-"]
+            if(anime_mode and gender == "male"):
+                tokinatorsubtype = ["(1boy, solo)"]
+            if(anime_mode and gender == "female"):
+                tokinatorsubtype = ["(1girl, solo)"]
             if(chance_roll(insanitylevel,"normal")):
                 if(chance_roll(insanitylevel,"normal") and remove_weights == False):
                     completeprompt += "(OR(;-imagetypequality-;uncommon) OR(-imagetype-;-othertype-;rare):1.3) "
@@ -3240,7 +3256,6 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
 
         
         
-        
         if(partlystylemode == True):
             # add a part of the style to the back
             chosenstylesuffixlist = chosenstylesuffix.split(",")
@@ -3277,7 +3292,6 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 completeprompt += " \n , "
             else:
                 completeprompt += " \n " + seperator + " "
-
 
 
 
@@ -3681,7 +3695,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         print(random.choice(devmessagelist))
         print("")
 
-    print(completeprompt)
+    print(completeprompt) # keep this! :D 
+
     if(prompt_g_and_l == False):
         return completeprompt
     else:
@@ -5488,8 +5503,15 @@ def replace_user_wildcards(completeprompt):
 
 def translate_main_subject(main_subject=""):
     subjecttype_lookup = {
+        "all": ["all", "all"],
+        "random": ["all", "all"],
+        "--- all": ["all", "all"],
+        "------all": ["all", "all"],
+        "------ all": ["all", "all"],
+
         "object - all": ["object", "all"],
         "--- object - all": ["object", "all"],
+        "object": ["object", "all"],
         "object - generic": ["object", "all"],
         "generic object": ["object", "generic objects"],
         "generic objects": ["object", "generic objects"],

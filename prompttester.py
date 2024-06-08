@@ -130,7 +130,7 @@ if __name__ == "__main__":
                 , -1  # seed
                 , "" #outfit override
                 , False #prompt_g_and_l
-                , "Stable Cascade" #base model 
+                , "SDXL" #base model 
                 , "" #preset  "All (random)..."
                 , "" # superprompter
                 )

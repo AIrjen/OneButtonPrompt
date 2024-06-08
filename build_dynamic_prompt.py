@@ -1016,7 +1016,6 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
     generatelandscape = generatelocation or generatelocationfantasy or generatelocationscifi or generatelocationvideogame or generatelocationbiome or generatelocationcity
 
     if(generatelandscape):
-        mainchooserlist.append("landscape")
         addontolocationlist.append("-location-")
         addontolocationlist.append("-background-")
         addontolocationinsidelist.append("-location-")
@@ -1472,7 +1471,18 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 mainchooserlist.remove("object")
             if(random.randint(0,8) > max(2,insanitylevel -2) and "humanoid" in mainchooserlist):
                 mainchooserlist.remove("humanoid")
- 
+        
+        #focus in animemode on mostly humans
+        if(anime_mode):
+            if(random.randint(0,11) > max(2,insanitylevel -2) and "concept" in mainchooserlist):
+                mainchooserlist.remove("concept")
+            if(random.randint(0,11) > max(2,insanitylevel -2) and "landscape" in mainchooserlist):
+                mainchooserlist.remove("landscape")
+            if(random.randint(0,11) > max(2,insanitylevel -2) and "object" in mainchooserlist):
+                mainchooserlist.remove("object")
+            if(random.randint(0,8) > max(2,insanitylevel -2) and "animal" in mainchooserlist):
+                mainchooserlist.remove("animal")
+    
 
         # choose the main subject type
         mainchooser = random.choice(mainchooserlist)
@@ -2824,7 +2834,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                 # todo
                 descriptivemode = False
                 # if we have artists, maybe go in artists descriptor mode
-                if(templatemode == False and specialmode == False and "-artist-" in completeprompt and common_dist(max(8 - insanitylevel,3))):
+                if(not anime_mode and not less_verbose and templatemode == False and specialmode == False and "-artist-" in completeprompt and uncommon_dist(max(8 - insanitylevel,3))):
                     for i in range(random.randint(1,3)):
                         # print("adding artist stuff")
                         completeprompt += ", -artistdescription-"
@@ -2834,7 +2844,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
                     
 
                 # if not, we could go in random styles descriptor mode
-                elif(not anime_mode and templatemode == False and specialmode == False and uncommon_dist(10 - insanitylevel)):
+                elif(not anime_mode and not less_verbose and templatemode == False and specialmode == False and legendary_dist(10 - insanitylevel)):
                     for i in range(random.randint(1,max(7,insanitylevel + 2))):
                         # print("adding random crap")
                         completeprompt += ", -allstylessuffix-"

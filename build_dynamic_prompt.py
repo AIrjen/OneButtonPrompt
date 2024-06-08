@@ -152,6 +152,10 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         advancedprompting = False
         anime_mode = True
         configfilesuffix = "anime"
+    
+    # Hard overwrite some stuff because people dont config this themselves
+    if((anime_mode or imagetype == "all - anime") and artists == "all"):
+        artists = "none"
 
 
     # load the config file

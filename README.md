@@ -142,7 +142,7 @@ You an use the Subject Types filter to select on main subject types to generate.
 Artists have a major impact on the result. Automatically, it will select between 0-3 artists out of 3483 artists for your prompt.
 You can turn it off. Add your own artists to the prompt, and they will be added to the end of the prompt.
 
-Type of image can be used to force a certain direction. For example when using Realistic Vision, it might be a good idea to set it to photograph. For an anime model, you might want to use "Anime key visual"
+Type of image can be used to force a certain direction. For example when using Realistic Vision, it might be a good idea to set it to photograph. For an anime model, you might want to use "all - anime"
 
 Special image type modes have chance to trigger. Those follow different rules of prompt generation.
 

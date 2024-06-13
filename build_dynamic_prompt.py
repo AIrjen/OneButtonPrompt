@@ -106,7 +106,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         antistring = selected_opb_preset["antistring"]
 
     prefixprompt = preset_prefix + ", " + prefixprompt
-    suffixprompt = preset_suffix + ", " + suffixprompt
+    suffixprompt = suffixprompt + ", " + preset_suffix
 
     # new method of subject choosing from the interface, lets translate this:
     # really hacky way of doing this now.

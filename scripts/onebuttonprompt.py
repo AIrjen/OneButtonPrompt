@@ -408,6 +408,12 @@ class Script(scripts.Script):
                     )
             with gr.Group(visible=True) as presetgroup:
                 with gr.Row():
+                    gr.Markdown("""
+                            <font size="2">
+                            These prefix and suffix are run on top the of preset. Can be used for LoRA's and other general stylings.
+                            </font>
+                            """)
+                with gr.Row():
                     presetprefix = gr.Textbox(label="Preset prefix: ", value="")
                     presetsuffix = gr.Textbox(label="Preset suffix: ", value="")
                                 

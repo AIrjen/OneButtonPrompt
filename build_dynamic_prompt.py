@@ -159,7 +159,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         configfilesuffix = "anime"
     
     # Hard overwrite some stuff because people dont config this themselves
-    if((anime_mode or imagetype == "all - anime") and artists == "all"):
+    if((anime_mode or imagetype == "all - anime") and (artists == "all" or normal_dist(insanitylevel))):
         artists = "none"
 
 

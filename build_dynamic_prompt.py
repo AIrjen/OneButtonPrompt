@@ -13,7 +13,7 @@ OBPresets = OneButtonPresets()
 # insanity level controls randomness of propmt 0-10
 # forcesubject van be used to force a certain type of subject
 # Set artistmode to none, to exclude artists 
-def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", givensubject="",smartsubject = True,giventypeofimage="", imagemodechance = 20, gender = "all", subtypeobject="all", subtypehumanoid="all", subtypeconcept="all", advancedprompting=True, hardturnoffemojis=False, seed=-1, overrideoutfit="", prompt_g_and_l = False, base_model = "SD1.5", OBP_preset = "", prompt_enhancer = "none", subtypeanimal="all", subtypelocation="all"):
+def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all", imagetype = "all", onlyartists = False, antivalues = "", prefixprompt = "", suffixprompt ="",promptcompounderlevel ="1", seperator = "comma", givensubject="",smartsubject = True,giventypeofimage="", imagemodechance = 20, gender = "all", subtypeobject="all", subtypehumanoid="all", subtypeconcept="all", advancedprompting=True, hardturnoffemojis=False, seed=-1, overrideoutfit="", prompt_g_and_l = False, base_model = "SD1.5", OBP_preset = "", prompt_enhancer = "none", subtypeanimal="all", subtypelocation="all", preset_prefix = "", preset_suffix = ""):
 
     remove_weights = False
     less_verbose = False
@@ -105,6 +105,9 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         giventypeofimage = selected_opb_preset["giventypeofimage"]
         antistring = selected_opb_preset["antistring"]
 
+    prefixprompt = preset_prefix + ", " + prefixprompt
+    suffixprompt = suffixprompt + ", " + preset_suffix
+
     # new method of subject choosing from the interface, lets translate this:
     # really hacky way of doing this now.
     if("-" in forcesubject):
@@ -156,7 +159,7 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         configfilesuffix = "anime"
     
     # Hard overwrite some stuff because people dont config this themselves
-    if((anime_mode or imagetype == "all - anime") and artists == "all"):
+    if((anime_mode or imagetype == "all - anime") and (artists == "all" or normal_dist(insanitylevel))):
         artists = "none"
 
 

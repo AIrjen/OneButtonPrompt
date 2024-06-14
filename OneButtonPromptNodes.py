@@ -351,6 +351,14 @@ class OneButtonPrompt:
                     "multiline": False, # This is the overwrite for an outfit, super nice
                     "default": ""
                 }),
+                "prompt_prefix": ("STRING", {
+                    "multiline": False, # prefix the prompt
+                    "default": ""
+                }),
+                "prompt_suffix": ("STRING", {
+                    "multiline": False, # Suffix of the prompt
+                    "default": ""
+                }),
                 "humanoids_gender": (genders, {"default": "all"}),
                 "emojis":(emojis, {"default": False}),
                 "base_model":(models, {"default": "SDXL"}),
@@ -369,8 +377,8 @@ class OneButtonPrompt:
 
     CATEGORY = "OneButtonPrompt"
     
-    def Comfy_OBP(self, insanitylevel, custom_subject, seed, artist, imagetype, subject, imagemodechance, humanoids_gender, emojis, custom_outfit, base_model, prompt_enhancer):
-        generatedpromptlist = build_dynamic_prompt(insanitylevel,subject,artist,imagetype,False,"","","",1,"",custom_subject,True,"",imagemodechance, humanoids_gender,"all", "all", "all", False, emojis, seed, custom_outfit, True, base_model, "", prompt_enhancer)
+    def Comfy_OBP(self, insanitylevel, custom_subject, seed, artist, imagetype, subject, imagemodechance, humanoids_gender, emojis, custom_outfit, base_model, prompt_enhancer, prompt_prefix, prompt_suffix):
+        generatedpromptlist = build_dynamic_prompt(insanitylevel,subject,artist,imagetype,False,"",prompt_prefix,prompt_suffix,1,"",custom_subject,True,"",imagemodechance, humanoids_gender,"all", "all", "all", False, emojis, seed, custom_outfit, True, base_model, "", prompt_enhancer)
         #print(generatedprompt)
         generatedprompt = generatedpromptlist[0]
         prompt_g = generatedpromptlist[1]
@@ -579,7 +587,15 @@ class OneButtonPreset:
             },
             "optional": {
                 "base_model":(models, {"default": "SDXL"}),
-                "prompt_enhancer":(prompt_enhancers, {"default": "none"}),   
+                "prompt_enhancer":(prompt_enhancers, {"default": "none"}),
+                "preset_prefix": ("STRING", {
+                    "multiline": False, # prefix the preset
+                    "default": ""
+                }),
+                "preset_suffix": ("STRING", {
+                    "multiline": False, # Suffix of the preset
+                    "default": ""
+                }),   
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF}),
             },
         }
@@ -594,7 +610,7 @@ class OneButtonPreset:
 
     CATEGORY = "OneButtonPrompt"
     
-    def Comfy_OBP_OneButtonPreset(self, OneButtonPreset, seed, base_model, prompt_enhancer):
+    def Comfy_OBP_OneButtonPreset(self, OneButtonPreset, seed, base_model, prompt_enhancer, preset_prefix, preset_suffix):
         # load the stuff
         if(OneButtonPreset == OBPresets.RANDOM_PRESET_OBP):
             selected_opb_preset = OBPresets.get_obp_preset("Standard")
@@ -640,6 +656,8 @@ class OneButtonPreset:
                                                base_model=base_model,
                                                OBP_preset=OneButtonPreset,
                                                prompt_enhancer=prompt_enhancer,
+                                               preset_prefix=preset_prefix,
+                                               preset_suffix=preset_suffix,
                                                )
         
         

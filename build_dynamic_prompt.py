@@ -1,9 +1,9 @@
 import random
 import re
-from csv_reader import *
-from random_functions import *
-from one_button_presets import OneButtonPresets
-from superprompter.superprompter import *
+from .csv_reader import *
+from .random_functions import *
+from .one_button_presets import OneButtonPresets
+from .superprompter.superprompter import *
 OBPresets = OneButtonPresets()
 
 
@@ -4947,7 +4947,7 @@ def cleanup(completeprompt, advancedprompting, insanitylevel = 5):
         completeprompt = completeprompt.replace("|", " ")
 
     # sometimes if there are not enough artist, we get left we things formed as (:1.2)
-    completeprompt = re.sub('\(\:\d+\.\d+\)', '', completeprompt) 
+    completeprompt = re.sub(r'\(\:\d+\.\d+\)', '', completeprompt)
 
     # lets also remove some wierd stuff on lower insanitylevels
     if(insanitylevel < 7):
@@ -4955,16 +4955,16 @@ def cleanup(completeprompt, advancedprompting, insanitylevel = 5):
         completeprompt = completeprompt.replace("fluorescent", " ")
 
     # all cleanup steps moved here
-    completeprompt = re.sub('\[ ', '[', completeprompt)
-    completeprompt = re.sub('\[,', '[', completeprompt) 
-    completeprompt = re.sub(' \]', ']', completeprompt)
-    completeprompt = re.sub(' \|', '|', completeprompt)
-    #completeprompt = re.sub(' \"', '\"', completeprompt)
-    #completeprompt = re.sub('\" ', '\"', completeprompt)
-    completeprompt = re.sub('\( ', '(', completeprompt)
-    completeprompt = re.sub(' \(', '(', completeprompt)
-    completeprompt = re.sub('\) ', ')', completeprompt)
-    completeprompt = re.sub(' \)', ')', completeprompt)
+    completeprompt = re.sub(r'\[ ', '[', completeprompt)
+    completeprompt = re.sub(r'\[,', '[', completeprompt)
+    completeprompt = re.sub(r' \]', ']', completeprompt)
+    completeprompt = re.sub(r' \|', '|', completeprompt)
+    #completeprompt = re.sub(r' \"', '\"', completeprompt)
+    #completeprompt = re.sub(r'\" ', '\"', completeprompt)
+    completeprompt = re.sub(r'\( ', '(', completeprompt)
+    completeprompt = re.sub(r' \(', '(', completeprompt)
+    completeprompt = re.sub(r'\) ', ')', completeprompt)
+    completeprompt = re.sub(r' \)', ')', completeprompt)
 
     completeprompt = re.sub(' :', ':', completeprompt)
     completeprompt = re.sub(',::', '::', completeprompt)
@@ -4978,7 +4978,7 @@ def cleanup(completeprompt, advancedprompting, insanitylevel = 5):
     completeprompt = re.sub(' ,', ',', completeprompt)
     completeprompt = re.sub(' ,', ',', completeprompt)
     completeprompt = re.sub(' ,', ',', completeprompt)
-    completeprompt = re.sub(',\(', ', (', completeprompt)
+    completeprompt = re.sub(r',\(', ', (', completeprompt)
 
 
 
@@ -5048,17 +5048,17 @@ def cleanup(completeprompt, advancedprompting, insanitylevel = 5):
     completeprompt = re.sub(' mans', ' men', completeprompt)
     completeprompt = re.sub(' Womans,', ' Women', completeprompt)
     completeprompt = re.sub(' womans,', ' women,', completeprompt)
-    completeprompt = re.sub('\(Mans', '(Men,', completeprompt)
-    completeprompt = re.sub('\(mans', '(men', completeprompt)
-    completeprompt = re.sub('\(Womans', '(Women', completeprompt)
-    completeprompt = re.sub('\(womans', '(women', completeprompt)
+    completeprompt = re.sub(r'\(Mans', '(Men,', completeprompt)
+    completeprompt = re.sub(r'\(mans', '(men', completeprompt)
+    completeprompt = re.sub(r'\(Womans', '(Women', completeprompt)
+    completeprompt = re.sub(r'\(womans', '(women', completeprompt)
 
     completeprompt = re.sub('-sameothersubject-', 'it', completeprompt)
     completeprompt = re.sub('-samehumansubject-', 'the person', completeprompt)
 
     
-    completeprompt = re.sub('(?<!\()\s?\(', ' (', completeprompt)
-    completeprompt = re.sub('\)(?![\s)])', ') ', completeprompt)
+    completeprompt = re.sub(r'(?<!\()\s?\(', ' (', completeprompt)
+    completeprompt = re.sub(r'\)(?![\s)])', ') ', completeprompt)
 
     # Move the extracted LoRA's to the end of completeprompt
     #completeprompt += " " + " ".join(allLoRA)   

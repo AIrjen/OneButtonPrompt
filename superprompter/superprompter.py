@@ -3,7 +3,7 @@ import os
 import random
 import torch
 from transformers import T5Tokenizer, T5ForConditionalGeneration
-from superprompter.download_models import download_models
+from .download_models import download_models
 
 global tokenizer, model
 script_dir = os.path.dirname(os.path.abspath(__file__))  # Script directory

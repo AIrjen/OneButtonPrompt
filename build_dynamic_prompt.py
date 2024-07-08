@@ -1,9 +1,21 @@
 import random
 import re
-from .csv_reader import *
-from .random_functions import *
-from .one_button_presets import OneButtonPresets
-from .superprompter.superprompter import *
+
+if __package__ is None or __package__ == '':
+    # A1111 style (standalone script or direct module execution)
+    # Use absolute imports for compatibility with A1111 WebUI environment
+    from csv_reader import *
+    from random_functions import *
+    from one_button_presets import OneButtonPresets
+    from superprompter.superprompter import *
+else:
+    # ComfyUI style (imported as a package)
+    # Use relative imports for proper integration with ComfyUI
+    from .csv_reader import *
+    from .random_functions import *
+    from .one_button_presets import OneButtonPresets
+    from .superprompter.superprompter import *
+
 OBPresets = OneButtonPresets()
 
 

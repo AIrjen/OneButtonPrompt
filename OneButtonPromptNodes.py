@@ -10,10 +10,10 @@ onebuttonprompt_path = os.path.join(custom_nodes_path, "OneButtonPrompt")
 
 sys.path.append(onebuttonprompt_path)
 
-from build_dynamic_prompt import *
-from csv_reader import *
+from .build_dynamic_prompt import *
+from .csv_reader import *
 
-from one_button_presets import OneButtonPresets
+from .one_button_presets import OneButtonPresets
 OBPresets = OneButtonPresets()
 allpresets = [OBPresets.RANDOM_PRESET_OBP] + list(OBPresets.opb_presets.keys())
 

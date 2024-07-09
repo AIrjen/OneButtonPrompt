@@ -3,7 +3,15 @@ import os
 import random
 import torch
 from transformers import T5Tokenizer, T5ForConditionalGeneration
-from superprompter.download_models import download_models
+
+if __package__ is None or __package__ == '':
+    # A1111 style (standalone script or direct module execution)
+    # Use absolute imports for compatibility with A1111 WebUI environment
+    from download_models import download_models
+else:
+    # ComfyUI style (imported as a package)
+    # Use relative imports for proper integration with ComfyUI
+    from .download_models import download_models
 
 global tokenizer, model
 script_dir = os.path.dirname(os.path.abspath(__file__))  # Script directory

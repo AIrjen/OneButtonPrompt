@@ -3693,8 +3693,8 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         superpromptresult = one_button_superprompt(insanitylevel=insanitylevel, prompt=subjectprompt, seed=seed, override_subject=givensubject, override_outfit=overrideoutfit, chosensubject=subjectchooser, gender=gender, restofprompt = startprompt + endprompt)
         completeprompt = startprompt + ", " + superpromptresult + ", " + endprompt
         prompt_g = superpromptresult
-        prompt_l = completeprompt
-    elif(prompt_g_and_l == True):
+        prompt_l = startprompt + endprompt
+    elif(prompt_g_and_l == False):
         prompt_g = completeprompt
         prompt_l = completeprompt
 

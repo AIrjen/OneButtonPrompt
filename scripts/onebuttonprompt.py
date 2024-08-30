@@ -388,7 +388,7 @@ class Script(scripts.Script):
 
         with gr.Tab("Main"):
             with gr.Row(variant="compact"):
-                gr.Markdown("""
+                md_basic = gr.Markdown("""
                             <font size="2">
                             One Button Prompt is now active. Just press the normal Generate button to start generating images.
 
@@ -408,7 +408,7 @@ class Script(scripts.Script):
                     )
             with gr.Group(visible=True) as presetgroup:
                 with gr.Row():
-                    gr.Markdown("""
+                    md_prefix_preset = gr.Markdown("""
                             <font size="2">
                             These prefix and suffix are run on top the of preset. Can be used for LoRA's and other general stylings.
                             </font>
@@ -417,8 +417,8 @@ class Script(scripts.Script):
                     presetprefix = gr.Textbox(label="Preset prefix: ", value="")
                     presetsuffix = gr.Textbox(label="Preset suffix: ", value="")
                                 
-            with gr.Group(visible=False) as maingroup:
-                gr.Markdown("""
+            with gr.Group(visible=True) as maingroup:
+                md_save_preset = gr.Markdown("""
                             <font size="2">
                             Type a name and press "Save as Preset" to store the current generation settings.
                             </font>
@@ -428,13 +428,13 @@ class Script(scripts.Script):
                             show_label=False,
                             placeholder="Name of new preset",
                             interactive=True,
-                            visible=True,
+                            visible=False,
                         )
                         obp_preset_save = gr.Button(
                             value="Save as preset",
-                            visible=True,
+                            visible=False,
                         )
-                gr.Markdown("""
+                md_generation_settings = gr.Markdown("""
                             <font size="4">
                             Generation settings:
                             </font>
@@ -443,14 +443,14 @@ class Script(scripts.Script):
             # End of this part of presets
                 
                 with gr.Row(variant="compact"):
-                    insanitylevel = gr.Slider(1, 10, value=5, step=1, label="🎲⬅️❔➡️🎲🎲🎲 Higher levels increases complexity and randomness of generated prompt")
+                    insanitylevel = gr.Slider(1, 10, value=5, step=1, label="🎲⬅️❔➡️🎲🎲🎲 Higher levels increases complexity and randomness of generated prompt", visible=False)
                 with gr.Row(variant="compact"):
                     with gr.Column(variant="compact"):
                         subject = gr.Dropdown(
-                                        subjects, label="📸 Subject Types", value="all")                   
+                                        subjects, label="📸 Subject Types", value="all", visible=False)                   
                     with gr.Column(variant="compact"):
                         artist = gr.Dropdown(
-                                        artists, label="🎨 Artists", value="all")
+                                        artists, label="🎨 Artists", value="all", visible=False)
                 with gr.Row(variant="compact"):
                     chosensubjectsubtypeobject = gr.Dropdown(
                                         subjectsubtypesobject, label="🏺 Type of object", value="all", visible=False)
@@ -463,45 +463,45 @@ class Script(scripts.Script):
                 with gr.Row(variant="compact"):
                     with gr.Column(variant="compact"):
                         imagetype = gr.Dropdown(
-                                        imagetypes, label="🖼️ type of image", value="all")
+                                        imagetypes, label="🖼️ type of image", value="all", visible=False)
                     with gr.Column(variant="compact"):
                         imagemodechance = gr.Slider(
-                                        1, 100, value="20", step=1, label="🎲🖼️ One in X chance to use special image type mode")
+                                        1, 100, value="20", step=1, label="🎲🖼️ One in X chance to use special image type mode", visible=False)
                 with gr.Row(variant="compact"):
-                    gr.Markdown("""
+                    md_override_options = gr.Markdown("""
                                 <font size="2">
                                 Override options (choose the related subject type first for better results)
                                 </font>
-                                """
+                                """, visible=False
                     )
                 with gr.Row(variant="compact"):
-                    givensubject = gr.Textbox(label="🔃📸 Overwrite subject: ", value="")
-                    smartsubject = gr.Checkbox(label="🧠📸 Smart subject", value = True)
+                    givensubject = gr.Textbox(label="🔃📸 Overwrite subject: ", value="", visible=False)
+                    smartsubject = gr.Checkbox(label="🧠📸 Smart subject", value = True, visible=False)
                 with gr.Row(variant="compact"):
-                    givenoutfit = gr.Textbox(label="🔃👗 Overwrite outfit: ", value="")
-                with gr.Row(variant="compact"):
-                    gr.Markdown("""
-                                <font size="2">
-                                Prompt fields
-                                </font>
-                                """
-                    )
+                    givenoutfit = gr.Textbox(label="🔃👗 Overwrite outfit: ", value="", visible=False)
+                # with gr.Row(variant="compact"):
+                #     gr.Markdown("""
+                #                 <font size="2">
+                #                 Prompt fields
+                #                 </font>
+                #                 """
+                #     )
                 with gr.Row(variant="compact"):
                     with gr.Column(variant="compact"):
-                        prefixprompt = gr.Textbox(label="⬅️💬 Place this in front of generated prompt (prefix)",value="")
-                        suffixprompt = gr.Textbox(label="➡️💬 Place this at back of generated prompt (suffix)",value="")
+                        prefixprompt = gr.Textbox(label="⬅️💬 Place this in front of generated prompt (prefix)",value="", visible=False)
+                        suffixprompt = gr.Textbox(label="➡️💬 Place this at back of generated prompt (suffix)",value="", visible=False)
                 with gr.Row(variant="compact"):
-                    gr.Markdown("""
+                    md_additional_options = gr.Markdown("""
                                 <font size="2">
                                 Additional options
                                 </font>
-                                """
+                                """, visible=False
                     )
                 with gr.Row(variant="compact"):
-                    giventypeofimage = gr.Textbox(label="🔃🖼️ Overwrite type of image: ", value="")
+                    giventypeofimage = gr.Textbox(label="🔃🖼️ Overwrite type of image: ", value="", visible=False)
                 with gr.Row(variant="compact"):
                     with gr.Column(variant="compact"):
-                        antistring = gr.Textbox(label="❌📝 Filter out following properties (comma seperated). Example ""film grain, purple, cat"" ")
+                        antistring = gr.Textbox(label="❌📝 Filter out following properties (comma seperated). Example ""film grain, purple, cat"" ", visible=False)
                 with gr.Accordion("Help", open=False):
                         gr.Markdown(
                             """
@@ -1105,9 +1105,9 @@ class Script(scripts.Script):
                         obp_options[obp_preset_name] = opts
                         OBPresets.save_obp_preset(obp_options)
                         choices = [OBPresets.RANDOM_PRESET_OBP] + list(obp_options.keys()) + [OBPresets.CUSTOM_OBP]
-                        return gr.update(choices=choices, value=obp_preset_name)
+                        return gr(choices=choices, value=obp_preset_name)
                     else:
-                        return gr.update()
+                        return gr()
 
         obp_preset_save.click(act_obp_preset_save,
                     inputs=obp_outputs,
@@ -1119,23 +1119,89 @@ class Script(scripts.Script):
                 if selection == OBPresets.CUSTOM_OBP:
                     return (
                         [obp_preset_name.update(value="", visible=True)]
-                        + [maingroup.update(visible=True)]
-                        + [presetgroup.update(visible=False)]
-                        + [presetprefix.update(value="")]
-                        + [presetsuffix.update(value="")]
+                        
+                        #+ [maingroup(visible=True)]
+                        + [md_save_preset.update(visible=True)]
+                        + [obp_preset_name.update(visible=True)]
+                        + [obp_preset_save.update(visible=True)]
+                        + [md_generation_settings.update(visible=True)]
+                        + [insanitylevel.update(visible=True)]
+                        + [subject.update(visible=True)]
+                        + [artist.update(visible=True)]
+                        + [chosengender.update(visible=True)]
+                        + [imagetype.update(visible=True)]
+                        + [imagemodechance.update(visible=True)]
+                        + [md_override_options.update(visible=True)]
+                        + [givensubject.update(visible=True)]
+                        + [smartsubject.update(visible=True)]
+                        + [givenoutfit.update(visible=True)]
+                        + [prefixprompt.update(visible=True)]
+                        + [suffixprompt.update(visible=True)]
+                        + [md_additional_options.update(visible=True)]
+                        + [giventypeofimage.update(visible=True)]
+                        + [antistring.update(visible=True)]
+
+
+                        #+ [presetgroup(visible=False)]
+
+                        + [md_prefix_preset.update(visible=False)]
+                        + [presetprefix.update(value="", visible=False)]
+                        + [presetsuffix.update(value="", visible=False)]
                     )
     
                 else:
                     return (
                         [obp_preset_name.update(visible=False)]
-                        + [maingroup.update(visible=False)]
-                        + [presetgroup.update(visible=True)]
-                        + [presetprefix.update(visible=True)]
-                        + [presetsuffix.update(visible=True)]
+                        #+ [maingroup(visible=False)]
+                        + [md_save_preset.update(visible=False)]
+                        + [obp_preset_name.update(visible=False)]
+                        + [obp_preset_save.update(visible=False)]
+                        + [md_generation_settings.update(visible=False)]
+                        + [insanitylevel.update(visible=False)]
+                        + [subject.update(visible=False)]
+                        + [artist.update(visible=False)]
+                        + [chosengender.update(visible=False)]
+                        + [imagetype.update(visible=False)]
+                        + [imagemodechance.update(visible=False)]
+                        + [md_override_options.update(visible=False)]
+                        + [givensubject.update(visible=False)]
+                        + [smartsubject.update(visible=False)]
+                        + [givenoutfit.update(visible=False)]
+                        + [prefixprompt.update(visible=False)]
+                        + [suffixprompt.update(visible=False)]
+                        + [md_additional_options.update(visible=False)]
+                        + [giventypeofimage.update(visible=False)]
+                        + [antistring.update(visible=False)]
+
+                        # + [presetgroup(visible=True)]
+                        + [md_prefix_preset.update(visible=True)]
+                        + [presetprefix.update(value="", visible=True)]
+                        + [presetsuffix.update(value="", visible=True)]
                     )
         OBP_preset.change(obppreset_changed,
                 inputs=[OBP_preset],
-                outputs=[obp_preset_name] + [maingroup] + [presetgroup] + [presetprefix] + [presetsuffix]
+                outputs=[obp_preset_name]
+                        + [md_save_preset]
+                        + [obp_preset_name]
+                        + [obp_preset_save]
+                        + [md_generation_settings]
+                        + [insanitylevel]
+                        + [subject]
+                        + [artist]
+                        + [chosengender]
+                        + [imagetype]
+                        + [imagemodechance]
+                        + [md_override_options]
+                        + [givensubject]
+                        + [smartsubject]
+                        + [givenoutfit]
+                        + [prefixprompt]
+                        + [suffixprompt]
+                        + [md_additional_options]
+                        + [giventypeofimage]
+                        + [antistring]
+                 
+                  + [md_prefix_preset] + [presetprefix] + [presetsuffix]
             )
         
         
@@ -1144,7 +1210,25 @@ class Script(scripts.Script):
         def OBPPreset_changed_update_custom(selection):
                 # Skip if Custom was selected
                 if selection == OBPresets.CUSTOM_OBP:
-                    return [gr.update()] * 16
+                    #return [gr()] * 16
+                    selected_opb_preset = OBPresets.get_obp_preset("Standard")
+                    return [insanitylevel.update(value=selected_opb_preset["insanitylevel"]),
+                    subject.update(value=selected_opb_preset["subject"]),
+                    artist.update(value=selected_opb_preset["artist"]),
+                    chosensubjectsubtypeobject.update(value=selected_opb_preset["chosensubjectsubtypeobject"]),
+                    chosensubjectsubtypehumanoid.update(value=selected_opb_preset["chosensubjectsubtypehumanoid"]),
+                    chosensubjectsubtypeconcept.update(value=selected_opb_preset["chosensubjectsubtypeconcept"]),
+                    chosengender.update(value=selected_opb_preset["chosengender"]),
+                    imagetype.update(value=selected_opb_preset["imagetype"]),
+                    imagemodechance.update(value=selected_opb_preset["imagemodechance"]),
+                    givensubject.update(value=selected_opb_preset["givensubject"]),
+                    smartsubject.update(value=selected_opb_preset["smartsubject"]),
+                    givenoutfit.update(value=selected_opb_preset["givenoutfit"]),
+                    prefixprompt.update(value=selected_opb_preset["prefixprompt"]),
+                    suffixprompt.update(value=selected_opb_preset["suffixprompt"]),
+                    giventypeofimage.update(value=selected_opb_preset["giventypeofimage"]),
+                    antistring.update(value=selected_opb_preset["antistring"]),
+                    ]
                 
                 # Update Custom values based on selected One Button preset
                 if selection == OBPresets.RANDOM_PRESET_OBP:
@@ -1189,80 +1273,76 @@ class Script(scripts.Script):
                 [antistring], 
         )
 
+        ### not used anymore
         # turn things on and off for gender
-        def subjectsvalue(subject):
-             enable=("human" in subject)
-             return {
-                  chosengender: gr.update(visible=enable),
-             }
-        subject.change(
-            subjectsvalue,
-            [subject],
-            [chosengender]
-        )
-
-        # turn things on and off for subject subtype object
-        def subjectsvalueforsubtypeobject(subject):
-             enable=(subject=="object")
-             return {
-                  chosensubjectsubtypeobject: gr.update(visible=enable),
-             }
-        subject.change(
-            subjectsvalueforsubtypeobject,
-            [subject],
-            [chosensubjectsubtypeobject]
-        )
+        #def subjectsvalue(subject):
+        #     enable=("human" in subject)
+        #     return chosengender.update(visible=enable)
+        #subject.change(
+        #    subjectsvalue,
+        #    [subject],
+        #    [chosengender]
+        #)
         
+        ### not used anymore
+        # turn things on and off for subject subtype object
+        # def subjectsvalueforsubtypeobject(subject):
+        #      enable=(subject=="object")
+        #      return chosensubjectsubtypeobject.update(visible=enable)
+        # subject.change(
+        #     subjectsvalueforsubtypeobject,
+        #     [subject],
+        #     [chosensubjectsubtypeobject]
+        # )
+        
+        ### not used anymore
         # turn things on and off for subject subtype humanoid
-        def subjectsvalueforsubtypeobject(subject):
-             enable=(subject=="humanoid")
-             return {
-                  chosensubjectsubtypehumanoid: gr.update(visible=enable),
-             }
-        subject.change(
-            subjectsvalueforsubtypeobject,
-            [subject],
-            [chosensubjectsubtypehumanoid]
-        )
-
+        # def subjectsvalueforsubtypeobject(subject):
+        #      enable=(subject=="humanoid")
+        #      return chosensubjectsubtypehumanoid.update(visible=enable)
+        # subject.change(
+        #     subjectsvalueforsubtypeobject,
+        #     [subject],
+        #     [chosensubjectsubtypehumanoid]
+        # )
+        
+        ### not used anymore
         # turn things on and off for subject subtype concept
-        def subjectsvalueforsubtypeconcept(subject):
-             enable=(subject=="concept")
-             return {
-                  chosensubjectsubtypeconcept: gr.update(visible=enable),
-             }
-        subject.change(
-            subjectsvalueforsubtypeconcept,
-            [subject],
-            [chosensubjectsubtypeconcept]
-        )
+        # def subjectsvalueforsubtypeconcept(subject):
+        #      enable=(subject=="concept")
+        #      return chosensubjectsubtypeconcept.update(visible=enable)
+        # subject.change(
+        #     subjectsvalueforsubtypeconcept,
+        #     [subject],
+        #     [chosensubjectsubtypeconcept]
+        # )
 
 
         # Turn things off and on for onlyupscale and txt2img
         def onlyupscalevalues(onlyupscale):
              onlyupscale = not onlyupscale
              return {
-                  amountofimages: gr.update(visible=onlyupscale),
-                  size: gr.update(visible=onlyupscale),
-                  samplingsteps: gr.update(visible=onlyupscale),
-                  cfg: gr.update(visible=onlyupscale),
+                  amountofimages: gr(visible=onlyupscale),
+                  size: gr(visible=onlyupscale),
+                  samplingsteps: gr(visible=onlyupscale),
+                  cfg: gr(visible=onlyupscale),
 
-                  hiresfix: gr.update(visible=onlyupscale),
-                  hiressteps: gr.update(visible=onlyupscale),
-                  hiresscale: gr.update(visible=onlyupscale),
-                  denoisestrength: gr.update(visible=onlyupscale),
-                  upscaler: gr.update(visible=onlyupscale),
+                  hiresfix: gr(visible=onlyupscale),
+                  hiressteps: gr(visible=onlyupscale),
+                  hiresscale: gr(visible=onlyupscale),
+                  denoisestrength: gr(visible=onlyupscale),
+                  upscaler: gr(visible=onlyupscale),
 
-                  model: gr.update(visible=onlyupscale),
-                  samplingmethod: gr.update(visible=onlyupscale),
-                  upscaler: gr.update(visible=onlyupscale),
+                  model: gr(visible=onlyupscale),
+                  samplingmethod: gr(visible=onlyupscale),
+                  upscaler: gr(visible=onlyupscale),
 
-                  qualitygate: gr.update(visible=onlyupscale),
-                  quality: gr.update(visible=onlyupscale),
-                  runs: gr.update(visible=onlyupscale),
-                  qualityhiresfix: gr.update(visible=onlyupscale),
-                  qualitymode: gr.update(visible=onlyupscale),
-                  qualitykeep: gr.update(visible=onlyupscale)
+                  qualitygate: gr(visible=onlyupscale),
+                  quality: gr(visible=onlyupscale),
+                  runs: gr(visible=onlyupscale),
+                  qualityhiresfix: gr(visible=onlyupscale),
+                  qualitymode: gr(visible=onlyupscale),
+                  qualitykeep: gr(visible=onlyupscale)
 
 
              }
@@ -1277,10 +1357,10 @@ class Script(scripts.Script):
         # Turn things off and on for hiresfix
         def hireschangevalues(hiresfix):
              return {
-                  hiressteps: gr.update(visible=hiresfix),
-                  hiresscale: gr.update(visible=hiresfix),
-                  denoisestrength: gr.update(visible=hiresfix),
-                  upscaler: gr.update(visible=hiresfix)
+                  hiressteps: gr(visible=hiresfix),
+                  hiresscale: gr(visible=hiresfix),
+                  denoisestrength: gr(visible=hiresfix),
+                  upscaler: gr(visible=hiresfix)
              }
         
         hiresfix.change(
@@ -1292,11 +1372,11 @@ class Script(scripts.Script):
         # Turn things off and on for quality gate
         def qgatechangevalues(qualitygate):
              return {
-                  quality: gr.update(visible=qualitygate),
-                  runs: gr.update(visible=qualitygate),
-                  qualityhiresfix: gr.update(visible=qualitygate),
-                  qualitymode: gr.update(visible=qualitygate),
-                  qualitykeep: gr.update(visible=qualitygate)
+                  quality: gr(visible=qualitygate),
+                  runs: gr(visible=qualitygate),
+                  qualityhiresfix: gr(visible=qualitygate),
+                  qualitymode: gr(visible=qualitygate),
+                  qualitykeep: gr(visible=qualitygate)
              }
         
         qualitygate.change(
@@ -1308,16 +1388,16 @@ class Script(scripts.Script):
         # Turn things off and on for USDU
         def ultimatesdupscalechangevalues(ultimatesdupscale):
              return {
-                  usdutilewidth: gr.update(visible=ultimatesdupscale),
-                  usdutileheight: gr.update(visible=ultimatesdupscale),
-                  usdumaskblur: gr.update(visible=ultimatesdupscale),
-                  usduredraw: gr.update(visible=ultimatesdupscale),
+                  usdutilewidth: gr(visible=ultimatesdupscale),
+                  usdutileheight: gr(visible=ultimatesdupscale),
+                  usdumaskblur: gr(visible=ultimatesdupscale),
+                  usduredraw: gr(visible=ultimatesdupscale),
 
-                  usduSeamsfix: gr.update(visible=ultimatesdupscale),
-                  usdusdenoise: gr.update(visible=ultimatesdupscale),
-                  usduswidth: gr.update(visible=ultimatesdupscale),
-                  usduspadding: gr.update(visible=ultimatesdupscale),
-                  usdusmaskblur: gr.update(visible=ultimatesdupscale)
+                  usduSeamsfix: gr(visible=ultimatesdupscale),
+                  usdusdenoise: gr(visible=ultimatesdupscale),
+                  usduswidth: gr(visible=ultimatesdupscale),
+                  usduspadding: gr(visible=ultimatesdupscale),
+                  usdusmaskblur: gr(visible=ultimatesdupscale)
              }
         
         ultimatesdupscale.change(
@@ -1329,14 +1409,14 @@ class Script(scripts.Script):
         # Turn things off and on for EXTRAS
         def enableextraupscalechangevalues(enableextraupscale):
              return {
-                  extrasupscaler1: gr.update(visible=enableextraupscale),
-                  extrasupscaler2: gr.update(visible=enableextraupscale),
-                  extrasupscaler2visiblity: gr.update(visible=enableextraupscale),
-                  extrasresize: gr.update(visible=enableextraupscale),
+                  extrasupscaler1: gr(visible=enableextraupscale),
+                  extrasupscaler2: gr(visible=enableextraupscale),
+                  extrasupscaler2visiblity: gr(visible=enableextraupscale),
+                  extrasresize: gr(visible=enableextraupscale),
 
-                  extrasupscaler2gfpgan: gr.update(visible=enableextraupscale),
-                  extrasupscaler2codeformer: gr.update(visible=enableextraupscale),
-                  extrasupscaler2codeformerweight: gr.update(visible=enableextraupscale)
+                  extrasupscaler2gfpgan: gr(visible=enableextraupscale),
+                  extrasupscaler2codeformer: gr(visible=enableextraupscale),
+                  extrasupscaler2codeformerweight: gr(visible=enableextraupscale)
              }
         
         enableextraupscale.change(

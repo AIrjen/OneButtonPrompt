@@ -1116,161 +1116,158 @@ class Script(scripts.Script):
         
         
         def obppreset_changed(selection):
-                if selection == OBPresets.CUSTOM_OBP:
-                    return (
-                        [obp_preset_name.update(value="", visible=True)]
-                        
-                        #+ [maingroup(visible=True)]
-                        + [md_save_preset.update(visible=True)]
-                        + [obp_preset_name.update(visible=True)]
-                        + [obp_preset_save.update(visible=True)]
-                        + [md_generation_settings.update(visible=True)]
-                        + [insanitylevel.update(visible=True)]
-                        + [subject.update(visible=True)]
-                        + [artist.update(visible=True)]
-                        + [chosengender.update(visible=True)]
-                        + [imagetype.update(visible=True)]
-                        + [imagemodechance.update(visible=True)]
-                        + [md_override_options.update(visible=True)]
-                        + [givensubject.update(visible=True)]
-                        + [smartsubject.update(visible=True)]
-                        + [givenoutfit.update(visible=True)]
-                        + [prefixprompt.update(visible=True)]
-                        + [suffixprompt.update(visible=True)]
-                        + [md_additional_options.update(visible=True)]
-                        + [giventypeofimage.update(visible=True)]
-                        + [antistring.update(visible=True)]
+            gradio_major_version = gr.__version__.split('.')[0]
 
-
-                        #+ [presetgroup(visible=False)]
-
-                        + [md_prefix_preset.update(visible=False)]
-                        + [presetprefix.update(value="", visible=False)]
-                        + [presetsuffix.update(value="", visible=False)]
-                    )
-    
-                else:
-                    return (
-                        [obp_preset_name.update(visible=False)]
-                        #+ [maingroup(visible=False)]
-                        + [md_save_preset.update(visible=False)]
-                        + [obp_preset_name.update(visible=False)]
-                        + [obp_preset_save.update(visible=False)]
-                        + [md_generation_settings.update(visible=False)]
-                        + [insanitylevel.update(visible=False)]
-                        + [subject.update(visible=False)]
-                        + [artist.update(visible=False)]
-                        + [chosengender.update(visible=False)]
-                        + [imagetype.update(visible=False)]
-                        + [imagemodechance.update(visible=False)]
-                        + [md_override_options.update(visible=False)]
-                        + [givensubject.update(visible=False)]
-                        + [smartsubject.update(visible=False)]
-                        + [givenoutfit.update(visible=False)]
-                        + [prefixprompt.update(visible=False)]
-                        + [suffixprompt.update(visible=False)]
-                        + [md_additional_options.update(visible=False)]
-                        + [giventypeofimage.update(visible=False)]
-                        + [antistring.update(visible=False)]
-
-                        # + [presetgroup(visible=True)]
-                        + [md_prefix_preset.update(visible=True)]
-                        + [presetprefix.update(value="", visible=True)]
-                        + [presetsuffix.update(value="", visible=True)]
-                    )
-        OBP_preset.change(obppreset_changed,
-                inputs=[OBP_preset],
-                outputs=[obp_preset_name]
-                        + [md_save_preset]
-                        + [obp_preset_name]
-                        + [obp_preset_save]
-                        + [md_generation_settings]
-                        + [insanitylevel]
-                        + [subject]
-                        + [artist]
-                        + [chosengender]
-                        + [imagetype]
-                        + [imagemodechance]
-                        + [md_override_options]
-                        + [givensubject]
-                        + [smartsubject]
-                        + [givenoutfit]
-                        + [prefixprompt]
-                        + [suffixprompt]
-                        + [md_additional_options]
-                        + [giventypeofimage]
-                        + [antistring]
-                 
-                  + [md_prefix_preset] + [presetprefix] + [presetsuffix]
-            )
-        
-        
-        
-        
-        def OBPPreset_changed_update_custom(selection):
-                # Skip if Custom was selected
-                if selection == OBPresets.CUSTOM_OBP:
-                    #return [gr()] * 16
-                    selected_opb_preset = OBPresets.get_obp_preset("Standard")
-                    return [insanitylevel.update(value=selected_opb_preset["insanitylevel"]),
-                    subject.update(value=selected_opb_preset["subject"]),
-                    artist.update(value=selected_opb_preset["artist"]),
-                    chosensubjectsubtypeobject.update(value=selected_opb_preset["chosensubjectsubtypeobject"]),
-                    chosensubjectsubtypehumanoid.update(value=selected_opb_preset["chosensubjectsubtypehumanoid"]),
-                    chosensubjectsubtypeconcept.update(value=selected_opb_preset["chosensubjectsubtypeconcept"]),
-                    chosengender.update(value=selected_opb_preset["chosengender"]),
-                    imagetype.update(value=selected_opb_preset["imagetype"]),
-                    imagemodechance.update(value=selected_opb_preset["imagemodechance"]),
-                    givensubject.update(value=selected_opb_preset["givensubject"]),
-                    smartsubject.update(value=selected_opb_preset["smartsubject"]),
-                    givenoutfit.update(value=selected_opb_preset["givenoutfit"]),
-                    prefixprompt.update(value=selected_opb_preset["prefixprompt"]),
-                    suffixprompt.update(value=selected_opb_preset["suffixprompt"]),
-                    giventypeofimage.update(value=selected_opb_preset["giventypeofimage"]),
-                    antistring.update(value=selected_opb_preset["antistring"]),
+            # if custom selected, then update visibility and return
+            if selection == OBPresets.CUSTOM_OBP:
+                if gradio_major_version == '3':
+                    return [
+                        md_prefix_preset.update(visible=False),
+                        presetprefix.update(value="", visible=False),
+                        presetsuffix.update(value="", visible=False),
+                        md_save_preset.update(visible=True),
+                        obp_preset_name.update(visible=True),
+                        obp_preset_save.update(visible=True),
+                        md_generation_settings.update(visible=True),
+                        insanitylevel.update(visible=True),
+                        subject.update(visible=True),
+                        artist.update(visible=True),
+                        chosensubjectsubtypeobject.update(visible=True),
+                        chosensubjectsubtypehumanoid.update(visible=True),
+                        chosensubjectsubtypeconcept.update(visible=True),
+                        chosengender.update(visible=True),
+                        imagetype.update(visible=True),
+                        imagemodechance.update(visible=True),
+                        md_override_options.update(visible=True),
+                        givensubject.update(visible=True),
+                        smartsubject.update(visible=True),
+                        givenoutfit.update(visible=True),
+                        prefixprompt.update(visible=True),
+                        suffixprompt.update(visible=True),
+                        md_additional_options.update(visible=True),
+                        giventypeofimage.update(visible=True),
+                        antistring.update(visible=True),
                     ]
-                
-                # Update Custom values based on selected One Button preset
-                if selection == OBPresets.RANDOM_PRESET_OBP:
-                    selected_opb_preset = OBPresets.get_obp_preset("Standard")
-                else:     
-                    selected_opb_preset = OBPresets.get_obp_preset(selection)
+                else: # GR4
+                    return [
+                        gr.Markdown(visible=False),         # md_prefix_preset
+                        gr.Textbox(visible=False),          # presetprefix
+                        gr.Textbox(visible=False),          # presetsuffix
+                        gr.Markdown(visible=True),          # md_save_preset
+                        gr.Textbox(value="", visible=True), # obp_preset_name
+                        gr.Button(visible=True),            # obp_preset_save
+                        gr.Markdown(visible=True),          # md_generation_settings
+                        gr.Slider(visible=True),            # insanitylevel
+                        gr.Dropdown(visible=True),          # subject
+                        gr.Dropdown(visible=True),          # artist
+                        gr.Dropdown(visible=True),          # chosensubjectsubtypeobject
+                        gr.Dropdown(visible=True),          # chosensubjectsubtypehumanoid
+                        gr.Dropdown(visible=True),          # chosensubjectsubtypeconcept
+                        gr.Dropdown(visible=True),          # chosengender
+                        gr.Dropdown(visible=True),          # imagetype
+                        gr.Slider(visible=True),            # imagemodechance
+                        gr.Markdown(visible=True),          # md_override_options
+                        gr.Textbox(visible=True),           # givensubject
+                        gr.Checkbox(visible=True),          # smartsubject
+                        gr.Textbox(visible=True),           # givenoutfit
+                        gr.Textbox(visible=True),           # prefixprompt
+                        gr.Textbox(visible=True),           # suffixprompt
+                        gr.Markdown(visible=True),          # md_additional_options
+                        gr.Textbox(visible=True),           # giventypeofimage
+                        gr.Textbox(visible=True),           # antistring
+                    ]
+
+            # Update Custom values based on selected One Button preset
+            if selection == OBPresets.RANDOM_PRESET_OBP:
+                selected_opb_preset = OBPresets.get_obp_preset("Standard")
+            else:     
+                selected_opb_preset = OBPresets.get_obp_preset(selection)
+
+            if gradio_major_version == '3':
                 return [
-                    insanitylevel.update(value=selected_opb_preset["insanitylevel"]),
-                    subject.update(value=selected_opb_preset["subject"]),
-                    artist.update(value=selected_opb_preset["artist"]),
-                    chosensubjectsubtypeobject.update(value=selected_opb_preset["chosensubjectsubtypeobject"]),
-                    chosensubjectsubtypehumanoid.update(value=selected_opb_preset["chosensubjectsubtypehumanoid"]),
-                    chosensubjectsubtypeconcept.update(value=selected_opb_preset["chosensubjectsubtypeconcept"]),
-                    chosengender.update(value=selected_opb_preset["chosengender"]),
-                    imagetype.update(value=selected_opb_preset["imagetype"]),
-                    imagemodechance.update(value=selected_opb_preset["imagemodechance"]),
-                    givensubject.update(value=selected_opb_preset["givensubject"]),
-                    smartsubject.update(value=selected_opb_preset["smartsubject"]),
-                    givenoutfit.update(value=selected_opb_preset["givenoutfit"]),
-                    prefixprompt.update(value=selected_opb_preset["prefixprompt"]),
-                    suffixprompt.update(value=selected_opb_preset["suffixprompt"]),
-                    giventypeofimage.update(value=selected_opb_preset["giventypeofimage"]),
-                    antistring.update(value=selected_opb_preset["antistring"]),
+                    md_prefix_preset.update(visible=True),
+                    presetprefix.update(visible=True),
+                    presetsuffix.update(visible=True),
+                    md_save_preset.update(visible=False),
+                    obp_preset_name.update(value="", visible=False),
+                    obp_preset_save.update(visible=False),
+                    md_generation_settings.update(visible=False),
+                    insanitylevel.update(visible=False, value=selected_opb_preset["insanitylevel"]),
+                    subject.update(visible=False, value=selected_opb_preset["subject"]),
+                    artist.update(visible=False, value=selected_opb_preset["artist"]),
+                    chosensubjectsubtypeobject.update(visible=False, value=selected_opb_preset["chosensubjectsubtypeobject"]),
+                    chosensubjectsubtypehumanoid.update(visible=False, value=selected_opb_preset["chosensubjectsubtypehumanoid"]),
+                    chosensubjectsubtypeconcept.update(visible=False, value=selected_opb_preset["chosensubjectsubtypeconcept"]),
+                    chosengender.update(visible=False, value=selected_opb_preset["chosengender"]),
+                    imagetype.update(visible=False, value=selected_opb_preset["imagetype"]),
+                    imagemodechance.update(visible=False, value=selected_opb_preset["imagemodechance"]),
+                    md_override_options.update(visible=False),
+                    givensubject.update(visible=False, value=selected_opb_preset["givensubject"]),
+                    smartsubject.update(visible=False, value=selected_opb_preset["smartsubject"]),
+                    givenoutfit.update(visible=False, value=selected_opb_preset["givenoutfit"]),
+                    prefixprompt.update(visible=False, value=selected_opb_preset["prefixprompt"]),
+                    suffixprompt.update(visible=False, value=selected_opb_preset["suffixprompt"]),
+                    md_additional_options.update(visible=False),
+                    giventypeofimage.update(visible=False, value=selected_opb_preset["giventypeofimage"]),
+                    antistring.update(visible=False, value=selected_opb_preset["antistring"]),
                 ]
-        OBP_preset.change(OBPPreset_changed_update_custom,
-                inputs=[OBP_preset],
-                outputs=[insanitylevel] + 
-                [subject] + 
-                [artist] + 
-                [chosensubjectsubtypeobject] + 
-                [chosensubjectsubtypehumanoid] + 
-                [chosensubjectsubtypeconcept] + 
-                [chosengender] + 
-                [imagetype] + 
-                [imagemodechance] + 
-                [givensubject] + 
-                [smartsubject] + 
-                [givenoutfit] +
-                [prefixprompt] +
-                [suffixprompt] +
-                [giventypeofimage] +
-                [antistring], 
+            else:
+                return [
+                    gr.Markdown(visible=True),                      # md_prefix_preset
+                    gr.Textbox(visible=True),                       # presetprefix
+                    gr.Textbox(visible=True),                       # presetsuffix
+                    gr.Markdown(visible=False),                     # md_save_preset
+                    gr.Textbox(value="", visible=False),            # obp_preset_name
+                    gr.Button(visible=False),                       # obp_preset_save
+                    gr.Markdown(visible=False),                     # md_generation_settings
+                    gr.Slider(visible=False, value=selected_opb_preset["insanitylevel"]),
+                    gr.Dropdown(visible=False, value=selected_opb_preset["subject"]),
+                    gr.Dropdown(visible=False, value=selected_opb_preset["artist"]),
+                    gr.Dropdown(visible=False, value=selected_opb_preset["chosensubjectsubtypeobject"]),
+                    gr.Dropdown(visible=False, value=selected_opb_preset["chosensubjectsubtypehumanoid"]),
+                    gr.Dropdown(visible=False, value=selected_opb_preset["chosensubjectsubtypeconcept"]),
+                    gr.Dropdown(visible=False, value=selected_opb_preset["chosengender"]),
+                    gr.Dropdown(visible=False, value=selected_opb_preset["imagetype"]),
+                    gr.Slider(visible=False, value=selected_opb_preset["imagemodechance"]),
+                    gr.Markdown(visible=False),                     #  md_override_options
+                    gr.Textbox(visible=False, value=selected_opb_preset["givensubject"]),
+                    gr.Checkbox(visible=False, value=selected_opb_preset["smartsubject"]),
+                    gr.Textbox(visible=False, value=selected_opb_preset["givenoutfit"]),
+                    gr.Textbox(visible=False, value=selected_opb_preset["prefixprompt"]),
+                    gr.Textbox(visible=False, value=selected_opb_preset["suffixprompt"]),
+                    gr.Markdown(visible=False),                     # md_additional_options
+                    gr.Textbox(visible=False, value=selected_opb_preset["giventypeofimage"]),
+                    gr.Textbox(visible=False, value=selected_opb_preset["antistring"]),
+                ]
+        OBP_preset.change(obppreset_changed,
+            inputs=[OBP_preset],
+            outputs=[
+                md_prefix_preset,
+                presetprefix,
+                presetsuffix,
+                md_save_preset,
+                obp_preset_name,
+                obp_preset_save,
+                md_generation_settings,
+                insanitylevel,
+                subject,
+                artist,
+                chosensubjectsubtypeobject,
+                chosensubjectsubtypehumanoid,
+                chosensubjectsubtypeconcept,
+                chosengender,
+                imagetype,
+                imagemodechance,
+                md_override_options,
+                givensubject,
+                smartsubject,
+                givenoutfit,
+                prefixprompt,
+                suffixprompt,
+                md_additional_options,
+                giventypeofimage,
+                antistring,
+            ]
         )
 
         ### not used anymore

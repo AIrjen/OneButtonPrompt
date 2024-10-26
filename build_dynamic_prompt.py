@@ -3333,7 +3333,11 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         for i in range(len(completeprompt_list) - len("-heshe-") + 1):
             if "".join(completeprompt_list[i:i+len("-heshe-")]) == "-heshe-":
                 # Replace -heshe- with a value from the shuffled list
-                replacement = samehumanreplacementlist.pop()
+                if(samehumanreplacementlist):
+                    replacement = samehumanreplacementlist.pop()
+                else:
+                    replacement = "-heshe-"    
+                    
                 completeprompt_list[i:i+len("-heshe-")] = replacement
 
         # Convert the list back to a string
@@ -3350,7 +3354,11 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         for i in range(len(completeprompt_list) - len("-heshe-") + 1):
             if "".join(completeprompt_list[i:i+len("-heshe-")]) == "-heshe-":
                 # Replace -heshe- with a value from the shuffled list
-                replacement = sameobjectreplacementlist.pop()
+                if(sameobjectreplacementlist):
+                    replacement = sameobjectreplacementlist.pop()
+                else:
+                    replacement = "-heshe-"    
+                    
                 completeprompt_list[i:i+len("-heshe-")] = replacement
         # Convert the list back to a string
         completeprompt = "".join(completeprompt_list)
@@ -3431,7 +3439,11 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         for i in range(len(completeprompt_list) - len("-color-") + 1):
             if "".join(completeprompt_list[i:i+len("-color-")]) == "-color-":
                 # Replace -heshe- with a value from the shuffled list
-                replacement = colorreplacementlist.pop()
+                if(colorreplacementlist):
+                    replacement = colorreplacementlist.pop()
+                else:
+                    replacement = "-color-"
+
                 completeprompt_list[i:i+len("-color-")] = replacement
 
         # Convert the list back to a string
@@ -3451,7 +3463,11 @@ def build_dynamic_prompt(insanitylevel = 5, forcesubject = "all", artists = "all
         for i in range(len(completeprompt_list) - len("-material-") + 1):
             if "".join(completeprompt_list[i:i+len("-material-")]) == "-material-":
                 # Replace -heshe- with a value from the shuffled list
-                replacement = materialreplacementlist.pop()
+                if(materialreplacementlist):
+                    replacement = materialreplacementlist.pop()
+                else:
+                    replacement = "-material-"
+                
                 completeprompt_list[i:i+len("-material-")] = replacement
 
         # Convert the list back to a string

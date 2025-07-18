@@ -1,5 +1,5 @@
 [project]
-name = "onebuttonprompt"
+name = "OneButtonPrompt"
 description = "One Button Prompt has a prompt generation node for beginners who have problems writing a good prompt, or advanced users who want to get inspired. It generates an entire prompt from scratch. It is random, but controlled. You simply load up the script and press generate, and let it surprise you."
 version = "1.0.0"
 license = { file = "LICENSE" }
